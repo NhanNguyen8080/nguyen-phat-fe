@@ -1,0 +1,223 @@
+.hero {
+  padding-top: 12px;
+  padding-bottom: 40px;
+  text-align: center;
+}
+
+.hero-top {
+  display: grid;
+  grid-template-columns: minmax(180px, 250px) minmax(0, 1fr) minmax(170px, 230px);
+  grid-template-areas:
+    'location titleTop .'
+    '. titleBottom description';
+  column-gap: 18px;
+  row-gap: 6px;
+  margin-bottom: 38px;
+}
+
+.hero-location,
+.hero-description {
+  text-align: left;
+  font-size: 0.62rem;
+  line-height: 1.45;
+  color: var(--text-gray);
+}
+
+.hero-location {
+  grid-area: location;
+  align-self: center;
+  justify-self: start;
+  transform: translateX(28px) translateY(-6px);
+}
+
+.hero-description {
+  grid-area: description;
+  align-self: center;
+  justify-self: start;
+  transform: translateX(-40px) translateY(2px);
+}
+
+.hero-title-main {
+  text-align: center;
+}
+
+.hero-title-main-top {
+  grid-area: titleTop;
+  justify-self: start;
+  margin-left: 18px;
+}
+
+.hero-title-main-bottom {
+  grid-area: titleBottom;
+  justify-self: start;
+  margin-left: 340px;
+}
+
+.hero-title {
+  font-size: 3.45rem;
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -1.5px;
+  white-space: nowrap;
+}
+
+.hero-title-main-top .hero-title {
+  padding-bottom: 6px;
+}
+
+.hero-title-main-bottom .hero-title {
+  padding-top: 6px;
+}
+
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.hero-image-wrapper {
+  position: relative;
+  width: 100%;
+  border-radius: var(--border-radius-xl);
+  overflow: hidden;
+  background-color: var(--secondary-bg);
+  margin-top: -12px;
+}
+
+/* Tạo đường cắt chữ V ở cạnh trên của hình ảnh */
+.hero-image-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  height: 60px; 
+  background-color: var(--primary-bg);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  z-index: 2;
+}
+
+.hero-image {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Tạo đường cắt bo tròn ở 2 góc dưới */
+.hero-stats-left, .hero-stats-right {
+  position: absolute;
+  bottom: -2px;
+  background-color: var(--primary-bg);
+  padding: 24px 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  z-index: 2;
+}
+
+.hero-stats-left {
+  left: -2px;
+  border-top-right-radius: var(--border-radius-xl);
+}
+
+.hero-stats-right {
+  right: -2px;
+  border-top-left-radius: var(--border-radius-xl);
+}
+
+.team-avatars, .country-flags {
+  display: flex;
+}
+
+.avatar, .flag {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #ddd;
+  margin-left: -8px;
+  border: 2px solid var(--primary-bg);
+}
+
+.avatar:first-child, .flag:first-child {
+  margin-left: 0;
+}
+
+@media (max-width: 1024px) {
+  .hero-top {
+    grid-template-columns: minmax(150px, 210px) minmax(0, 1fr) minmax(150px, 190px);
+  }
+
+  .hero-location {
+    transform: translateX(12px) translateY(-4px);
+  }
+
+  .hero-description {
+    transform: translateX(4px) translateY(0);
+  }
+
+  .hero-title-main-top {
+    margin-left: 8px;
+  }
+
+  .hero-title-main-bottom {
+    margin-left: 180px;
+  }
+
+  .hero-location,
+  .hero-description {
+    font-size: 0.58rem;
+  }
+
+  .hero-title {
+    font-size: 2.95rem;
+  }
+
+  .hero-image {
+    height: 380px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding-top: 8px;
+    padding-bottom: 32px;
+  }
+
+  .hero-top {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+
+  .hero-location,
+  .hero-description,
+  .hero-title-main {
+    width: 100%;
+    text-align: center;
+    transform: none;
+    margin-left: 0;
+  }
+
+  .hero-title {
+    font-size: 2.35rem;
+    line-height: 1.02;
+    white-space: normal;
+  }
+
+  .hero-image {
+    height: 280px;
+  }
+
+  .hero-stats-left,
+  .hero-stats-right {
+    padding: 14px 16px;
+    font-size: 0.76rem;
+  }
+}
