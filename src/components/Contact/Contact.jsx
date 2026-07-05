@@ -1,12 +1,15 @@
 import React from 'react';
 import './Contact.css';
+import { useScrollReveal } from '../../hooks/useScrollReveal';
 
 const Contact = () => {
+  const panelRef = useScrollReveal({ threshold: 0.08 });
+
   return (
     <section className="contact" id="contact">
       <div className="container">
-        <div className="contact-panel">
-          <div className="contact-header">
+        <div className="contact-panel" ref={panelRef}>
+          <div className="contact-header reveal">
             <h2 className="section-title">
               Contact <span className="text-yellow">Us</span>
             </h2>
@@ -16,7 +19,7 @@ const Contact = () => {
           </div>
 
           <div className="contact-content">
-            <div className="contact-info">
+            <div className="contact-info reveal-left delay-2">
               <div className="contact-info-item">
                 <h4 className="contact-info-title">Email</h4>
                 <p className="contact-info-text">hello@canda.com</p>
@@ -35,7 +38,7 @@ const Contact = () => {
               </div>
             </div>
 
-            <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
+            <form className="contact-form reveal-right delay-3" onSubmit={(e) => e.preventDefault()}>
               <div className="contact-form-row">
                 <input type="text" className="contact-input" placeholder="Your Name" />
                 <input type="email" className="contact-input" placeholder="Your Email" />

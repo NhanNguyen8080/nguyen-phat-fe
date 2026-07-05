@@ -89,3 +89,74 @@ img {
 .text-yellow {
   color: var(--accent-yellow);
 }
+
+/* =============================================
+   SCROLL REVEAL UTILITIES
+   Used with useScrollReveal hook:
+   Parent gets ref → adds .is-visible on viewport entry
+   Children get .reveal / .reveal-left / .reveal-right / .reveal-scale
+   ============================================= */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-56px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(56px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.88);
+  transition: opacity 0.75s ease, transform 0.75s ease;
+}
+
+/* When parent has is-visible, all reveal children animate in */
+.is-visible > .reveal,
+.is-visible > .reveal-left,
+.is-visible > .reveal-right,
+.is-visible > .reveal-scale,
+.is-visible .reveal,
+.is-visible .reveal-left,
+.is-visible .reveal-right,
+.is-visible .reveal-scale {
+  opacity: 1;
+  transform: none;
+}
+
+/* Transition delays for staggered children */
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-3 { transition-delay: 0.35s; }
+.delay-4 { transition-delay: 0.5s; }
+.delay-5 { transition-delay: 0.65s; }
+.delay-6 { transition-delay: 0.8s; }
+
+/* =============================================
+   BUTTON SHIMMER
+   ============================================= */
+@keyframes btnShimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.btn-primary {
+  background-image: linear-gradient(
+    105deg,
+    var(--accent-yellow) 40%,
+    #ffe066 50%,
+    var(--accent-yellow) 60%
+  );
+  background-size: 200% auto;
+  animation: btnShimmer 3.5s linear infinite;
+}

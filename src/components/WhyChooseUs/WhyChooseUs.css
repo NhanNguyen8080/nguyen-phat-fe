@@ -40,10 +40,36 @@
   flex-direction: column;
 }
 
+/* =============================================
+   WCU ANIMATIONS
+   ============================================= */
+@keyframes iconBounce {
+  0%   { opacity: 0; transform: scale(0.3) rotate(-20deg); }
+  60%  { transform: scale(1.15) rotate(6deg); }
+  80%  { transform: scale(0.95) rotate(-3deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+.wcu-panel.is-visible .wcu-feature:nth-child(1) .feature-icon {
+  animation: iconBounce 0.6s 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.wcu-panel.is-visible .wcu-feature:nth-child(2) .feature-icon {
+  animation: iconBounce 0.6s 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.wcu-panel.is-visible .wcu-feature:nth-child(3) .feature-icon {
+  animation: iconBounce 0.6s 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
 .feature-icon {
   margin-bottom: 20px;
   line-height: 0;
+  transition: filter 0.3s ease;
 }
+
+.wcu-feature:hover .feature-icon {
+  filter: drop-shadow(0 0 10px rgba(255, 184, 0, 0.6));
+}
+
 
 .feature-title {
   font-size: 1.1rem;

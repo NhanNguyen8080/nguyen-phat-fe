@@ -38,7 +38,7 @@
 }
 
 .portfolio-item:hover .portfolio-image {
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
 .portfolio-info {
@@ -49,6 +49,13 @@
   background-color: var(--primary-bg);
   padding: 16px 24px;
   border-radius: var(--border-radius-sm);
+  /* Slide-up on hover */
+  transform: translateY(calc(100% + 24px));
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.featured-item:hover .portfolio-info {
+  transform: translateY(0);
 }
 
 .portfolio-item-title {

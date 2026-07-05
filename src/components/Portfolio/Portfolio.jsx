@@ -1,5 +1,6 @@
 import React from 'react';
 import './Portfolio.css';
+import { useScrollReveal } from '../../hooks/useScrollReveal';
 
 const projects = [
   {
@@ -24,17 +25,25 @@ const projects = [
 ];
 
 const Portfolio = () => {
+  const headerRef = useScrollReveal();
+  const gridRef = useScrollReveal({ threshold: 0.08 });
+  const actionsRef = useScrollReveal();
+
   return (
     <section className="portfolio" id="projects">
       <div className="container">
-        <div className="portfolio-header">
-          <h2 className="section-title">Our <span className="text-yellow">Portfolio</span></h2>
-          <p className="portfolio-subtitle">We have completed over 500+ projects across USA.</p>
+        <div className="portfolio-header" ref={headerRef}>
+          <h2 className="section-title reveal delay-1">Our <span className="text-yellow">Portfolio</span></h2>
+          <p className="portfolio-subtitle reveal delay-3">We have completed over 500+ projects across USA.</p>
         </div>
 
-        <div className="portfolio-grid">
+        <div className="portfolio-grid" ref={gridRef}>
           {projects.map((project, index) => (
-            <div key={project.id} className={`portfolio-item ${index === 0 ? 'featured-item' : ''}`}>
+            <div
+              key={project.id}
+              className={`portfolio-item reveal ${index === 0 ? 'featured-item' : ''}`}
+              style={{ transitionDelay: `${index * 0.12}s` }}
+            >
               <img src={project.image} alt="Project" className="portfolio-image" />
               {project.featured && (
                 <div className="portfolio-info">
@@ -46,7 +55,7 @@ const Portfolio = () => {
           ))}
         </div>
 
-        <div className="portfolio-actions">
+        <div className="portfolio-actions reveal" ref={actionsRef}>
           <button className="btn-primary">See All Projects Now</button>
         </div>
       </div>

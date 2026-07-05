@@ -1,5 +1,6 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import './Services.css';
+import { useScrollReveal } from '../../hooks/useScrollReveal';
 
 const services = [
   {
@@ -69,6 +70,7 @@ const Services = () => {
   const viewportRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [maxIndex, setMaxIndex] = useState(0);
+  const headerRef = useScrollReveal();
 
   useLayoutEffect(() => {
     const viewport = viewportRef.current;
@@ -101,9 +103,9 @@ const Services = () => {
   return (
     <section className="services" id="services">
       <div className="container">
-        <div className="services-header">
-          <h2 className="section-title">Our <span className="text-yellow">Services</span></h2>
-          <p className="services-subtitle">
+        <div className="services-header" ref={headerRef}>
+          <h2 className="section-title reveal delay-1">Our <span className="text-yellow">Services</span></h2>
+          <p className="services-subtitle reveal delay-3">
             Our organization boasts a vibrant team of over 1,500 dedicated experts, each bringing unique talents and perspectives. Together, we aim to deliver exceptional solutions tailored to our clients' diverse needs.
           </p>
         </div>

@@ -5,6 +5,7 @@
   top: 0;
   z-index: 100;
   transition: background-color 0.2s ease;
+  animation: headerSlideDown 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .header.header-scrolled {
@@ -26,6 +27,11 @@
   border-radius: var(--border-radius-xl);
   display: inline-flex;
   align-items: center;
+  transition: transform 0.25s ease;
+}
+
+.logo:hover {
+  transform: scale(1.04);
 }
 
 .nav-menu {
@@ -45,8 +51,44 @@
   color: var(--text-gray);
   font-weight: 500;
   transition: color 0.2s ease;
+  position: relative;
+  padding-bottom: 2px;
 }
 
 .nav-link:hover, .nav-link.active {
   color: var(--text-dark);
 }
+
+/* Animated underline — expands from center on hover */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  right: 50%;
+  height: 2px;
+  background-color: var(--accent-yellow);
+  border-radius: 2px;
+  transition: left 0.3s ease, right 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  left: 0;
+  right: 0;
+}
+
+/* =============================================
+   HEADER ANIMATIONS
+   ============================================= */
+@keyframes headerSlideDown {
+  from {
+    transform: translateY(-110%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
