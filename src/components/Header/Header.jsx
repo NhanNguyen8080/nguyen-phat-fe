@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './Header.css';
 
-const Header = () => {
+const Header = ({ onNavigateProducts }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
 
@@ -107,6 +107,16 @@ const Header = () => {
         </nav>
         
         <div className="header-actions">
+          {onNavigateProducts && (
+            <button 
+              type="button"
+              className="btn-secondary"
+              onClick={onNavigateProducts}
+              style={{ marginRight: '10px', padding: '10px 18px', fontSize: '0.88rem' }}
+            >
+              Trang Sản Phẩm
+            </button>
+          )}
           <a 
             href="#contact" 
             className="btn-primary"
