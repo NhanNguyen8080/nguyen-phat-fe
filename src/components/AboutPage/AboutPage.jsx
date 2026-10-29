@@ -77,33 +77,6 @@ const processSteps = [
   }
 ];
 
-const teamMembers = [
-  {
-    name: 'George Brian',
-    role: 'CEO / Tổng Giám Đốc',
-    exp: 'Hơn 20 năm điều hành tổng thầu xây dựng công nghiệp quốc tế.',
-    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    name: 'Trần Quang Minh',
-    role: 'Giám Đốc Kỹ Thuật & Kết Cấu',
-    exp: 'Chuyên gia tính toán kết cấu thép khẩu độ lớn và mô hình hóa BIM.',
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    name: 'Lê Hoàng Nam',
-    role: 'Trưởng Ban Quản Lý Dự Án',
-    exp: 'Chỉ huy trưởng hơn 80+ công trình nhà xưởng quy mô trên 20.000m².',
-    image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800&auto=format&fit=crop'
-  },
-  {
-    name: 'Nguyễn Thanh Tùng',
-    role: 'Trưởng Ban An Toàn Lao Động',
-    exp: 'Chứng chỉ an toàn quốc tế OSHA, quản trị rủi ro thi công cơ giới nặng.',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop'
-  }
-];
-
 const AboutPage = ({ onNavigateHome }) => {
   return (
     <div className="about-page">
@@ -173,24 +146,73 @@ const AboutPage = ({ onNavigateHome }) => {
           </div>
         </section>
 
-        {/* Đội ngũ chuyên gia */}
-        <section className="about-team-section">
-          <div className="about-team-header">
-            <h3>Đội Ngũ <span className="text-yellow">Chuyên Gia Chủ Chốt</span></h3>
-            <p style={{ color: 'var(--text-gray)', fontSize: '0.95rem', marginTop: '6px' }}>Những cá nhân dẫn dắt sự thành công của hàng trăm dự án trọng điểm</p>
+        {/* Thông tin CEO & Lãnh đạo */}
+        <section className="about-ceo-section">
+          <div className="about-ceo-header">
+            <h3>Thông Điệp Từ <span className="text-yellow">CEO &amp; Nhà Sáng Lập</span></h3>
+            <p style={{ color: 'var(--text-gray)', fontSize: '0.95rem', marginTop: '6px' }}>Tầm nhìn chiến lược và cam kết đồng hành bền vững cùng khách hàng</p>
           </div>
 
-          <div className="team-grid">
-            {teamMembers.map((member, idx) => (
-              <div key={idx} className="team-card">
-                <img src={member.image} alt={member.name} className="team-card-image" loading="lazy" />
-                <div className="team-card-body">
-                  <h4 className="team-name">{member.name}</h4>
-                  <p className="team-role">{member.role}</p>
-                  <p className="team-exp">{member.exp}</p>
+          <div className="ceo-profile-card">
+            {/* Cột hình ảnh & chức danh */}
+            <div className="ceo-photo-col">
+              <div className="ceo-avatar-wrap">
+                <img 
+                  src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop" 
+                  alt="George Brian - CEO C&A" 
+                  className="ceo-avatar-img"
+                />
+              </div>
+              <span className="ceo-badge">CEO &amp; Founder</span>
+              <h4 className="ceo-name">George Brian</h4>
+              <p className="ceo-title">Tổng Giám Đốc / Nhà Sáng Lập C&amp;A</p>
+            </div>
+
+            {/* Cột thông điệp & profile */}
+            <div className="ceo-content-col">
+              <blockquote className="ceo-quote-box">
+                "Tại Nguyên Phát, mỗi công trình thép được dựng lên không đơn thuần là một dự án xây dựng, mà là hiện thân của sự an toàn tuyệt đối, độ chính xác kỹ thuật cao và cam kết gắn bó lâu dài cùng sự thịnh vượng của mỗi đối tác."
+              </blockquote>
+
+              <div className="ceo-points-list">
+                <div className="ceo-point-item">
+                  <div className="ceo-point-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                  </div>
+                  <div className="ceo-point-text">
+                    <strong>Hơn 20 Năm Kinh Nghiệm Lãnh Đạo</strong>
+                    <p>Trực tiếp chỉ huy và cố vấn kỹ thuật cho hơn 500+ dự án nhà xưởng công nghiệp, kho bãi logistics và trung tâm thương mại quy mô lớn.</p>
+                  </div>
+                </div>
+
+                <div className="ceo-point-item">
+                  <div className="ceo-point-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                      <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                    </svg>
+                  </div>
+                  <div className="ceo-point-text">
+                    <strong>Nền Tảng Kỹ Thuật Chuyên Sâu</strong>
+                    <p>Thạc sĩ Kỹ thuật Xây dựng &amp; Quản lý Dự án, thành viên Hiệp hội Kết cấu Thép Quốc tế (AISC), tiên phong ứng dụng công nghệ 3D BIM và tự động hóa CNC.</p>
+                  </div>
+                </div>
+
+                <div className="ceo-point-item">
+                  <div className="ceo-point-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
+                  </div>
+                  <div className="ceo-point-text">
+                    <strong>Triết Lý Kinh Doanh Bền Vững</strong>
+                    <p>Lấy con người làm trọng tâm, chất lượng làm danh dự và an toàn là ưu tiên số một trong mọi quyết định phát triển công trình.</p>
+                  </div>
                 </div>
               </div>
-            ))}
+            </div>
           </div>
         </section>
 
