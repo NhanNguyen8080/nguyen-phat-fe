@@ -5,10 +5,12 @@ import About from './components/About/About';
 import Services from './components/Services/Services';
 import WhyChooseUs from './components/WhyChooseUs/WhyChooseUs';
 import Portfolio from './components/Portfolio/Portfolio';
+import News from './components/News/News';
 import Contact from './components/Contact/Contact';
 import ProductList from './components/ProductList/ProductList';
 import ProjectList from './components/ProjectList/ProjectList';
 import AboutPage from './components/AboutPage/AboutPage';
+import NewsPage from './components/NewsPage/NewsPage';
 import './App.css';
 
 function App() {
@@ -24,6 +26,9 @@ function App() {
     if (path === '/products' || hash === '#/products' || hash === '#products') {
       return 'products';
     }
+    if (path === '/news' || hash === '#/news' || hash === '#news-page') {
+      return 'news';
+    }
     return 'home';
   });
 
@@ -37,6 +42,8 @@ function App() {
         setCurrentPage('projects');
       } else if (path === '/products' || hash === '#/products' || hash === '#products') {
         setCurrentPage('products');
+      } else if (path === '/news' || hash === '#/news' || hash === '#news-page') {
+        setCurrentPage('news');
       } else {
         setCurrentPage('home');
       }
@@ -68,6 +75,12 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const navigateToNews = () => {
+    window.location.hash = '#/news';
+    setCurrentPage('news');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const navigateToHome = (targetId = '#home') => {
     window.location.hash = targetId;
     setCurrentPage('home');
@@ -93,6 +106,7 @@ function App() {
         onNavigateAbout={navigateToAbout}
         onNavigateProducts={navigateToProducts}
         onNavigateProjects={navigateToProjects}
+        onNavigateNews={navigateToNews}
       />
       {currentPage === 'about' ? (
         <AboutPage onNavigateHome={navigateToHome} />
@@ -100,6 +114,8 @@ function App() {
         <ProductList onNavigateHome={() => navigateToHome('#contact')} />
       ) : currentPage === 'projects' ? (
         <ProjectList onNavigateHome={() => navigateToHome('#contact')} />
+      ) : currentPage === 'news' ? (
+        <NewsPage onNavigateHome={() => navigateToHome('#contact')} />
       ) : (
         <main>
           <Hero onNavigateAbout={navigateToAbout} />
@@ -107,6 +123,7 @@ function App() {
           <Services onNavigateProducts={navigateToProducts} />
           <WhyChooseUs />
           <Portfolio onNavigateProjects={navigateToProjects} />
+          <News onNavigateNews={navigateToNews} />
           <Contact />
         </main>
       )}

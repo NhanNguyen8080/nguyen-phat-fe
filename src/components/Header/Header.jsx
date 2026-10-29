@@ -6,7 +6,8 @@ const Header = ({
   onNavigateHome, 
   onNavigateAbout,
   onNavigateProducts,
-  onNavigateProjects 
+  onNavigateProjects,
+  onNavigateNews
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
@@ -27,10 +28,15 @@ const Header = ({
       return;
     }
 
+    if (currentPage === 'news') {
+      setActiveSection('news');
+      return;
+    }
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
 
-      const sectionIds = ['contact', 'project', 'product', 'about', 'home'];
+      const sectionIds = ['contact', 'news', 'project', 'product', 'about', 'home'];
       const scrollPosition = window.scrollY + 140;
 
       for (const id of sectionIds) {
@@ -65,6 +71,10 @@ const Header = ({
         onNavigateProjects();
         return;
       }
+      if (targetId === '#news' && onNavigateNews) {
+        onNavigateNews();
+        return;
+      }
       if (onNavigateHome) {
         onNavigateHome(targetId);
       }
@@ -83,6 +93,10 @@ const Header = ({
       }
       if (targetId === '#project' && onNavigateProjects) {
         onNavigateProjects();
+        return;
+      }
+      if (targetId === '#news' && onNavigateNews) {
+        onNavigateNews();
         return;
       }
       if (onNavigateHome) {
@@ -105,13 +119,41 @@ const Header = ({
         onNavigateProducts();
         return;
       }
+      if (targetId === '#news' && onNavigateNews) {
+        onNavigateNews();
+        return;
+      }
       if (onNavigateHome) {
         onNavigateHome(targetId);
       }
       return;
     }
 
-    // 4. Khi đang ở Trang Chủ -> cuộn mượt xuống đúng section (kể cả #about, #product, #project)
+    // 4. Khi đang ở trang News
+    if (currentPage === 'news') {
+      if (targetId === '#news') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+      if (targetId === '#about' && onNavigateAbout) {
+        onNavigateAbout();
+        return;
+      }
+      if (targetId === '#product' && onNavigateProducts) {
+        onNavigateProducts();
+        return;
+      }
+      if (targetId === '#project' && onNavigateProjects) {
+        onNavigateProjects();
+        return;
+      }
+      if (onNavigateHome) {
+        onNavigateHome(targetId);
+      }
+      return;
+    }
+
+    // 5. Khi đang ở Trang Chủ -> cuộn mượt xuống đúng section (kể cả #about, #product, #project, #news)
     const id = targetId.replace('#', '');
     const element = document.getElementById(id);
     if (element) {
@@ -125,6 +167,8 @@ const Header = ({
       });
       setActiveSection(id);
       window.history.pushState(null, '', targetId);
+    } else if (targetId === '#news' && onNavigateNews) {
+      onNavigateNews();
     }
   };
 
