@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import './Header.css';
 
-const Header = ({ onNavigateProducts }) => {
+const Header = ({ currentPage = 'home', onNavigateHome, onNavigateProducts }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
+    if (currentPage === 'products') {
+      setActiveSection('product');
+      return;
+    }
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
 
@@ -25,10 +30,27 @@ const Header = ({ onNavigateProducts }) => {
     window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [currentPage]);
 
   const handleNavClick = (e, targetId) => {
     e.preventDefault();
+
+    if (targetId === '#product') {
+      if (currentPage !== 'products' && onNavigateProducts) {
+        onNavigateProducts();
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      return;
+    }
+
+    if (currentPage === 'products') {
+      if (onNavigateHome) {
+        onNavigateHome(targetId);
+      }
+      return;
+    }
+
     const id = targetId.replace('#', '');
     const element = document.getElementById(id);
     if (element) {
@@ -107,16 +129,6 @@ const Header = ({ onNavigateProducts }) => {
         </nav>
         
         <div className="header-actions">
-          {onNavigateProducts && (
-            <button 
-              type="button"
-              className="btn-secondary"
-              onClick={onNavigateProducts}
-              style={{ marginRight: '10px', padding: '10px 18px', fontSize: '0.88rem' }}
-            >
-              Trang Sản Phẩm
-            </button>
-          )}
           <a 
             href="#contact" 
             className="btn-primary"

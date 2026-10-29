@@ -178,17 +178,17 @@ const Services = ({ onNavigateProducts }) => {
             className="btn-primary"
             onClick={onNavigateProducts}
             style={{ 
-              padding: '14px 36px', 
-              fontSize: '1rem', 
+              padding: '12px 32px', 
+              fontSize: '0.95rem', 
               display: 'inline-flex', 
               alignItems: 'center', 
-              gap: '10px',
+              gap: '8px',
               borderRadius: 'var(--border-radius-lg)',
               cursor: 'pointer'
             }}
           >
-            <span>Xem Danh Sách Đầy Đủ Sản Phẩm (API)</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <span>Xem thêm</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="5" y1="12" x2="19" y2="12"></line>
               <polyline points="12 5 19 12 12 19"></polyline>
             </svg>

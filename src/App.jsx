@@ -44,27 +44,42 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const navigateToHome = () => {
-    window.location.hash = '#home';
+  const navigateToHome = (targetId = '#home') => {
+    window.location.hash = targetId;
     setCurrentPage('home');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      const id = targetId.replace('#', '');
+      const element = document.getElementById(id);
+      if (element) {
+        const headerOffset = 85;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 60);
   };
-
-  if (currentPage === 'products') {
-    return <ProductList onNavigateHome={navigateToHome} />;
-  }
 
   return (
     <div className="app">
-      <Header onNavigateProducts={navigateToProducts} />
-      <main>
-        <Hero />
-        <About />
-        <Services onNavigateProducts={navigateToProducts} />
-        <WhyChooseUs />
-        <Portfolio />
-        <Contact />
-      </main>
+      <Header 
+        currentPage={currentPage}
+        onNavigateHome={navigateToHome}
+        onNavigateProducts={navigateToProducts}
+      />
+      {currentPage === 'products' ? (
+        <ProductList onNavigateHome={() => navigateToHome('#contact')} />
+      ) : (
+        <main>
+          <Hero />
+          <About />
+          <Services onNavigateProducts={navigateToProducts} />
+          <WhyChooseUs />
+          <Portfolio />
+          <Contact />
+        </main>
+      )}
     </div>
   );
 }

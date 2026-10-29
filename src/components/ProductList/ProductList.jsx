@@ -2,60 +2,55 @@ import React, { useEffect, useMemo, useState } from 'react';
 import './ProductList.css';
 import { getProducts } from '../../services/productService';
 
+const ITEMS_PER_PAGE = 6;
+
 const ProductList = ({ onNavigateHome }) => {
-  const [products, setProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [apiStatus, setApiStatus] = useState({ isLive: false, message: '' });
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
+  const [currentPageNum, setCurrentPageNum] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  // Cấu hình token nếu muốn kết nối trực tiếp với backend yêu cầu Bearer auth
-  const [showTokenInput, setShowTokenInput] = useState(false);
-  const [customToken, setCustomToken] = useState(localStorage.getItem('np_admin_token') || '');
-
-  const loadData = async (cat = null, token = null) => {
-    setLoading(true);
-    const result = await getProducts(cat === 'all' ? null : cat, token);
-    setProducts(result.products || []);
-    setApiStatus({
-      isLive: result.isLive,
-      message: result.message
-    });
-    setLoading(false);
-  };
-
+  // Load toàn bộ sản phẩm 1 lần duy nhất khi mount
   useEffect(() => {
-    loadData(selectedCategory, customToken);
-  }, [selectedCategory]);
-
-  const handleSaveToken = (e) => {
-    e.preventDefault();
-    localStorage.setItem('np_admin_token', customToken);
-    loadData(selectedCategory, customToken);
-  };
+    let isMounted = true;
+    const loadInitialData = async () => {
+      setLoading(true);
+      const result = await getProducts(null);
+      if (isMounted) {
+        setAllProducts(result.products || []);
+        setLoading(false);
+      }
+    };
+    loadInitialData();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Trích xuất danh mục động từ danh sách sản phẩm
   const categories = useMemo(() => {
     const set = new Set();
-    products.forEach((p) => {
+    allProducts.forEach((p) => {
       if (p.category_name) set.add(p.category_name);
     });
     return ['all', ...Array.from(set)];
-  }, [products]);
+  }, [allProducts]);
 
-  // Lọc và sắp xếp sản phẩm
+  // Lọc và sắp xếp sản phẩm tức thì (in-memory) không load lại trang
   const filteredProducts = useMemo(() => {
-    return products
+    const term = searchTerm.toLowerCase().trim();
+
+    return allProducts
       .filter((p) => {
         const matchesCategory =
           selectedCategory === 'all' ||
           p.category_name === selectedCategory ||
           p.category_id === selectedCategory;
 
-        const term = searchTerm.toLowerCase().trim();
         const matchesSearch =
           !term ||
           (p.name && p.name.toLowerCase().includes(term)) ||
@@ -76,7 +71,37 @@ const ProductList = ({ onNavigateHome }) => {
         }
         return 0;
       });
-  }, [products, selectedCategory, searchTerm, sortBy]);
+  }, [allProducts, selectedCategory, searchTerm, sortBy]);
+
+  // Phân trang
+  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE) || 1;
+
+  const paginatedProducts = useMemo(() => {
+    const start = (currentPageNum - 1) * ITEMS_PER_PAGE;
+    return filteredProducts.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredProducts, currentPageNum]);
+
+  // Chọn danh mục: đổi ngay lập tức, không reload, reset về trang 1
+  const handleSelectCategory = (cat) => {
+    setSelectedCategory(cat);
+    setCurrentPageNum(1);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPageNum(1);
+  };
+
+  const handleSortChange = (e) => {
+    setSortBy(e.target.value);
+    setCurrentPageNum(1);
+  };
+
+  const handlePageChange = (page) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPageNum(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const openDetail = (product) => {
     setSelectedProduct(product);
@@ -103,121 +128,15 @@ const ProductList = ({ onNavigateHome }) => {
 
   return (
     <div className="product-page">
-      {/* Top Navigation Bar */}
-      <header className="product-nav-bar">
-        <div className="container product-nav-container">
-          <div className="product-nav-left">
-            <div 
-              className="logo" 
-              style={{ cursor: 'pointer' }}
-              onClick={onNavigateHome}
-              title="Về trang chủ"
-            >
-              <span className="logo-text">C<span className="text-yellow">&amp;</span>A</span>
-            </div>
-
-            <button 
-              type="button" 
-              className="back-home-btn"
-              onClick={onNavigateHome}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-              </svg>
-              Trang Chủ
-            </button>
-          </div>
-
-          <div className="product-nav-actions">
-            <button 
-              type="button" 
-              className="btn-primary"
-              onClick={onNavigateHome}
-            >
-              Liên hệ tư vấn
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* Hero Header */}
-      <section className="product-hero">
+      {/* Tiêu đề ngắn gọn duy nhất: Product */}
+      <div className="product-page-title-wrap">
         <div className="container">
-          <div className="product-hero-inner">
-            <span className="product-badge">Nguyên Phát Portfolio &amp; Products</span>
-            <h1 className="product-hero-title">
-              Giải Pháp &amp; <span className="text-yellow">Sản Phẩm</span> Tiêu Biểu
-            </h1>
-            <p className="product-hero-desc">
-              Hệ thống kết cấu thép tiền chế, panel cách nhiệt, giải pháp sàn công nghiệp và trang thiết bị phụ trợ xây dựng đạt tiêu chuẩn kiểm định quốc tế.
-            </p>
-
-            <div className="product-stats">
-              <div className="product-stat-item">
-                <span className="stat-number">500<span>+</span></span>
-                <span className="stat-label">Công trình thực hiện</span>
-              </div>
-              <div className="product-stat-item">
-                <span className="stat-number">100<span>%</span></span>
-                <span className="stat-label">Kiểm định ASTM / ISO</span>
-              </div>
-              <div className="product-stat-item">
-                <span className="stat-number">50<span>+</span></span>
-                <span className="stat-label">Năm tuổi thọ kết cấu</span>
-              </div>
-            </div>
-          </div>
+          <h1 className="section-title"><span className="text-yellow">Product</span></h1>
         </div>
-      </section>
+      </div>
 
       {/* Main Container */}
       <main className="container products-grid-section">
-        {/* API Info & Token Bar */}
-        <div className={`api-status-banner ${apiStatus.isLive ? 'is-live' : ''}`}>
-          <div className="api-status-left">
-            <span className="api-status-dot"></span>
-            <span>
-              <strong>Nguồn dữ liệu:</strong>{' '}
-              <span className="api-endpoint-tag">/api/v1/products/</span> – {apiStatus.message}
-            </span>
-          </div>
-          <button 
-            type="button" 
-            className="api-toggle-btn"
-            onClick={() => setShowTokenInput(!showTokenInput)}
-          >
-            {showTokenInput ? 'Đóng cấu hình' : 'Cấu hình Token'}
-          </button>
-        </div>
-
-        {showTokenInput && (
-          <form className="api-token-form" onSubmit={handleSaveToken}>
-            <input 
-              type="text" 
-              className="api-token-input"
-              placeholder="Dán Bearer Access Token vào đây nếu có tài khoản Admin..."
-              value={customToken}
-              onChange={(e) => setCustomToken(e.target.value)}
-            />
-            <button type="submit" className="btn-primary" style={{ padding: '8px 20px' }}>
-              Đồng bộ API
-            </button>
-            <button 
-              type="button" 
-              className="btn-secondary" 
-              style={{ padding: '8px 16px' }}
-              onClick={() => {
-                setCustomToken('');
-                localStorage.removeItem('np_admin_token');
-                loadData(selectedCategory, '');
-              }}
-            >
-              Đặt lại
-            </button>
-          </form>
-        )}
-
         {/* Search & Filters */}
         <div className="product-controls">
           <div className="product-search-row">
@@ -229,9 +148,9 @@ const ProductList = ({ onNavigateHome }) => {
               <input 
                 type="text" 
                 className="product-search-input"
-                placeholder="Tìm kiếm theo tên sản phẩm, mã, danh mục..."
+                placeholder="Tìm kiếm theo tên sản phẩm, danh mục..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={handleSearchChange}
               />
             </div>
 
@@ -239,7 +158,7 @@ const ProductList = ({ onNavigateHome }) => {
               <select 
                 className="sort-select"
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
+                onChange={handleSortChange}
               >
                 <option value="newest">Mới cập nhật</option>
                 <option value="name-asc">Tên: A - Z</option>
@@ -248,14 +167,14 @@ const ProductList = ({ onNavigateHome }) => {
             </div>
           </div>
 
-          {/* Category Pills */}
+          {/* Category Pills - thay đổi tức thì, không reload */}
           <div className="category-pills">
             {categories.map((cat) => (
               <button
                 key={cat}
                 type="button"
                 className={`category-pill ${selectedCategory === cat ? 'active' : ''}`}
-                onClick={() => setSelectedCategory(cat)}
+                onClick={() => handleSelectCategory(cat)}
               >
                 {cat === 'all' ? 'Tất cả danh mục' : cat}
               </button>
@@ -267,6 +186,7 @@ const ProductList = ({ onNavigateHome }) => {
         <div className="products-grid-header">
           <span className="products-count">
             Hiển thị <strong>{filteredProducts.length}</strong> sản phẩm
+            {totalPages > 1 && ` (Trang ${currentPageNum}/${totalPages})`}
             {searchTerm && ` cho từ khóa "${searchTerm}"`}
           </span>
         </div>
@@ -274,7 +194,7 @@ const ProductList = ({ onNavigateHome }) => {
         {/* Loading / Grid / Empty */}
         {loading ? (
           <div className="product-empty">
-            <p className="product-empty-desc">Đang đồng bộ dữ liệu từ API Nguyên Phát...</p>
+            <p className="product-empty-desc">Đang tải danh sách sản phẩm...</p>
           </div>
         ) : filteredProducts.length === 0 ? (
           <div className="product-empty">
@@ -283,56 +203,100 @@ const ProductList = ({ onNavigateHome }) => {
             <p className="product-empty-desc">Vui lòng thử thay đổi từ khóa tìm kiếm hoặc chọn danh mục khác.</p>
           </div>
         ) : (
-          <div className="products-grid">
-            {filteredProducts.map((product) => (
-              <article key={product.id || product.slug} className="product-card">
-                <div 
-                  className="product-card-thumb-wrap"
-                  onClick={() => openDetail(product)}
-                >
-                  <span className="product-card-badge">
-                    {product.category_name || 'Sản phẩm'}
-                  </span>
-                  <img 
-                    src={product.thumbnail || 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=800&auto=format&fit=crop'} 
-                    alt={product.name} 
-                    className="product-card-thumb"
-                    loading="lazy"
-                  />
-                </div>
-
-                <div className="product-card-body">
-                  <h3 
-                    className="product-card-title"
+          <>
+            <div className="products-grid">
+              {paginatedProducts.map((product) => (
+                <article key={product.id || product.slug} className="product-card">
+                  <div 
+                    className="product-card-thumb-wrap"
                     onClick={() => openDetail(product)}
                   >
-                    {product.name}
-                  </h3>
-                  <p className="product-card-desc">{product.description}</p>
+                    <span className="product-card-badge">
+                      {product.category_name || 'Sản phẩm'}
+                    </span>
+                    <img 
+                      src={product.thumbnail || 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=800&auto=format&fit=crop'} 
+                      alt={product.name} 
+                      className="product-card-thumb"
+                      loading="lazy"
+                    />
+                  </div>
 
-                  <div className="product-card-footer">
-                    <button 
-                      type="button" 
-                      className="btn-card-detail"
+                  <div className="product-card-body">
+                    <h3 
+                      className="product-card-title"
                       onClick={() => openDetail(product)}
                     >
-                      Chi tiết
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="9 18 15 12 9 6"></polyline>
-                      </svg>
-                    </button>
-                    <button 
-                      type="button" 
-                      className="btn-card-quote"
-                      onClick={onNavigateHome}
-                    >
-                      Báo giá
-                    </button>
+                      {product.name}
+                    </h3>
+                    <p className="product-card-desc">{product.description}</p>
+
+                    <div className="product-card-footer">
+                      <button 
+                        type="button" 
+                        className="btn-card-detail"
+                        onClick={() => openDetail(product)}
+                      >
+                        Chi tiết
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                      </button>
+                      <button 
+                        type="button" 
+                        className="btn-card-quote"
+                        onClick={onNavigateHome}
+                      >
+                        Báo giá
+                      </button>
+                    </div>
                   </div>
+                </article>
+              ))}
+            </div>
+
+            {/* Phân trang */}
+            {totalPages > 1 && (
+              <div className="pagination-container">
+                <button
+                  type="button"
+                  className="pagination-btn"
+                  onClick={() => handlePageChange(currentPageNum - 1)}
+                  disabled={currentPageNum === 1}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                  </svg>
+                  Trước
+                </button>
+
+                <div className="pagination-pages">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                    <button
+                      key={pageNum}
+                      type="button"
+                      className={`pagination-page-btn ${currentPageNum === pageNum ? 'active' : ''}`}
+                      onClick={() => handlePageChange(pageNum)}
+                    >
+                      {pageNum}
+                    </button>
+                  ))}
                 </div>
-              </article>
-            ))}
-          </div>
+
+                <button
+                  type="button"
+                  className="pagination-btn"
+                  onClick={() => handlePageChange(currentPageNum + 1)}
+                  disabled={currentPageNum === totalPages}
+                >
+                  Sau
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </button>
+              </div>
+            )}
+          </>
         )}
       </main>
 
@@ -387,7 +351,7 @@ const ProductList = ({ onNavigateHome }) => {
                 <div className="modal-meta">
                   <div><strong>Mã nhận diện (Slug):</strong> {selectedProduct.slug || selectedProduct.id}</div>
                   <div><strong>Thời gian đăng ký:</strong> {selectedProduct.created_at ? new Date(selectedProduct.created_at).toLocaleDateString('vi-VN') : 'Đang cập nhật'}</div>
-                  <div><strong>Trạng thái kiểm định:</strong> Đạt tiêu chuẩn kỹ thuật xây dựng</div>
+                  <div><strong>Trạng thái:</strong> Tiêu chuẩn kiểm định xây dựng</div>
                 </div>
 
                 <div className="modal-actions">
