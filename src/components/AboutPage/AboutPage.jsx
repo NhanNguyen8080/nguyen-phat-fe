@@ -1,0 +1,217 @@
+import React from 'react';
+import './AboutPage.css';
+import aboutImage from '../../assets/about-us.png';
+
+const coreValues = [
+  {
+    icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+    ),
+    title: 'Chất Lượng Vượt Trội',
+    desc: '100% cấu kiện thép gia công kiểm định siêu âm, mối hàn đạt chuẩn ASTM/TCVN, bề mặt xử lý phun bi và sơn epoxy kháng ăn mòn cao.'
+  },
+  {
+    icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12 6 12 12 16 14"/>
+      </svg>
+    ),
+    title: 'Tiến Độ Cam Kết',
+    desc: 'Quy trình sản xuất tự động hóa kết hợp lắp dựng cơ giới hóa hiện đại, cam kết bàn giao đúng hoặc vượt tiến độ thi công đã thỏa thuận.'
+  },
+  {
+    icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="16" y1="13" x2="8" y2="13"/>
+        <line x1="16" y1="17" x2="8" y2="17"/>
+        <polyline points="10 9 9 9 8 9"/>
+      </svg>
+    ),
+    title: 'Giải Pháp Tối Ưu',
+    desc: 'Thiết kế tối ưu tải trọng và khẩu độ nhịp, tiết kiệm từ 15% - 25% tổng chi phí đầu tư xây dựng nhà xưởng cho chủ doanh nghiệp.'
+  },
+  {
+    icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+    ),
+    title: 'An Toàn Tuyệt Đối',
+    desc: 'Tuân thủ nghiêm ngặt tiêu chuẩn an toàn lao động quốc tế ISO 45001, trang thiết bị bảo hộ chuẩn chỉnh và quy trình kiểm soát rủi ro 24/7.'
+  }
+];
+
+const processSteps = [
+  {
+    num: '01',
+    title: 'Khảo Sát & Tư Vấn',
+    desc: 'Tiếp nhận yêu cầu, khảo sát địa chất thực địa và đề xuất phương án kết cấu tối ưu ngân sách.'
+  },
+  {
+    num: '02',
+    title: 'Thiết Kế 3D BIM',
+    desc: 'Mô hình hóa chi tiết kiến trúc và tải trọng kết cấu thép 3D, bóc tách khối lượng chính xác 100%.'
+  },
+  {
+    num: '03',
+    title: 'Gia Công Tại Nhà Máy',
+    desc: 'Cắt plasma CNC, gá đính tự động, hàn cổng tự động và phun bi làm sạch đạt độ nhám tiêu chuẩn Sa 2.5.'
+  },
+  {
+    num: '04',
+    title: 'Lắp Dựng Công Trường',
+    desc: 'Vận chuyển cấu kiện, sử dụng cẩu chuyên dụng lắp ráp chính xác từng bu lông liên kết theo bản vẽ.'
+  },
+  {
+    num: '05',
+    title: 'Nghiệm Thu & Bảo Hành',
+    desc: 'Bàn giao hồ sơ hoàn công, nghiệm thu PCCC và kích hoạt chính sách bảo hành kết cấu dài hạn 10 - 20 năm.'
+  }
+];
+
+const teamMembers = [
+  {
+    name: 'George Brian',
+    role: 'CEO / Tổng Giám Đốc',
+    exp: 'Hơn 20 năm điều hành tổng thầu xây dựng công nghiệp quốc tế.',
+    image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop'
+  },
+  {
+    name: 'Trần Quang Minh',
+    role: 'Giám Đốc Kỹ Thuật & Kết Cấu',
+    exp: 'Chuyên gia tính toán kết cấu thép khẩu độ lớn và mô hình hóa BIM.',
+    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop'
+  },
+  {
+    name: 'Lê Hoàng Nam',
+    role: 'Trưởng Ban Quản Lý Dự Án',
+    exp: 'Chỉ huy trưởng hơn 80+ công trình nhà xưởng quy mô trên 20.000m².',
+    image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=800&auto=format&fit=crop'
+  },
+  {
+    name: 'Nguyễn Thanh Tùng',
+    role: 'Trưởng Ban An Toàn Lao Động',
+    exp: 'Chứng chỉ an toàn quốc tế OSHA, quản trị rủi ro thi công cơ giới nặng.',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop'
+  }
+];
+
+const AboutPage = ({ onNavigateHome }) => {
+  return (
+    <div className="about-page">
+      {/* Tiêu đề trang sạch sẽ */}
+      <div className="about-page-title-wrap">
+        <div className="container">
+          <h1 className="section-title">About <span className="text-yellow">Us</span></h1>
+          <p className="about-page-subtitle">
+            Hơn 15 năm kiến tạo giải pháp nhà thép tiền chế và xây dựng công nghiệp bền vững, đồng hành cùng sự thịnh vượng của hàng trăm doanh nghiệp.
+          </p>
+        </div>
+      </div>
+
+      <main className="container">
+        {/* Câu chuyện & Giới thiệu chung */}
+        <section className="about-intro-section">
+          <div className="about-intro-grid">
+            <div className="about-intro-text">
+              <h2>Đối Tác Tổng Thầu Tin Cậy Của Mọi Công Trình</h2>
+              <p>
+                Được thành lập với sứ mệnh tiên phong trong lĩnh vực kết cấu thép tiền chế và tổng thầu xây dựng công nghiệp, Nguyên Phát (C&amp;A) tự hào quy tụ đội ngũ hơn 1.500 kỹ sư, kiến trúc sư và thợ lành nghề giàu kinh nghiệm.
+              </p>
+              <p>
+                Chúng tôi sở hữu nhà máy gia công cơ khí hiện đại với hệ thống máy cắt Plasma CNC, máy hàn tự động dầm H và dây chuyền cán tôn panel cách nhiệt công nghệ cao, đáp ứng mọi yêu cầu kỹ thuật khắt khe nhất từ các chủ đầu tư trong và ngoài nước.
+              </p>
+            </div>
+
+            <div className="about-intro-image-wrap">
+              <img src={aboutImage} alt="Đội ngũ Nguyên Phát thi công trên công trường" className="about-intro-image" />
+            </div>
+          </div>
+        </section>
+
+        {/* Giá trị cốt lõi */}
+        <section className="about-values-section">
+          <div className="about-values-header">
+            <h3>Giá Trị <span className="text-yellow">Cốt Lõi</span></h3>
+            <p style={{ color: 'var(--text-gray)', fontSize: '0.95rem' }}>Những nguyên tắc định hướng chất lượng trong từng mối hàn và bản vẽ</p>
+          </div>
+
+          <div className="values-grid">
+            {coreValues.map((val, idx) => (
+              <div key={idx} className="value-card">
+                <div className="value-icon">{val.icon}</div>
+                <h4 className="value-title">{val.title}</h4>
+                <p className="value-desc">{val.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Quy trình làm việc 5 bước */}
+        <section className="about-process-section">
+          <div className="about-process-header">
+            <h3>Quy Trình <span className="text-yellow">Triển Khai Chuyên Nghiệp</span></h3>
+            <p style={{ color: 'var(--text-gray)', fontSize: '0.95rem', marginTop: '6px' }}>Đồng bộ từ khâu ý tưởng, tính toán kết cấu đến bàn giao hoàn thiện</p>
+          </div>
+
+          <div className="process-steps">
+            {processSteps.map((step) => (
+              <div key={step.num} className="process-step-item">
+                <span className="step-number">{step.num}</span>
+                <h4 className="step-title">{step.title}</h4>
+                <p className="step-desc">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Đội ngũ chuyên gia */}
+        <section className="about-team-section">
+          <div className="about-team-header">
+            <h3>Đội Ngũ <span className="text-yellow">Chuyên Gia Chủ Chốt</span></h3>
+            <p style={{ color: 'var(--text-gray)', fontSize: '0.95rem', marginTop: '6px' }}>Những cá nhân dẫn dắt sự thành công của hàng trăm dự án trọng điểm</p>
+          </div>
+
+          <div className="team-grid">
+            {teamMembers.map((member, idx) => (
+              <div key={idx} className="team-card">
+                <img src={member.image} alt={member.name} className="team-card-image" loading="lazy" />
+                <div className="team-card-body">
+                  <h4 className="team-name">{member.name}</h4>
+                  <p className="team-role">{member.role}</p>
+                  <p className="team-exp">{member.exp}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Bottom CTA */}
+        <section className="about-cta-section">
+          <h3 className="about-cta-title">Sẵn Sàng Khởi Động Dự Án Của Bạn?</h3>
+          <p className="about-cta-desc">
+            Hãy liên hệ ngay với đội ngũ kỹ sư của Nguyên Phát để được tư vấn giải pháp kết cấu thép và nhận dự toán kinh phí chi tiết, chính xác nhất.
+          </p>
+          <button 
+            type="button" 
+            className="btn-primary"
+            onClick={() => onNavigateHome('#contact')}
+            style={{ padding: '14px 40px', fontSize: '1rem', cursor: 'pointer' }}
+          >
+            Liên Hệ Tư Vấn Ngay
+          </button>
+        </section>
+      </main>
+    </div>
+  );
+};
+
+export default AboutPage;

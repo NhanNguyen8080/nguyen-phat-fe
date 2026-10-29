@@ -4,6 +4,7 @@ import './Header.css';
 const Header = ({ 
   currentPage = 'home', 
   onNavigateHome, 
+  onNavigateAbout,
   onNavigateProducts,
   onNavigateProjects 
 }) => {
@@ -11,6 +12,11 @@ const Header = ({
   const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
+    if (currentPage === 'about') {
+      setActiveSection('about');
+      return;
+    }
+
     if (currentPage === 'products') {
       setActiveSection('product');
       return;
@@ -45,10 +51,14 @@ const Header = ({
   const handleNavClick = (e, targetId) => {
     e.preventDefault();
 
-    // 1. Khi đang ở trang Products
-    if (currentPage === 'products') {
-      if (targetId === '#product') {
+    // 1. Khi đang ở trang About Us
+    if (currentPage === 'about') {
+      if (targetId === '#about') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+      if (targetId === '#product' && onNavigateProducts) {
+        onNavigateProducts();
         return;
       }
       if (targetId === '#project' && onNavigateProjects) {
@@ -61,10 +71,34 @@ const Header = ({
       return;
     }
 
-    // 2. Khi đang ở trang Projects
+    // 2. Khi đang ở trang Products
+    if (currentPage === 'products') {
+      if (targetId === '#product') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+      if (targetId === '#about' && onNavigateAbout) {
+        onNavigateAbout();
+        return;
+      }
+      if (targetId === '#project' && onNavigateProjects) {
+        onNavigateProjects();
+        return;
+      }
+      if (onNavigateHome) {
+        onNavigateHome(targetId);
+      }
+      return;
+    }
+
+    // 3. Khi đang ở trang Projects
     if (currentPage === 'projects') {
       if (targetId === '#project') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+      if (targetId === '#about' && onNavigateAbout) {
+        onNavigateAbout();
         return;
       }
       if (targetId === '#product' && onNavigateProducts) {
@@ -77,7 +111,7 @@ const Header = ({
       return;
     }
 
-    // 3. Khi đang ở Trang Chủ -> cuộn mượt xuống đúng section (kể cả #product và #project)
+    // 4. Khi đang ở Trang Chủ -> cuộn mượt xuống đúng section (kể cả #about, #product, #project)
     const id = targetId.replace('#', '');
     const element = document.getElementById(id);
     if (element) {

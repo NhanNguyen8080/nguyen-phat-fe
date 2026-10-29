@@ -3,7 +3,7 @@ import './About.css';
 import aboutImage from '../../assets/about-us.png';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 
-const About = () => {
+const About = ({ onNavigateAbout }) => {
   const containerRef = useScrollReveal();
 
   return (
@@ -23,6 +23,31 @@ const About = () => {
               <span>CEO / C&amp;A</span>
             </div>
           </div>
+
+          {onNavigateAbout && (
+            <div style={{ marginTop: '24px' }}>
+              <button 
+                type="button" 
+                className="btn-primary" 
+                onClick={onNavigateAbout}
+                style={{ 
+                  padding: '12px 30px', 
+                  fontSize: '0.95rem', 
+                  display: 'inline-flex', 
+                  alignItems: 'center', 
+                  gap: '8px',
+                  borderRadius: 'var(--border-radius-lg)',
+                  cursor: 'pointer'
+                }}
+              >
+                <span>Xem thêm</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="about-center reveal-scale">

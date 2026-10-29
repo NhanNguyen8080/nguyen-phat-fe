@@ -2,7 +2,7 @@ import React from 'react';
 import './Hero.css';
 import heroImage from '../../assets/hero.png';
 
-const Hero = () => {
+const Hero = ({ onNavigateAbout }) => {
   return (
     <section className="hero" id="home">
       <div className="container hero-container">
@@ -33,8 +33,14 @@ const Hero = () => {
         </div>
 
         <div className="hero-actions">
-          <button className="btn-primary">Build</button>
-          <button className="btn-secondary">About Us</button>
+          <a href="#product" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>Build</a>
+          <button 
+            type="button" 
+            className="btn-secondary"
+            onClick={onNavigateAbout}
+          >
+            About Us
+          </button>
         </div>
 
         <div className="hero-image-wrapper">
@@ -43,23 +49,6 @@ const Hero = () => {
             alt="Construction workers on site" 
             className="hero-image"
           />
-          <div className="hero-stats-left">
-            <div className="team-avatars">
-              <div className="avatar"></div>
-              <div className="avatar"></div>
-              <div className="avatar"></div>
-            </div>
-            <span>+1,500 Team Members</span>
-          </div>
-          
-          <div className="hero-stats-right">
-            <span>Present in 4 Countries</span>
-            <div className="country-flags">
-              <div className="flag"></div>
-              <div className="flag"></div>
-              <div className="flag"></div>
-            </div>
-          </div>
         </div>
       </div>
     </section>

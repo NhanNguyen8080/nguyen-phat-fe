@@ -8,12 +8,16 @@ import Portfolio from './components/Portfolio/Portfolio';
 import Contact from './components/Contact/Contact';
 import ProductList from './components/ProductList/ProductList';
 import ProjectList from './components/ProjectList/ProjectList';
+import AboutPage from './components/AboutPage/AboutPage';
 import './App.css';
 
 function App() {
   const [currentPage, setCurrentPage] = useState(() => {
     const hash = window.location.hash;
     const path = window.location.pathname;
+    if (path === '/about' || hash === '#/about' || hash === '#about-page') {
+      return 'about';
+    }
     if (path === '/projects' || hash === '#/projects' || hash === '#projects-page') {
       return 'projects';
     }
@@ -27,7 +31,9 @@ function App() {
     const handleLocationChange = () => {
       const hash = window.location.hash;
       const path = window.location.pathname;
-      if (path === '/projects' || hash === '#/projects' || hash === '#projects-page') {
+      if (path === '/about' || hash === '#/about' || hash === '#about-page') {
+        setCurrentPage('about');
+      } else if (path === '/projects' || hash === '#/projects' || hash === '#projects-page') {
         setCurrentPage('projects');
       } else if (path === '/products' || hash === '#/products' || hash === '#products') {
         setCurrentPage('products');
@@ -43,6 +49,12 @@ function App() {
       window.removeEventListener('popstate', handleLocationChange);
     };
   }, []);
+
+  const navigateToAbout = () => {
+    window.location.hash = '#/about';
+    setCurrentPage('about');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const navigateToProducts = () => {
     window.location.hash = '#/products';
@@ -78,17 +90,20 @@ function App() {
       <Header 
         currentPage={currentPage}
         onNavigateHome={navigateToHome}
+        onNavigateAbout={navigateToAbout}
         onNavigateProducts={navigateToProducts}
         onNavigateProjects={navigateToProjects}
       />
-      {currentPage === 'products' ? (
+      {currentPage === 'about' ? (
+        <AboutPage onNavigateHome={navigateToHome} />
+      ) : currentPage === 'products' ? (
         <ProductList onNavigateHome={() => navigateToHome('#contact')} />
       ) : currentPage === 'projects' ? (
         <ProjectList onNavigateHome={() => navigateToHome('#contact')} />
       ) : (
         <main>
-          <Hero />
-          <About />
+          <Hero onNavigateAbout={navigateToAbout} />
+          <About onNavigateAbout={navigateToAbout} />
           <Services onNavigateProducts={navigateToProducts} />
           <WhyChooseUs />
           <Portfolio onNavigateProjects={navigateToProjects} />
