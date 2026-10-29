@@ -1,13 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import './Header.css';
 
-const Header = ({ currentPage = 'home', onNavigateHome, onNavigateProducts }) => {
+const Header = ({ 
+  currentPage = 'home', 
+  onNavigateHome, 
+  onNavigateProducts,
+  onNavigateProjects 
+}) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
     if (currentPage === 'products') {
       setActiveSection('product');
+      return;
+    }
+
+    if (currentPage === 'projects') {
+      setActiveSection('project');
       return;
     }
 
@@ -35,22 +45,39 @@ const Header = ({ currentPage = 'home', onNavigateHome, onNavigateProducts }) =>
   const handleNavClick = (e, targetId) => {
     e.preventDefault();
 
-    // Khi đang ở trang Product
+    // 1. Khi đang ở trang Products
     if (currentPage === 'products') {
       if (targetId === '#product') {
-        // Đang ở trang Product bấm Product -> vẫn ở trang Product (cuộn nhẹ lên đầu)
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }
-
-      // Bấm các mục khác (Home, About Us, Project, News, Contact) -> về Trang Chủ và cuộn đến mục đó
+      if (targetId === '#project' && onNavigateProjects) {
+        onNavigateProjects();
+        return;
+      }
       if (onNavigateHome) {
         onNavigateHome(targetId);
       }
       return;
     }
 
-    // Khi đang ở Trang Chủ -> cuộn mượt xuống đúng section (bao gồm cả #product)
+    // 2. Khi đang ở trang Projects
+    if (currentPage === 'projects') {
+      if (targetId === '#project') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+      if (targetId === '#product' && onNavigateProducts) {
+        onNavigateProducts();
+        return;
+      }
+      if (onNavigateHome) {
+        onNavigateHome(targetId);
+      }
+      return;
+    }
+
+    // 3. Khi đang ở Trang Chủ -> cuộn mượt xuống đúng section (kể cả #product và #project)
     const id = targetId.replace('#', '');
     const element = document.getElementById(id);
     if (element) {

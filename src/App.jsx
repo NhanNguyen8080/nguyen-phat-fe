@@ -7,12 +7,16 @@ import WhyChooseUs from './components/WhyChooseUs/WhyChooseUs';
 import Portfolio from './components/Portfolio/Portfolio';
 import Contact from './components/Contact/Contact';
 import ProductList from './components/ProductList/ProductList';
+import ProjectList from './components/ProjectList/ProjectList';
 import './App.css';
 
 function App() {
   const [currentPage, setCurrentPage] = useState(() => {
     const hash = window.location.hash;
     const path = window.location.pathname;
+    if (path === '/projects' || hash === '#/projects' || hash === '#projects-page') {
+      return 'projects';
+    }
     if (path === '/products' || hash === '#/products' || hash === '#products') {
       return 'products';
     }
@@ -23,7 +27,9 @@ function App() {
     const handleLocationChange = () => {
       const hash = window.location.hash;
       const path = window.location.pathname;
-      if (path === '/products' || hash === '#/products' || hash === '#products') {
+      if (path === '/projects' || hash === '#/projects' || hash === '#projects-page') {
+        setCurrentPage('projects');
+      } else if (path === '/products' || hash === '#/products' || hash === '#products') {
         setCurrentPage('products');
       } else {
         setCurrentPage('home');
@@ -41,6 +47,12 @@ function App() {
   const navigateToProducts = () => {
     window.location.hash = '#/products';
     setCurrentPage('products');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const navigateToProjects = () => {
+    window.location.hash = '#/projects';
+    setCurrentPage('projects');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -67,16 +79,19 @@ function App() {
         currentPage={currentPage}
         onNavigateHome={navigateToHome}
         onNavigateProducts={navigateToProducts}
+        onNavigateProjects={navigateToProjects}
       />
       {currentPage === 'products' ? (
         <ProductList onNavigateHome={() => navigateToHome('#contact')} />
+      ) : currentPage === 'projects' ? (
+        <ProjectList onNavigateHome={() => navigateToHome('#contact')} />
       ) : (
         <main>
           <Hero />
           <About />
           <Services onNavigateProducts={navigateToProducts} />
           <WhyChooseUs />
-          <Portfolio />
+          <Portfolio onNavigateProjects={navigateToProjects} />
           <Contact />
         </main>
       )}
