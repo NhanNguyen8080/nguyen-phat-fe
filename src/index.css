@@ -129,7 +129,11 @@ img {
   transition: opacity 0.75s ease, transform 0.75s ease;
 }
 
-/* When parent has is-visible, all reveal children animate in */
+/* When element or parent has is-visible, animate in */
+.reveal.is-visible,
+.reveal-left.is-visible,
+.reveal-right.is-visible,
+.reveal-scale.is-visible,
 .is-visible > .reveal,
 .is-visible > .reveal-left,
 .is-visible > .reveal-right,
