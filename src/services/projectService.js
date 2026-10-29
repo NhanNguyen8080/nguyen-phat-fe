@@ -131,3 +131,74 @@ export async function getProjects(customToken = null) {
     message: 'Đang hiển thị dữ liệu chuẩn theo cấu trúc API Nguyên Phát.'
   };
 }
+
+/**
+ * Lấy chi tiết công trình theo ID hoặc Slug
+ * @param {string} idOrSlug
+ * @param {string|null} customToken
+ * @returns {Promise<Object|null>}
+ */
+export async function getProjectById(idOrSlug, customToken = null) {
+  const token = customToken || localStorage.getItem('np_admin_token') || '';
+  
+  if (idOrSlug) {
+    try {
+      const headers = { 'Accept': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      
+      const res = await fetch(`${API_BASE_URL}/projects/${idOrSlug}`, { headers });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && (data.id || data.title)) {
+          return enrichProjectSpecs(data);
+        }
+      }
+    } catch (err) {
+      console.warn('Lỗi gọi API getProjectById:', err.message);
+    }
+  }
+
+  // Fallback tìm kiếm trong MOCK_PROJECTS theo id hoặc slug
+  const found = MOCK_PROJECTS.find(p => p.id === idOrSlug || p.slug === idOrSlug) || MOCK_PROJECTS[0];
+  return enrichProjectSpecs(found);
+}
+
+// Bổ sung thông số kỹ thuật và hình ảnh bổ trợ cho trang chi tiết công trình
+function enrichProjectSpecs(project) {
+  if (!project) return null;
+
+  const defaultGallery = [
+    project.thumbnail || "https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop",
+    "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1200&auto=format&fit=crop"
+  ];
+
+  return {
+    ...project,
+    images: project.images && project.images.length > 0 ? project.images : defaultGallery,
+    location: project.location || (project.title.includes('Bắc Ninh') || project.title.includes('Hansol') ? 'KCN Yên Phong, Bắc Ninh'
+      : project.title.includes('Long An') ? 'KCN Đức Hòa, Long An'
+      : project.title.includes('Bình Dương') ? 'KCN VSIP II, Bình Dương'
+      : project.title.includes('TP.HCM') ? 'Quận 7, TP. Hồ Chí Minh'
+      : project.title.includes('Hải Phòng') ? 'KCN Đình Vũ, Hải Phòng'
+      : project.title.includes('Đồng Nai') ? 'KCN Nhơn Trạch, Đồng Nai'
+      : project.title.includes('Đà Lạt') ? 'TP. Đà Lạt, Lâm Đồng'
+      : 'Việt Nam'),
+    area: project.area || (project.title.includes('Hansol') ? '35.000 m²'
+      : project.title.includes('Logistics') ? '28.000 m²'
+      : project.title.includes('VinaFresh') ? '18.500 m²'
+      : project.title.includes('C&A') ? '12.000 m² (7 Tầng)'
+      : project.title.includes('Phương Nam') ? '20.000 m²'
+      : project.title.includes('VinaCan') ? '16.000 m²'
+      : '15.000 m²'),
+    steelVolume: project.steelVolume || (project.title.includes('Hansol') ? '1.800 Tấn'
+      : project.title.includes('Logistics') ? '1.450 Tấn'
+      : project.title.includes('C&A') ? '980 Tấn'
+      : '1.200 Tấn'),
+    duration: project.duration || '120 Ngày',
+    investor: project.investor || 'Chủ đầu tư trong nước & FDI',
+    standards: project.standards || 'TCVN 5575:2012, ASTM A36, AWS D1.1, LEED Silver',
+    scope: project.scope || 'Thiết kế kỹ thuật, gia công kết cấu thép tại nhà máy và lắp dựng hoàn thiện trọn gói.'
+  };
+}

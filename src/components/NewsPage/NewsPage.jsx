@@ -4,7 +4,7 @@ import { getPosts } from '../../services/newsService';
 
 const ITEMS_PER_PAGE = 6;
 
-const NewsPage = ({ onNavigateHome }) => {
+const NewsPage = ({ onNavigateHome, onSelectNews }) => {
   const [allPosts, setAllPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -105,9 +105,13 @@ const NewsPage = ({ onNavigateHome }) => {
     window.scrollTo({ top: 120, behavior: 'smooth' });
   };
 
-  const openDetail = (post) => {
-    setSelectedPost(post);
-    document.body.style.overflow = 'hidden';
+  const handlePostClick = (post) => {
+    if (onSelectNews) {
+      onSelectNews(post);
+    } else {
+      setSelectedPost(post);
+      document.body.style.overflow = 'hidden';
+    }
   };
 
   const closeDetail = () => {
@@ -220,7 +224,7 @@ const NewsPage = ({ onNavigateHome }) => {
                 <article 
                   key={post.id} 
                   className="news-card"
-                  onClick={() => openDetail(post)}
+                  onClick={() => handlePostClick(post)}
                 >
                   <div className="news-thumbnail-wrap">
                     <img 

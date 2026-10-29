@@ -23,12 +23,12 @@ const Header = ({
       return;
     }
 
-    if (currentPage === 'projects') {
+    if (currentPage === 'projects' || currentPage === 'project-detail') {
       setActiveSection('project');
       return;
     }
 
-    if (currentPage === 'news') {
+    if (currentPage === 'news' || currentPage === 'news-detail') {
       setActiveSection('news');
       return;
     }
@@ -105,10 +105,14 @@ const Header = ({
       return;
     }
 
-    // 3. Khi đang ở trang Projects
-    if (currentPage === 'projects') {
+    // 3. Khi đang ở trang Projects hoặc Project Detail
+    if (currentPage === 'projects' || currentPage === 'project-detail') {
       if (targetId === '#project') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (currentPage === 'project-detail' && onNavigateProjects) {
+          onNavigateProjects();
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
         return;
       }
       if (targetId === '#about' && onNavigateAbout) {
@@ -129,10 +133,14 @@ const Header = ({
       return;
     }
 
-    // 4. Khi đang ở trang News
-    if (currentPage === 'news') {
+    // 4. Khi đang ở trang News hoặc News Detail
+    if (currentPage === 'news' || currentPage === 'news-detail') {
       if (targetId === '#news') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (currentPage === 'news-detail' && onNavigateNews) {
+          onNavigateNews();
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
         return;
       }
       if (targetId === '#about' && onNavigateAbout) {

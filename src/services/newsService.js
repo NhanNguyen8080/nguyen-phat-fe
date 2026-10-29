@@ -204,27 +204,43 @@ export async function getPosts(category = null) {
 }
 
 /**
- * Lấy chi tiết bài viết theo ID
- * @param {string} id - ID của bài viết
+ * Lấy chi tiết bài viết theo ID hoặc Slug
+ * @param {string} idOrSlug - ID hoặc Slug của bài viết
  * @returns {Promise<Object|null>}
  */
-export async function getPostById(id) {
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4500);
+export async function getPostById(idOrSlug) {
+  if (idOrSlug) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4500);
 
-    const response = await fetch(`${API_BASE_URL}/posts/${id}`, {
-      headers: { 'Accept': 'application/json' },
-      signal: controller.signal
-    });
-    clearTimeout(timeoutId);
+      const response = await fetch(`${API_BASE_URL}/posts/${idOrSlug}`, {
+        headers: { 'Accept': 'application/json' },
+        signal: controller.signal
+      });
+      clearTimeout(timeoutId);
 
-    if (response.ok) {
-      return await response.json();
+      if (response.ok) {
+        const data = await response.json();
+        if (data && (data.id || data.title)) {
+          return enrichPost(data);
+        }
+      }
+    } catch (error) {
+      console.warn(`[newsService] Fetch detail failed for id/slug ${idOrSlug}:`, error.message);
     }
-  } catch (error) {
-    console.warn(`[newsService] Fetch detail failed for id ${id}:`, error.message);
   }
 
-  return MOCK_POSTS.find(p => p.id === id) || null;
+  const found = MOCK_POSTS.find(p => p.id === idOrSlug || p.slug === idOrSlug) || MOCK_POSTS[0];
+  return enrichPost(found);
+}
+
+function enrichPost(post) {
+  if (!post) return null;
+  return {
+    ...post,
+    author: post.author || 'Ban Kỹ Thuật Nguyên Phát',
+    readTime: post.readTime || '5 phút đọc',
+    tags: post.tags || ['Kết cấu thép', 'Nhà xưởng công nghiệp', 'Nguyên Phát Steel', 'Tiêu chuẩn xây dựng']
+  };
 }

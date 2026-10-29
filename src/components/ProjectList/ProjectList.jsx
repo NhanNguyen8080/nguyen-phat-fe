@@ -4,7 +4,7 @@ import { getProjects } from '../../services/projectService';
 
 const ITEMS_PER_PAGE = 6;
 
-const ProjectList = ({ onNavigateHome }) => {
+const ProjectList = ({ onNavigateHome, onSelectProject }) => {
   const [allProjects, setAllProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -101,9 +101,13 @@ const ProjectList = ({ onNavigateHome }) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const openDetail = (project) => {
-    setSelectedProject(project);
-    document.body.style.overflow = 'hidden';
+  const handleProjectClick = (project) => {
+    if (onSelectProject) {
+      onSelectProject(project);
+    } else {
+      setSelectedProject(project);
+      document.body.style.overflow = 'hidden';
+    }
   };
 
   const closeDetail = () => {
@@ -194,7 +198,7 @@ const ProjectList = ({ onNavigateHome }) => {
                 <article key={project.id || project.slug} className="project-card">
                   <div 
                     className="project-card-thumb-wrap"
-                    onClick={() => openDetail(project)}
+                    onClick={() => handleProjectClick(project)}
                   >
                     <span className="project-card-badge">
                       {project.category_name || 'Công trình'}
@@ -210,7 +214,7 @@ const ProjectList = ({ onNavigateHome }) => {
                   <div className="project-card-body">
                     <h3 
                       className="project-card-title"
-                      onClick={() => openDetail(project)}
+                      onClick={() => handleProjectClick(project)}
                     >
                       {project.title}
                     </h3>
@@ -220,7 +224,7 @@ const ProjectList = ({ onNavigateHome }) => {
                       <button 
                         type="button" 
                         className="btn-card-detail"
-                        onClick={() => openDetail(project)}
+                        onClick={() => handleProjectClick(project)}
                       >
                         Chi tiết
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

@@ -3,7 +3,7 @@ import './News.css';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { MOCK_POSTS } from '../../services/newsService';
 
-const News = ({ onNavigateNews }) => {
+const News = ({ onNavigateNews, onSelectNews }) => {
   const headerRef = useScrollReveal();
   const gridRef = useScrollReveal({ threshold: 0.08 });
 
@@ -21,6 +21,14 @@ const News = ({ onNavigateNews }) => {
       });
     } catch {
       return isoString;
+    }
+  };
+
+  const handleCardClick = (post) => {
+    if (onSelectNews) {
+      onSelectNews(post);
+    } else if (onNavigateNews) {
+      onNavigateNews();
     }
   };
 
@@ -43,7 +51,7 @@ const News = ({ onNavigateNews }) => {
               key={post.id} 
               className="home-news-card reveal"
               style={{ transitionDelay: `${index * 0.12}s`, cursor: 'pointer' }}
-              onClick={onNavigateNews}
+              onClick={() => handleCardClick(post)}
               title="Nhấn để xem chi tiết bài viết"
             >
               <div className="home-news-thumb-wrap">
