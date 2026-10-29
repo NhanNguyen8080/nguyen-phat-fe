@@ -35,22 +35,22 @@ const Header = ({ currentPage = 'home', onNavigateHome, onNavigateProducts }) =>
   const handleNavClick = (e, targetId) => {
     e.preventDefault();
 
-    if (targetId === '#product') {
-      if (currentPage !== 'products' && onNavigateProducts) {
-        onNavigateProducts();
-      } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-      return;
-    }
-
+    // Khi đang ở trang Product
     if (currentPage === 'products') {
+      if (targetId === '#product') {
+        // Đang ở trang Product bấm Product -> vẫn ở trang Product (cuộn nhẹ lên đầu)
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      // Bấm các mục khác (Home, About Us, Project, News, Contact) -> về Trang Chủ và cuộn đến mục đó
       if (onNavigateHome) {
         onNavigateHome(targetId);
       }
       return;
     }
 
+    // Khi đang ở Trang Chủ -> cuộn mượt xuống đúng section (bao gồm cả #product)
     const id = targetId.replace('#', '');
     const element = document.getElementById(id);
     if (element) {
