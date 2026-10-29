@@ -101,10 +101,11 @@ const Services = () => {
   const trackOffset = PEEK_OFFSET + currentIndex * CARD_STEP;
 
   return (
-    <section className="services" id="services">
+    <section className="services" id="product">
+      <span id="services"></span>
       <div className="container">
         <div className="services-header" ref={headerRef}>
-          <h2 className="section-title reveal delay-1">Our <span className="text-yellow">Services</span></h2>
+          <h2 className="section-title reveal delay-1"><span className="text-yellow">Product</span></h2>
           <p className="services-subtitle reveal delay-3">
             Our organization boasts a vibrant team of over 1,500 dedicated experts, each bringing unique talents and perspectives. Together, we aim to deliver exceptional solutions tailored to our clients' diverse needs.
           </p>

@@ -30,10 +30,12 @@ const Portfolio = () => {
   const actionsRef = useScrollReveal();
 
   return (
-    <section className="portfolio" id="projects">
+    <section className="portfolio" id="project">
+      <span id="cong-trinh"></span>
+      <span id="projects"></span>
       <div className="container">
         <div className="portfolio-header" ref={headerRef}>
-          <h2 className="section-title reveal delay-1">Our <span className="text-yellow">Portfolio</span></h2>
+          <h2 className="section-title reveal delay-1"><span className="text-yellow">Công trình</span></h2>
           <p className="portfolio-subtitle reveal delay-3">We have completed over 500+ projects across USA.</p>
         </div>
 
