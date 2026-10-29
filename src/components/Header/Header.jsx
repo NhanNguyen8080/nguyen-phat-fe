@@ -3,37 +3,117 @@ import './Header.css';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
+
+      const sectionIds = ['contact', 'project', 'product', 'about', 'home'];
+      const scrollPosition = window.scrollY + 140;
+
+      for (const id of sectionIds) {
+        const element = document.getElementById(id);
+        if (element && element.offsetTop <= scrollPosition) {
+          setActiveSection(id);
+          break;
+        }
+      }
     };
 
     handleScroll();
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleNavClick = (e, targetId) => {
+    e.preventDefault();
+    const id = targetId.replace('#', '');
+    const element = document.getElementById(id);
+    if (element) {
+      const headerOffset = 85;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+      setActiveSection(id);
+      window.history.pushState(null, '', targetId);
+    }
+  };
+
   return (
     <header className={`header ${isScrolled ? 'header-scrolled' : ''}`}>
       <div className="container header-container">
-        <div className="logo">
+        <div 
+          className="logo" 
+          style={{ cursor: 'pointer' }} 
+          onClick={(e) => handleNavClick(e, '#home')}
+        >
           <span className="logo-text">C<span className="text-yellow">&amp;</span>A</span>
         </div>
         
         <nav className="nav-menu">
           <ul className="nav-list">
-            <li><a href="#home" className="nav-link active">Home</a></li>
-            <li><a href="#about" className="nav-link">About Us</a></li>
-            <li><a href="#team" className="nav-link">Team</a></li>
-            <li><a href="#projects" className="nav-link">Projects</a></li>
-            <li><a href="#blog" className="nav-link">Blog</a></li>
+            <li>
+              <a 
+                href="#home" 
+                className={`nav-link ${activeSection === 'home' ? 'active' : ''}`}
+                onClick={(e) => handleNavClick(e, '#home')}
+              >
+                Home
+              </a>
+            </li>
+            <li>
+              <a 
+                href="#about" 
+                className={`nav-link ${activeSection === 'about' ? 'active' : ''}`}
+                onClick={(e) => handleNavClick(e, '#about')}
+              >
+                About Us
+              </a>
+            </li>
+            <li>
+              <a 
+                href="#product" 
+                className={`nav-link ${activeSection === 'product' ? 'active' : ''}`}
+                onClick={(e) => handleNavClick(e, '#product')}
+              >
+                Product
+              </a>
+            </li>
+            <li>
+              <a 
+                href="#project" 
+                className={`nav-link ${activeSection === 'project' ? 'active' : ''}`}
+                onClick={(e) => handleNavClick(e, '#project')}
+              >
+                Project
+              </a>
+            </li>
+            <li>
+              <a 
+                href="#news" 
+                className={`nav-link ${activeSection === 'news' ? 'active' : ''}`}
+                onClick={(e) => handleNavClick(e, '#news')}
+              >
+                News
+              </a>
+            </li>
           </ul>
         </nav>
         
         <div className="header-actions">
-          <a href="#contact" className="btn-primary">Contact</a>
+          <a 
+            href="#contact" 
+            className="btn-primary"
+            onClick={(e) => handleNavClick(e, '#contact')}
+          >
+            Contact
+          </a>
         </div>
       </div>
     </header>
