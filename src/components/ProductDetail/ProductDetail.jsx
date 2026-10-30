@@ -31,11 +31,6 @@ const ProductDetail = ({
   const [failedImages, setFailedImages] = useState({});
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
-  // Micro-interaction states
-  const [copiedLink, setCopiedLink] = useState(false);
-  const [copiedCode, setCopiedCode] = useState(false);
-  const [copiedId, setCopiedId] = useState(false);
-
   // RFQ (Request For Quotation) Modal states
   const [isQuoteOpen, setIsQuoteOpen] = useState(false);
   const [quoteSubmitted, setQuoteSubmitted] = useState(false);
@@ -171,32 +166,6 @@ const ProductDetail = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isLightboxOpen, isQuoteOpen, handlePrevImage, handleNextImage]);
 
-  const handleCopyLink = () => {
-    if (navigator.clipboard?.writeText) {
-      navigator.clipboard.writeText(window.location.href).catch(() => {});
-    }
-    setCopiedLink(true);
-    setTimeout(() => setCopiedLink(false), 2200);
-  };
-
-  const handleCopyCode = (text) => {
-    if (!text) return;
-    if (navigator.clipboard?.writeText) {
-      navigator.clipboard.writeText(text).catch(() => {});
-    }
-    setCopiedCode(true);
-    setTimeout(() => setCopiedCode(false), 2000);
-  };
-
-  const handleCopyId = (text) => {
-    if (!text) return;
-    if (navigator.clipboard?.writeText) {
-      navigator.clipboard.writeText(text).catch(() => {});
-    }
-    setCopiedId(true);
-    setTimeout(() => setCopiedId(false), 2000);
-  };
-
   const scrollToTabs = (tabKey) => {
     if (tabKey) setActiveTab(tabKey);
     if (detailTabsRef.current) {
@@ -212,26 +181,6 @@ const ProductDetail = ({
     } else if (onNavigateBack) {
       onNavigateBack();
     }
-  };
-
-  const formatDate = (isoString) => {
-    if (!isoString) return '—';
-    try {
-      const d = new Date(isoString);
-      if (Number.isNaN(d.getTime())) return '—';
-      return d.toLocaleDateString('vi-VN', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-      });
-    } catch {
-      return '—';
-    }
-  };
-
-  const shortenId = (id) => {
-    if (!id || id.length <= 18) return id || '—';
-    return `${id.slice(0, 8)}...${id.slice(-6)}`;
   };
 
   const openQuoteModal = () => {
@@ -353,42 +302,6 @@ const ProductDetail = ({
             </nav>
           </div>
 
-          <div className="pd-subnav-right">
-            <button
-              type="button"
-              className={`pd-share-btn ${copiedLink ? 'copied' : ''}`}
-              onClick={handleCopyLink}
-              title="Sao chép đường dẫn sản phẩm"
-            >
-              {copiedLink ? (
-                <>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                  <span>Đã chép link</span>
-                </>
-              ) : (
-                <>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="18" cy="5" r="3"></circle>
-                    <circle cx="6" cy="12" r="3"></circle>
-                    <circle cx="18" cy="19" r="3"></circle>
-                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                  </svg>
-                  <span>Chia sẻ</span>
-                </>
-              )}
-            </button>
-
-            <button
-              type="button"
-              className="pd-subnav-quote-btn"
-              onClick={openQuoteModal}
-            >
-              Nhận Báo Giá
-            </button>
-          </div>
         </div>
       </div>
 
@@ -543,13 +456,6 @@ const ProductDetail = ({
                   {product.category_name}
                 </button>
               )}
-
-              {product.brand && (
-                <span className="pd-brand-badge">
-                  {product.brand}
-                </span>
-              )}
-
             </div>
 
             {/* Product Title */}
@@ -561,20 +467,6 @@ const ProductDetail = ({
               <code className="pd-code-value">
                 {product.code || 'NP-STD'}
               </code>
-              <button
-                type="button"
-                className={`pd-code-copy-btn ${copiedCode ? 'copied' : ''}`}
-                onClick={() => handleCopyCode(product.code || 'NP-STD')}
-                title="Sao chép mã hiệu sản phẩm"
-              >
-                {copiedCode ? 'Đã sao chép' : 'Sao chép mã'}
-              </button>
-
-              {product.product_type && (
-                <span className="pd-type-tag">
-                  Dòng: {product.product_type === 'manufactured' ? 'Sản xuất trực tiếp' : product.product_type}
-                </span>
-              )}
             </div>
 
             {/* 6 Hero Highlights: Thẻ thông số điện - cơ then chốt (giao diện kỹ thuật sạch sẽ) */}
@@ -624,38 +516,6 @@ const ProductDetail = ({
               >
                 Xem chi tiết mô tả kỹ thuật ↓
               </button>
-            </div>
-
-            {/* CTA Group */}
-            <div className="pd-cta-group">
-              <button
-                type="button"
-                className="btn-primary pd-btn-quote"
-                onClick={openQuoteModal}
-              >
-                <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
-                <span>Yêu Cầu Tư Vấn &amp; Báo Giá SLD</span>
-              </button>
-            </div>
-
-            {/* Quick Meta Footer */}
-            <div className="pd-quick-meta-footer">
-              <div className="pd-meta-id-line">
-                <span>Mã hệ thống:</span>
-                <code title={product.id}>{shortenId(product.id)}</code>
-                <button
-                  type="button"
-                  className={`pd-copy-id-btn ${copiedId ? 'copied' : ''}`}
-                  onClick={() => handleCopyId(product.id)}
-                >
-                  {copiedId ? '✓' : 'Copy'}
-                </button>
-              </div>
-              <div className="pd-meta-date-line">
-                Cập nhật: {formatDate(product.updated_at || product.created_at)}
-              </div>
             </div>
           </div>
         </section>
