@@ -4,10 +4,17 @@ import { getPosts } from '../../services/newsService';
 
 const ITEMS_PER_PAGE = 6;
 
+const TIME_FILTERS = [
+  { id: 'all', label: 'Tất cả thời gian' },
+  { id: '7days', label: '7 ngày gần đây', days: 7 },
+  { id: '15days', label: '15 ngày gần đây', days: 15 },
+  { id: '30days', label: '30 ngày gần đây', days: 30 },
+];
+
 const NewsPage = ({ onNavigateHome, onSelectNews }) => {
   const [allPosts, setAllPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedTimeFilter, setSelectedTimeFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const [currentPageNum, setCurrentPageNum] = useState(1);
@@ -30,24 +37,28 @@ const NewsPage = ({ onNavigateHome, onSelectNews }) => {
     };
   }, []);
 
-  // Trích xuất danh mục động từ danh sách bài viết
-  const categories = useMemo(() => {
-    const set = new Set();
-    allPosts.forEach((p) => {
-      if (p.category_name) set.add(p.category_name);
-    });
-    return ['all', ...Array.from(set)];
+  // Mốc thời gian tham chiếu để lọc theo khoảng thời gian
+  const referenceTimestamp = useMemo(() => {
+    if (!allPosts.length) return Date.now();
+    const maxItemTime = Math.max(
+      ...allPosts.map((p) => new Date(p.created_at || 0).getTime() || 0)
+    );
+    return maxItemTime > 0 ? maxItemTime : Date.now();
   }, [allPosts]);
 
-  // Lọc và sắp xếp tin tức tức thì (in-memory) không reload trang
+  // Lọc và sắp xếp tin tức theo thời gian (luôn ưu tiên mới tạo nhất đứng đầu)
   const filteredPosts = useMemo(() => {
     const term = searchTerm.toLowerCase().trim();
+    const activeFilter = TIME_FILTERS.find((f) => f.id === selectedTimeFilter);
 
     return allPosts
       .filter((p) => {
-        const matchesCategory =
-          selectedCategory === 'all' ||
-          p.category_name === selectedCategory;
+        let matchesTime = true;
+        if (activeFilter && activeFilter.days) {
+          const itemTime = new Date(p.created_at || 0).getTime();
+          const diffMs = referenceTimestamp - itemTime;
+          matchesTime = diffMs <= activeFilter.days * 24 * 60 * 60 * 1000;
+        }
 
         const matchesSearch =
           !term ||
@@ -56,24 +67,18 @@ const NewsPage = ({ onNavigateHome, onSelectNews }) => {
           (p.content && p.content.toLowerCase().includes(term)) ||
           (p.category_name && p.category_name.toLowerCase().includes(term));
 
-        return matchesCategory && matchesSearch;
+        return matchesTime && matchesSearch;
       })
       .sort((a, b) => {
-        if (sortBy === 'newest') {
-          return new Date(b.created_at || 0) - new Date(a.created_at || 0);
-        }
+        const timeA = new Date(a.created_at || 0).getTime();
+        const timeB = new Date(b.created_at || 0).getTime();
         if (sortBy === 'oldest') {
-          return new Date(a.created_at || 0) - new Date(b.created_at || 0);
+          return timeA - timeB;
         }
-        if (sortBy === 'title-asc') {
-          return (a.title || '').localeCompare(b.title || '');
-        }
-        if (sortBy === 'title-desc') {
-          return (b.title || '').localeCompare(a.title || '');
-        }
-        return 0;
+        // Mặc định luôn cho những items được tạo mới nhất đứng đầu
+        return timeB - timeA;
       });
-  }, [allPosts, selectedCategory, searchTerm, sortBy]);
+  }, [allPosts, selectedTimeFilter, referenceTimestamp, searchTerm, sortBy]);
 
   // Phân trang
   const totalPages = Math.ceil(filteredPosts.length / ITEMS_PER_PAGE) || 1;
@@ -83,9 +88,9 @@ const NewsPage = ({ onNavigateHome, onSelectNews }) => {
     return filteredPosts.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredPosts, currentPageNum]);
 
-  // Chọn danh mục: lọc tức thì, không reload, reset về trang 1
-  const handleSelectCategory = (cat) => {
-    setSelectedCategory(cat);
+  // Chọn bộ lọc thời gian: lọc tức thì, không reload, reset về trang 1
+  const handleSelectTimeFilter = (filterId) => {
+    setSelectedTimeFilter(filterId);
     setCurrentPageNum(1);
   };
 
@@ -167,25 +172,23 @@ const NewsPage = ({ onNavigateHome, onSelectNews }) => {
                 value={sortBy}
                 onChange={handleSortChange}
               >
-                <option value="newest">Mới nhất</option>
+                <option value="newest">Mới nhất (Mặc định)</option>
                 <option value="oldest">Cũ nhất</option>
-                <option value="title-asc">Tiêu đề: A - Z</option>
-                <option value="title-desc">Tiêu đề: Z - A</option>
               </select>
             </div>
           </div>
 
-          {/* Category Pills - thay đổi tức thì, không reload */}
+          {/* Time Filter Pills - lọc theo thời gian tạo */}
           <div className="category-pills">
-            {categories.map((cat) => (
+            {TIME_FILTERS.map((filter) => (
               <button
-                key={cat}
+                key={filter.id}
                 type="button"
-                className={`category-pill ${selectedCategory === cat ? 'active' : ''}`}
-                onClick={() => handleSelectCategory(cat)}
+                className={`category-pill ${selectedTimeFilter === filter.id ? 'active' : ''}`}
+                onClick={() => handleSelectTimeFilter(filter.id)}
               >
-                {cat === 'all' ? 'Tất Cả' : cat}
-                {cat === 'all' ? ` (${allPosts.length})` : ''}
+                {filter.label}
+                {filter.id === 'all' ? ` (${allPosts.length})` : ''}
               </button>
             ))}
           </div>
@@ -207,11 +210,11 @@ const NewsPage = ({ onNavigateHome, onSelectNews }) => {
               <polyline points="10 9 9 9 8 9"></polyline>
             </svg>
             <h3>Không tìm thấy bài viết phù hợp</h3>
-            <p>Vui lòng thử tìm kiếm với từ khóa khác hoặc chọn lại chuyên mục.</p>
+            <p>Vui lòng thử tìm kiếm với từ khóa khác hoặc chọn mốc thời gian khác.</p>
             <button 
               type="button"
               className="btn-primary" 
-              onClick={() => { setSelectedCategory('all'); setSearchTerm(''); }}
+              onClick={() => { setSelectedTimeFilter('all'); setSearchTerm(''); }}
             >
               Xem tất cả bài viết
             </button>

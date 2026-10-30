@@ -114,8 +114,11 @@ export async function getProjects(customToken = null) {
     if (response.ok) {
       const data = await response.json();
       if (Array.isArray(data) && data.length > 0) {
+        const sortedData = [...data].sort(
+          (a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0)
+        );
         return {
-          projects: data,
+          projects: sortedData,
           isLive: true,
           message: 'Kết nối API công trình trực tiếp thành công'
         };
@@ -125,8 +128,12 @@ export async function getProjects(customToken = null) {
     console.warn('Lỗi kết nối API projects:', err);
   }
 
+  const sortedMock = [...MOCK_PROJECTS].sort(
+    (a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0)
+  );
+
   return {
-    projects: MOCK_PROJECTS,
+    projects: sortedMock,
     isLive: false,
     message: 'Đang hiển thị dữ liệu chuẩn theo cấu trúc API Nguyên Phát.'
   };

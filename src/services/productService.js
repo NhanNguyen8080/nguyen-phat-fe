@@ -181,6 +181,8 @@ export async function getProducts(categoryId = null, customToken = null) {
 }
 
 function filterMock(categoryId) {
-  if (!categoryId || categoryId === 'all') return MOCK_PRODUCTS;
-  return MOCK_PRODUCTS.filter(p => p.category_id === categoryId || p.category_name === categoryId);
+  const list = (!categoryId || categoryId === 'all')
+    ? [...MOCK_PRODUCTS]
+    : MOCK_PRODUCTS.filter(p => p.category_id === categoryId || p.category_name === categoryId);
+  return list.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
 }

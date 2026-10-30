@@ -183,9 +183,10 @@ export async function getPosts(category = null) {
           updated_at: item.updated_at || new Date().toISOString(),
         }));
 
-        const filtered = category && category !== 'all'
+        const filtered = (category && category !== 'all'
           ? formatted.filter(p => p.category_name === category)
-          : formatted;
+          : formatted
+        ).sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
 
         return { posts: filtered, isLiveApi: true };
       }
@@ -195,10 +196,11 @@ export async function getPosts(category = null) {
     console.warn('[newsService] Live API không khả dụng hoặc yêu cầu Token, sử dụng dữ liệu chuẩn schema:', error.message);
   }
 
-  // Fallback an toàn với MOCK_POSTS
-  const filtered = category && category !== 'all'
+  // Fallback an toàn với MOCK_POSTS (luôn sắp xếp bài tạo mới nhất đứng đầu)
+  const filtered = (category && category !== 'all'
     ? MOCK_POSTS.filter(p => p.category_name === category)
-    : MOCK_POSTS;
+    : [...MOCK_POSTS]
+  ).sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
 
   return { posts: filtered, isLiveApi: false };
 }
