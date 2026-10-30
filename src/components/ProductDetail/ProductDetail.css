@@ -439,16 +439,6 @@
   border-radius: var(--border-radius-xl);
 }
 
-.pd-warranty-badge {
-  background-color: #e6f7ed;
-  color: #0d8a43;
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 4px 12px;
-  border-radius: var(--border-radius-xl);
-  border: 1px solid #a3e6be;
-}
-
 .pd-title {
   font-size: 2.25rem;
   font-weight: 800;

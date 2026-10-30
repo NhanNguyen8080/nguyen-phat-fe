@@ -4,7 +4,7 @@ import { getProducts, getCategories } from '../../services/productService';
 
 const ITEMS_PER_PAGE = 6;
 
-const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' }) => {
+const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initialCategory = 'all' }) => {
   const [allProducts, setAllProducts] = useState([]);
   const [parentCategories, setParentCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -304,12 +304,14 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
           <>
             <div className="products-grid">
               {paginatedProducts.map((product) => (
-                <article key={product.id || product.slug} className="product-card">
+                <article 
+                  key={product.id || product.slug} 
+                  className="product-card"
+                  onClick={() => openDetail(product)}
+                  style={{ cursor: 'pointer' }}
+                >
                   {/* Thumbnail & Badges */}
-                  <div 
-                    className="product-card-thumb-wrap"
-                    onClick={() => openDetail(product)}
-                  >
+                  <div className="product-card-thumb-wrap">
                     <div className="product-card-top-badges">
                       <span className="product-card-badge">
                         {product.category_name || 'Tủ điện'}
@@ -325,12 +327,6 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
                         e.target.src = 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=800&auto=format&fit=crop';
                       }}
                     />
-
-                    {product.warranty_months && (
-                      <span className="product-warranty-badge">
-                        Bảo hành {product.warranty_months}T
-                      </span>
-                    )}
                   </div>
 
                   {/* Body Content */}
@@ -348,32 +344,31 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
                     {/* Tên sản phẩm */}
                     <h3 
                       className="product-card-title"
-                      onClick={() => openDetail(product)}
                       title={product.name}
                     >
                       {product.name}
                     </h3>
 
-                    {/* Quick Specs Chips trích xuất đúng trường API */}
+                    {/* Quick Specs Chips: Bỏ icon, hiển thị thông số tinh gọn */}
                     <div className="product-card-specs-row">
                       {product.rated_voltage && (
                         <span className="spec-pill" title="Điện áp định mức">
-                          ⚡ {product.rated_voltage}
+                          {product.rated_voltage}
                         </span>
                       )}
                       {product.rated_current && (
                         <span className="spec-pill" title="Dòng điện định mức">
-                          🔌 {product.rated_current}
+                          {product.rated_current}
                         </span>
                       )}
                       {product.ip_rating && (
                         <span className="spec-pill" title="Cấp bảo vệ">
-                          🛡️ {product.ip_rating}
+                          {product.ip_rating}
                         </span>
                       )}
                       {product.standards && (
                         <span className="spec-pill" title="Tiêu chuẩn sản xuất">
-                          📋 {product.standards.split(',')[0]}
+                          {product.standards.split(',')[0]}
                         </span>
                       )}
                     </div>
@@ -381,27 +376,6 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
                     <p className="product-card-desc">
                       {stripHtml(product.description) || 'Thiết bị cơ điện chất lượng cao sản xuất theo tiêu chuẩn quốc tế IEC.'}
                     </p>
-
-                    {/* Footer Actions */}
-                    <div className="product-card-footer">
-                      <button 
-                        type="button" 
-                        className="btn-card-detail"
-                        onClick={() => openDetail(product)}
-                      >
-                        Chi tiết kỹ thuật
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                      </button>
-                      <button 
-                        type="button" 
-                        className="btn-card-quote"
-                        onClick={onNavigateHome}
-                      >
-                        Báo giá
-                      </button>
-                    </div>
                   </div>
                 </article>
               ))}

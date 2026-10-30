@@ -585,11 +585,6 @@ const ProductDetail = ({
                 </span>
               )}
 
-              {product.warranty_months && (
-                <span className="pd-warranty-badge">
-                  Bảo hành {product.warranty_months} Tháng
-                </span>
-              )}
             </div>
 
             {/* Product Title */}
