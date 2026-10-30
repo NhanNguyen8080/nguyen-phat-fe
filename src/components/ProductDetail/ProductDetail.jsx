@@ -539,7 +539,13 @@ const ProductDetail = ({
                 </>
               ) : (
                 <div className="pd-no-image-stage">
-                  <div className="pd-no-image-icon">⚡</div>
+                  <div className="pd-no-image-icon">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                      <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                  </div>
                   <span>Hình ảnh tủ điện đang được cập nhật</span>
                 </div>
               )}
@@ -547,15 +553,12 @@ const ProductDetail = ({
               {/* Cam kết kỹ thuật mini dưới Gallery */}
               <div className="pd-gallery-trust-strip">
                 <div className="pd-trust-item">
-                  <span className="pd-trust-icon">✓</span>
                   <span>100% Type-tested IEC</span>
                 </div>
                 <div className="pd-trust-item">
-                  <span className="pd-trust-icon">✓</span>
                   <span>Đồng mạ thiếc 99.99%</span>
                 </div>
                 <div className="pd-trust-item">
-                  <span className="pd-trust-icon">✓</span>
                   <span>CO/CQ chính hãng</span>
                 </div>
               </div>
@@ -582,15 +585,9 @@ const ProductDetail = ({
                 </span>
               )}
 
-              {product.is_featured && (
-                <span className="pd-featured-badge">
-                  ★ Sản phẩm nổi bật
-                </span>
-              )}
-
               {product.warranty_months && (
                 <span className="pd-warranty-badge">
-                  🛡️ Bảo hành {product.warranty_months} Tháng
+                  Bảo hành {product.warranty_months} Tháng
                 </span>
               )}
             </div>
@@ -610,7 +607,7 @@ const ProductDetail = ({
                 onClick={() => handleCopyCode(product.code || 'NP-STD')}
                 title="Sao chép mã hiệu sản phẩm"
               >
-                {copiedCode ? 'Đã sao chép ✓' : 'Sao chép mã'}
+                {copiedCode ? 'Đã sao chép' : 'Sao chép mã'}
               </button>
 
               {product.product_type && (
@@ -620,40 +617,34 @@ const ProductDetail = ({
               )}
             </div>
 
-            {/* 6 Hero Highlights: Thẻ thông số điện - cơ then chốt */}
+            {/* 6 Hero Highlights: Thẻ thông số điện - cơ then chốt (giao diện kỹ thuật sạch sẽ) */}
             <div className="pd-hero-specs-grid">
               <div className="pd-hero-spec-card">
-                <span className="pd-spec-icon">⚡</span>
                 <span className="pd-spec-name">Điện áp định mức</span>
                 <span className="pd-spec-val">{product.rated_voltage || '380V - 415V AC'}</span>
               </div>
 
               <div className="pd-hero-spec-card highlight">
-                <span className="pd-spec-icon">🔌</span>
                 <span className="pd-spec-name">Dòng điện định mức</span>
                 <span className="pd-spec-val">{product.rated_current || 'Theo yêu cầu thiết kế'}</span>
               </div>
 
               <div className="pd-hero-spec-card">
-                <span className="pd-spec-icon">🛡️</span>
                 <span className="pd-spec-name">Cấp bảo vệ vỏ tủ</span>
                 <span className="pd-spec-val">{product.ip_rating || 'IP43 / IP54'}</span>
               </div>
 
               <div className="pd-hero-spec-card">
-                <span className="pd-spec-icon">💥</span>
                 <span className="pd-spec-name">Dòng cắt ngắn mạch</span>
                 <span className="pd-spec-val">{product.short_circuit_current || 'Theo thiết kế (kA)'}</span>
               </div>
 
               <div className="pd-hero-spec-card">
-                <span className="pd-spec-icon">📜</span>
                 <span className="pd-spec-name">Tiêu chuẩn sản xuất</span>
                 <span className="pd-spec-val">{product.standards || 'IEC 61439-1/2'}</span>
               </div>
 
               <div className="pd-hero-spec-card">
-                <span className="pd-spec-icon">⏱️</span>
                 <span className="pd-spec-name">Tần số làm việc</span>
                 <span className="pd-spec-val">{product.frequency || '50Hz / 60Hz'}</span>
               </div>
@@ -735,8 +726,7 @@ const ProductDetail = ({
               role="tab"
               aria-selected={activeTab === 'specs'}
             >
-              <span className="pd-tab-icon">📊</span>
-              <span>Thông Số Kỹ Thuật Toàn Diện</span>
+              <span>Thông Số Kỹ Thuật</span>
             </button>
 
             <button
@@ -746,8 +736,7 @@ const ProductDetail = ({
               role="tab"
               aria-selected={activeTab === 'desc'}
             >
-              <span className="pd-tab-icon">📝</span>
-              <span>Mô Tả &amp; Tính Năng Nổi Bật</span>
+              <span>Mô Tả &amp; Tính Năng</span>
             </button>
 
             <button
@@ -757,7 +746,6 @@ const ProductDetail = ({
               role="tab"
               aria-selected={activeTab === 'gallery'}
             >
-              <span className="pd-tab-icon">🖼️</span>
               <span>Hình Ảnh Thực Tế ({galleryImages.length})</span>
             </button>
 
@@ -768,7 +756,6 @@ const ProductDetail = ({
               role="tab"
               aria-selected={activeTab === 'docs'}
             >
-              <span className="pd-tab-icon">📑</span>
               <span>Tài Liệu &amp; Bản Vẽ ({documentsList.length})</span>
             </button>
           </div>
@@ -784,7 +771,6 @@ const ProductDetail = ({
                   {/* Nhóm 1: Hệ thống Điện Khí & Vận Hành */}
                   <div className="pd-specs-group-card">
                     <div className="pd-specs-group-head">
-                      <span className="pd-group-icon">⚡</span>
                       <h3>1. Thông Số Điện Khí &amp; Vận Hành</h3>
                     </div>
                     <table className="pd-specs-table">
@@ -822,7 +808,6 @@ const ProductDetail = ({
                   {/* Nhóm 2: Cơ Khí & Quy Cách Vỏ Tủ */}
                   <div className="pd-specs-group-card">
                     <div className="pd-specs-group-head">
-                      <span className="pd-group-icon">📐</span>
                       <h3>2. Quy Cách Cơ Khí &amp; Vỏ Tủ</h3>
                     </div>
                     <table className="pd-specs-table">
@@ -836,7 +821,7 @@ const ProductDetail = ({
                           <td>{product.material || 'Thép cán nguội tiêu chuẩn JIS / Inox 304 theo yêu cầu'}</td>
                         </tr>
                         <tr>
-                          <th>Độ dày tôn vỏ tủ (Thickness)</th>
+                          <th>Đ度 dày tôn vỏ tủ (Thickness)</th>
                           <td>{product.thickness || '1.5mm - 2.0mm - 2.5mm'}</td>
                         </tr>
                         <tr>
@@ -854,7 +839,6 @@ const ProductDetail = ({
                   {/* Nhóm 3: Thiết Bị Chính & Cấu Hình Đóng Cắt */}
                   <div className="pd-specs-group-card">
                     <div className="pd-specs-group-head">
-                      <span className="pd-group-icon">⚙️</span>
                       <h3>3. Cấu Hình Thiết Bị Đóng Cắt &amp; Linh Kiện</h3>
                     </div>
                     <table className="pd-specs-table">
@@ -883,7 +867,6 @@ const ProductDetail = ({
                   {product.specifications && Object.keys(product.specifications).length > 0 && (
                     <div className="pd-specs-group-card">
                       <div className="pd-specs-group-head">
-                        <span className="pd-group-icon">📋</span>
                         <h3>4. Thông Số Bổ Sung &amp; Tiêu Chuẩn Dự Án</h3>
                       </div>
                       <table className="pd-specs-table">
@@ -941,19 +924,16 @@ const ProductDetail = ({
                 {/* Cam kết chất lượng Nguyên Phát */}
                 <div className="pd-quality-commitments-grid">
                   <div className="pd-commitment-card">
-                    <div className="pd-commit-icon">🏆</div>
                     <h4>Đạt Chuẩn Quốc Tế IEC</h4>
                     <p>Toàn bộ sản phẩm xuất xưởng tuân thủ nghiêm ngặt IEC 61439-1/2, đảm bảo khả năng chịu dòng ngắn mạch và độ tăng nhiệt an toàn.</p>
                   </div>
 
                   <div className="pd-commitment-card">
-                    <div className="pd-commit-icon">⚙️</div>
                     <h4>Gia Công CNC Chính Xác</h4>
                     <p>Vỏ tủ sản xuất trên dây chuyền đột dập và chấn bẻ CNC tự động, sơn tĩnh điện ngoài trời chống ăn mòn hóa chất và hơi muối biển.</p>
                   </div>
 
                   <div className="pd-commitment-card">
-                    <div className="pd-commit-icon">🤝</div>
                     <h4>Hỗ Trợ Kỹ Thuật Tận Nơi</h4>
                     <p>Đội ngũ kỹ sư Cơ Điện Nguyên Phát đồng hành tư vấn, giám sát lắp đặt, đấu nối và nghiệm thu đóng điện cùng chủ đầu tư.</p>
                   </div>
@@ -1043,7 +1023,7 @@ const ProductDetail = ({
                                 <span className="pd-bento-tag">{meta.tag}</span>
                               </div>
                               <div className="pd-bento-bottom-info">
-                                <span className="pd-bento-zoom-icon">🔍</span>
+                                <span className="pd-bento-zoom-pill">Chi tiết</span>
                               </div>
                             </div>
                           </div>
@@ -1080,9 +1060,6 @@ const ProductDetail = ({
                 <div className="pd-docs-list">
                   {documentsList.map((doc, idx) => (
                     <div key={idx} className="pd-doc-card">
-                      <div className="pd-doc-icon-wrap">
-                        <span className="pd-doc-icon">📄</span>
-                      </div>
                       <div className="pd-doc-info">
                         <h4 className="pd-doc-title">{doc.title || `Tài liệu kỹ thuật ${idx + 1}`}</h4>
                         <div className="pd-doc-meta">
@@ -1118,7 +1095,6 @@ const ProductDetail = ({
 
                 {/* Box Yêu cầu bản vẽ CAD / DWG */}
                 <div className="pd-docs-custom-cad-box">
-                  <div className="pd-cad-icon">📐</div>
                   <div>
                     <h4>Cần file bản vẽ AutoCAD (.dwg) hoặc mô hình Revit (.rfa)?</h4>
                     <p>Hãy gửi mã tủ <strong>{product.code || product.name}</strong> cho chúng tôi để nhận thư viện CAD 2D/3D chính xác theo thông số thiết kế của bạn.</p>
@@ -1179,7 +1155,13 @@ const ProductDetail = ({
                         onError={() => handleImageError(rel.thumbnail)}
                       />
                     ) : (
-                      <div className="pd-related-no-thumb">⚡</div>
+                      <div className="pd-related-no-thumb">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+                          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                          <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                          <polyline points="21 15 16 10 5 21"></polyline>
+                        </svg>
+                      </div>
                     )}
                   </div>
                   <div className="pd-related-body">

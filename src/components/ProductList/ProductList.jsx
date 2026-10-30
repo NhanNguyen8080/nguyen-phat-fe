@@ -10,7 +10,6 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
   const [loading, setLoading] = useState(true);
   const [isLiveApi, setIsLiveApi] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(initialCategory || 'all');
-  const [onlyFeatured, setOnlyFeatured] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const [currentPageNum, setCurrentPageNum] = useState(1);
@@ -82,9 +81,6 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
           p.category_name === selectedCategory ||
           p.category_id === selectedCategory;
 
-        // Lọc sản phẩm nổi bật
-        const matchesFeatured = !onlyFeatured || Boolean(p.is_featured);
-
         // Tìm kiếm theo tên, mã code, danh mục, tiêu chuẩn, thương hiệu
         const matchesSearch =
           !term ||
@@ -95,14 +91,9 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
           (p.category_name && p.category_name.toLowerCase().includes(term)) ||
           (p.description && p.description.toLowerCase().includes(term));
 
-        return matchesCategory && matchesFeatured && matchesSearch;
+        return matchesCategory && matchesSearch;
       })
       .sort((a, b) => {
-        if (sortBy === 'featured') {
-          if (a.is_featured && !b.is_featured) return -1;
-          if (!a.is_featured && b.is_featured) return 1;
-          return new Date(b.created_at || 0) - new Date(a.created_at || 0);
-        }
         if (sortBy === 'code-asc') {
           return (a.code || '').localeCompare(b.code || '');
         }
@@ -115,7 +106,7 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
         // Mặc định: Mới nhất
         return new Date(b.created_at || 0) - new Date(a.created_at || 0);
       });
-  }, [allProducts, selectedCategory, onlyFeatured, searchTerm, sortBy]);
+  }, [allProducts, selectedCategory, searchTerm, sortBy]);
 
   // Phân trang
   const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE) || 1;
@@ -227,25 +218,12 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
             </div>
 
             <div className="product-controls-right">
-              {/* Nút lọc sản phẩm nổi bật is_featured */}
-              <button
-                type="button"
-                className={`featured-toggle-btn ${onlyFeatured ? 'active' : ''}`}
-                onClick={() => {
-                  setOnlyFeatured(!onlyFeatured);
-                  setCurrentPageNum(1);
-                }}
-              >
-                <span>★ Nổi bật</span>
-              </button>
-
               <select 
                 className="sort-select"
                 value={sortBy}
                 onChange={handleSortChange}
               >
                 <option value="newest">Mới cập nhật</option>
-                <option value="featured">Ưu tiên nổi bật</option>
                 <option value="code-asc">Mã sản phẩm: A - Z</option>
                 <option value="name-asc">Tên: A - Z</option>
                 <option value="name-desc">Tên: Z - A</option>
@@ -286,7 +264,6 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
             Hiển thị <strong>{filteredProducts.length}</strong> sản phẩm
             {totalPages > 1 && ` (Trang ${currentPageNum}/${totalPages})`}
             {searchTerm && ` cho từ khóa "${searchTerm}"`}
-            {onlyFeatured && ` [Chỉ sản phẩm nổi bật]`}
           </span>
         </div>
 
@@ -307,7 +284,6 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
           </div>
         ) : filteredProducts.length === 0 ? (
           <div className="product-empty">
-            <div className="product-empty-icon">⚡</div>
             <h3 className="product-empty-title">Không tìm thấy sản phẩm phù hợp</h3>
             <p className="product-empty-desc">
               Vui lòng thử tìm với từ khóa khác (ví dụ: MSB, ATS, 3200A, IEC...) hoặc đặt lại bộ lọc danh mục.
@@ -319,7 +295,6 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
               onClick={() => {
                 setSearchTerm('');
                 setSelectedCategory('all');
-                setOnlyFeatured(false);
               }}
             >
               Đặt lại tất cả bộ lọc
@@ -339,11 +314,6 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
                       <span className="product-card-badge">
                         {product.category_name || 'Tủ điện'}
                       </span>
-                      {product.is_featured && (
-                        <span className="product-featured-star-badge" title="Sản phẩm tiêu biểu">
-                          ★ Nổi bật
-                        </span>
-                      )}
                     </div>
 
                     <img 
