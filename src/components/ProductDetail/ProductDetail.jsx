@@ -2,6 +2,15 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import './ProductDetail.css';
 import { getProductDetailData } from '../../services/productService';
 
+const IMAGE_VIEW_META = [
+  { tag: 'Phối cảnh toàn diện', desc: 'Kiến trúc & kết cấu tổng quan' },
+  { tag: 'Cận cảnh cấu kiện', desc: 'Độ tinh xảo mối hàn & liên kết' },
+  { tag: 'Gia công tại nhà máy', desc: 'Dây chuyền sản xuất cơ khí CNC' },
+  { tag: 'Lắp dựng thực tế', desc: 'Thi công cẩu lắp tại công trường' },
+  { tag: 'Nghiệm thu hoàn thiện', desc: 'Bàn giao công trình chuẩn quốc tế' },
+  { tag: 'Chi tiết kỹ thuật', desc: 'Góc chụp kỹ thuật chuyên sâu' }
+];
+
 const ProductDetail = ({
   productIdOrSlug,
   onNavigateBack,
@@ -418,13 +427,16 @@ const ProductDetail = ({
                     />
 
                     <div className="pd-stage-top-bar">
-                      {galleryImages.length > 1 ? (
-                        <span className="pd-stage-counter">
-                          {safeImageIndex + 1} / {galleryImages.length}
+                      <div className="pd-stage-badge-group">
+                        <span className="pd-stage-perspective-tag">
+                          {IMAGE_VIEW_META[safeImageIndex % IMAGE_VIEW_META.length].tag}
                         </span>
-                      ) : (
-                        <span />
-                      )}
+                        {galleryImages.length > 1 && (
+                          <span className="pd-stage-counter">
+                            {safeImageIndex + 1} / {galleryImages.length}
+                          </span>
+                        )}
+                      </div>
 
                       <span className="pd-zoom-hint">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -682,46 +694,176 @@ const ProductDetail = ({
               )}
             </div>
 
-            {/* Chỉ hiển thị Lưới Hình ảnh chi tiết khi API trả về nhiều hơn 1 hình ảnh */}
-            {galleryImages.length > 1 && (
-              <div className="pd-content-card">
-                <div className="pd-gallery-section-head">
-                  <h2 className="pd-section-heading" style={{ marginBottom: 0 }}>
-                    Hình Ảnh Sản Phẩm ({galleryImages.length})
-                  </h2>
-                  <span className="pd-gallery-hint-text">Nhấn vào ảnh để xem kích thước lớn</span>
+            {/* Bộ sưu tập Những hình ảnh khác của sản phẩm */}
+            <div className="pd-content-card pd-gallery-showcase-box">
+              <div className="pd-gallery-section-head">
+                <div>
+                  <div className="pd-gallery-title-row">
+                    <h2 className="pd-section-heading" style={{ marginBottom: 0 }}>
+                      Những Hình Ảnh Khác Của Sản Phẩm
+                    </h2>
+                    {galleryImages.length > 0 && (
+                      <span className="pd-gallery-count-chip">
+                        {galleryImages.length} Góc chụp chi tiết
+                      </span>
+                    )}
+                  </div>
+                  <p className="pd-gallery-desc-text">
+                    Khám phá chi tiết cấu kiện, công đoạn gia công cơ khí chính xác tại nhà xưởng đến quy trình lắp dựng hoàn thiện thực tế tại công trường.
+                  </p>
                 </div>
 
-                <div className="pd-images-showcase-grid">
-                  {galleryImages.map((imgUrl, idx) => (
-                    <div
-                      key={imgUrl + idx}
-                      className="pd-showcase-img-card"
-                      onClick={() => {
-                        setActiveImageIndex(idx);
-                        setIsLightboxOpen(true);
-                      }}
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          setActiveImageIndex(idx);
-                          setIsLightboxOpen(true);
-                        }
-                      }}
-                    >
-                      <img
-                        src={imgUrl}
-                        alt={`${product.name} - hình ${idx + 1}`}
-                        loading="lazy"
-                        onError={() => handleImageError(imgUrl)}
-                      />
-                    </div>
-                  ))}
-                </div>
+                {galleryImages.length > 0 && (
+                  <button
+                    type="button"
+                    className="pd-slideshow-trigger-btn"
+                    onClick={() => setIsLightboxOpen(true)}
+                    title="Mở chế độ trình chiếu toàn màn hình"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+                      <line x1="7" y1="2" x2="7" y2="22"></line>
+                      <line x1="17" y1="2" x2="17" y2="22"></line>
+                      <line x1="2" y1="12" x2="22" y2="12"></line>
+                    </svg>
+                    <span>Xem Trình Chiếu</span>
+                  </button>
+                )}
               </div>
-            )}
+
+              {galleryImages.length > 1 ? (
+                <div className="pd-bento-gallery">
+                  {/* Ảnh tiêu biểu nổi bật (Hero Showcase) */}
+                  <div
+                    className="pd-bento-item pd-bento-featured"
+                    onClick={() => {
+                      setActiveImageIndex(0);
+                      setIsLightboxOpen(true);
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setActiveImageIndex(0);
+                        setIsLightboxOpen(true);
+                      }
+                    }}
+                  >
+                    <img
+                      src={galleryImages[0]}
+                      alt={`${product.name} - ${IMAGE_VIEW_META[0].tag}`}
+                      loading="lazy"
+                      onError={() => handleImageError(galleryImages[0])}
+                    />
+                    <div className="pd-bento-overlay">
+                      <div className="pd-bento-badges">
+                        <span className="pd-bento-num">01</span>
+                        <span className="pd-bento-tag">{IMAGE_VIEW_META[0].tag}</span>
+                      </div>
+                      <div className="pd-bento-bottom-info">
+                        <p className="pd-bento-caption">{IMAGE_VIEW_META[0].desc}</p>
+                        <span className="pd-bento-zoom-pill">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            <line x1="11" y1="8" x2="11" y2="14"></line>
+                            <line x1="8" y1="11" x2="14" y2="11"></line>
+                          </svg>
+                          Phóng to chi tiết
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Lưới các ảnh góc nhìn khác */}
+                  <div className="pd-bento-subgrid">
+                    {galleryImages.slice(1).map((imgUrl, idx) => {
+                      const imageIndex = idx + 1;
+                      const meta = IMAGE_VIEW_META[imageIndex % IMAGE_VIEW_META.length];
+                      return (
+                        <div
+                          key={imgUrl + idx}
+                          className="pd-bento-item pd-bento-regular"
+                          onClick={() => {
+                            setActiveImageIndex(imageIndex);
+                            setIsLightboxOpen(true);
+                          }}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              setActiveImageIndex(imageIndex);
+                              setIsLightboxOpen(true);
+                            }
+                          }}
+                        >
+                          <img
+                            src={imgUrl}
+                            alt={`${product.name} - ${meta.tag}`}
+                            loading="lazy"
+                            onError={() => handleImageError(imgUrl)}
+                          />
+                          <div className="pd-bento-overlay">
+                            <div className="pd-bento-badges">
+                              <span className="pd-bento-num">0{imageIndex + 1}</span>
+                              <span className="pd-bento-tag">{meta.tag}</span>
+                            </div>
+                            <div className="pd-bento-bottom-info">
+                              <span className="pd-bento-zoom-icon" title="Xem chi tiết">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+                                  <circle cx="11" cy="11" r="8"></circle>
+                                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : galleryImages.length === 1 ? (
+                /* Khi sản phẩm có 1 ảnh: Thiết kế khung ảnh thực tế kết hợp sơ đồ kỹ thuật */
+                <div className="pd-single-image-gallery">
+                  <div
+                    className="pd-single-hero-card"
+                    onClick={() => setIsLightboxOpen(true)}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    <img src={galleryImages[0]} alt={product.name} />
+                    <div className="pd-single-overlay">
+                      <span className="pd-single-badge">Ảnh thực tế chính thức</span>
+                      <span className="pd-single-zoom">Nhấn để xem kích thước lớn ↗</span>
+                    </div>
+                  </div>
+                  <div className="pd-single-subcards">
+                    <div className="pd-diagram-card">
+                      <div className="pd-diagram-icon">📐</div>
+                      <h4>Bản Vẽ Gia Công Cơ Khí (Shop Drawing)</h4>
+                      <p>Mô phỏng 3D Tekla và bản vẽ gia công kích thước hình học chính xác từng liên kết bu lông, mối hàn.</p>
+                      <button type="button" className="pd-diagram-btn" onClick={openQuoteModal}>
+                        Yêu cầu gửi bản vẽ mẫu
+                      </button>
+                    </div>
+                    <div className="pd-diagram-card">
+                      <div className="pd-diagram-icon">🏗️</div>
+                      <h4>Hình Ảnh Thực Tế Tại Công Trường</h4>
+                      <p>Đội ngũ kỹ thuật Nguyên Phát đang tiếp tục bổ sung tư liệu hình ảnh nghiệm thu công trình thực tế.</p>
+                      <button type="button" className="pd-diagram-btn" onClick={openQuoteModal}>
+                        Xem hồ sơ năng lực dự án
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="pd-gallery-empty-state">
+                  <p>Bộ sưu tập hình ảnh cho sản phẩm này đang được ban kỹ thuật số hóa và cập nhật.</p>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Cột bên: Thẻ hỗ trợ tư vấn nhanh */}
@@ -855,18 +997,27 @@ const ProductDetail = ({
           aria-label="Xem ảnh kích thước lớn"
         >
           <div className="pd-lightbox-topbar" onClick={(e) => e.stopPropagation()}>
-            <span className="pd-lightbox-caption">
-              {product.name}
-              {galleryImages.length > 1 && ` (${safeImageIndex + 1}/${galleryImages.length})`}
-            </span>
-            <button
-              type="button"
-              className="pd-lightbox-close"
-              onClick={() => setIsLightboxOpen(false)}
-              aria-label="Đóng"
-            >
-              ✕
-            </button>
+            <div className="pd-lightbox-title-box">
+              <span className="pd-lightbox-caption">{product.name}</span>
+              <span className="pd-lightbox-tag">
+                {IMAGE_VIEW_META[safeImageIndex % IMAGE_VIEW_META.length].tag}
+              </span>
+            </div>
+            <div className="pd-lightbox-top-right">
+              {galleryImages.length > 1 && (
+                <span className="pd-lightbox-counter">
+                  {safeImageIndex + 1} / {galleryImages.length}
+                </span>
+              )}
+              <button
+                type="button"
+                className="pd-lightbox-close"
+                onClick={() => setIsLightboxOpen(false)}
+                aria-label="Đóng"
+              >
+                ✕
+              </button>
+            </div>
           </div>
 
           <div className="pd-lightbox-stage" onClick={(e) => e.stopPropagation()}>

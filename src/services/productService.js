@@ -32,10 +32,13 @@ export const MOCK_PRODUCTS = [
     category_id: "3fa85f64-5717-4562-b3fc-2c963f66afa1",
     category_name: "Kết Cấu Thép",
     description: "Giải pháp nhà xưởng khung thép tiền chế nhịp lớn vượt khẩu độ 40m - 60m không cột giữa. Thiết kế tối ưu tải trọng, thời gian lắp dựng nhanh gấp 2 lần xây dựng truyền thống, độ bền trên 50 năm.\n\n- Tối ưu không gian vận hành dây chuyền sản xuất và kho vận.\n- Gia công đồng bộ từ phôi thép cường độ cao trên dây chuyền CNC tự động.\n- Kiểm soát chất lượng mối hàn và lớp sơn bảo vệ nghiêm ngặt trước khi xuất xưởng.",
-    thumbnail: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=1000&auto=format&fit=crop",
+    thumbnail: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=1200&auto=format&fit=crop",
     images: [
       "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1200&auto=format&fit=crop"
     ],
     created_at: "2026-10-15T08:30:00.000Z",
     updated_at: "2026-10-25T14:20:00.000Z"
@@ -46,10 +49,13 @@ export const MOCK_PRODUCTS = [
     slug: "khung-keo-thep-to-hop-chu-i",
     category_id: "3fa85f64-5717-4562-b3fc-2c963f66afa1",
     category_name: "Kết Cấu Thép",
-    description: "Chế tạo từ phôi thép tấm chất lượng cao SS400, Q345B cắt tự động trên dây chuyền Plasma CNC. Mối hàn tự động dưới lớp thuốc hàn đạt chuẩn siêu âm kiểm định độ kín khít, chịu lực gió bão cấp 12.",
-    thumbnail: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1000&auto=format&fit=crop",
+    description: "Chế tạo từ phôi thép tấm chất lượng cao SS400, Q345B cắt tự động trên dây chuyền Plasma CNC. Mối hàn tự động dưới lớp thuốc hàn đạt chuẩn siêu âm kiểm định độ kín khít, chịu lực gió bão cấp 12.\n\n- Độ chính xác gia công dầm kèo tổ hợp đạt tiêu chuẩn quốc tế ASTM A36 / AWS D1.1.\n- Xử lý bề mặt phun bi chuẩn Sa 2.5 tăng khả năng bám dính lớp sơn bảo vệ kháng ăn mòn.",
+    thumbnail: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1200&auto=format&fit=crop",
     images: [
-      "https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=1200&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=1200&auto=format&fit=crop"
     ],
     created_at: "2026-10-18T09:15:00.000Z",
     updated_at: "2026-10-26T11:00:00.000Z"
@@ -60,10 +66,13 @@ export const MOCK_PRODUCTS = [
     slug: "tam-panel-sandwich-pu-cach-nhiet",
     category_id: "3fa85f64-5717-4562-b3fc-2c963f66afa2",
     category_name: "Vật Liệu Cách Nhiệt",
-    description: "Lõi Polyurethane tỷ trọng cao 40-42 kg/m³, bề mặt tôn mạ hợp kim nhôm kẽm kháng khuẩn, cách âm và cách nhiệt vượt trội cho phòng sạch, kho lạnh và nhà máy thực phẩm.",
-    thumbnail: "https://images.unsplash.com/photo-1632759145351-1d592919f522?q=80&w=1000&auto=format&fit=crop",
+    description: "Lõi Polyurethane tỷ trọng cao 40-42 kg/m³, bề mặt tôn mạ hợp kim nhôm kẽm kháng khuẩn, cách âm và cách nhiệt vượt trội cho phòng sạch, kho lạnh và nhà máy thực phẩm.\n\n- Giảm truyền nhiệt tới 45%, tiết kiệm tối đa năng lượng điều hòa làm mát xưởng.\n- Khóa ngàm âm dương chống dột, thi công lắp ráp tường vách và trần nhanh chóng.",
+    thumbnail: "https://images.unsplash.com/photo-1632759145351-1d592919f522?q=80&w=1200&auto=format&fit=crop",
     images: [
-      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1200&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop"
     ],
     created_at: "2026-10-19T10:45:00.000Z",
     updated_at: "2026-10-27T08:10:00.000Z"
@@ -74,10 +83,13 @@ export const MOCK_PRODUCTS = [
     slug: "san-thep-lien-hop-deck-ma-kem",
     category_id: "3fa85f64-5717-4562-b3fc-2c963f66afa3",
     category_name: "Giải Pháp Sàn",
-    description: "Tấm sàn Decking thay thế hoàn toàn cốp pha truyền thống, giảm 30% khối lượng bê tông và thời gian thi công sàn nhiều tầng. Độ bám dính bê tông cực cao với các gân dập nổi chuyên dụng.",
-    thumbnail: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1000&auto=format&fit=crop",
+    description: "Tấm sàn Decking thay thế hoàn toàn cốp pha truyền thống, giảm 30% khối lượng bê tông và thời gian thi công sàn nhiều tầng. Độ bám dính bê tông cực cao với các gân dập nổi chuyên dụng.\n\n- Khả năng chịu tải trọng rung động cao trong các nhà xưởng đa tầng hiện đại.\n- Thép mạ kẽm Z120 - Z275 đạt chuẩn chống rỉ sét môi trường công nghiệp.",
+    thumbnail: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop",
     images: [
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1200&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1200&auto=format&fit=crop"
     ],
     created_at: "2026-10-20T11:20:00.000Z",
     updated_at: "2026-10-27T16:40:00.000Z"
@@ -88,9 +100,14 @@ export const MOCK_PRODUCTS = [
     slug: "cua-cuon-nhanh-cong-nghiep-high-speed-door",
     category_id: "3fa85f64-5717-4562-b3fc-2c963f66afa4",
     category_name: "Cơ Điện & Phụ Trợ",
-    description: "Tốc độ nâng hạ 1.5 - 2.0 m/s, tự động cảm biến radar và loop từ trường. Màn bạt PVC gia cường sợi polyester, tích hợp cơ chế tự phục hồi sau va đập vô tình của xe nâng.",
-    thumbnail: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1000&auto=format&fit=crop",
-    images: [],
+    description: "Tốc độ nâng hạ 1.5 - 2.0 m/s, tự động cảm biến radar và loop từ trường. Màn bạt PVC gia cường sợi polyester, tích hợp cơ chế tự phục hồi sau va đập vô tình của xe nâng.\n\n- Ngăn bụi mịn, giữ nhiệt độ kho lạnh và tiết kiệm điện năng cho điều hòa phân xưởng.\n- Động cơ biến tần vận hành êm ái, tuổi thọ trên 1.000.000 chu kỳ đóng mở.",
+    thumbnail: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=1200&auto=format&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1553413077-190dd305871c?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=1200&auto=format&fit=crop"
+    ],
     created_at: "2026-10-21T13:00:00.000Z",
     updated_at: "2026-10-28T09:30:00.000Z"
   },
@@ -100,9 +117,14 @@ export const MOCK_PRODUCTS = [
     slug: "he-thong-thong-gio-mai-quat-hvls",
     category_id: "3fa85f64-5717-4562-b3fc-2c963f66afa4",
     category_name: "Cơ Điện & Phụ Trợ",
-    description: "Hệ thống cửa trời louver kết hợp quạt trần công nghiệp sải cánh 7.3m, luân chuyển khí tươi liên tục, hạ nhiệt độ mặt sàn 4-6 độ C mà không tiêu tốn điện năng làm lạnh.",
-    thumbnail: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1000&auto=format&fit=crop",
-    images: [],
+    description: "Hệ thống cửa trời louver kết hợp quạt trần công nghiệp sải cánh 7.3m, luân chuyển khí tươi liên tục, hạ nhiệt độ mặt sàn 4-6 độ C mà không tiêu tốn điện năng làm lạnh.\n\n- Phủ gió mát diện rộng lên đến 1.500m² mỗi cụm quạt trần HVLS.\n- Cánh quạt hợp kim nhôm định hình khí động học hàng không hoạt động bền bỉ, an toàn.",
+    thumbnail: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1200&auto=format&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=1200&auto=format&fit=crop"
+    ],
     created_at: "2026-10-22T14:10:00.000Z",
     updated_at: "2026-10-28T10:15:00.000Z"
   },
@@ -112,9 +134,14 @@ export const MOCK_PRODUCTS = [
     slug: "cau-truc-dam-doi-nha-xuong",
     category_id: "3fa85f64-5717-4562-b3fc-2c963f66afa5",
     category_name: "Thiết Bị Nâng Hạ",
-    description: "Thiết kế tích hợp đồng bộ với kết cấu cột dầm nhà thép. Hệ tời pa lăng cáp đôi điện tử biến tần xuất xứ Hàn Quốc/Đức, thắng đĩa từ tính an toàn tuyệt đối khi vận hành tải trọng nặng.",
-    thumbnail: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1000&auto=format&fit=crop",
-    images: [],
+    description: "Thiết kế tích hợp đồng bộ với kết cấu cột dầm nhà thép. Hệ tời pa lăng cáp đôi điện tử biến tần xuất xứ Hàn Quốc/Đức, thắng đĩa từ tính an toàn tuyệt đối khi vận hành tải trọng nặng.\n\n- Khẩu độ dầm đạt từ 12m đến 36m, hành trình nâng hạ chính xác cao.\n- Tích hợp cảm biến chống quá tải, công tắc giới hạn hành trình và điều khiển từ xa.",
+    thumbnail: "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1200&auto=format&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop"
+    ],
     created_at: "2026-10-23T15:30:00.000Z",
     updated_at: "2026-10-28T14:00:00.000Z"
   },
@@ -124,9 +151,14 @@ export const MOCK_PRODUCTS = [
     slug: "bulong-mong-neo-ban-ma-cnc",
     category_id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
     category_name: "Phụ Kiện Cơ Khí",
-    description: "Bộ bu lông neo móng M24, M30, M36 mạ kẽm nhúng nóng chuẩn ASTM F1554, kèm bản mã thép gia công đột lỗ CNC chính xác từng milimet cho liên kết chân cột vững chãi.",
-    thumbnail: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=1000&auto=format&fit=crop",
-    images: [],
+    description: "Bộ bu lông neo móng M24, M30, M36 mạ kẽm nhúng nóng chuẩn ASTM F1554, kèm bản mã thép gia công đột lỗ CNC chính xác từng milimet cho liên kết chân cột vững chãi.\n\n- Cường độ chịu kéo cao cấp bền 8.8, 10.9 đáp ứng mọi yêu cầu móng chịu tải động.\n- Bề mặt ren sắc nét, mạ kẽm chống oxy hóa trong môi trường đất ẩm hoặc ven biển.",
+    thumbnail: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=1200&auto=format&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1581092335397-9583fe92d232?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1200&auto=format&fit=crop"
+    ],
     created_at: "2026-10-24T16:00:00.000Z",
     updated_at: "2026-10-29T08:00:00.000Z"
   }
