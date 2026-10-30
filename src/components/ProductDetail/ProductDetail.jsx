@@ -11,33 +11,6 @@ const IMAGE_VIEW_META = [
   { tag: 'Nghiệm thu tại công trình', desc: 'Lắp đặt bàn giao chuẩn kỹ thuật IEC' }
 ];
 
-const DEFAULT_DOCUMENTS = [
-  {
-    title: 'Catalogue Kỹ Thuật Tổng Hợp Sản Phẩm',
-    file_type: 'PDF',
-    size: '3.4 MB',
-    url: '#'
-  },
-  {
-    title: 'Bản Vẽ Kích Thước Hình Học & Mặt Bằng (Outline Drawing)',
-    file_type: 'PDF',
-    size: '1.8 MB',
-    url: '#'
-  },
-  {
-    title: 'Sơ Đồ Nguyên Lý Đơn Tuyến (Single Line Diagram - SLD)',
-    file_type: 'DWG/PDF',
-    size: '2.5 MB',
-    url: '#'
-  },
-  {
-    title: 'Hướng Dẫn Vận Hành, Bảo Trì & An Toàn (O&M Manual)',
-    file_type: 'PDF',
-    size: '4.2 MB',
-    url: '#'
-  }
-];
-
 const ProductDetail = ({
   productIdOrSlug,
   onNavigateBack,
@@ -50,7 +23,7 @@ const ProductDetail = ({
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Active Tab: 'specs' | 'desc' | 'gallery' | 'docs'
+  // Active Tab: 'specs' | 'desc' | 'gallery'
   const [activeTab, setActiveTab] = useState('specs');
 
   // Gallery & Lightbox states
@@ -168,14 +141,6 @@ const ProductDetail = ({
       hasSameCategory: sameCat.length > 0
     };
   }, [product, allProducts]);
-
-  // Documents list
-  const documentsList = useMemo(() => {
-    if (product?.documents && Array.isArray(product.documents) && product.documents.length > 0) {
-      return product.documents;
-    }
-    return DEFAULT_DOCUMENTS;
-  }, [product]);
 
   // Lock scroll when modal or lightbox is active
   useEffect(() => {
@@ -673,19 +638,6 @@ const ProductDetail = ({
                 </svg>
                 <span>Yêu Cầu Tư Vấn &amp; Báo Giá SLD</span>
               </button>
-
-              <button
-                type="button"
-                className="pd-btn-download-docs"
-                onClick={() => scrollToTabs('docs')}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                <span>Tài Liệu &amp; Bản Vẽ</span>
-              </button>
             </div>
 
             {/* Quick Meta Footer */}
@@ -709,7 +661,7 @@ const ProductDetail = ({
         </section>
 
         {/* =============================================
-            TABS SECTION: FULL SPECS, DESCRIPTION, GALLERY, DOCS
+            TABS SECTION: FULL SPECS, DESCRIPTION, GALLERY
             ============================================= */}
         <section className="pd-tabs-section" ref={detailTabsRef}>
           {/* Tab Navigation Headers */}
@@ -744,15 +696,6 @@ const ProductDetail = ({
               <span>Hình Ảnh Thực Tế ({galleryImages.length})</span>
             </button>
 
-            <button
-              type="button"
-              className={`pd-tab-btn ${activeTab === 'docs' ? 'active' : ''}`}
-              onClick={() => setActiveTab('docs')}
-              role="tab"
-              aria-selected={activeTab === 'docs'}
-            >
-              <span>Tài Liệu &amp; Bản Vẽ ({documentsList.length})</span>
-            </button>
           </div>
 
           {/* Tab Panels */}
@@ -1042,64 +985,6 @@ const ProductDetail = ({
               </div>
             )}
 
-            {/* =============================================
-                TAB 4: TÀI LIỆU KỸ THUẬT & CATALOGUE (DOCUMENTS)
-                ============================================= */}
-            {activeTab === 'docs' && (
-              <div className="pd-tab-pane pd-docs-pane">
-                <div className="pd-docs-head">
-                  <h3>Tài Liệu Kỹ Thuật, Bản Vẽ &amp; Catalogue Tải Về</h3>
-                  <p>Toàn bộ tài liệu kỹ thuật của dòng sản phẩm <strong>{product.name} ({product.code})</strong> phục vụ thiết kế cơ điện MEP và thẩm duyệt dự án.</p>
-                </div>
-
-                <div className="pd-docs-list">
-                  {documentsList.map((doc, idx) => (
-                    <div key={idx} className="pd-doc-card">
-                      <div className="pd-doc-info">
-                        <h4 className="pd-doc-title">{doc.title || `Tài liệu kỹ thuật ${idx + 1}`}</h4>
-                        <div className="pd-doc-meta">
-                          <span className="pd-doc-badge">{doc.file_type || 'PDF'}</span>
-                          {doc.size && <span className="pd-doc-size">{doc.size}</span>}
-                          <span className="pd-doc-origin">Cơ Điện Nguyên Phát</span>
-                        </div>
-                      </div>
-                      <div className="pd-doc-actions">
-                        <a
-                          href={doc.url && doc.url !== '#' ? doc.url : '#'}
-                          className="pd-btn-download-file"
-                          onClick={(e) => {
-                            if (!doc.url || doc.url === '#') {
-                              e.preventDefault();
-                              openQuoteModal();
-                            }
-                          }}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="7 10 12 15 17 10"></polyline>
-                            <line x1="12" y1="15" x2="12" y2="3"></line>
-                          </svg>
-                          <span>Tải Tài Liệu</span>
-                        </a>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Box Yêu cầu bản vẽ CAD / DWG */}
-                <div className="pd-docs-custom-cad-box">
-                  <div>
-                    <h4>Cần file bản vẽ AutoCAD (.dwg) hoặc mô hình Revit (.rfa)?</h4>
-                    <p>Hãy gửi mã tủ <strong>{product.code || product.name}</strong> cho chúng tôi để nhận thư viện CAD 2D/3D chính xác theo thông số thiết kế của bạn.</p>
-                  </div>
-                  <button type="button" className="btn-secondary" onClick={openQuoteModal}>
-                    Yêu Cầu Bản Vẽ CAD
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
         </section>
 
