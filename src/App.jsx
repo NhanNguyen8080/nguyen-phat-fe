@@ -8,6 +8,7 @@ import Portfolio from './components/Portfolio/Portfolio';
 import News from './components/News/News';
 import Contact from './components/Contact/Contact';
 import ProductList from './components/ProductList/ProductList';
+import ProductDetail from './components/ProductDetail/ProductDetail';
 import ProjectList from './components/ProjectList/ProjectList';
 import ProjectDetail from './components/ProjectDetail/ProjectDetail';
 import AboutPage from './components/AboutPage/AboutPage';
@@ -19,6 +20,10 @@ function parseLocation() {
   const hash = window.location.hash || '';
   const path = window.location.pathname || '';
 
+  // Chi tiết sản phẩm: #/products/:idOrSlug
+  if (hash.startsWith('#/products/') && hash.replace('#/products/', '').length > 0) {
+    return { page: 'product-detail', id: decodeURIComponent(hash.replace('#/products/', '')) };
+  }
   // Chi tiết công trình: #/projects/:idOrSlug
   if (hash.startsWith('#/projects/') && hash.replace('#/projects/', '').length > 0) {
     return { page: 'project-detail', id: decodeURIComponent(hash.replace('#/projects/', '')) };
@@ -68,6 +73,16 @@ function App() {
   const navigateToProducts = () => {
     window.location.hash = '#/products';
     setRoute({ page: 'products', id: '' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const navigateToProductDetail = (productOrId) => {
+    const idOrSlug = typeof productOrId === 'object' && productOrId !== null
+      ? (productOrId.slug || productOrId.id)
+      : productOrId;
+
+    window.location.hash = `#/products/${idOrSlug}`;
+    setRoute({ page: 'product-detail', id: idOrSlug });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -133,7 +148,18 @@ function App() {
       {route.page === 'about' ? (
         <AboutPage onNavigateHome={navigateToHome} />
       ) : route.page === 'products' ? (
-        <ProductList onNavigateHome={() => navigateToHome('#contact')} />
+        <ProductList 
+          onNavigateHome={() => navigateToHome('#contact')} 
+          onSelectProduct={navigateToProductDetail}
+        />
+      ) : route.page === 'product-detail' ? (
+        <ProductDetail 
+          productIdOrSlug={route.id}
+          onNavigateBack={navigateToProducts}
+          onNavigateHome={navigateToHome}
+          onNavigateContact={() => navigateToHome('#contact')}
+          onSelectProduct={navigateToProductDetail}
+        />
       ) : route.page === 'projects' ? (
         <ProjectList 
           onNavigateHome={() => navigateToHome('#contact')} 

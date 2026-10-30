@@ -14,21 +14,25 @@ const Header = ({
 
   useEffect(() => {
     if (currentPage === 'about') {
+      setIsScrolled(false);
       setActiveSection('about');
       return;
     }
 
-    if (currentPage === 'products') {
+    if (currentPage === 'products' || currentPage === 'product-detail') {
+      setIsScrolled(false);
       setActiveSection('product');
       return;
     }
 
     if (currentPage === 'projects' || currentPage === 'project-detail') {
+      setIsScrolled(false);
       setActiveSection('project');
       return;
     }
 
     if (currentPage === 'news' || currentPage === 'news-detail') {
+      setIsScrolled(false);
       setActiveSection('news');
       return;
     }
@@ -81,10 +85,14 @@ const Header = ({
       return;
     }
 
-    // 2. Khi đang ở trang Products
-    if (currentPage === 'products') {
+    // 2. Khi đang ở trang Products hoặc Product Detail
+    if (currentPage === 'products' || currentPage === 'product-detail') {
       if (targetId === '#product') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (currentPage === 'product-detail' && onNavigateProducts) {
+          onNavigateProducts();
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
         return;
       }
       if (targetId === '#about' && onNavigateAbout) {

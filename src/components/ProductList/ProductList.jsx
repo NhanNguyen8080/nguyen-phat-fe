@@ -4,7 +4,7 @@ import { getProducts } from '../../services/productService';
 
 const ITEMS_PER_PAGE = 6;
 
-const ProductList = ({ onNavigateHome }) => {
+const ProductList = ({ onNavigateHome, onSelectProduct }) => {
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -104,6 +104,10 @@ const ProductList = ({ onNavigateHome }) => {
   };
 
   const openDetail = (product) => {
+    if (onSelectProduct) {
+      onSelectProduct(product);
+      return;
+    }
     setSelectedProduct(product);
     setActiveImageIndex(0);
     document.body.style.overflow = 'hidden';
