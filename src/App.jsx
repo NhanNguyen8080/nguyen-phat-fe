@@ -50,6 +50,7 @@ function parseLocation() {
 
 function App() {
   const [route, setRoute] = useState(() => parseLocation());
+  const [productCategoryFilter, setProductCategoryFilter] = useState('all');
 
   useEffect(() => {
     const handleLocationChange = () => {
@@ -70,7 +71,9 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const navigateToProducts = () => {
+  const navigateToProducts = (category = 'all') => {
+    const nextCat = typeof category === 'string' && category ? category : 'all';
+    setProductCategoryFilter(nextCat);
     window.location.hash = '#/products';
     setRoute({ page: 'products', id: '' });
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -151,11 +154,13 @@ function App() {
         <ProductList 
           onNavigateHome={() => navigateToHome('#contact')} 
           onSelectProduct={navigateToProductDetail}
+          initialCategory={productCategoryFilter}
         />
       ) : route.page === 'product-detail' ? (
         <ProductDetail 
           productIdOrSlug={route.id}
-          onNavigateBack={navigateToProducts}
+          onNavigateBack={() => navigateToProducts('all')}
+          onNavigateCategory={navigateToProducts}
           onNavigateHome={navigateToHome}
           onNavigateContact={() => navigateToHome('#contact')}
           onSelectProduct={navigateToProductDetail}

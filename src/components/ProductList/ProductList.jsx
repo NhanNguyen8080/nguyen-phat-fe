@@ -4,10 +4,15 @@ import { getProducts } from '../../services/productService';
 
 const ITEMS_PER_PAGE = 6;
 
-const ProductList = ({ onNavigateHome, onSelectProduct }) => {
+const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' }) => {
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory || 'all');
+
+  useEffect(() => {
+    setSelectedCategory(initialCategory || 'all');
+    setCurrentPageNum(1);
+  }, [initialCategory]);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const [currentPageNum, setCurrentPageNum] = useState(1);
