@@ -1,11 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './ProductList.css';
-import { getProducts } from '../../services/productService';
+import { getProducts, getCategories } from '../../services/productService';
 
 const ITEMS_PER_PAGE = 6;
 
 const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' }) => {
   const [allProducts, setAllProducts] = useState([]);
+  const [parentCategories, setParentCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isLiveApi, setIsLiveApi] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(initialCategory || 'all');
@@ -21,15 +22,19 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
     setCurrentPageNum(1);
   }, [initialCategory]);
 
-  // Load danh sách sản phẩm từ API (có fallback sang Mock Layer)
+  // Load danh sách sản phẩm & danh mục cha từ API (có fallback sang Mock Layer)
   useEffect(() => {
     let isMounted = true;
     const loadInitialData = async () => {
       setLoading(true);
-      const result = await getProducts();
+      const [prodRes, catRes] = await Promise.all([
+        getProducts(),
+        getCategories()
+      ]);
       if (isMounted) {
-        setAllProducts(result.products || []);
-        setIsLiveApi(Boolean(result.isLive));
+        setAllProducts(prodRes.products || []);
+        setIsLiveApi(Boolean(prodRes.isLive));
+        setParentCategories(catRes || []);
         setLoading(false);
       }
     };
@@ -39,13 +44,30 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
     };
   }, []);
 
-  // Trích xuất danh mục động từ danh sách sản phẩm trả về
-  const categories = useMemo(() => {
-    const set = new Set();
-    allProducts.forEach((p) => {
-      if (p.category_name) set.add(p.category_name);
+  // Danh mục: Chỉ giữ 1 phân cấp cha, lọc bỏ tất cả phân cấp con, phân cấp cha bỏ mục hình ảnh thiết bị
+  const categoryPills = useMemo(() => {
+    const list = [{ id: 'all', name: 'Tất cả danh mục' }];
+    parentCategories.forEach((cat) => {
+      if (!list.some((item) => item.name === cat.name)) {
+        list.push({
+          id: cat.id || cat.slug || cat.name,
+          name: cat.name,
+          slug: cat.slug
+        });
+      }
     });
-    return ['all', ...Array.from(set)];
+    return list;
+  }, [parentCategories]);
+
+  // Thống kê số lượng sản phẩm thuộc từng danh mục cha
+  const categoryCounts = useMemo(() => {
+    const counts = { all: allProducts.length };
+    allProducts.forEach((p) => {
+      if (p.category_name) {
+        counts[p.category_name] = (counts[p.category_name] || 0) + 1;
+      }
+    });
+    return counts;
   }, [allProducts]);
 
   // Lọc và sắp xếp sản phẩm tức thì theo đúng các trường kỹ thuật của 2 API
@@ -54,7 +76,7 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
 
     return allProducts
       .filter((p) => {
-        // Lọc danh mục
+        // Lọc danh mục cha (đã quy chuẩn hoá 1 cấp duy nhất)
         const matchesCategory =
           selectedCategory === 'all' ||
           p.category_name === selectedCategory ||
@@ -231,18 +253,30 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
             </div>
           </div>
 
-          {/* Category Pills trích xuất trực tiếp từ category_name của API */}
+          {/* Category Pills: 1 phân cấp cha duy nhất, lọc bỏ toàn bộ phân cấp con & bỏ hình ảnh thiết bị */}
           <div className="category-pills">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                className={`category-pill ${selectedCategory === cat ? 'active' : ''}`}
-                onClick={() => handleSelectCategory(cat)}
-              >
-                {cat === 'all' ? 'Tất cả danh mục' : cat}
-              </button>
-            ))}
+            {categoryPills.map((cat) => {
+              const isSelected =
+                (cat.id === 'all' && selectedCategory === 'all') ||
+                selectedCategory === cat.name ||
+                selectedCategory === cat.id;
+              const count =
+                cat.id === 'all'
+                  ? allProducts.length
+                  : categoryCounts[cat.name] || 0;
+
+              return (
+                <button
+                  key={cat.id || cat.name}
+                  type="button"
+                  className={`category-pill ${isSelected ? 'active' : ''}`}
+                  onClick={() => handleSelectCategory(cat.id === 'all' ? 'all' : cat.name)}
+                >
+                  <span>{cat.name}</span>
+                  {count > 0 && <span className="cat-pill-count">{count}</span>}
+                </button>
+              );
+            })}
           </div>
         </div>
 

@@ -1,11 +1,13 @@
 /**
- * Service kết nối và Mock API Sản phẩm Cơ Điện Nguyên Phát
+ * Service kết nối và Mock API Sản phẩm & Danh Mục Cơ Điện Nguyên Phát
  * 
  * 2 API chuẩn theo OpenAPI Specification:
  * 1. GET https://nguyen-phat-admin.onrender.com/api/v1/products/
  *    (Hỗ trợ query: category_id, product_type, is_featured, search, skip, limit)
  * 2. GET https://nguyen-phat-admin.onrender.com/api/v1/products/{product_id}
  *    (Chi tiết đầy đủ thông số kỹ thuật của 1 sản phẩm)
+ * 3. GET https://nguyen-phat-admin.onrender.com/api/v1/categories/
+ *    (Danh mục: Chỉ giữ 1 phân cấp cha, lọc bỏ tất cả phân cấp con, phân cấp cha bỏ mục hình ảnh thiết bị)
  * 
  * Schema ProductResponse gồm 28 trường kỹ thuật chuẩn:
  * - id: string (uuid)
@@ -44,6 +46,44 @@ export const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9
 
 // Cache ngắn hạn trong bộ nhớ phiên giúp chuyển trang mượt mà không giật layout
 let cachedProductsList = null;
+let cachedCategoriesList = null;
+
+// =========================================================================
+// MOCK DANH MỤC CHA CHUẨN:
+// - Chỉ giữ 1 phân cấp cha (parent_id: null)
+// - Lọc bỏ 100% tất cả phân cấp con
+// - Phân cấp cha BỎ mục "Hình ảnh thiết bị" / "Hình ảnh & Dự án"
+// =========================================================================
+export const MOCK_PARENT_CATEGORIES = [
+  {
+    id: "e03442e0-789d-46f9-a334-5a5f1cc02642",
+    name: "Tủ điện",
+    slug: "tu-dien",
+    description: "Sản xuất và lắp đặt các loại tủ bảng điện công nghiệp, tủ MSB, ATS, tụ bù, điều khiển, VCB.",
+    sort_order: 1
+  },
+  {
+    id: "09048929-2ca1-48fb-a727-6fc6c259a0a7",
+    name: "Thang máng cáp",
+    slug: "thang-mang-cap",
+    description: "Sản xuất thang cáp, máng cáp, khay cáp (tray cáp) sơn tĩnh điện, mạ kẽm nhúng nóng, Inox 304.",
+    sort_order: 2
+  },
+  {
+    id: "8345389a-c70e-473c-ba34-c6ee68ac237d",
+    name: "Thiết bị đóng cắt",
+    slug: "thiet-bi-dong-cat",
+    description: "Phân phối chính hãng thiết bị đóng cắt ACB, MCCB, MCB, Contactor, Rơ le của Schneider, Mitsubishi, ABB, LS.",
+    sort_order: 3
+  },
+  {
+    id: "192eb51f-01fd-464c-8cb8-4983af568eb1",
+    name: "Điện công nghiệp",
+    slug: "ien-cong-nghiep",
+    description: "Giải pháp và vật tư điện công nghiệp đồng bộ cho nhà máy xí nghiệp.",
+    sort_order: 4
+  }
+];
 
 // =========================================================================
 // MOCK DATA: Chuẩn hóa 100% cấu trúc 28 trường của ProductResponse
@@ -57,8 +97,8 @@ export const MOCK_PRODUCTS = [
     code: "NP-MSB-3200",
     brand: "Nguyên Phát",
     product_type: "switchboard",
-    category_id: "874efedc-72c8-48a6-90d3-ffe78035ac3b",
-    category_name: "Tủ điện hạ thế MSB",
+    category_id: "e03442e0-789d-46f9-a334-5a5f1cc02642",
+    category_name: "Tủ điện",
     description: `<h3>Tủ Phân Phối Tổng MSB 3200A - Chuẩn IEC 61439-1/2</h3>
 <p><strong>Tủ MSB 3200A</strong> là sản phẩm thiết bị cơ điện chất lượng cao được sản xuất và lắp ráp bởi <strong>Công ty TNHH SX-TM Cơ Điện Nguyên Phát</strong> trên dây chuyền công nghệ CNC hiện đại, tuân thủ nghiêm ngặt các tiêu chuẩn kỹ thuật IEC 61439-1/2, IEC 60529, TCVN 7994.</p>
 <h4>Ưu điểm nổi bật:</h4>
@@ -99,348 +139,393 @@ export const MOCK_PRODUCTS = [
     documents: [
       {
         title: "Catalogue Tủ Điện Phân Phối Tổng MSB Nguyên Phát",
-        file_name: "Catalogue_Tu_Dien_MSB_Nguyen_Phat.pdf",
-        file_size: "3.8 MB",
-        file_type: "pdf"
+        url: "#",
+        file_type: "pdf",
+        size: "2.8 MB"
       },
       {
-        title: "Bản vẽ bố trí kết cấu & Kích thước hình học tủ MSB 3200A",
-        file_name: "Drawing_MSB_3200A_Layout.dwg",
-        file_size: "2.4 MB",
-        file_type: "cad"
-      },
-      {
-        title: "Biên bản kiểm tra nghiệm thu xuất xưởng KCS",
-        file_name: "KCS_Certificate_Test_Report.pdf",
-        file_size: "1.2 MB",
-        file_type: "pdf"
+        title: "Bản vẽ mặt cắt kích thước hình học Tủ MSB 3200A (DWG/PDF)",
+        url: "#",
+        file_type: "pdf",
+        size: "1.4 MB"
       }
     ],
     is_featured: true,
     warranty_months: 24,
-    created_at: "2026-10-30T01:11:14.627Z",
-    updated_at: "2026-10-30T01:11:14.627Z"
+    created_at: "2026-10-30T01:11:13.568Z",
+    updated_at: "2026-10-30T01:11:13.568Z"
   },
   {
-    id: "567db2f7-13fb-4a7b-82b6-a4e0c55fc775",
-    name: "Tủ Bơm Biến Tần VFD - NHÀ MÁY SX CỌC VÁCH NHỰA UPVC",
-    slug: "tu-bom-bien-tan-nha-may-sx-coc-vach-nhua-upvc-251",
-    code: "NP-CTRL-VFD",
+    id: "f8435d64-e535-43a9-a9a7-96a9390230f8",
+    name: "Tủ Bơm Biến Tần - NHÀ MÁY SX CỌC VÁCH NHỰA UPVC",
+    slug: "tu-bom-bien-tan-nha-may-sx-coc-vach-nhua-upvc-249",
+    code: "NP-VFD-055",
     brand: "Nguyên Phát",
-    product_type: "switchboard",
-    category_id: "874efedc-72c8-48a6-90d3-ffe78035ac3b",
-    category_name: "Tủ điều khiển & Biến tần",
-    description: `<h3>Tủ Điều Khiển Bơm Biến Tần Inverter VFD</h3>
-<p><strong>Tủ Bơm Biến Tần VFD</strong> do <strong>Công ty TNHH SX-TM Cơ Điện Nguyên Phát</strong> thiết kế chuyên dụng cho hệ thống máy bơm cấp nước, chiller và quạt thông gió công nghiệp.</p>
-<h4>Tính năng kỹ thuật:</h4>
-<ul>
-  <li>Tích hợp biến tần thế hệ mới (Schneider / Danfoss / Yaskawa / ABB) điều khiển vòng kín PID ổn định áp suất đường ống.</li>
-  <li>Tiết kiệm từ 25% - 40% điện năng tiêu thụ so với phương thức khởi động trực tiếp.</li>
-  <li>Chức năng luân phiên và gọi thêm bơm thông minh khi lưu lượng yêu cầu tăng đột biến.</li>
-  <li>Khởi động mềm giảm rung chấn, tránh hiện tượng búa nước phá hủy đường ống.</li>
-</ul>`,
-    thumbnail: "https://diennguyenphat.com/upload/files/baiviet/thuydiensongbung2-w350%5B1%5D.jpg",
+    product_type: "control_panel",
+    category_id: "e03442e0-789d-46f9-a334-5a5f1cc02642",
+    category_name: "Tủ điện",
+    description: `<h3>Tủ Điều Khiển Bơm Tích Hợp Biến Tần VFD</h3>
+<p><strong>Tủ bơm biến tần</strong> chuyên dụng cho hệ thống cấp nước sinh hoạt, tuần hoàn giải nhiệt và phòng cháy chữa cháy công nghiệp. Giúp ổn định áp suất đường ống và tiết kiệm điện năng lên đến 40%.</p>`,
+    thumbnail: "https://diennguyenphat.com/upload/files/baiviet/img20160617151604-w350%5B1%5D.jpg",
     images: [
       "https://diennguyenphat.com/upload/files/baiviet/img20160617151604-w350%5B1%5D.jpg",
-      "https://diennguyenphat.com/upload/files/sanpham/image005.jpg",
-      "https://diennguyenphat.com/upload/files/image008.jpg",
-      "https://diennguyenphat.com/upload/files/image009.jpg"
+      "https://diennguyenphat.com/upload/files/baiviet/thuydiensongbung2-w350%5B1%5D.jpg"
     ],
-    rated_voltage: "220V/380V - 440V",
-    rated_current: "450A",
+    rated_voltage: "380V - 415V AC",
+    rated_current: "150A",
     frequency: "50 Hz",
-    ip_rating: "IP42 (tiêu chuẩn trong nhà)",
-    standards: "IEC 61439-1/2, IEC 60529, TCVN 7994",
-    short_circuit_current: "25kA - 50kA/1s",
-    material: "Thép cán nguội tiêu chuẩn (Tole)",
-    thickness: "1.5mm - 2.0mm",
-    surface_finish: "Sơn tĩnh điện sần tiêu chuẩn công nghiệp (RAL 7032 / RAL 7035)",
-    dimensions: "H2000 x W1000 x D600 mm",
-    main_components: "Biến tần Inverter (Danfoss/Yaskawa/Schneider), PLC Mitsubishi/Siemens, Khởi động từ",
-    specifications: {
-      "Chức năng chính": "Điều khiển khởi động mềm và ổn định áp suất/lưu lượng hệ thống bơm biến tần",
-      "Chế độ vận hành": "Tự động (Auto qua cảm biến áp suất) / Bằng tay (Manual)",
-      "Bảo vệ": "Bảo vệ quá tải, mất pha, ngắn mạch, thấp áp và chống chạy khô"
-    },
-    documents: [
-      {
-        title: "Tài liệu kỹ thuật vận hành Tủ Bơm Biến Tần VFD",
-        file_name: "Manual_VFD_Pump_Controller.pdf",
-        file_size: "2.1 MB",
-        file_type: "pdf"
-      }
-    ],
-    is_featured: false,
-    warranty_months: 12,
-    created_at: "2026-10-30T01:11:14.627Z",
-    updated_at: "2026-10-30T01:11:14.627Z"
-  },
-  {
-    id: "6b98a7ad-b31b-4326-87b0-c792809e673a",
-    name: "Tủ MSB (ATS 4P - 400A) - KHU TÁI ĐỊNH CƯ TÂN HÒA ĐÔNG",
-    slug: "tu-msb-ats-4p-400a-khu-tai-dinh-cu-tan-hoa-dong-252",
-    code: "NP-MSB-400",
-    brand: "Nguyên Phát",
-    product_type: "switchboard",
-    category_id: "874efedc-72c8-48a6-90d3-ffe78035ac3b",
-    category_name: "Tủ chuyển nguồn tự động ATS",
-    description: `<h3>Tủ Chuyển Nguồn Tự Động ATS 4P 400A</h3>
-<p><strong>Tủ MSB tích hợp bộ chuyển nguồn ATS 4P 400A</strong> đảm bảo nguồn điện cấp liên tục 24/7 cho các phụ tải ưu tiên tại khu dân cư và tòa nhà công cộng.</p>
-<h4>Ưu điểm:</h4>
-<ul>
-  <li>Tự động nhận diện mất nguồn lưới và phát tín hiệu khởi động máy phát điện trong vòng 3 - 5 giây.</li>
-  <li>Chuyển đổi nguồn an toàn với cơ cấu khóa liên động cơ khí (Mechanical Interlock) và liên động điện (Electrical Interlock).</li>
-  <li>Bảo vệ chống dòng thứ tự không và cách ly dây trung tính hoàn toàn nhờ thiết kế bộ đóng cắt 4 cực (4 Poles).</li>
-</ul>`,
-    thumbnail: "https://diennguyenphat.com/upload/files/baiviet/thuydiensongbung2-w350%5B1%5D.jpg",
-    images: [
-      "https://diennguyenphat.com/upload/files/baiviet/img20160617151604-w350%5B1%5D.jpg",
-      "https://diennguyenphat.com/upload/files/sanpham/image007%5B1%5D.jpg",
-      "https://diennguyenphat.com/upload/files/image008.jpg",
-      "https://diennguyenphat.com/upload/files/image011.jpg"
-    ],
-    rated_voltage: "220V/380V - 440V",
-    rated_current: "400A",
-    frequency: "50 Hz",
-    ip_rating: "IP42 (tiêu chuẩn trong nhà)",
-    standards: "IEC 61439-1/2, IEC 60529, TCVN 7994",
-    short_circuit_current: "25kA - 50kA/1s",
-    material: "Thép cán nguội tiêu chuẩn (Tole)",
-    thickness: "1.5mm - 2.0mm",
-    surface_finish: "Sơn tĩnh điện sần tiêu chuẩn công nghiệp (RAL 7032 / RAL 7035)",
+    ip_rating: "IP54 (chống bụi & nước bắn tóe)",
+    standards: "IEC 61439-1, IEC 60947",
+    short_circuit_current: "25kA/1s",
+    material: "Thép cán nguội phủ sơn tĩnh điện",
+    thickness: "1.5mm",
+    surface_finish: "Sơn tĩnh điện RAL 7032",
     dimensions: "H1800 x W800 x D600 mm",
-    main_components: "Thiết bị đóng cắt ACB/MCCB, bộ chuyển đổi nguồn ATS Socomec/Osung/Schneider",
+    main_components: "Biến tần Danfoss/Schneider, MCCB LS, PLC Mitsubishi, rơ le bảo vệ",
     specifications: {
-      "Số cực (Poles)": "4P (3 Pha + 1 Trung tính)",
-      "Thời gian chuyển nguồn": "0.5s - 30s (Có thể cài đặt tùy biến)",
-      "Chức năng chính": "Tự động chuyển nguồn lưới - máy phát và phân phối hạ thế",
-      "Kiểu cách lắp đặt": "Form tủ: Form 2B / Form 3B theo IEC 61439"
-    },
-    documents: [
-      {
-        title: "Sơ đồ nguyên lý điện Tủ ATS 4P 400A",
-        file_name: "Schematic_ATS_400A.pdf",
-        file_size: "1.5 MB",
-        file_type: "pdf"
-      }
-    ],
-    is_featured: true,
-    warranty_months: 24,
-    created_at: "2026-10-30T01:11:14.627Z",
-    updated_at: "2026-10-30T01:11:14.627Z"
-  },
-  {
-    id: "0982fdde-41af-4057-b084-8f56e8045580",
-    name: "Tủ MSB (ATS 4P - 400A) - KCN LONG ĐỨC-ĐỒNG NAI",
-    slug: "tu-msb-ats-4p-400a-kcn-long-duc-dong-nai-253",
-    code: "NP-MSB-400-LD",
-    brand: "Nguyên Phát",
-    product_type: "switchboard",
-    category_id: "874efedc-72c8-48a6-90d3-ffe78035ac3b",
-    category_name: "Tủ chuyển nguồn tự động ATS",
-    description: `<h3>Tủ MSB Kèm ATS 400A Cho Khu Công Nghiệp Long Đức</h3>
-<p>Sản phẩm thiết kế chuyên dụng cho các nhà xưởng khu công nghiệp có mật độ thiết bị tải trọng liên tục, yêu cầu tính ổn định và an toàn điện ở mức cao nhất.</p>`,
-    thumbnail: "https://diennguyenphat.com/upload/files/baiviet/thuydiensongbung2-w350%5B1%5D.jpg",
-    images: [
-      "https://diennguyenphat.com/upload/files/baiviet/img20160617151604-w350%5B1%5D.jpg",
-      "https://diennguyenphat.com/upload/files/image008.jpg",
-      "https://diennguyenphat.com/upload/files/image009.jpg"
-    ],
-    rated_voltage: "220V/380V - 440V",
-    rated_current: "400A",
-    frequency: "50 Hz",
-    ip_rating: "IP42 (tiêu chuẩn trong nhà)",
-    standards: "IEC 61439-1/2, IEC 60529, TCVN 7994",
-    short_circuit_current: "25kA - 50kA/1s",
-    material: "Thép cán nguội tiêu chuẩn (Tole)",
-    thickness: "1.5mm - 2.0mm",
-    surface_finish: "Sơn tĩnh điện sần tiêu chuẩn công nghiệp (RAL 7032 / RAL 7035)",
-    dimensions: "H1800 x W800 x D600 mm",
-    main_components: "Thiết bị đóng cắt ACB/MCCB, bộ chuyển đổi nguồn ATS",
-    specifications: {
-      "Số cực (Poles)": "4P (3 Pha + 1 Trung tính)",
-      "Chức năng chính": "Tủ phân phối tổng cấp nguồn và tự động đảo nguồn máy phát",
-      "Kiểu cách lắp đặt": "Form tủ: Form 2B / Form 3B theo IEC 61439"
+      "Chế độ vận hành": "Tự động điều áp theo cảm biến (PID) / Bằng tay",
+      "Số lượng bơm điều khiển": "Luân phiên 3 bơm động lực",
+      "Giao diện điều khiển": "Màn hình cảm ứng HMI 7 inch giao diện tiếng Việt"
     },
     documents: [],
     is_featured: true,
     warranty_months: 24,
-    created_at: "2026-10-30T01:11:14.627Z",
-    updated_at: "2026-10-30T01:11:14.627Z"
+    created_at: "2026-10-30T01:11:13.670Z",
+    updated_at: "2026-10-30T01:11:13.670Z"
   },
   {
-    id: "2b5e5277-a9d0-4f36-80cd-ba20251e2baf",
-    name: "TỦ VCB 24kV - NHÀ MÁY ĐƯỜNG SƠN DƯƠNG - TUYÊN QUANG",
-    slug: "tu-vcb-nha-may-duong-son-duong-tuyen-quang-254",
+    id: "4444558e-0b04-4c28-971c-f232491fa308",
+    name: "Tủ Chuyển Nguồn Tự Động ATS 4P - 400A",
+    slug: "tu-msb-ats-4p-400a-khu-tai-dinh-cu-tan-hoa-dong-248",
+    code: "NP-ATS-400",
+    brand: "Nguyên Phát",
+    product_type: "ats_panel",
+    category_id: "e03442e0-789d-46f9-a334-5a5f1cc02642",
+    category_name: "Tủ điện",
+    description: `<h3>Tủ Chuyển Đổi Nguồn Tự Động ATS 4P 400A</h3>
+<p>Đảm bảo nguồn điện dự phòng liên tục cho công trình. Tự động chuyển đổi giữa nguồn điện lưới và máy phát điện dự phòng trong thời gian chưa đầy 3 giây.</p>`,
+    thumbnail: "https://diennguyenphat.com/upload/files/baiviet/182854-news-bworldbank%5B1%5D.jpg",
+    images: [
+      "https://diennguyenphat.com/upload/files/baiviet/182854-news-bworldbank%5B1%5D.jpg"
+    ],
+    rated_voltage: "380V - 440V / 3P + N",
+    rated_current: "400A",
+    frequency: "50 Hz",
+    ip_rating: "IP43",
+    standards: "IEC 60947-6-1, TCVN 7994",
+    short_circuit_current: "36kA/1s",
+    material: "Thép cán nguội Tole dày 2.0mm",
+    thickness: "2.0mm",
+    surface_finish: "Sơn tĩnh điện công nghiệp RAL 7035",
+    dimensions: "H1600 x W800 x D500 mm",
+    main_components: "Bộ chuyển đổi nguồn ATS Socomec/Osung/Schneider, bộ điều khiển ATS Controller kỹ thuật số",
+    specifications: {
+      "Thời gian chuyển mạch": "Dưới 1.5 giây",
+      "Cơ chế khóa liên động": "Khóa cơ khí & khóa liên động điện kép an toàn tuyệt đối",
+      "Chế độ vận hành": "Auto / Manual / Test nguồn máy phát định kỳ"
+    },
+    documents: [],
+    is_featured: true,
+    warranty_months: 24,
+    created_at: "2026-10-30T01:11:13.774Z",
+    updated_at: "2026-10-30T01:11:13.774Z"
+  },
+  {
+    id: "a3a2e374-60be-45a7-96a3-f08eafe799a4",
+    name: "Hệ Thống Tủ Trung Thế VCB 24kV",
+    slug: "tu-vcb-nha-may-duong-son-duong-tuyen-quang-246",
     code: "NP-VCB-24KV",
     brand: "Nguyên Phát",
-    product_type: "switchboard",
-    category_id: "874efedc-72c8-48a6-90d3-ffe78035ac3b",
-    category_name: "Tủ điện trung thế VCB / RMU",
+    product_type: "medium_voltage",
+    category_id: "e03442e0-789d-46f9-a334-5a5f1cc02642",
+    category_name: "Tủ điện",
     description: `<h3>Tủ Máy Cắt Chân Không Trung Thế VCB 24kV</h3>
-<p><strong>Tủ VCB 24kV</strong> là giải pháp phân phối và đóng cắt trung thế bảo vệ đầu vào trạm biến áp, trạm biến áp phân phối nhà máy sản xuất công nghiệp nặng.</p>
-<h4>Đặc điểm nổi bật:</h4>
-<ul>
-  <li>Sử dụng máy cắt chân không (Vacuum Circuit Breaker) tuổi thọ điện cao, dập hồ quang an toàn tuyệt đối.</li>
-  <li>Hệ thống liên động cơ khí thông minh ngăn chặn mọi thao tác đóng cắt nhầm lẫn khi cửa tủ mở.</li>
-  <li>Khoang cáp lực, khoang máy cắt và khoang hạ thế độc lập an toàn theo chuẩn ngăn cách kim loại LSC2B-PM.</li>
-</ul>`,
-    thumbnail: "https://diennguyenphat.com/upload/files/baiviet/thuydiensongbung2-w350%5B1%5D.jpg",
+<p>Sản phẩm tủ trung thế bảo vệ trạm biến áp phân phối nhà máy sản xuất công nghiệp, điện áp vận hành đến 24kV, máy cắt chân không tiêu chuẩn quốc tế.</p>`,
+    thumbnail: "https://diennguyenphat.com/upload/files/image004.jpg",
     images: [
-      "https://diennguyenphat.com/upload/files/baiviet/img20160617151604-w350%5B1%5D.jpg",
-      "https://diennguyenphat.com/upload/files/image012.jpg",
-      "https://diennguyenphat.com/upload/files/image008.jpg",
-      "https://diennguyenphat.com/upload/files/sanpham/image014.jpg"
+      "https://diennguyenphat.com/upload/files/image004.jpg"
     ],
     rated_voltage: "24 kV",
     rated_current: "630A - 1250A",
     frequency: "50 Hz",
     ip_rating: "IP4X",
-    standards: "IEC 62271-200, IEC 62271-1, TCVN",
+    standards: "IEC 62271-200, IEC 62271-100",
     short_circuit_current: "25kA/3s",
-    material: "Thép tấm Aluzinc mạ hợp kim nhôm kẽm kháng ăn mòn",
-    thickness: "2.0mm",
-    surface_finish: "Sơn tĩnh điện chất lượng cao chống phóng điện hồ quang",
+    material: "Tôn mạ kẽm Aluzinc chống ăn mòn cao cấp",
+    thickness: "2.0mm - 2.5mm",
+    surface_finish: "Sơn tĩnh điện epoxy",
     dimensions: "H2200 x W800 x D1500 mm",
-    main_components: "Máy cắt chân không VCB ABB/Schneider/LS, biến dòng CT, biến điện áp PT",
+    main_components: "Máy cắt chân không VCB ABB/Schneider, dao tiếp địa, rơ le kỹ thuật số bảo vệ SEL/MiCOM",
     specifications: {
-      "Chức năng chính": "Tủ máy cắt chân không trung thế bảo vệ trạm biến áp và lưới 22kV - 24kV",
-      "Điện áp cách điện": "24kV / 35kV (Thử nghiệm xung sét 125kV BIL)",
-      "Kiểu ngăn cách": "Metal-Clad LSC2B-PM an toàn vận hành cao nhất"
+      "Cấp điện áp cách điện": "50kV / 1 phút, xung sét 125kV",
+      "Tiêu chuẩn khoang tủ": "Metal-clad phân chia độc lập an toàn thao tác"
     },
-    documents: [
-      {
-        title: "Chứng chỉ thử nghiệm điển hình Type Test Tủ VCB 24kV",
-        file_name: "Type_Test_Certificate_VCB_24kV.pdf",
-        file_size: "4.5 MB",
-        file_type: "pdf"
-      }
+    documents: [],
+    is_featured: false,
+    warranty_months: 36,
+    created_at: "2026-10-30T01:11:13.978Z",
+    updated_at: "2026-10-30T01:11:13.978Z"
+  },
+  {
+    id: "97463f23-f3c9-4675-9e6e-d28c2c7760da",
+    name: "Tủ Tụ Bù Công Suất Phản Kháng 500kVAR - 440V",
+    slug: "tu-tu-bu-500kva-440v",
+    code: "NP-CAP-500",
+    brand: "Nguyên Phát",
+    product_type: "capacitor_bank",
+    category_id: "e03442e0-789d-46f9-a334-5a5f1cc02642",
+    category_name: "Tủ điện",
+    description: `<h3>Tủ Tụ Bù Tự Động 500kVAR Tích Hợp Cuộn Kháng Lọc Sóng Hài</h3>
+<p>Bù công suất vô công cosφ > 0.95, triệt tiêu tiền phạt cos phi của điện lực và giảm tổn thất trên đường dây truyền tải.</p>`,
+    thumbnail: "https://diennguyenphat.com/upload/files/image008.jpg",
+    images: [
+      "https://diennguyenphat.com/upload/files/image008.jpg"
     ],
+    rated_voltage: "440V / 3P",
+    rated_current: "650A",
+    frequency: "50 Hz",
+    ip_rating: "IP41",
+    standards: "IEC 61439-1, IEC 60831",
+    short_circuit_current: "30kA/1s",
+    material: "Thép cán nguội sơn tĩnh điện",
+    thickness: "1.5mm - 2.0mm",
+    surface_finish: "Sơn tĩnh điện RAL 7032",
+    dimensions: "H2000 x W1000 x D800 mm",
+    main_components: "Tụ khô Epcos/Schneider 50kVAR, cuộn kháng lọc sóng hài 7%, bộ điều khiển Mikro 12 cấp",
+    specifications: {
+      "Cấp bù": "12 cấp đóng cắt thông minh tuần tự",
+      "Bảo vệ nhiệt": "Tích hợp rơ le nhiệt và quạt thông gió cưỡng bức điều khiển tự động"
+    },
+    documents: [],
     is_featured: true,
+    warranty_months: 24,
+    created_at: "2026-10-30T01:11:14.288Z",
+    updated_at: "2026-10-30T01:11:14.288Z"
+  },
+  {
+    id: "bc283f57-a24f-4662-b07f-1fc0ffd85e09",
+    name: "Thang Cáp & Máng Cáp Điện Sơn Tĩnh Điện (Cable Tray & Trunking)",
+    slug: "mang-cap-son-tinh-dien-nguyen-phat",
+    code: "NP-CABLE-TRAY",
+    brand: "Nguyên Phát",
+    product_type: "cable_containment",
+    category_id: "09048929-2ca1-48fb-a727-6fc6c259a0a7",
+    category_name: "Thang máng cáp",
+    description: `<h3>Hệ Thống Thang Máng Cáp Cơ Điện MEP</h3>
+<p>Gia công trên dây chuyền chấn đột CNC chính xác từng milimet. Đa dạng kích thước và chủng loại: Mạ kẽm nhúng nóng, Sơn tĩnh điện, Inox 304.</p>`,
+    thumbnail: "https://diennguyenphat.com/upload/files/image009.jpg",
+    images: [
+      "https://diennguyenphat.com/upload/files/image009.jpg",
+      "https://diennguyenphat.com/upload/files/image011.jpg"
+    ],
+    rated_voltage: null,
+    rated_current: null,
+    frequency: null,
+    ip_rating: "NEMA VE-1",
+    standards: "TCVN 10688, NEMA VE1, IEC 61537",
+    short_circuit_current: null,
+    material: "Thép đen / Tôn tráng kẽm / Inox 304",
+    thickness: "1.2mm - 1.5mm - 2.0mm",
+    surface_finish: "Sơn tĩnh điện RAL 7032 hoặc Mạ kẽm nhúng nóng",
+    dimensions: "W100xH50 mm đến W1000xH200 mm, L=2500 - 3000 mm",
+    main_components: "Thân máng, nắp máng, co L, ngã 3 tee, ngã 4 cross, bát nối và bu lông M8",
+    specifications: {
+      "Tải trọng an toàn": "Chịu tải cáp điện nặng theo chuẩn NEMA",
+      "Màu sắc tùy chọn": "Ghi xám RAL 7032, Cam báo cháy, Trắng sữa, Inox mờ"
+    },
+    documents: [],
+    is_featured: false,
     warranty_months: 24,
     created_at: "2026-10-30T01:11:14.627Z",
     updated_at: "2026-10-30T01:11:14.627Z"
   },
   {
-    id: "8ca7c01e-4e3b-47d3-b3bb-57de4ba94da7",
-    name: "TỦ ATS TỰ ĐỘNG - TRẠI TẠM GIAM CHÍ HÒA - CA TP.HCM",
-    slug: "tu-ats-trai-tam-giam-chi-hoa-ca-tphcm-255",
-    code: "NP-ATS-AUTO",
-    brand: "Nguyên Phát",
-    product_type: "switchboard",
-    category_id: "874efedc-72c8-48a6-90d3-ffe78035ac3b",
-    category_name: "Tủ chuyển nguồn tự động ATS",
-    description: `<h3>Hệ Thống Tủ ATS Dự Phòng Nguồn An Ninh</h3>
-<p>Công trình trọng điểm an ninh yêu cầu mức độ tin cậy tuyệt đối, hệ thống chuyển nguồn tự động không trễ và cơ chế khóa liên động chống cấp ngược nguồn điện nguy hiểm.</p>`,
-    thumbnail: "https://diennguyenphat.com/upload/files/baiviet/thuydiensongbung2-w350%5B1%5D.jpg",
+    id: "31dbd409-8cf1-4b09-9244-533d7e807120",
+    name: "Rơ Le Bảo Vệ Quá Áp, Thấp Áp Selec 600VPR",
+    slug: "relay-bao-ve-qua-ap-thap-ap-selec-600vpr",
+    code: "NP-SELEC-600VPR",
+    brand: "Selec / Phân phối Nguyên Phát",
+    product_type: "protection_relay",
+    category_id: "8345389a-c70e-473c-ba34-c6ee68ac237d",
+    category_name: "Thiết bị đóng cắt",
+    description: `<h3>Rơ Le Kỹ Thuật Số Giám Sát Điện Áp 3 Pha</h3>
+<p>Thiết bị giám sát quá áp, thấp áp, mất pha, thứ tự pha và lệch pha tự động ngắt cuộn hút khởi động từ bảo vệ an toàn cho động cơ và tải điện.</p>`,
+    thumbnail: "https://diennguyenphat.com/upload/files/image011.jpg",
     images: [
-      "https://diennguyenphat.com/upload/files/baiviet/img20160617151604-w350%5B1%5D.jpg",
-      "https://diennguyenphat.com/upload/files/sanpham/image013.jpg",
       "https://diennguyenphat.com/upload/files/image011.jpg"
     ],
-    rated_voltage: "220V/380V - 440V",
-    rated_current: "630A",
-    frequency: "50 Hz",
-    ip_rating: "IP42 (tiêu chuẩn trong nhà)",
-    standards: "IEC 61439-1/2, IEC 60529, TCVN 7994",
-    short_circuit_current: "35kA/1s",
-    material: "Thép cán nguội tiêu chuẩn (Tole)",
-    thickness: "1.5mm - 2.0mm",
-    surface_finish: "Sơn tĩnh điện sần tiêu chuẩn công nghiệp (RAL 7032 / RAL 7035)",
-    dimensions: "H1800 x W800 x D600 mm",
-    main_components: "Bộ chuyển nguồn ATS tự động, Rơ le giám sát điện áp, Khóa liên động điện cơ",
+    rated_voltage: "280V - 520V AC (L-L)",
+    rated_current: "Tiếp điểm 5A / 250V AC",
+    frequency: "50 Hz / 60 Hz",
+    ip_rating: "IP20 (Terminal), IP40 (Enclosure)",
+    standards: "IEC 60947-5-1",
+    short_circuit_current: null,
+    material: "Nhựa chống cháy Polycarbonate chuẩn UL94-V0",
+    thickness: null,
+    surface_finish: "Lắp đặt thanh ray DIN rail 35mm",
+    dimensions: "17.5 x 90 x 60 mm",
+    main_components: "Bộ vi xử lý đo lường RMS thực tế (True RMS), màn hình LED hiển thị trạng thái lỗi",
     specifications: {
-      "Chức năng chính": "Tự động chuyển đổi nguồn điện giữa lưới điện quốc gia và máy phát điện dự phòng",
-      "Thời gian chuyển nguồn": "Tùy chỉnh 1s - 30s với cơ chế trễ làm mát máy phát"
-    },
-    documents: [],
-    is_featured: true,
-    warranty_months: 12,
-    created_at: "2026-10-30T01:11:14.627Z",
-    updated_at: "2026-10-30T01:11:14.627Z"
-  },
-  {
-    id: "f1a2b3c4-1234-4567-89ab-cdef01234567",
-    name: "Tủ Bù Công Suất Phản Kháng 300kVAR (Tụ Bù Hạ Thế)",
-    slug: "tu-bu-cong-suat-phan-khang-300kvar",
-    code: "NP-CAP-300",
-    brand: "Nguyên Phát",
-    product_type: "switchboard",
-    category_id: "874efedc-72c8-48a6-90d3-ffe78035ac3b",
-    category_name: "Tủ tụ bù công suất phản kháng",
-    description: `<h3>Tủ Tụ Bù Tự Động 300kVAR Nâng Cao Hệ Số Công Suất Cosφ</h3>
-<p>Giải pháp tối ưu hóa chất lượng điện năng cho nhà máy, giảm thiểu tổn thất đường dây, loại bỏ hoàn toàn tiền phạt công suất phản kháng từ Điện lực EVN.</p>
-<h4>Tính năng nổi bật:</h4>
-<ul>
-  <li>Bộ điều khiển tụ bù kỹ thuật số 6 đến 12 cấp vi xử lý thông minh.</li>
-  <li>Cuộn kháng chặn sóng hài 7% (189Hz) bảo vệ tụ điện không bị nổ hoặc phồng trong môi trường có biến tần.</li>
-  <li>Quạt hút thông gió giải nhiệt tự động theo nhiệt độ cài đặt.</li>
-</ul>`,
-    thumbnail: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=1000&auto=format&fit=crop",
-    images: [
-      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1200&auto=format&fit=crop"
-    ],
-    rated_voltage: "415V - 440V",
-    rated_current: "Dung lượng 300 kVAR (6 cấp x 50kVAR)",
-    frequency: "50 Hz",
-    ip_rating: "IP42",
-    standards: "IEC 61439-1/2, IEC 60831-1/2",
-    short_circuit_current: "25kA/1s",
-    material: "Thép cán nguội tiêu chuẩn (Tole) 1.5mm",
-    thickness: "1.5mm - 2.0mm",
-    surface_finish: "Sơn tĩnh điện công nghiệp RAL 7032",
-    dimensions: "H2000 x W800 x D800 mm",
-    main_components: "Tụ khô Epcos / Ducati / Mikro, Cuộn kháng lọc sóng hài, Contactor chuyên dụng cho tụ bù",
-    specifications: {
-      "Hệ số công suất đạt được": "Cosφ ≥ 0.95 (Tránh phạt tiền điện vô công)",
-      "Số cấp đóng cắt": "6 cấp hoặc 12 cấp tự động luân phiên",
-      "Bảo vệ": "Bảo vệ quá nhiệt, quá áp và quá sóng hài THD-U"
+      "Thời gian tác động": "Trễ cắt điều chỉnh được từ 0.2 đến 10 giây",
+      "Chức năng bảo vệ": "Quá áp, thấp áp, mất pha, đảo thứ tự pha, mất cân bằng pha"
     },
     documents: [],
     is_featured: false,
     warranty_months: 18,
-    created_at: "2026-10-30T01:11:14.627Z",
-    updated_at: "2026-10-30T01:11:14.627Z"
-  },
-  {
-    id: "a9b8c7d6-9876-4321-bca9-fedcba987654",
-    name: "Hệ Thống Thang Máng Cáp & Khay Cáp Điện Mạ Kẽm Nhúng Nóng",
-    slug: "he-thong-thang-mang-cap-ma-kem-nhung-nong",
-    code: "NP-TMC-HDG",
-    brand: "Nguyên Phát",
-    product_type: "cable_tray",
-    category_id: "964efedc-72c8-48a6-90d3-ffe78035ac4c",
-    category_name: "Thang máng cáp điện",
-    description: `<h3>Thang Máng Cáp Điện (Cable Tray / Trunking / Ladder)</h3>
-<p>Sản phẩm gia công đột dập CNC chính xác, mạ kẽm nhúng nóng đạt độ dày lớp mạ 65 - 85 µm theo chuẩn ASTM A123, bền vững vượt trội tại các nhà máy hóa chất và ven biển.</p>`,
-    thumbnail: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=1000&auto=format&fit=crop",
-    images: [
-      "https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=1200&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop"
-    ],
-    rated_voltage: null,
-    rated_current: null,
-    frequency: null,
-    ip_rating: null,
-    standards: "NEMA VE1, BS EN 61537, ASTM A123",
-    short_circuit_current: null,
-    material: "Thép tấm cán nóng tiêu chuẩn SS400",
-    thickness: "1.5mm - 2.5mm",
-    surface_finish: "Mạ kẽm nhúng nóng (Hot-dip Galvanized) hoặc Sơn tĩnh điện",
-    dimensions: "W100mm - W1000mm, H50mm - H150mm, L2500mm",
-    main_components: "Thang máng cáp, cút nối, co chữ T, co ngã tư, giá đỡ treo ty ren",
-    specifications: {
-      "Chiều dài tiêu chuẩn": "2.5m - 3.0m mỗi thanh",
-      "Tải trọng an toàn": "Chịu tải cáp lực lên đến 250kg/m"
-    },
-    documents: [],
-    is_featured: false,
-    warranty_months: 36,
-    created_at: "2026-10-30T01:11:14.627Z",
-    updated_at: "2026-10-30T01:11:14.627Z"
+    created_at: "2026-10-30T01:11:14.700Z",
+    updated_at: "2026-10-30T01:11:14.700Z"
   }
 ];
+
+// =========================================================================
+// HÀM HỖ TRỢ XÁC ĐỊNH DANH MỤC CHA CHUẨN (HIERARCHY MAPPER)
+// - Quy về 1 phân cấp cha duy nhất
+// - Loại bỏ phân cấp con
+// - Bỏ hoàn toàn mục "Hình ảnh thiết bị"
+// =========================================================================
+export function resolveParentCategory(catId, catName, productName) {
+  const cName = (catName || '').trim();
+  const pName = (productName || '').trim();
+  const cNameLower = cName.toLowerCase();
+  const pNameLower = pName.toLowerCase();
+
+  // 1. Nếu là mục "Hình ảnh thiết bị" (hoặc máy móc nhà xưởng máy hàn, máy chấn...) -> Đánh dấu bỏ
+  if (
+    cNameLower.includes('hình ảnh thiết bị') ||
+    catId === '604977d8-7990-4131-b160-77673a786a8a' ||
+    cNameLower === 'hình ảnh & dự án' ||
+    catId === 'bee10ab4-de98-40f4-857a-b544a585a182'
+  ) {
+    // Nếu sản phẩm bắt đầu bằng Tủ điện (được gán nhầm vào Công trình tiêu biểu / Hình ảnh), vẫn đưa về Tủ điện
+    if (pNameLower.startsWith('tủ ') || pNameLower.startsWith('hệ thống tủ') || pNameLower.startsWith('tủ')) {
+      return {
+        id: "e03442e0-789d-46f9-a334-5a5f1cc02642",
+        name: "Tủ điện",
+        slug: "tu-dien",
+        isFacility: false
+      };
+    }
+    return {
+      id: null,
+      name: null,
+      slug: null,
+      isFacility: true // Flag loại bỏ
+    };
+  }
+
+  // 2. Thang máng cáp (Thang cáp, Máng cáp, Tray cáp)
+  if (
+    cNameLower.includes('thang') ||
+    cNameLower.includes('máng cáp') ||
+    cNameLower.includes('tray') ||
+    catId === '09048929-2ca1-48fb-a727-6fc6c259a0a7' ||
+    catId === 'cd8a3f57-a24f-4662-b07f-1fc0ffd85e01'
+  ) {
+    return {
+      id: "09048929-2ca1-48fb-a727-6fc6c259a0a7",
+      name: "Thang máng cáp",
+      slug: "thang-mang-cap",
+      isFacility: false
+    };
+  }
+
+  // 3. Thiết bị đóng cắt (Rơ le, Relay, Contactor, ACB, MCCB)
+  if (
+    cNameLower.includes('đóng cắt') ||
+    cNameLower.includes('rơ le') ||
+    cNameLower.includes('relay') ||
+    pNameLower.includes('rơ le') ||
+    pNameLower.includes('relay') ||
+    catId === '8345389a-c70e-473c-ba34-c6ee68ac237d' ||
+    catId === '06b2d787-d788-453c-a137-896a4a0a4251' ||
+    catId === '31dbd409-8cf1-4b09-9244-533d7e807120'
+  ) {
+    return {
+      id: "8345389a-c70e-473c-ba34-c6ee68ac237d",
+      name: "Thiết bị đóng cắt",
+      slug: "thiet-bi-dong-cat",
+      isFacility: false
+    };
+  }
+
+  // 4. Điện công nghiệp
+  if (
+    cNameLower.includes('điện công nghiệp') ||
+    catId === '192eb51f-01fd-464c-8cb8-4983af568eb1'
+  ) {
+    return {
+      id: "192eb51f-01fd-464c-8cb8-4983af568eb1",
+      name: "Điện công nghiệp",
+      slug: "ien-cong-nghiep",
+      isFacility: false
+    };
+  }
+
+  // 5. Mặc định: Tủ điện (Bao gồm các phân cấp con: Tủ MSB, ATS, Tụ Bù, Điều Khiển, VCB, MDB, Hòa Đồng Bộ...)
+  return {
+    id: "e03442e0-789d-46f9-a334-5a5f1cc02642",
+    name: "Tủ điện",
+    slug: "tu-dien",
+    isFacility: false
+  };
+}
+
+// =========================================================================
+// HÀM LẤY DANH MỤC: CHỈ GIỮ 1 PHÂN CẤP CHA, LỌC BỎ TẤT CẢ CON, BỎ HÌNH ẢNH THIẾT BỊ
+// =========================================================================
+export async function getCategories(customToken = null) {
+  if (Array.isArray(cachedCategoriesList) && cachedCategoriesList.length > 0) {
+    return cachedCategoriesList;
+  }
+
+  const token = customToken || localStorage.getItem('np_admin_token') || '';
+  const headers = { 'Accept': 'application/json' };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/categories/`, { headers });
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        // 1. Chỉ giữ phân cấp cha: parent_id === null
+        // 2. Lọc bỏ phân cấp con: bỏ tất cả parent_id !== null
+        // 3. Phân cấp cha bỏ mục hình ảnh thiết bị & hình ảnh dự án
+        const parents = data.filter((c) => {
+          if (c.parent_id !== null && c.parent_id !== undefined && c.parent_id !== '') {
+            return false;
+          }
+          const name = (c.name || '').toLowerCase();
+          const slug = (c.slug || '').toLowerCase();
+          if (name.includes('hình ảnh') || slug.includes('hinh-anh') || name.includes('dự án')) {
+            return false;
+          }
+          return true;
+        });
+
+        if (parents.length > 0) {
+          // Sắp xếp thứ tự trực quan: Tủ điện -> Thang máng cáp -> Thiết bị đóng cắt -> Điện công nghiệp
+          const orderMap = {
+            'tu-dien': 1,
+            'thang-mang-cap': 2,
+            'thiet-bi-dong-cat': 3,
+            'ien-cong-nghiep': 4
+          };
+          parents.sort((a, b) => (orderMap[a.slug] || 99) - (orderMap[b.slug] || 99));
+
+          cachedCategoriesList = parents;
+          return parents;
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('Lỗi gọi API categories live, dùng Mock Parent Categories:', err.message);
+  }
+
+  cachedCategoriesList = MOCK_PARENT_CATEGORIES;
+  return MOCK_PARENT_CATEGORIES;
+}
 
 // =========================================================================
 // HÀM CHUẨN HÓA DỮ LIỆU ĐẦY ĐỦ 28 TRƯỜNG PRODUCTRESPONSE
@@ -467,15 +552,24 @@ export function normalizeProduct(raw) {
     return arr.map(cleanUrl).filter(Boolean);
   };
 
+  const rawCatId = raw.category_id ?? null;
+  const rawCatName = cleanString(raw.category_name);
+  const rawName = cleanString(raw.name) || 'Sản phẩm Cơ Điện Nguyên Phát';
+
+  // Xác định phân cấp cha chuẩn 1 cấp duy nhất (bỏ con, bỏ hình ảnh thiết bị)
+  const parentCat = resolveParentCategory(rawCatId, rawCatName, rawName);
+
   return {
     id: raw.id || '',
-    name: cleanString(raw.name) || 'Sản phẩm Cơ Điện Nguyên Phát',
+    name: rawName,
     slug: cleanString(raw.slug) || raw.id || '',
     code: cleanString(raw.code),
     brand: cleanString(raw.brand) || 'Nguyên Phát',
     product_type: cleanString(raw.product_type) || 'switchboard',
-    category_id: raw.category_id ?? null,
-    category_name: cleanString(raw.category_name) || 'Tủ điện công nghiệp',
+    category_id: parentCat.id || rawCatId,
+    category_name: parentCat.name || 'Tủ điện',
+    raw_category_name: rawCatName,
+    is_facility_equipment: parentCat.isFacility,
     description: typeof raw.description === 'string' && raw.description !== 'string' ? raw.description : '',
     thumbnail: cleanUrl(raw.thumbnail),
     images: cleanArrayOfStrings(raw.images),
@@ -493,7 +587,7 @@ export function normalizeProduct(raw) {
     specifications: (raw.specifications && typeof raw.specifications === 'object') ? raw.specifications : {},
     documents: Array.isArray(raw.documents) ? raw.documents : [],
     is_featured: Boolean(raw.is_featured),
-    warranty_months: typeof raw.warranty_months === 'number' ? raw.warranty_months : 12,
+    warranty_months: typeof raw.warranty_months === 'number' ? raw.warranty_months : 24,
     created_at: raw.created_at || null,
     updated_at: raw.updated_at || null
   };
@@ -504,7 +598,6 @@ export function normalizeProduct(raw) {
 // Có đầy đủ Mock Layer hỗ trợ phân trang, lọc danh mục, tìm kiếm
 // =========================================================================
 export async function getProducts(params = {}, customToken = null) {
-  // Chuẩn hóa params linh hoạt: có thể truyền category_id dạng chuỗi hoặc object params
   const options = typeof params === 'string' ? { category_id: params } : (params || {});
   const { category_id, product_type, is_featured, search, skip = 0, limit = 200 } = options;
 
@@ -537,10 +630,16 @@ export async function getProducts(params = {}, customToken = null) {
     if (response.ok) {
       const data = await response.json();
       if (Array.isArray(data) && data.length > 0) {
-        const normalized = data.map(normalizeProduct).filter(Boolean);
+        // Chuẩn hóa và lọc bỏ các mục "Hình ảnh thiết bị"
+        const normalized = data
+          .map(normalizeProduct)
+          .filter(Boolean)
+          .filter((p) => !p.is_facility_equipment);
+
         if (!category_id && !search && !product_type) {
           cachedProductsList = normalized;
         }
+
         return {
           products: normalized,
           isLive: true,
@@ -629,7 +728,7 @@ export async function getProductDetailData(idOrSlug, customToken = null) {
  */
 export function mockGetProducts(params = {}) {
   const { category_id, product_type, is_featured, search, skip = 0, limit = 200 } = params;
-  let list = MOCK_PRODUCTS.map(normalizeProduct).filter(Boolean);
+  let list = MOCK_PRODUCTS.map(normalizeProduct).filter(Boolean).filter((p) => !p.is_facility_equipment);
 
   if (category_id && category_id !== 'all') {
     list = list.filter((p) => p.category_id === category_id || p.category_name === category_id);
