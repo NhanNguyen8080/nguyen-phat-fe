@@ -16,7 +16,7 @@ const ProductDetail = ({
   onNavigateBack,
   onNavigateCategory,
   onNavigateHome,
-  onNavigateContact,
+  onNavigateContact: _onNavigateContact,
   onSelectProduct
 }) => {
   const [product, setProduct] = useState(null);
@@ -31,17 +31,6 @@ const ProductDetail = ({
   const [failedImages, setFailedImages] = useState({});
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
-  // RFQ (Request For Quotation) Modal states
-  const [isQuoteOpen, setIsQuoteOpen] = useState(false);
-  const [quoteSubmitted, setQuoteSubmitted] = useState(false);
-  const [quoteForm, setQuoteForm] = useState({
-    fullName: '',
-    phone: '',
-    email: '',
-    company: '',
-    projectLocation: '',
-    note: ''
-  });
 
   const detailTabsRef = useRef(null);
 
@@ -137,9 +126,9 @@ const ProductDetail = ({
     };
   }, [product, allProducts]);
 
-  // Lock scroll when modal or lightbox is active
+  // Lock scroll when lightbox is active
   useEffect(() => {
-    if (isLightboxOpen || isQuoteOpen) {
+    if (isLightboxOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
@@ -147,14 +136,13 @@ const ProductDetail = ({
     return () => {
       document.body.style.overflow = '';
     };
-  }, [isLightboxOpen, isQuoteOpen]);
+  }, [isLightboxOpen]);
 
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
         if (isLightboxOpen) setIsLightboxOpen(false);
-        if (isQuoteOpen) setIsQuoteOpen(false);
       } else if (isLightboxOpen && e.key === 'ArrowLeft') {
         handlePrevImage();
       } else if (isLightboxOpen && e.key === 'ArrowRight') {
@@ -164,7 +152,7 @@ const ProductDetail = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isLightboxOpen, isQuoteOpen, handlePrevImage, handleNextImage]);
+  }, [isLightboxOpen, handlePrevImage, handleNextImage]);
 
   const scrollToTabs = (tabKey) => {
     if (tabKey) setActiveTab(tabKey);
@@ -181,21 +169,6 @@ const ProductDetail = ({
     } else if (onNavigateBack) {
       onNavigateBack();
     }
-  };
-
-  const openQuoteModal = () => {
-    setQuoteSubmitted(false);
-    setIsQuoteOpen(true);
-  };
-
-  const handleQuoteChange = (e) => {
-    const { name, value } = e.target;
-    setQuoteForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleQuoteSubmit = (e) => {
-    e.preventDefault();
-    setQuoteSubmitted(true);
   };
 
   // Shimmer Skeleton
@@ -680,24 +653,6 @@ const ProductDetail = ({
                     </div>
                   )}
                 </div>
-
-                {/* Banner Kêu gọi RFQ trong Tab Specs */}
-                <div className="pd-specs-rfq-banner">
-                  <div className="pd-rfq-banner-text">
-                    <h4>Cần tùy biến thông số hoặc thiết kế theo sơ đồ một sợi (SLD) riêng?</h4>
-                    <p>Kỹ sư Cơ Điện Nguyên Phát sẵn sàng bóc tách khối lượng và lên bản vẽ sơ bộ miễn phí trong 24h.</p>
-                  </div>
-                  <div className="pd-rfq-banner-actions">
-                    <button type="button" className="btn-primary" onClick={openQuoteModal}>
-                      Gửi Yêu Cầu Thiết Kế Ngay
-                    </button>
-                    {onNavigateContact && (
-                      <button type="button" className="btn-secondary" onClick={onNavigateContact}>
-                        Liên Hệ Kỹ Sư Trực Tiếp
-                      </button>
-                    )}
-                  </div>
-                </div>
               </div>
             )}
 
@@ -920,124 +875,6 @@ const ProductDetail = ({
           </section>
         )}
       </main>
-
-      {/* =============================================
-          MODAL YÊU CẦU BÁO GIÁ KỸ THUẬT (RFQ)
-          ============================================= */}
-      {isQuoteOpen && (
-        <div className="pd-modal-overlay" onClick={() => setIsQuoteOpen(false)}>
-          <div className="pd-modal-card" onClick={(e) => e.stopPropagation()}>
-            <button
-              type="button"
-              className="pd-modal-close"
-              onClick={() => setIsQuoteOpen(false)}
-              aria-label="Đóng bảng báo giá"
-            >
-              ✕
-            </button>
-
-            {!quoteSubmitted ? (
-              <form className="pd-quote-form" onSubmit={handleQuoteSubmit}>
-                <div className="pd-modal-header">
-                  <span className="pd-modal-eyebrow">Yêu Cầu Báo Giá Kỹ Thuật (RFQ)</span>
-                  <h3 className="pd-modal-title">{product.name}</h3>
-                  <div className="pd-modal-code-badge">
-                    Mã thiết bị: <strong>{product.code || 'NP-STD'}</strong> • {product.category_name || 'Tủ điện'}
-                  </div>
-                </div>
-
-                <div className="pd-form-grid">
-                  <div className="pd-form-group">
-                    <label>Họ và tên kỹ sư / Phụ trách mua hàng *</label>
-                    <input
-                      type="text"
-                      name="fullName"
-                      required
-                      placeholder="Ví dụ: Nguyễn Văn An"
-                      value={quoteForm.fullName}
-                      onChange={handleQuoteChange}
-                    />
-                  </div>
-
-                  <div className="pd-form-group">
-                    <label>Số điện thoại liên hệ *</label>
-                    <input
-                      type="tel"
-                      name="phone"
-                      required
-                      placeholder="Ví dụ: 0912 345 678"
-                      value={quoteForm.phone}
-                      onChange={handleQuoteChange}
-                    />
-                  </div>
-
-                  <div className="pd-form-group">
-                    <label>Email nhận hồ sơ báo giá *</label>
-                    <input
-                      type="email"
-                      name="email"
-                      required
-                      placeholder="Ví dụ: engineer@company.com"
-                      value={quoteForm.email}
-                      onChange={handleQuoteChange}
-                    />
-                  </div>
-
-                  <div className="pd-form-group">
-                    <label>Công ty / Dự án thi công</label>
-                    <input
-                      type="text"
-                      name="company"
-                      placeholder="Ví dụ: Công ty Cơ Điện Delta / Nhà máy Foxconn"
-                      value={quoteForm.company}
-                      onChange={handleQuoteChange}
-                    />
-                  </div>
-                </div>
-
-                <div className="pd-form-group">
-                  <label>Thông số kỹ thuật bổ sung hoặc file đính kèm SLD</label>
-                  <textarea
-                    name="note"
-                    rows="3"
-                    placeholder="Ví dụ: Cần dòng định mức 3200A, thiết bị chính ABB, cấp bảo vệ IP54 ngoài trời..."
-                    value={quoteForm.note}
-                    onChange={handleQuoteChange}
-                  ></textarea>
-                </div>
-
-                <div className="pd-modal-actions">
-                  <button type="submit" className="btn-primary pd-submit-rfq-btn">
-                    Gửi Yêu Cầu Kỹ Thuật Ngay
-                  </button>
-                  <button
-                    type="button"
-                    className="btn-secondary"
-                    onClick={() => setIsQuoteOpen(false)}
-                  >
-                    Hủy bỏ
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <div className="pd-quote-success">
-                <div className="pd-success-icon">✓</div>
-                <h3>Yêu Cầu Báo Giá Đã Được Gửi Thành Công!</h3>
-                <p>
-                  Cảm ơn Quý khách <strong>{quoteForm.fullName || 'bạn'}</strong>. Ban Kỹ thuật Cơ Điện Nguyên Phát sẽ rà soát thông số thiết bị <strong>{product.code || product.name}</strong> và gửi bảng dự toán chi tiết tới email <strong>{quoteForm.email}</strong> trong vòng 24 giờ.
-                </p>
-                <button
-                  type="button"
-                  className="btn-primary"
-                  onClick={() => setIsQuoteOpen(false)}
-                >
-                  Hoàn tất &amp; Đóng
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
 
       {/* =============================================
           FULLSCREEN LIGHTBOX
