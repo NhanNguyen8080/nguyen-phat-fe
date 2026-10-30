@@ -3,12 +3,39 @@ import './ProductDetail.css';
 import { getProductDetailData } from '../../services/productService';
 
 const IMAGE_VIEW_META = [
-  { tag: 'Phối cảnh toàn diện', desc: 'Kiến trúc & kết cấu tổng quan' },
-  { tag: 'Cận cảnh cấu kiện', desc: 'Độ tinh xảo mối hàn & liên kết' },
-  { tag: 'Gia công tại nhà máy', desc: 'Dây chuyền sản xuất cơ khí CNC' },
-  { tag: 'Lắp dựng thực tế', desc: 'Thi công cẩu lắp tại công trường' },
-  { tag: 'Nghiệm thu hoàn thiện', desc: 'Bàn giao công trình chuẩn quốc tế' },
-  { tag: 'Chi tiết kỹ thuật', desc: 'Góc chụp kỹ thuật chuyên sâu' }
+  { tag: 'Phối cảnh toàn diện', desc: 'Kiến trúc & kết cấu tổng quan tủ điện' },
+  { tag: 'Mặt trước cánh tủ', desc: 'Bố trí thiết bị đo lường, đồng hồ & đèn báo' },
+  { tag: 'Nội thất & Thiết bị chính', desc: 'Thiết bị đóng cắt ACB/MCCB & Busbar đồng' },
+  { tag: 'Thanh cái đồng (Busbar)', desc: 'Gia công uốn CNC & mạ thiếc cách điện' },
+  { tag: 'Lắp ráp tại nhà máy', desc: 'Quy trình đấu nối & kiểm tra Type-test' },
+  { tag: 'Nghiệm thu tại công trình', desc: 'Lắp đặt bàn giao chuẩn kỹ thuật IEC' }
+];
+
+const DEFAULT_DOCUMENTS = [
+  {
+    title: 'Catalogue Kỹ Thuật Tổng Hợp Sản Phẩm',
+    file_type: 'PDF',
+    size: '3.4 MB',
+    url: '#'
+  },
+  {
+    title: 'Bản Vẽ Kích Thước Hình Học & Mặt Bằng (Outline Drawing)',
+    file_type: 'PDF',
+    size: '1.8 MB',
+    url: '#'
+  },
+  {
+    title: 'Sơ Đồ Nguyên Lý Đơn Tuyến (Single Line Diagram - SLD)',
+    file_type: 'DWG/PDF',
+    size: '2.5 MB',
+    url: '#'
+  },
+  {
+    title: 'Hướng Dẫn Vận Hành, Bảo Trì & An Toàn (O&M Manual)',
+    file_type: 'PDF',
+    size: '4.2 MB',
+    url: '#'
+  }
 ];
 
 const ProductDetail = ({
@@ -23,6 +50,9 @@ const ProductDetail = ({
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Active Tab: 'specs' | 'desc' | 'gallery' | 'docs'
+  const [activeTab, setActiveTab] = useState('specs');
+
   // Gallery & Lightbox states
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [failedImages, setFailedImages] = useState({});
@@ -30,20 +60,24 @@ const ProductDetail = ({
 
   // Micro-interaction states
   const [copiedLink, setCopiedLink] = useState(false);
+  const [copiedCode, setCopiedCode] = useState(false);
   const [copiedId, setCopiedId] = useState(false);
 
-  // Quick Inquiry Modal states
+  // RFQ (Request For Quotation) Modal states
   const [isQuoteOpen, setIsQuoteOpen] = useState(false);
   const [quoteSubmitted, setQuoteSubmitted] = useState(false);
   const [quoteForm, setQuoteForm] = useState({
     fullName: '',
     phone: '',
     email: '',
+    company: '',
+    projectLocation: '',
     note: ''
   });
 
-  const descriptionRef = useRef(null);
+  const detailTabsRef = useRef(null);
 
+  // Fetch product data
   useEffect(() => {
     let isMounted = true;
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -58,6 +92,7 @@ const ProductDetail = ({
       setAllProducts(list || []);
       setActiveImageIndex(0);
       setFailedImages({});
+      setActiveTab('specs');
       setLoading(false);
     };
 
@@ -68,7 +103,7 @@ const ProductDetail = ({
     };
   }, [productIdOrSlug]);
 
-  // Danh sách ảnh lấy đúng từ 2 trường `thumbnail` và `images` của API (loại bỏ trùng lặp & URL lỗi)
+  // Gallery images merged from thumbnail + images
   const galleryImages = useMemo(() => {
     if (!product) return [];
     const urls = [];
@@ -85,7 +120,6 @@ const ProductDetail = ({
     return urls;
   }, [product, failedImages]);
 
-  // Đảm bảo activeImageIndex luôn nằm trong phạm vi hợp lệ nếu có ảnh bị lỗi tải
   const safeImageIndex = galleryImages.length > 0
     ? Math.min(activeImageIndex, galleryImages.length - 1)
     : 0;
@@ -107,7 +141,7 @@ const ProductDetail = ({
     setActiveImageIndex((prev) => (prev >= galleryImages.length - 1 ? 0 : prev + 1));
   }, [galleryImages.length]);
 
-  // Lọc sản phẩm liên quan dựa trên `category_id` hoặc `category_name` từ API
+  // Related products
   const { relatedProducts, hasSameCategory } = useMemo(() => {
     if (!product || !Array.isArray(allProducts)) {
       return { relatedProducts: [], hasSameCategory: false };
@@ -135,18 +169,15 @@ const ProductDetail = ({
     };
   }, [product, allProducts]);
 
-  // Phân tích các đoạn văn / gạch đầu dòng từ trường `description` của API
-  const descriptionBlocks = useMemo(() => {
-    if (!product?.description) return [];
-    return product.description
-      .split(/\r?\n/)
-      .map((line) => line.trim())
-      .filter(Boolean);
+  // Documents list
+  const documentsList = useMemo(() => {
+    if (product?.documents && Array.isArray(product.documents) && product.documents.length > 0) {
+      return product.documents;
+    }
+    return DEFAULT_DOCUMENTS;
   }, [product]);
 
-  const isLongDescription = (product?.description || '').length > 220 || descriptionBlocks.length > 2;
-
-  // Khóa cuộn body an toàn khi mở Lightbox hoặc Modal
+  // Lock scroll when modal or lightbox is active
   useEffect(() => {
     if (isLightboxOpen || isQuoteOpen) {
       document.body.style.overflow = 'hidden';
@@ -158,7 +189,7 @@ const ProductDetail = ({
     };
   }, [isLightboxOpen, isQuoteOpen]);
 
-  // Điều hướng bàn phím cho Lightbox & Modal
+  // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
@@ -183,6 +214,15 @@ const ProductDetail = ({
     setTimeout(() => setCopiedLink(false), 2200);
   };
 
+  const handleCopyCode = (text) => {
+    if (!text) return;
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(text).catch(() => {});
+    }
+    setCopiedCode(true);
+    setTimeout(() => setCopiedCode(false), 2000);
+  };
+
   const handleCopyId = (text) => {
     if (!text) return;
     if (navigator.clipboard?.writeText) {
@@ -192,9 +232,10 @@ const ProductDetail = ({
     setTimeout(() => setCopiedId(false), 2000);
   };
 
-  const scrollToDescription = () => {
-    if (descriptionRef.current) {
-      const top = descriptionRef.current.getBoundingClientRect().top + window.pageYOffset - 150;
+  const scrollToTabs = (tabKey) => {
+    if (tabKey) setActiveTab(tabKey);
+    if (detailTabsRef.current) {
+      const top = detailTabsRef.current.getBoundingClientRect().top + window.pageYOffset - 130;
       window.scrollTo({ top, behavior: 'smooth' });
     }
   };
@@ -223,26 +264,6 @@ const ProductDetail = ({
     }
   };
 
-  const formatDateTime = (isoString) => {
-    if (!isoString) return '—';
-    try {
-      const d = new Date(isoString);
-      if (Number.isNaN(d.getTime())) return '—';
-      const datePart = d.toLocaleDateString('vi-VN', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-      });
-      const timePart = d.toLocaleTimeString('vi-VN', {
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-      return `${datePart} • ${timePart}`;
-    } catch {
-      return '—';
-    }
-  };
-
   const shortenId = (id) => {
     if (!id || id.length <= 18) return id || '—';
     return `${id.slice(0, 8)}...${id.slice(-6)}`;
@@ -263,7 +284,7 @@ const ProductDetail = ({
     setQuoteSubmitted(true);
   };
 
-  // Shimmer Skeleton khi đang tải API
+  // Shimmer Skeleton
   if (loading) {
     return (
       <div className="pd-page">
@@ -295,7 +316,7 @@ const ProductDetail = ({
     );
   }
 
-  // Trạng thái không tìm thấy sản phẩm
+  // Not found state
   if (!product) {
     return (
       <div className="pd-empty-state container">
@@ -317,7 +338,7 @@ const ProductDetail = ({
 
   return (
     <div className="pd-page">
-      {/* Thanh điều hướng phụ Sticky */}
+      {/* Sticky Secondary Navigation Bar */}
       <div className="pd-subnav">
         <div className="container pd-subnav-inner">
           <div className="pd-subnav-left">
@@ -367,40 +388,52 @@ const ProductDetail = ({
             </nav>
           </div>
 
-          <button
-            type="button"
-            className={`pd-share-btn ${copiedLink ? 'copied' : ''}`}
-            onClick={handleCopyLink}
-            title="Sao chép đường dẫn sản phẩm"
-          >
-            {copiedLink ? (
-              <>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                <span>Đã sao chép link</span>
-              </>
-            ) : (
-              <>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="18" cy="5" r="3"></circle>
-                  <circle cx="6" cy="12" r="3"></circle>
-                  <circle cx="18" cy="19" r="3"></circle>
-                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
-                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
-                </svg>
-                <span>Chia sẻ</span>
-              </>
-            )}
-          </button>
+          <div className="pd-subnav-right">
+            <button
+              type="button"
+              className={`pd-share-btn ${copiedLink ? 'copied' : ''}`}
+              onClick={handleCopyLink}
+              title="Sao chép đường dẫn sản phẩm"
+            >
+              {copiedLink ? (
+                <>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span>Đã chép link</span>
+                </>
+              ) : (
+                <>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="18" cy="5" r="3"></circle>
+                    <circle cx="6" cy="12" r="3"></circle>
+                    <circle cx="18" cy="19" r="3"></circle>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                  </svg>
+                  <span>Chia sẻ</span>
+                </>
+              )}
+            </button>
+
+            <button
+              type="button"
+              className="pd-subnav-quote-btn"
+              onClick={openQuoteModal}
+            >
+              Nhận Báo Giá
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Nội dung chính */}
+      {/* Main Container */}
       <main className="container pd-main">
-        {/* Khối Hero 2 cột hiển thị đúng trường API: thumbnail, images, category_name, name, description, id, slug, created_at, updated_at */}
+        {/* =============================================
+            HERO SECTION: GALLERY (LEFT) + SUMMARY (RIGHT)
+            ============================================= */}
         <section className="pd-hero-grid">
-          {/* Cột Trái: Trình xem ảnh thích ứng (1 ảnh, nhiều ảnh, hoặc chưa có ảnh) */}
+          {/* Cột Trái: Trình xem ảnh đa góc nhìn */}
           <div className="pd-gallery-col">
             <div className="pd-gallery-sticky">
               {galleryImages.length > 0 ? (
@@ -481,7 +514,7 @@ const ProductDetail = ({
                     )}
                   </div>
 
-                  {/* Dải ảnh thu nhỏ: chỉ hiển thị khi mảng images có thêm hình */}
+                  {/* Dải ảnh thu nhỏ */}
                   {galleryImages.length > 1 && (
                     <div className="pd-thumbs-strip" role="tablist" aria-label="Danh sách hình ảnh sản phẩm">
                       {galleryImages.map((imgUrl, idx) => (
@@ -505,139 +538,144 @@ const ProductDetail = ({
                   )}
                 </>
               ) : (
-                /* Placeholder thanh lịch khi sản phẩm trên API chưa upload thumbnail & images: [] */
                 <div className="pd-no-image-stage">
-                  <div className="pd-no-image-icon">
-                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                      <polyline points="21 15 16 10 5 21"></polyline>
-                    </svg>
-                  </div>
-                  <span>Chưa có hình ảnh cho sản phẩm này</span>
+                  <div className="pd-no-image-icon">⚡</div>
+                  <span>Hình ảnh tủ điện đang được cập nhật</span>
                 </div>
               )}
+
+              {/* Cam kết kỹ thuật mini dưới Gallery */}
+              <div className="pd-gallery-trust-strip">
+                <div className="pd-trust-item">
+                  <span className="pd-trust-icon">✓</span>
+                  <span>100% Type-tested IEC</span>
+                </div>
+                <div className="pd-trust-item">
+                  <span className="pd-trust-icon">✓</span>
+                  <span>Đồng mạ thiếc 99.99%</span>
+                </div>
+                <div className="pd-trust-item">
+                  <span className="pd-trust-icon">✓</span>
+                  <span>CO/CQ chính hãng</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Cột Phải: Thông tin định danh từ API & Hành động */}
+          {/* Cột Phải: Thông tin định danh kỹ thuật & Hành động */}
           <div className="pd-summary-col">
+            {/* Top Badges */}
             <div className="pd-badges-row">
-              {product.category_name ? (
+              {product.category_name && (
                 <button
                   type="button"
                   className="pd-category-badge clickable"
                   onClick={handleCategoryClick}
-                  title={`Xem các sản phẩm thuộc danh mục ${product.category_name}`}
                 >
                   {product.category_name}
                 </button>
-              ) : (
-                <span className="pd-category-badge">Sản phẩm</span>
               )}
 
-              {(product.updated_at || product.created_at) && (
-                <span className="pd-date-pill">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 16 14"></polyline>
-                  </svg>
-                  Cập nhật: {formatDate(product.updated_at || product.created_at)}
+              {product.brand && (
+                <span className="pd-brand-badge">
+                  {product.brand}
+                </span>
+              )}
+
+              {product.is_featured && (
+                <span className="pd-featured-badge">
+                  ★ Sản phẩm nổi bật
+                </span>
+              )}
+
+              {product.warranty_months && (
+                <span className="pd-warranty-badge">
+                  🛡️ Bảo hành {product.warranty_months} Tháng
                 </span>
               )}
             </div>
 
+            {/* Product Title */}
             <h1 className="pd-title">{product.name}</h1>
 
-            {/* Tóm tắt mô tả từ trường `description` */}
-            <div className="pd-lead-wrap">
-              {product.description ? (
-                <>
-                  <p className={`pd-lead-desc ${isLongDescription ? 'clamped' : ''}`}>
-                    {descriptionBlocks[0]}
-                  </p>
-                  {isLongDescription && (
-                    <button
-                      type="button"
-                      className="pd-readmore-btn"
-                      onClick={scrollToDescription}
-                    >
-                      Xem đầy đủ mô tả chi tiết ↓
-                    </button>
-                  )}
-                </>
-              ) : (
-                <p className="pd-lead-empty">
-                  Thông tin mô tả chi tiết cho sản phẩm đang được cập nhật.
-                </p>
+            {/* Product Code Line */}
+            <div className="pd-code-strip">
+              <span className="pd-code-label">Mã sản phẩm:</span>
+              <code className="pd-code-value">
+                {product.code || 'NP-STD'}
+              </code>
+              <button
+                type="button"
+                className={`pd-code-copy-btn ${copiedCode ? 'copied' : ''}`}
+                onClick={() => handleCopyCode(product.code || 'NP-STD')}
+                title="Sao chép mã hiệu sản phẩm"
+              >
+                {copiedCode ? 'Đã sao chép ✓' : 'Sao chép mã'}
+              </button>
+
+              {product.product_type && (
+                <span className="pd-type-tag">
+                  Dòng: {product.product_type === 'manufactured' ? 'Sản xuất trực tiếp' : product.product_type}
+                </span>
               )}
             </div>
 
-            {/* Bảng thông tin định danh trích xuất đúng 100% từ API Schema */}
-            <div className="pd-meta-card">
-              <div className="pd-meta-card-header">Thông tin sản phẩm</div>
+            {/* 6 Hero Highlights: Thẻ thông số điện - cơ then chốt */}
+            <div className="pd-hero-specs-grid">
+              <div className="pd-hero-spec-card">
+                <span className="pd-spec-icon">⚡</span>
+                <span className="pd-spec-name">Điện áp định mức</span>
+                <span className="pd-spec-val">{product.rated_voltage || '380V - 415V AC'}</span>
+              </div>
 
-              <div className="pd-meta-rows">
-                <div className="pd-meta-row">
-                  <span className="pd-meta-label">Danh mục</span>
-                  <span className="pd-meta-value">
-                    {product.category_name ? (
-                      <button
-                        type="button"
-                        className="pd-meta-cat-link"
-                        onClick={handleCategoryClick}
-                      >
-                        {product.category_name}
-                      </button>
-                    ) : (
-                      'Chưa phân loại'
-                    )}
-                  </span>
-                </div>
+              <div className="pd-hero-spec-card highlight">
+                <span className="pd-spec-icon">🔌</span>
+                <span className="pd-spec-name">Dòng điện định mức</span>
+                <span className="pd-spec-val">{product.rated_current || 'Theo yêu cầu thiết kế'}</span>
+              </div>
 
-                {product.slug && (
-                  <div className="pd-meta-row">
-                    <span className="pd-meta-label">Đường dẫn (Slug)</span>
-                    <code className="pd-meta-code">{product.slug}</code>
-                  </div>
-                )}
+              <div className="pd-hero-spec-card">
+                <span className="pd-spec-icon">🛡️</span>
+                <span className="pd-spec-name">Cấp bảo vệ vỏ tủ</span>
+                <span className="pd-spec-val">{product.ip_rating || 'IP43 / IP54'}</span>
+              </div>
 
-                {product.id && (
-                  <div className="pd-meta-row">
-                    <span className="pd-meta-label">Mã sản phẩm (ID)</span>
-                    <div className="pd-meta-id-group">
-                      <code className="pd-meta-code" title={product.id}>
-                        {shortenId(product.id)}
-                      </code>
-                      <button
-                        type="button"
-                        className={`pd-copy-mini-btn ${copiedId ? 'copied' : ''}`}
-                        onClick={() => handleCopyId(product.id)}
-                        title="Sao chép mã ID đầy đủ"
-                      >
-                        {copiedId ? 'Đã chép ✓' : 'Sao chép'}
-                      </button>
-                    </div>
-                  </div>
-                )}
+              <div className="pd-hero-spec-card">
+                <span className="pd-spec-icon">💥</span>
+                <span className="pd-spec-name">Dòng cắt ngắn mạch</span>
+                <span className="pd-spec-val">{product.short_circuit_current || 'Theo thiết kế (kA)'}</span>
+              </div>
 
-                {product.created_at && (
-                  <div className="pd-meta-row">
-                    <span className="pd-meta-label">Ngày đăng tải</span>
-                    <span className="pd-meta-value">{formatDateTime(product.created_at)}</span>
-                  </div>
-                )}
+              <div className="pd-hero-spec-card">
+                <span className="pd-spec-icon">📜</span>
+                <span className="pd-spec-name">Tiêu chuẩn sản xuất</span>
+                <span className="pd-spec-val">{product.standards || 'IEC 61439-1/2'}</span>
+              </div>
 
-                {product.updated_at && (
-                  <div className="pd-meta-row">
-                    <span className="pd-meta-label">Cập nhật gần nhất</span>
-                    <span className="pd-meta-value">{formatDateTime(product.updated_at)}</span>
-                  </div>
-                )}
+              <div className="pd-hero-spec-card">
+                <span className="pd-spec-icon">⏱️</span>
+                <span className="pd-spec-name">Tần số làm việc</span>
+                <span className="pd-spec-val">{product.frequency || '50Hz / 60Hz'}</span>
               </div>
             </div>
 
-            {/* Nhóm nút hành động chuyển đổi */}
+            {/* Lead Description Preview */}
+            <div className="pd-lead-wrap">
+              <p className="pd-lead-desc">
+                {product.description
+                  ? product.description.replace(/<[^>]+>/g, ' ').slice(0, 190) + '...'
+                  : 'Sản phẩm tủ điện công nghiệp chế tạo theo tiêu chuẩn quốc tế IEC, đáp ứng nghiêm ngặt an toàn vận hành và thẩm mỹ công trình.'}
+              </p>
+              <button
+                type="button"
+                className="pd-jump-desc-btn"
+                onClick={() => scrollToTabs('desc')}
+              >
+                Xem chi tiết mô tả kỹ thuật ↓
+              </button>
+            </div>
+
+            {/* CTA Group */}
             <div className="pd-cta-group">
               <button
                 type="button"
@@ -647,252 +685,456 @@ const ProductDetail = ({
                 <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                 </svg>
-                <span>Yêu Cầu Tư Vấn &amp; Báo Giá</span>
+                <span>Yêu Cầu Tư Vấn &amp; Báo Giá SLD</span>
               </button>
 
               <button
                 type="button"
-                className="pd-btn-contact"
-                onClick={onNavigateContact}
+                className="pd-btn-download-docs"
+                onClick={() => scrollToTabs('docs')}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
                 </svg>
-                <span>Liên hệ trực tiếp</span>
+                <span>Tài Liệu &amp; Bản Vẽ</span>
               </button>
+            </div>
+
+            {/* Quick Meta Footer */}
+            <div className="pd-quick-meta-footer">
+              <div className="pd-meta-id-line">
+                <span>Mã hệ thống:</span>
+                <code title={product.id}>{shortenId(product.id)}</code>
+                <button
+                  type="button"
+                  className={`pd-copy-id-btn ${copiedId ? 'copied' : ''}`}
+                  onClick={() => handleCopyId(product.id)}
+                >
+                  {copiedId ? '✓' : 'Copy'}
+                </button>
+              </div>
+              <div className="pd-meta-date-line">
+                Cập nhật: {formatDate(product.updated_at || product.created_at)}
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Phần Chi tiết Mô tả & Bộ sưu tập hình ảnh thực tế từ API */}
-        <section className="pd-detail-layout" ref={descriptionRef}>
-          <div className="pd-detail-main-col">
-            <div className="pd-content-card">
-              <h2 className="pd-section-heading">Mô Tả Chi Tiết Sản Phẩm</h2>
+        {/* =============================================
+            TABS SECTION: FULL SPECS, DESCRIPTION, GALLERY, DOCS
+            ============================================= */}
+        <section className="pd-tabs-section" ref={detailTabsRef}>
+          {/* Tab Navigation Headers */}
+          <div className="pd-tabs-nav" role="tablist">
+            <button
+              type="button"
+              className={`pd-tab-btn ${activeTab === 'specs' ? 'active' : ''}`}
+              onClick={() => setActiveTab('specs')}
+              role="tab"
+              aria-selected={activeTab === 'specs'}
+            >
+              <span className="pd-tab-icon">📊</span>
+              <span>Thông Số Kỹ Thuật Toàn Diện</span>
+            </button>
 
-              {descriptionBlocks.length > 0 ? (
-                <div className="pd-description-body">
-                  {descriptionBlocks.map((block, idx) => {
-                    const isBullet = /^[-•*]\s+/.test(block);
-                    if (isBullet) {
-                      return (
-                        <div key={idx} className="pd-desc-bullet">
-                          <span className="pd-bullet-dot" />
-                          <span>{block.replace(/^[-•*]\s+/, '')}</span>
-                        </div>
-                      );
-                    }
-                    return <p key={idx}>{block}</p>;
-                  })}
-                </div>
-              ) : (
-                <div className="pd-description-placeholder">
-                  <p>
-                    Nội dung mô tả chi tiết cho sản phẩm <strong>{product.name}</strong> đang được cập nhật trên hệ thống. Quý khách vui lòng nhấn <strong>Yêu cầu tư vấn &amp; Báo giá</strong> để nhận thông tin trực tiếp từ Nguyên Phát.
-                  </p>
-                </div>
-              )}
-            </div>
+            <button
+              type="button"
+              className={`pd-tab-btn ${activeTab === 'desc' ? 'active' : ''}`}
+              onClick={() => setActiveTab('desc')}
+              role="tab"
+              aria-selected={activeTab === 'desc'}
+            >
+              <span className="pd-tab-icon">📝</span>
+              <span>Mô Tả &amp; Tính Năng Nổi Bật</span>
+            </button>
 
-            {/* Bộ sưu tập Những hình ảnh khác của sản phẩm */}
-            <div className="pd-content-card pd-gallery-showcase-box">
-              <div className="pd-gallery-section-head">
-                <div>
-                  <div className="pd-gallery-title-row">
-                    <h2 className="pd-section-heading" style={{ marginBottom: 0 }}>
-                      Những Hình Ảnh Khác Của Sản Phẩm
-                    </h2>
-                    {galleryImages.length > 0 && (
-                      <span className="pd-gallery-count-chip">
-                        {galleryImages.length} Góc chụp chi tiết
-                      </span>
+            <button
+              type="button"
+              className={`pd-tab-btn ${activeTab === 'gallery' ? 'active' : ''}`}
+              onClick={() => setActiveTab('gallery')}
+              role="tab"
+              aria-selected={activeTab === 'gallery'}
+            >
+              <span className="pd-tab-icon">🖼️</span>
+              <span>Hình Ảnh Thực Tế ({galleryImages.length})</span>
+            </button>
+
+            <button
+              type="button"
+              className={`pd-tab-btn ${activeTab === 'docs' ? 'active' : ''}`}
+              onClick={() => setActiveTab('docs')}
+              role="tab"
+              aria-selected={activeTab === 'docs'}
+            >
+              <span className="pd-tab-icon">📑</span>
+              <span>Tài Liệu &amp; Bản Vẽ ({documentsList.length})</span>
+            </button>
+          </div>
+
+          {/* Tab Panels */}
+          <div className="pd-tabs-content">
+            {/* =============================================
+                TAB 1: THÔNG SỐ KỸ THUẬT TOÀN DIỆN (4 NHÓM)
+                ============================================= */}
+            {activeTab === 'specs' && (
+              <div className="pd-tab-pane pd-specs-pane">
+                <div className="pd-specs-groups">
+                  {/* Nhóm 1: Hệ thống Điện Khí & Vận Hành */}
+                  <div className="pd-specs-group-card">
+                    <div className="pd-specs-group-head">
+                      <span className="pd-group-icon">⚡</span>
+                      <h3>1. Thông Số Điện Khí &amp; Vận Hành</h3>
+                    </div>
+                    <table className="pd-specs-table">
+                      <tbody>
+                        <tr>
+                          <th>Điện áp định mức (Rated Voltage)</th>
+                          <td>{product.rated_voltage || '380V - 415V AC / 3P + N + PE'}</td>
+                        </tr>
+                        <tr>
+                          <th>Dòng điện định mức (Rated Current)</th>
+                          <td><strong>{product.rated_current || 'Tùy chọn cấu hình theo phụ tải'}</strong></td>
+                        </tr>
+                        <tr>
+                          <th>Tần số làm việc (Frequency)</th>
+                          <td>{product.frequency || '50Hz / 60Hz'}</td>
+                        </tr>
+                        <tr>
+                          <th>Dòng cắt ngắn mạch (Icu / Icw)</th>
+                          <td>{product.short_circuit_current || '36kA / 50kA / 65kA (1s)'}</td>
+                        </tr>
+                        <tr>
+                          <th>Tiêu chuẩn áp dụng (Standards)</th>
+                          <td>{product.standards || 'IEC 61439-1/2, IEC 60947-2, TCVN 7994'}</td>
+                        </tr>
+                        {product.specifications?.['Cấp cách điện'] && (
+                          <tr>
+                            <th>Cấp cách điện</th>
+                            <td>{product.specifications['Cấp cách điện']}</td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Nhóm 2: Cơ Khí & Quy Cách Vỏ Tủ */}
+                  <div className="pd-specs-group-card">
+                    <div className="pd-specs-group-head">
+                      <span className="pd-group-icon">📐</span>
+                      <h3>2. Quy Cách Cơ Khí &amp; Vỏ Tủ</h3>
+                    </div>
+                    <table className="pd-specs-table">
+                      <tbody>
+                        <tr>
+                          <th>Kích thước tiêu chuẩn (H x W x D)</th>
+                          <td>{product.dimensions || 'Gia công linh hoạt theo mặt bằng trạm điện'}</td>
+                        </tr>
+                        <tr>
+                          <th>Vật liệu chế tạo (Material)</th>
+                          <td>{product.material || 'Thép cán nguội tiêu chuẩn JIS / Inox 304 theo yêu cầu'}</td>
+                        </tr>
+                        <tr>
+                          <th>Độ dày tôn vỏ tủ (Thickness)</th>
+                          <td>{product.thickness || '1.5mm - 2.0mm - 2.5mm'}</td>
+                        </tr>
+                        <tr>
+                          <th>Xử lý bề mặt &amp; Sơn (Surface Finish)</th>
+                          <td>{product.surface_finish || 'Sơn tĩnh điện công nghiệp RAL 7032 / RAL 7035'}</td>
+                        </tr>
+                        <tr>
+                          <th>Cấp bảo vệ vỏ tủ (IP Rating)</th>
+                          <td><strong>{product.ip_rating || 'IP43 (Trong nhà) / IP54 (Ngoài trời)'}</strong></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Nhóm 3: Thiết Bị Chính & Cấu Hình Đóng Cắt */}
+                  <div className="pd-specs-group-card">
+                    <div className="pd-specs-group-head">
+                      <span className="pd-group-icon">⚙️</span>
+                      <h3>3. Cấu Hình Thiết Bị Đóng Cắt &amp; Linh Kiện</h3>
+                    </div>
+                    <table className="pd-specs-table">
+                      <tbody>
+                        <tr>
+                          <th>Thiết bị chính tích hợp</th>
+                          <td>{product.main_components || 'ACB, MCCB, Contactor, Rơ le bảo vệ kỹ thuật số, biến dòng CT'}</td>
+                        </tr>
+                        <tr>
+                          <th>Thương hiệu linh kiện</th>
+                          <td>{product.brand || 'Schneider / ABB / Mitsubishi / LS / Siemens (Tùy chọn)'}</td>
+                        </tr>
+                        <tr>
+                          <th>Vật liệu thanh cái (Busbar)</th>
+                          <td>Đồng thanh cái đỏ 99.99% mạ thiếc, bọc màng co nhiệt phân pha tiêu chuẩn</td>
+                        </tr>
+                        <tr>
+                          <th>Chế độ bảo hành</th>
+                          <td>Chính hãng <strong>{product.warranty_months || 24} tháng</strong> tận nơi công trình</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Nhóm 4: Thông Số Mở Rộng (Specifications Dynamic Dictionary) */}
+                  {product.specifications && Object.keys(product.specifications).length > 0 && (
+                    <div className="pd-specs-group-card">
+                      <div className="pd-specs-group-head">
+                        <span className="pd-group-icon">📋</span>
+                        <h3>4. Thông Số Bổ Sung &amp; Tiêu Chuẩn Dự Án</h3>
+                      </div>
+                      <table className="pd-specs-table">
+                        <tbody>
+                          {Object.entries(product.specifications).map(([key, val]) => (
+                            <tr key={key}>
+                              <th>{key}</th>
+                              <td>{String(val)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+
+                {/* Banner Kêu gọi RFQ trong Tab Specs */}
+                <div className="pd-specs-rfq-banner">
+                  <div className="pd-rfq-banner-text">
+                    <h4>Cần tùy biến thông số hoặc thiết kế theo sơ đồ một sợi (SLD) riêng?</h4>
+                    <p>Kỹ sư Cơ Điện Nguyên Phát sẵn sàng bóc tách khối lượng và lên bản vẽ sơ bộ miễn phí trong 24h.</p>
+                  </div>
+                  <div className="pd-rfq-banner-actions">
+                    <button type="button" className="btn-primary" onClick={openQuoteModal}>
+                      Gửi Yêu Cầu Thiết Kế Ngay
+                    </button>
+                    {onNavigateContact && (
+                      <button type="button" className="btn-secondary" onClick={onNavigateContact}>
+                        Liên Hệ Kỹ Sư Trực Tiếp
+                      </button>
                     )}
                   </div>
-                  <p className="pd-gallery-desc-text">
-                    Khám phá chi tiết cấu kiện, công đoạn gia công cơ khí chính xác tại nhà xưởng đến quy trình lắp dựng hoàn thiện thực tế tại công trường.
-                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* =============================================
+                TAB 2: MÔ TẢ KỸ THUẬT & ĐẶC ĐIỂM NỔI BẬT
+                ============================================= */}
+            {activeTab === 'desc' && (
+              <div className="pd-tab-pane pd-desc-pane">
+                <div className="pd-desc-content-card">
+                  {product.description ? (
+                    <div 
+                      className="pd-html-description"
+                      dangerouslySetInnerHTML={{ __html: product.description }}
+                    />
+                  ) : (
+                    <div className="pd-desc-empty">
+                      <p>Nội dung mô tả kỹ thuật chi tiết đang được ban kỹ sư Cơ Điện Nguyên Phát hoàn thiện.</p>
+                    </div>
+                  )}
                 </div>
 
-                {galleryImages.length > 0 && (
-                  <button
-                    type="button"
-                    className="pd-slideshow-trigger-btn"
-                    onClick={() => setIsLightboxOpen(true)}
-                    title="Mở chế độ trình chiếu toàn màn hình"
-                  >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
-                      <line x1="7" y1="2" x2="7" y2="22"></line>
-                      <line x1="17" y1="2" x2="17" y2="22"></line>
-                      <line x1="2" y1="12" x2="22" y2="12"></line>
-                    </svg>
-                    <span>Xem Trình Chiếu</span>
-                  </button>
-                )}
-              </div>
+                {/* Cam kết chất lượng Nguyên Phát */}
+                <div className="pd-quality-commitments-grid">
+                  <div className="pd-commitment-card">
+                    <div className="pd-commit-icon">🏆</div>
+                    <h4>Đạt Chuẩn Quốc Tế IEC</h4>
+                    <p>Toàn bộ sản phẩm xuất xưởng tuân thủ nghiêm ngặt IEC 61439-1/2, đảm bảo khả năng chịu dòng ngắn mạch và độ tăng nhiệt an toàn.</p>
+                  </div>
 
-              {galleryImages.length > 1 ? (
-                <div className="pd-bento-gallery">
-                  {/* Ảnh tiêu biểu nổi bật (Hero Showcase) */}
-                  <div
-                    className="pd-bento-item pd-bento-featured"
-                    onClick={() => {
-                      setActiveImageIndex(0);
-                      setIsLightboxOpen(true);
-                    }}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
+                  <div className="pd-commitment-card">
+                    <div className="pd-commit-icon">⚙️</div>
+                    <h4>Gia Công CNC Chính Xác</h4>
+                    <p>Vỏ tủ sản xuất trên dây chuyền đột dập và chấn bẻ CNC tự động, sơn tĩnh điện ngoài trời chống ăn mòn hóa chất và hơi muối biển.</p>
+                  </div>
+
+                  <div className="pd-commitment-card">
+                    <div className="pd-commit-icon">🤝</div>
+                    <h4>Hỗ Trợ Kỹ Thuật Tận Nơi</h4>
+                    <p>Đội ngũ kỹ sư Cơ Điện Nguyên Phát đồng hành tư vấn, giám sát lắp đặt, đấu nối và nghiệm thu đóng điện cùng chủ đầu tư.</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* =============================================
+                TAB 3: BỘ SƯU TẬP HÌNH ẢNH THỰC TẾ & BENTO GRID
+                ============================================= */}
+            {activeTab === 'gallery' && (
+              <div className="pd-tab-pane pd-gallery-pane">
+                <div className="pd-gallery-section-head">
+                  <div>
+                    <h3 className="pd-gallery-title">Bộ Sưu Tập Hình Ảnh Chế Tạo &amp; Lắp Đặt Thực Tế</h3>
+                    <p className="pd-gallery-sub">
+                      Góc chụp chân thực từ phân xưởng sản xuất cơ khí, đấu nối thiết bị đến quy trình nghiệm thu bàn giao tại các dự án trọng điểm.
+                    </p>
+                  </div>
+
+                  {galleryImages.length > 0 && (
+                    <button
+                      type="button"
+                      className="pd-slideshow-trigger-btn"
+                      onClick={() => setIsLightboxOpen(true)}
+                    >
+                      <span>Xem Toàn Màn Hình</span>
+                    </button>
+                  )}
+                </div>
+
+                {galleryImages.length > 1 ? (
+                  <div className="pd-bento-gallery">
+                    {/* Featured Large Item */}
+                    <div
+                      className="pd-bento-item pd-bento-featured"
+                      onClick={() => {
                         setActiveImageIndex(0);
                         setIsLightboxOpen(true);
-                      }
-                    }}
-                  >
-                    <img
-                      src={galleryImages[0]}
-                      alt={`${product.name} - ${IMAGE_VIEW_META[0].tag}`}
-                      loading="lazy"
-                      onError={() => handleImageError(galleryImages[0])}
-                    />
-                    <div className="pd-bento-overlay">
-                      <div className="pd-bento-badges">
-                        <span className="pd-bento-num">01</span>
-                        <span className="pd-bento-tag">{IMAGE_VIEW_META[0].tag}</span>
-                      </div>
-                      <div className="pd-bento-bottom-info">
-                        <p className="pd-bento-caption">{IMAGE_VIEW_META[0].desc}</p>
-                        <span className="pd-bento-zoom-pill">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                            <line x1="11" y1="8" x2="11" y2="14"></line>
-                            <line x1="8" y1="11" x2="14" y2="11"></line>
-                          </svg>
-                          Phóng to chi tiết
-                        </span>
+                      }}
+                      role="button"
+                      tabIndex={0}
+                    >
+                      <img
+                        src={galleryImages[0]}
+                        alt={`${product.name} - ${IMAGE_VIEW_META[0].tag}`}
+                        loading="lazy"
+                        onError={() => handleImageError(galleryImages[0])}
+                      />
+                      <div className="pd-bento-overlay">
+                        <div className="pd-bento-badges">
+                          <span className="pd-bento-num">01</span>
+                          <span className="pd-bento-tag">{IMAGE_VIEW_META[0].tag}</span>
+                        </div>
+                        <div className="pd-bento-bottom-info">
+                          <p className="pd-bento-caption">{IMAGE_VIEW_META[0].desc}</p>
+                          <span className="pd-bento-zoom-pill">Phóng to chi tiết</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Lưới các ảnh góc nhìn khác */}
-                  <div className="pd-bento-subgrid">
-                    {galleryImages.slice(1).map((imgUrl, idx) => {
-                      const imageIndex = idx + 1;
-                      const meta = IMAGE_VIEW_META[imageIndex % IMAGE_VIEW_META.length];
-                      return (
-                        <div
-                          key={imgUrl + idx}
-                          className="pd-bento-item pd-bento-regular"
-                          onClick={() => {
-                            setActiveImageIndex(imageIndex);
-                            setIsLightboxOpen(true);
-                          }}
-                          role="button"
-                          tabIndex={0}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                              e.preventDefault();
+                    {/* Subgrid */}
+                    <div className="pd-bento-subgrid">
+                      {galleryImages.slice(1).map((imgUrl, idx) => {
+                        const imageIndex = idx + 1;
+                        const meta = IMAGE_VIEW_META[imageIndex % IMAGE_VIEW_META.length];
+                        return (
+                          <div
+                            key={imgUrl + idx}
+                            className="pd-bento-item pd-bento-regular"
+                            onClick={() => {
                               setActiveImageIndex(imageIndex);
                               setIsLightboxOpen(true);
-                            }
-                          }}
-                        >
-                          <img
-                            src={imgUrl}
-                            alt={`${product.name} - ${meta.tag}`}
-                            loading="lazy"
-                            onError={() => handleImageError(imgUrl)}
-                          />
-                          <div className="pd-bento-overlay">
-                            <div className="pd-bento-badges">
-                              <span className="pd-bento-num">0{imageIndex + 1}</span>
-                              <span className="pd-bento-tag">{meta.tag}</span>
-                            </div>
-                            <div className="pd-bento-bottom-info">
-                              <span className="pd-bento-zoom-icon" title="Xem chi tiết">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
-                                  <circle cx="11" cy="11" r="8"></circle>
-                                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                </svg>
-                              </span>
+                            }}
+                            role="button"
+                            tabIndex={0}
+                          >
+                            <img
+                              src={imgUrl}
+                              alt={`${product.name} - ${meta.tag}`}
+                              loading="lazy"
+                              onError={() => handleImageError(imgUrl)}
+                            />
+                            <div className="pd-bento-overlay">
+                              <div className="pd-bento-badges">
+                                <span className="pd-bento-num">0{imageIndex + 1}</span>
+                                <span className="pd-bento-tag">{meta.tag}</span>
+                              </div>
+                              <div className="pd-bento-bottom-info">
+                                <span className="pd-bento-zoom-icon">🔍</span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              ) : galleryImages.length === 1 ? (
-                /* Khi sản phẩm có 1 ảnh: Thiết kế khung ảnh thực tế kết hợp sơ đồ kỹ thuật */
-                <div className="pd-single-image-gallery">
-                  <div
-                    className="pd-single-hero-card"
-                    onClick={() => setIsLightboxOpen(true)}
-                    role="button"
-                    tabIndex={0}
-                  >
+                ) : galleryImages.length === 1 ? (
+                  <div className="pd-single-hero-card" onClick={() => setIsLightboxOpen(true)}>
                     <img src={galleryImages[0]} alt={product.name} />
                     <div className="pd-single-overlay">
-                      <span className="pd-single-badge">Ảnh thực tế chính thức</span>
-                      <span className="pd-single-zoom">Nhấn để xem kích thước lớn ↗</span>
+                      <span className="pd-single-badge">Hình ảnh sản phẩm chính thức</span>
+                      <span className="pd-single-zoom">Nhấn để xem kích thước lớn</span>
                     </div>
                   </div>
-                  <div className="pd-single-subcards">
-                    <div className="pd-diagram-card">
-                      <div className="pd-diagram-icon">📐</div>
-                      <h4>Bản Vẽ Gia Công Cơ Khí (Shop Drawing)</h4>
-                      <p>Mô phỏng 3D Tekla và bản vẽ gia công kích thước hình học chính xác từng liên kết bu lông, mối hàn.</p>
-                      <button type="button" className="pd-diagram-btn" onClick={openQuoteModal}>
-                        Yêu cầu gửi bản vẽ mẫu
-                      </button>
-                    </div>
-                    <div className="pd-diagram-card">
-                      <div className="pd-diagram-icon">🏗️</div>
-                      <h4>Hình Ảnh Thực Tế Tại Công Trường</h4>
-                      <p>Đội ngũ kỹ thuật Nguyên Phát đang tiếp tục bổ sung tư liệu hình ảnh nghiệm thu công trình thực tế.</p>
-                      <button type="button" className="pd-diagram-btn" onClick={openQuoteModal}>
-                        Xem hồ sơ năng lực dự án
-                      </button>
-                    </div>
+                ) : (
+                  <div className="pd-gallery-empty-state">
+                    <p>Hình ảnh cho sản phẩm này đang được ban kỹ thuật số hóa và cập nhật.</p>
                   </div>
-                </div>
-              ) : (
-                <div className="pd-gallery-empty-state">
-                  <p>Bộ sưu tập hình ảnh cho sản phẩm này đang được ban kỹ thuật số hóa và cập nhật.</p>
-                </div>
-              )}
-            </div>
-          </div>
+                )}
+              </div>
+            )}
 
-          {/* Cột bên: Thẻ hỗ trợ tư vấn nhanh */}
-          <aside className="pd-detail-side-col">
-            <div className="pd-support-card">
-              <span className="pd-support-eyebrow">Tư vấn &amp; Báo giá</span>
-              <h3>Quan tâm đến {product.name}?</h3>
-              <p>
-                Để lại thông tin liên hệ để đội ngũ Nguyên Phát gửi báo giá chi tiết và tư vấn trực tiếp theo nhu cầu thực tế của bạn.
-              </p>
-              <button
-                type="button"
-                className="btn-primary pd-support-btn"
-                onClick={openQuoteModal}
-              >
-                Nhận Báo Giá Ngay
-              </button>
-              <button
-                type="button"
-                className="btn-secondary pd-support-secondary-btn"
-                onClick={onNavigateContact}
-              >
-                Xem thông tin liên hệ
-              </button>
-            </div>
-          </aside>
+            {/* =============================================
+                TAB 4: TÀI LIỆU KỸ THUẬT & CATALOGUE (DOCUMENTS)
+                ============================================= */}
+            {activeTab === 'docs' && (
+              <div className="pd-tab-pane pd-docs-pane">
+                <div className="pd-docs-head">
+                  <h3>Tài Liệu Kỹ Thuật, Bản Vẽ &amp; Catalogue Tải Về</h3>
+                  <p>Toàn bộ tài liệu kỹ thuật của dòng sản phẩm <strong>{product.name} ({product.code})</strong> phục vụ thiết kế cơ điện MEP và thẩm duyệt dự án.</p>
+                </div>
+
+                <div className="pd-docs-list">
+                  {documentsList.map((doc, idx) => (
+                    <div key={idx} className="pd-doc-card">
+                      <div className="pd-doc-icon-wrap">
+                        <span className="pd-doc-icon">📄</span>
+                      </div>
+                      <div className="pd-doc-info">
+                        <h4 className="pd-doc-title">{doc.title || `Tài liệu kỹ thuật ${idx + 1}`}</h4>
+                        <div className="pd-doc-meta">
+                          <span className="pd-doc-badge">{doc.file_type || 'PDF'}</span>
+                          {doc.size && <span className="pd-doc-size">{doc.size}</span>}
+                          <span className="pd-doc-origin">Cơ Điện Nguyên Phát</span>
+                        </div>
+                      </div>
+                      <div className="pd-doc-actions">
+                        <a
+                          href={doc.url && doc.url !== '#' ? doc.url : '#'}
+                          className="pd-btn-download-file"
+                          onClick={(e) => {
+                            if (!doc.url || doc.url === '#') {
+                              e.preventDefault();
+                              openQuoteModal();
+                            }
+                          }}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                          </svg>
+                          <span>Tải Tài Liệu</span>
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Box Yêu cầu bản vẽ CAD / DWG */}
+                <div className="pd-docs-custom-cad-box">
+                  <div className="pd-cad-icon">📐</div>
+                  <div>
+                    <h4>Cần file bản vẽ AutoCAD (.dwg) hoặc mô hình Revit (.rfa)?</h4>
+                    <p>Hãy gửi mã tủ <strong>{product.code || product.name}</strong> cho chúng tôi để nhận thư viện CAD 2D/3D chính xác theo thông số thiết kế của bạn.</p>
+                  </div>
+                  <button type="button" className="btn-secondary" onClick={openQuoteModal}>
+                    Yêu Cầu Bản Vẽ CAD
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </section>
 
-        {/* Sản phẩm cùng danh mục (`category_id` / `category_name`) hoặc Sản phẩm khác từ API */}
+        {/* =============================================
+            SIDEBAR & RELATED PRODUCTS
+            ============================================= */}
         {relatedProducts.length > 0 && (
           <section className="pd-related-section">
             <div className="pd-related-header">
@@ -903,7 +1145,7 @@ const ProductDetail = ({
                     : 'Sản Phẩm Khác'}
                 </h2>
                 <p className="pd-related-sub">
-                  Khám phá thêm các sản phẩm khác từ danh mục hệ thống Nguyên Phát
+                  Khám phá thêm các hệ thống tủ điện &amp; thiết bị cơ điện chất lượng cao của Nguyên Phát
                 </p>
               </div>
               <button
@@ -937,30 +1179,18 @@ const ProductDetail = ({
                         onError={() => handleImageError(rel.thumbnail)}
                       />
                     ) : (
-                      <div className="pd-related-no-thumb">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-                          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                          <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                          <polyline points="21 15 16 10 5 21"></polyline>
-                        </svg>
-                      </div>
+                      <div className="pd-related-no-thumb">⚡</div>
                     )}
                   </div>
                   <div className="pd-related-body">
-                    {rel.created_at && (
-                      <span className="pd-related-date">{formatDate(rel.created_at)}</span>
+                    {rel.code && (
+                      <span className="pd-related-code">{rel.code}</span>
                     )}
                     <h3 className="pd-related-title">{rel.name}</h3>
-                    {rel.description && (
-                      <p className="pd-related-desc">{rel.description}</p>
-                    )}
-                    <span className="pd-related-more">
-                      Xem chi tiết
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                        <polyline points="12 5 19 12 12 19"></polyline>
-                      </svg>
-                    </span>
+                    <div className="pd-related-specs">
+                      {rel.rated_voltage && <span>{rel.rated_voltage}</span>}
+                      {rel.rated_current && <span>{rel.rated_current}</span>}
+                    </div>
                   </div>
                 </article>
               ))}
@@ -969,228 +1199,181 @@ const ProductDetail = ({
         )}
       </main>
 
-      {/* Thanh CTA cố định đáy màn hình trên Mobile */}
-      <div className="pd-mobile-sticky-bar">
-        <button
-          type="button"
-          className="pd-mobile-contact-btn"
-          onClick={onNavigateContact}
-        >
-          Liên hệ
-        </button>
-        <button
-          type="button"
-          className="btn-primary pd-mobile-quote-btn"
-          onClick={openQuoteModal}
-        >
-          Yêu Cầu Báo Giá
-        </button>
-      </div>
-
-      {/* Lightbox phóng to ảnh toàn màn hình */}
-      {isLightboxOpen && galleryImages.length > 0 && (
-        <div
-          className="pd-lightbox-overlay"
-          onClick={() => setIsLightboxOpen(false)}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Xem ảnh kích thước lớn"
-        >
-          <div className="pd-lightbox-topbar" onClick={(e) => e.stopPropagation()}>
-            <div className="pd-lightbox-title-box">
-              <span className="pd-lightbox-caption">{product.name}</span>
-              <span className="pd-lightbox-tag">
-                {IMAGE_VIEW_META[safeImageIndex % IMAGE_VIEW_META.length].tag}
-              </span>
-            </div>
-            <div className="pd-lightbox-top-right">
-              {galleryImages.length > 1 && (
-                <span className="pd-lightbox-counter">
-                  {safeImageIndex + 1} / {galleryImages.length}
-                </span>
-              )}
-              <button
-                type="button"
-                className="pd-lightbox-close"
-                onClick={() => setIsLightboxOpen(false)}
-                aria-label="Đóng"
-              >
-                ✕
-              </button>
-            </div>
-          </div>
-
-          <div className="pd-lightbox-stage" onClick={(e) => e.stopPropagation()}>
-            {galleryImages.length > 1 && (
-              <button
-                type="button"
-                className="pd-lightbox-arrow left"
-                onClick={handlePrevImage}
-                aria-label="Ảnh trước"
-              >
-                ‹
-              </button>
-            )}
-
-            <img src={currentImage} alt={product.name} className="pd-lightbox-img" />
-
-            {galleryImages.length > 1 && (
-              <button
-                type="button"
-                className="pd-lightbox-arrow right"
-                onClick={handleNextImage}
-                aria-label="Ảnh sau"
-              >
-                ›
-              </button>
-            )}
-          </div>
-
-          {galleryImages.length > 1 && (
-            <div className="pd-lightbox-thumbs" onClick={(e) => e.stopPropagation()}>
-              {galleryImages.map((imgUrl, idx) => (
-                <button
-                  key={imgUrl + idx}
-                  type="button"
-                  className={`pd-lightbox-thumb ${safeImageIndex === idx ? 'active' : ''}`}
-                  onClick={() => setActiveImageIndex(idx)}
-                >
-                  <img src={imgUrl} alt={`Thumb ${idx + 1}`} />
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Modal Yêu cầu báo giá gắn với dữ liệu thật của sản phẩm đang xem */}
+      {/* =============================================
+          MODAL YÊU CẦU BÁO GIÁ KỸ THUẬT (RFQ)
+          ============================================= */}
       {isQuoteOpen && (
-        <div
-          className="pd-modal-overlay"
-          onClick={() => setIsQuoteOpen(false)}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="pd-quote-modal-title"
-        >
-          <div className="pd-quote-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="pd-modal-overlay" onClick={() => setIsQuoteOpen(false)}>
+          <div className="pd-modal-card" onClick={(e) => e.stopPropagation()}>
             <button
               type="button"
               className="pd-modal-close"
               onClick={() => setIsQuoteOpen(false)}
-              aria-label="Đóng cửa sổ"
+              aria-label="Đóng bảng báo giá"
             >
               ✕
             </button>
 
-            {quoteSubmitted ? (
-              <div className="pd-quote-success">
-                <div className="pd-success-icon">
-                  <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
+            {!quoteSubmitted ? (
+              <form className="pd-quote-form" onSubmit={handleQuoteSubmit}>
+                <div className="pd-modal-header">
+                  <span className="pd-modal-eyebrow">Yêu Cầu Báo Giá Kỹ Thuật (RFQ)</span>
+                  <h3 className="pd-modal-title">{product.name}</h3>
+                  <div className="pd-modal-code-badge">
+                    Mã thiết bị: <strong>{product.code || 'NP-STD'}</strong> • {product.category_name || 'Tủ điện'}
+                  </div>
                 </div>
-                <h3>Đã Gửi Yêu Cầu Tư Vấn!</h3>
+
+                <div className="pd-form-grid">
+                  <div className="pd-form-group">
+                    <label>Họ và tên kỹ sư / Phụ trách mua hàng *</label>
+                    <input
+                      type="text"
+                      name="fullName"
+                      required
+                      placeholder="Ví dụ: Nguyễn Văn An"
+                      value={quoteForm.fullName}
+                      onChange={handleQuoteChange}
+                    />
+                  </div>
+
+                  <div className="pd-form-group">
+                    <label>Số điện thoại liên hệ *</label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      required
+                      placeholder="Ví dụ: 0912 345 678"
+                      value={quoteForm.phone}
+                      onChange={handleQuoteChange}
+                    />
+                  </div>
+
+                  <div className="pd-form-group">
+                    <label>Email nhận hồ sơ báo giá *</label>
+                    <input
+                      type="email"
+                      name="email"
+                      required
+                      placeholder="Ví dụ: engineer@company.com"
+                      value={quoteForm.email}
+                      onChange={handleQuoteChange}
+                    />
+                  </div>
+
+                  <div className="pd-form-group">
+                    <label>Công ty / Dự án thi công</label>
+                    <input
+                      type="text"
+                      name="company"
+                      placeholder="Ví dụ: Công ty Cơ Điện Delta / Nhà máy Foxconn"
+                      value={quoteForm.company}
+                      onChange={handleQuoteChange}
+                    />
+                  </div>
+                </div>
+
+                <div className="pd-form-group">
+                  <label>Thông số kỹ thuật bổ sung hoặc file đính kèm SLD</label>
+                  <textarea
+                    name="note"
+                    rows="3"
+                    placeholder="Ví dụ: Cần dòng định mức 3200A, thiết bị chính ABB, cấp bảo vệ IP54 ngoài trời..."
+                    value={quoteForm.note}
+                    onChange={handleQuoteChange}
+                  ></textarea>
+                </div>
+
+                <div className="pd-modal-actions">
+                  <button type="submit" className="btn-primary pd-submit-rfq-btn">
+                    Gửi Yêu Cầu Kỹ Thuật Ngay
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-secondary"
+                    onClick={() => setIsQuoteOpen(false)}
+                  >
+                    Hủy bỏ
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="pd-quote-success">
+                <div className="pd-success-icon">✓</div>
+                <h3>Yêu Cầu Báo Giá Đã Được Gửi Thành Công!</h3>
                 <p>
-                  Cảm ơn <strong>{quoteForm.fullName || 'Quý khách'}</strong>. Nguyên Phát đã ghi nhận yêu cầu tư vấn cho sản phẩm <strong>{product.name}</strong> và sẽ liên hệ lại qua số điện thoại <strong>{quoteForm.phone}</strong> sớm nhất.
+                  Cảm ơn Quý khách <strong>{quoteForm.fullName || 'bạn'}</strong>. Ban Kỹ thuật Cơ Điện Nguyên Phát sẽ rà soát thông số thiết bị <strong>{product.code || product.name}</strong> và gửi bảng dự toán chi tiết tới email <strong>{quoteForm.email}</strong> trong vòng 24 giờ.
                 </p>
                 <button
                   type="button"
                   className="btn-primary"
                   onClick={() => setIsQuoteOpen(false)}
                 >
-                  Đóng
+                  Hoàn tất &amp; Đóng
                 </button>
               </div>
-            ) : (
-              <>
-                <div className="pd-quote-header">
-                  <span className="pd-quote-badge">Liên hệ báo giá</span>
-                  <h3 id="pd-quote-modal-title">Yêu Cầu Tư Vấn &amp; Báo Giá Sản Phẩm</h3>
-                </div>
-
-                <div className="pd-quote-product-preview">
-                  {galleryImages[0] && (
-                    <img src={galleryImages[0]} alt={product.name} />
-                  )}
-                  <div className="pd-preview-info">
-                    {product.category_name && (
-                      <span className="pd-preview-cat">{product.category_name}</span>
-                    )}
-                    <h4>{product.name}</h4>
-                    {product.slug && (
-                      <span className="pd-preview-slug">Slug: {product.slug}</span>
-                    )}
-                  </div>
-                </div>
-
-                <form className="pd-quote-form" onSubmit={handleQuoteSubmit}>
-                  <div className="pd-form-row">
-                    <div className="pd-form-field">
-                      <label htmlFor="quote-fullName">Họ và tên / Đơn vị *</label>
-                      <input
-                        id="quote-fullName"
-                        name="fullName"
-                        type="text"
-                        required
-                        placeholder="Nhập họ tên hoặc tên công ty"
-                        value={quoteForm.fullName}
-                        onChange={handleQuoteChange}
-                      />
-                    </div>
-                    <div className="pd-form-field">
-                      <label htmlFor="quote-phone">Số điện thoại *</label>
-                      <input
-                        id="quote-phone"
-                        name="phone"
-                        type="tel"
-                        required
-                        placeholder="Nhập số điện thoại liên hệ"
-                        value={quoteForm.phone}
-                        onChange={handleQuoteChange}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="pd-form-field">
-                    <label htmlFor="quote-email">Email (Tùy chọn)</label>
-                    <input
-                      id="quote-email"
-                      name="email"
-                      type="email"
-                      placeholder="email@domain.com"
-                      value={quoteForm.email}
-                      onChange={handleQuoteChange}
-                    />
-                  </div>
-
-                  <div className="pd-form-field">
-                    <label htmlFor="quote-note">Nội dung cần tư vấn</label>
-                    <textarea
-                      id="quote-note"
-                      name="note"
-                      rows={3}
-                      placeholder="Số lượng dự kiến, quy cách yêu cầu hoặc địa điểm giao hàng..."
-                      value={quoteForm.note}
-                      onChange={handleQuoteChange}
-                    />
-                  </div>
-
-                  <div className="pd-quote-footer">
-                    <button
-                      type="button"
-                      className="btn-secondary"
-                      onClick={() => setIsQuoteOpen(false)}
-                    >
-                      Hủy
-                    </button>
-                    <button type="submit" className="btn-primary pd-quote-submit">
-                      Gửi Yêu Cầu
-                    </button>
-                  </div>
-                </form>
-              </>
             )}
           </div>
+        </div>
+      )}
+
+      {/* =============================================
+          FULLSCREEN LIGHTBOX
+          ============================================= */}
+      {isLightboxOpen && galleryImages.length > 0 && (
+        <div className="pd-lightbox" onClick={() => setIsLightboxOpen(false)}>
+          <button
+            type="button"
+            className="pd-lightbox-close"
+            onClick={() => setIsLightboxOpen(false)}
+            aria-label="Đóng trình xem ảnh"
+          >
+            ✕
+          </button>
+
+          <div className="pd-lightbox-content" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={galleryImages[safeImageIndex]}
+              alt={`${product.name} - ảnh phóng to`}
+              className="pd-lightbox-img"
+            />
+
+            <div className="pd-lightbox-footer">
+              <span className="pd-lightbox-tag">
+                {IMAGE_VIEW_META[safeImageIndex % IMAGE_VIEW_META.length].tag}
+              </span>
+              <span className="pd-lightbox-count">
+                {safeImageIndex + 1} / {galleryImages.length}
+              </span>
+            </div>
+          </div>
+
+          {galleryImages.length > 1 && (
+            <>
+              <button
+                type="button"
+                className="pd-lightbox-nav prev"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePrevImage();
+                }}
+                aria-label="Ảnh trước"
+              >
+                ‹
+              </button>
+              <button
+                type="button"
+                className="pd-lightbox-nav next"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleNextImage();
+                }}
+                aria-label="Ảnh tiếp theo"
+              >
+                ›
+              </button>
+            </>
+          )}
         </div>
       )}
     </div>

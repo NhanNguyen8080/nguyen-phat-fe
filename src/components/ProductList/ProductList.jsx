@@ -7,26 +7,29 @@ const ITEMS_PER_PAGE = 6;
 const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' }) => {
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isLiveApi, setIsLiveApi] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(initialCategory || 'all');
-
-  useEffect(() => {
-    setSelectedCategory(initialCategory || 'all');
-    setCurrentPageNum(1);
-  }, [initialCategory]);
+  const [onlyFeatured, setOnlyFeatured] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const [currentPageNum, setCurrentPageNum] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  // Load toàn bộ sản phẩm 1 lần duy nhất khi mount
+  useEffect(() => {
+    setSelectedCategory(initialCategory || 'all');
+    setCurrentPageNum(1);
+  }, [initialCategory]);
+
+  // Load danh sách sản phẩm từ API (có fallback sang Mock Layer)
   useEffect(() => {
     let isMounted = true;
     const loadInitialData = async () => {
       setLoading(true);
-      const result = await getProducts(null);
+      const result = await getProducts();
       if (isMounted) {
         setAllProducts(result.products || []);
+        setIsLiveApi(Boolean(result.isLive));
         setLoading(false);
       }
     };
@@ -36,7 +39,7 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
     };
   }, []);
 
-  // Trích xuất danh mục động từ danh sách sản phẩm
+  // Trích xuất danh mục động từ danh sách sản phẩm trả về
   const categories = useMemo(() => {
     const set = new Set();
     allProducts.forEach((p) => {
@@ -45,28 +48,41 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
     return ['all', ...Array.from(set)];
   }, [allProducts]);
 
-  // Lọc và sắp xếp sản phẩm tức thì (in-memory) không load lại trang
+  // Lọc và sắp xếp sản phẩm tức thì theo đúng các trường kỹ thuật của 2 API
   const filteredProducts = useMemo(() => {
     const term = searchTerm.toLowerCase().trim();
 
     return allProducts
       .filter((p) => {
+        // Lọc danh mục
         const matchesCategory =
           selectedCategory === 'all' ||
           p.category_name === selectedCategory ||
           p.category_id === selectedCategory;
 
+        // Lọc sản phẩm nổi bật
+        const matchesFeatured = !onlyFeatured || Boolean(p.is_featured);
+
+        // Tìm kiếm theo tên, mã code, danh mục, tiêu chuẩn, thương hiệu
         const matchesSearch =
           !term ||
           (p.name && p.name.toLowerCase().includes(term)) ||
-          (p.description && p.description.toLowerCase().includes(term)) ||
-          (p.category_name && p.category_name.toLowerCase().includes(term));
+          (p.code && p.code.toLowerCase().includes(term)) ||
+          (p.brand && p.brand.toLowerCase().includes(term)) ||
+          (p.standards && p.standards.toLowerCase().includes(term)) ||
+          (p.category_name && p.category_name.toLowerCase().includes(term)) ||
+          (p.description && p.description.toLowerCase().includes(term));
 
-        return matchesCategory && matchesSearch;
+        return matchesCategory && matchesFeatured && matchesSearch;
       })
       .sort((a, b) => {
-        if (sortBy === 'newest') {
+        if (sortBy === 'featured') {
+          if (a.is_featured && !b.is_featured) return -1;
+          if (!a.is_featured && b.is_featured) return 1;
           return new Date(b.created_at || 0) - new Date(a.created_at || 0);
+        }
+        if (sortBy === 'code-asc') {
+          return (a.code || '').localeCompare(b.code || '');
         }
         if (sortBy === 'name-asc') {
           return (a.name || '').localeCompare(b.name || '');
@@ -74,9 +90,10 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
         if (sortBy === 'name-desc') {
           return (b.name || '').localeCompare(a.name || '');
         }
-        return 0;
+        // Mặc định: Mới nhất
+        return new Date(b.created_at || 0) - new Date(a.created_at || 0);
       });
-  }, [allProducts, selectedCategory, searchTerm, sortBy]);
+  }, [allProducts, selectedCategory, onlyFeatured, searchTerm, sortBy]);
 
   // Phân trang
   const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE) || 1;
@@ -86,7 +103,6 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
     return filteredProducts.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredProducts, currentPageNum]);
 
-  // Chọn danh mục: đổi ngay lập tức, không reload, reset về trang 1
   const handleSelectCategory = (cat) => {
     setSelectedCategory(cat);
     setCurrentPageNum(1);
@@ -135,18 +151,43 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
     return list;
   }, [selectedProduct]);
 
+  // Strip HTML tags for card description preview
+  const stripHtml = (html) => {
+    if (!html) return '';
+    return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  };
+
   return (
     <div className="product-page">
-      {/* Tiêu đề ngắn gọn duy nhất: Product */}
+      {/* Tiêu đề trang & Huy hiệu hệ thống */}
       <div className="product-page-title-wrap">
         <div className="container">
-          <h1 className="section-title"><span className="text-yellow">Product</span></h1>
+          <div className="product-header-badge-row">
+            <span className="product-brand-tag">Cơ Điện Nguyên Phát</span>
+            {isLiveApi ? (
+              <span className="api-status-pill live">
+                <span className="status-dot green"></span>
+                Dữ liệu trực tiếp (Live API)
+              </span>
+            ) : (
+              <span className="api-status-pill mock">
+                <span className="status-dot yellow"></span>
+                Dữ liệu mô phỏng (Mock API)
+              </span>
+            )}
+          </div>
+          <h1 className="section-title">
+            Danh Mục <span className="text-yellow">Sản Phẩm &amp; Thiết Bị</span>
+          </h1>
+          <p className="product-page-subtitle">
+            Hệ thống tủ điện công nghiệp, tủ phân phối MSB, tủ điều khiển và thiết bị cơ điện chế tạo theo tiêu chuẩn quốc tế IEC 61439-1/2 &amp; TCVN.
+          </p>
         </div>
       </div>
 
       {/* Main Container */}
       <main className="container products-grid-section">
-        {/* Search & Filters */}
+        {/* Search, Filter & Controls */}
         <div className="product-controls">
           <div className="product-search-row">
             <div className="search-box-wrapper">
@@ -157,26 +198,40 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
               <input 
                 type="text" 
                 className="product-search-input"
-                placeholder="Tìm kiếm theo tên sản phẩm, danh mục..."
+                placeholder="Tìm kiếm theo mã tủ (code), tên sản phẩm, tiêu chuẩn (IEC)..."
                 value={searchTerm}
                 onChange={handleSearchChange}
               />
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div className="product-controls-right">
+              {/* Nút lọc sản phẩm nổi bật is_featured */}
+              <button
+                type="button"
+                className={`featured-toggle-btn ${onlyFeatured ? 'active' : ''}`}
+                onClick={() => {
+                  setOnlyFeatured(!onlyFeatured);
+                  setCurrentPageNum(1);
+                }}
+              >
+                <span>★ Nổi bật</span>
+              </button>
+
               <select 
                 className="sort-select"
                 value={sortBy}
                 onChange={handleSortChange}
               >
                 <option value="newest">Mới cập nhật</option>
+                <option value="featured">Ưu tiên nổi bật</option>
+                <option value="code-asc">Mã sản phẩm: A - Z</option>
                 <option value="name-asc">Tên: A - Z</option>
                 <option value="name-desc">Tên: Z - A</option>
               </select>
             </div>
           </div>
 
-          {/* Category Pills - thay đổi tức thì, không reload */}
+          {/* Category Pills trích xuất trực tiếp từ category_name của API */}
           <div className="category-pills">
             {categories.map((cat) => (
               <button
@@ -197,56 +252,140 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
             Hiển thị <strong>{filteredProducts.length}</strong> sản phẩm
             {totalPages > 1 && ` (Trang ${currentPageNum}/${totalPages})`}
             {searchTerm && ` cho từ khóa "${searchTerm}"`}
+            {onlyFeatured && ` [Chỉ sản phẩm nổi bật]`}
           </span>
         </div>
 
-        {/* Loading / Grid / Empty */}
+        {/* Loading / Grid / Empty State */}
         {loading ? (
-          <div className="product-empty">
-            <p className="product-empty-desc">Đang tải danh sách sản phẩm...</p>
+          <div className="products-grid">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="product-card-skeleton">
+                <div className="skeleton-thumb"></div>
+                <div className="skeleton-body">
+                  <div className="skeleton-line short"></div>
+                  <div className="skeleton-line title"></div>
+                  <div className="skeleton-line desc"></div>
+                  <div className="skeleton-specs"></div>
+                </div>
+              </div>
+            ))}
           </div>
         ) : filteredProducts.length === 0 ? (
           <div className="product-empty">
-            <div className="product-empty-icon">🔍</div>
-            <h3 className="product-empty-title">Không tìm thấy sản phẩm nào</h3>
-            <p className="product-empty-desc">Vui lòng thử thay đổi từ khóa tìm kiếm hoặc chọn danh mục khác.</p>
+            <div className="product-empty-icon">⚡</div>
+            <h3 className="product-empty-title">Không tìm thấy sản phẩm phù hợp</h3>
+            <p className="product-empty-desc">
+              Vui lòng thử tìm với từ khóa khác (ví dụ: MSB, ATS, 3200A, IEC...) hoặc đặt lại bộ lọc danh mục.
+            </p>
+            <button
+              type="button"
+              className="btn-secondary"
+              style={{ marginTop: '16px' }}
+              onClick={() => {
+                setSearchTerm('');
+                setSelectedCategory('all');
+                setOnlyFeatured(false);
+              }}
+            >
+              Đặt lại tất cả bộ lọc
+            </button>
           </div>
         ) : (
           <>
             <div className="products-grid">
               {paginatedProducts.map((product) => (
                 <article key={product.id || product.slug} className="product-card">
+                  {/* Thumbnail & Badges */}
                   <div 
                     className="product-card-thumb-wrap"
                     onClick={() => openDetail(product)}
                   >
-                    <span className="product-card-badge">
-                      {product.category_name || 'Sản phẩm'}
-                    </span>
+                    <div className="product-card-top-badges">
+                      <span className="product-card-badge">
+                        {product.category_name || 'Tủ điện'}
+                      </span>
+                      {product.is_featured && (
+                        <span className="product-featured-star-badge" title="Sản phẩm tiêu biểu">
+                          ★ Nổi bật
+                        </span>
+                      )}
+                    </div>
+
                     <img 
-                      src={product.thumbnail || 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=800&auto=format&fit=crop'} 
+                      src={product.thumbnail || 'https://diennguyenphat.com/upload/files/baiviet/thuydiensongbung2-w350%5B1%5D.jpg'} 
                       alt={product.name} 
                       className="product-card-thumb"
                       loading="lazy"
+                      onError={(e) => {
+                        e.target.src = 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=800&auto=format&fit=crop';
+                      }}
                     />
+
+                    {product.warranty_months && (
+                      <span className="product-warranty-badge">
+                        Bảo hành {product.warranty_months}T
+                      </span>
+                    )}
                   </div>
 
+                  {/* Body Content */}
                   <div className="product-card-body">
+                    {/* Mã sản phẩm (Code) & Thương hiệu (Brand) */}
+                    <div className="product-card-meta-line">
+                      {product.code ? (
+                        <span className="product-card-code">{product.code}</span>
+                      ) : (
+                        <span className="product-card-code">NP-STD</span>
+                      )}
+                      <span className="product-card-brand">{product.brand || 'Nguyên Phát'}</span>
+                    </div>
+
+                    {/* Tên sản phẩm */}
                     <h3 
                       className="product-card-title"
                       onClick={() => openDetail(product)}
+                      title={product.name}
                     >
                       {product.name}
                     </h3>
-                    <p className="product-card-desc">{product.description}</p>
 
+                    {/* Quick Specs Chips trích xuất đúng trường API */}
+                    <div className="product-card-specs-row">
+                      {product.rated_voltage && (
+                        <span className="spec-pill" title="Điện áp định mức">
+                          ⚡ {product.rated_voltage}
+                        </span>
+                      )}
+                      {product.rated_current && (
+                        <span className="spec-pill" title="Dòng điện định mức">
+                          🔌 {product.rated_current}
+                        </span>
+                      )}
+                      {product.ip_rating && (
+                        <span className="spec-pill" title="Cấp bảo vệ">
+                          🛡️ {product.ip_rating}
+                        </span>
+                      )}
+                      {product.standards && (
+                        <span className="spec-pill" title="Tiêu chuẩn sản xuất">
+                          📋 {product.standards.split(',')[0]}
+                        </span>
+                      )}
+                    </div>
+
+                    <p className="product-card-desc">
+                      {stripHtml(product.description) || 'Thiết bị cơ điện chất lượng cao sản xuất theo tiêu chuẩn quốc tế IEC.'}
+                    </p>
+
+                    {/* Footer Actions */}
                     <div className="product-card-footer">
                       <button 
                         type="button" 
                         className="btn-card-detail"
                         onClick={() => openDetail(product)}
                       >
-                        Chi tiết
+                        Chi tiết kỹ thuật
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                           <polyline points="9 18 15 12 9 6"></polyline>
                         </svg>
@@ -264,7 +403,7 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
               ))}
             </div>
 
-            {/* Phân trang */}
+            {/* Pagination */}
             {totalPages > 1 && (
               <div className="pagination-container">
                 <button
@@ -309,7 +448,7 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
         )}
       </main>
 
-      {/* Modal Quick View */}
+      {/* Quick View Modal (nếu người dùng bấm xem nhanh khi không có router chuyển trang) */}
       {selectedProduct && (
         <div className="modal-overlay" onClick={closeDetail}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -323,7 +462,6 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
             </button>
 
             <div className="modal-body">
-              {/* Gallery column */}
               <div className="modal-gallery">
                 <div className="modal-main-image-wrap">
                   <img 
@@ -349,18 +487,32 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
                 )}
               </div>
 
-              {/* Info column */}
               <div className="modal-info">
-                <span className="modal-category">
-                  {selectedProduct.category_name || 'Nguyên Phát'}
-                </span>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <span className="modal-category">
+                    {selectedProduct.category_name || 'Cơ Điện'}
+                  </span>
+                  {selectedProduct.code && (
+                    <span className="product-card-code">{selectedProduct.code}</span>
+                  )}
+                </div>
+
                 <h2 className="modal-title">{selectedProduct.name}</h2>
-                <p className="modal-desc">{selectedProduct.description}</p>
+                <p className="modal-desc">{stripHtml(selectedProduct.description)}</p>
 
                 <div className="modal-meta">
-                  <div><strong>Mã nhận diện (Slug):</strong> {selectedProduct.slug || selectedProduct.id}</div>
-                  <div><strong>Thời gian đăng ký:</strong> {selectedProduct.created_at ? new Date(selectedProduct.created_at).toLocaleDateString('vi-VN') : 'Đang cập nhật'}</div>
-                  <div><strong>Trạng thái:</strong> Tiêu chuẩn kiểm định xây dựng</div>
+                  {selectedProduct.rated_voltage && (
+                    <div><strong>Điện áp định mức:</strong> {selectedProduct.rated_voltage}</div>
+                  )}
+                  {selectedProduct.rated_current && (
+                    <div><strong>Dòng điện định mức:</strong> {selectedProduct.rated_current}</div>
+                  )}
+                  {selectedProduct.standards && (
+                    <div><strong>Tiêu chuẩn sản xuất:</strong> {selectedProduct.standards}</div>
+                  )}
+                  {selectedProduct.warranty_months && (
+                    <div><strong>Bảo hành:</strong> {selectedProduct.warranty_months} tháng chính hãng</div>
+                  )}
                 </div>
 
                 <div className="modal-actions">
@@ -370,10 +522,10 @@ const ProductList = ({ onNavigateHome, onSelectProduct, initialCategory = 'all' 
                     style={{ flex: 1 }}
                     onClick={() => {
                       closeDetail();
-                      onNavigateHome();
+                      if (onSelectProduct) onSelectProduct(selectedProduct);
                     }}
                   >
-                    Yêu cầu tư vấn &amp; Báo giá
+                    Xem Toàn Bộ Chi Tiết Kỹ Thuật
                   </button>
                   <button 
                     type="button" 
