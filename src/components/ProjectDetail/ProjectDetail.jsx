@@ -130,26 +130,28 @@ const ProjectDetail = ({ projectIdOrSlug, onNavigateBack, onNavigateContact, onS
         <div className="project-gallery">
           <div className="project-main-image-wrap">
             <img 
+              key={activeImage || project.thumbnail}
               src={activeImage || project.thumbnail} 
               alt={project.title} 
               className="project-main-image"
             />
-          </div>
 
-          {project.images && project.images.length > 1 && (
-            <div className="project-thumbs-list">
-              {project.images.map((imgUrl, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  className={`project-thumb-btn ${activeImage === imgUrl ? 'active' : ''}`}
-                  onClick={() => setActiveImage(imgUrl)}
-                >
-                  <img src={imgUrl} alt={`${project.title} ${idx + 1}`} />
-                </button>
-              ))}
-            </div>
-          )}
+            {project.images && project.images.length > 1 && (
+              <div className="project-thumbs-list">
+                {project.images.map((imgUrl, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    className={`project-thumb-btn ${activeImage === imgUrl ? 'active' : ''}`}
+                    onClick={() => setActiveImage(imgUrl)}
+                    aria-label={`Xem ảnh ${idx + 1}`}
+                  >
+                    <img src={imgUrl} alt={`${project.title} ${idx + 1}`} />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Specifications Cards Grid */}
