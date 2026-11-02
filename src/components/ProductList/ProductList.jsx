@@ -8,7 +8,6 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
   const [allProducts, setAllProducts] = useState([]);
   const [parentCategories, setParentCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isLiveApi, setIsLiveApi] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(initialCategory || 'all');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
@@ -32,7 +31,6 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
       ]);
       if (isMounted) {
         setAllProducts(prodRes.products || []);
-        setIsLiveApi(Boolean(prodRes.isLive));
         setParentCategories(catRes || []);
         setLoading(false);
       }
@@ -172,23 +170,9 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
 
   return (
     <div className="product-page">
-      {/* Tiêu đề trang & Huy hiệu hệ thống */}
+      {/* Tiêu đề trang */}
       <div className="product-page-title-wrap">
         <div className="container">
-          <div className="product-header-badge-row">
-            <span className="product-brand-tag">Cơ Điện Nguyên Phát</span>
-            {isLiveApi ? (
-              <span className="api-status-pill live">
-                <span className="status-dot green"></span>
-                Dữ liệu trực tiếp (Live API)
-              </span>
-            ) : (
-              <span className="api-status-pill mock">
-                <span className="status-dot yellow"></span>
-                Dữ liệu mô phỏng (Mock API)
-              </span>
-            )}
-          </div>
           <h1 className="section-title">
             Danh Mục <span className="text-yellow">Sản Phẩm &amp; Thiết Bị</span>
           </h1>
