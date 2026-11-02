@@ -28,6 +28,11 @@ const ProductDetail = ({
 
   // Gallery & Lightbox states
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [slideTransition, setSlideTransition] = useState({
+    prevImage: '',
+    direction: 'next',
+    step: 0
+  });
   const [failedImages, setFailedImages] = useState({});
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
@@ -48,6 +53,7 @@ const ProductDetail = ({
       setProduct(detail);
       setAllProducts(list || []);
       setActiveImageIndex(0);
+      setSlideTransition({ prevImage: '', direction: 'next', step: 0 });
       setFailedImages({});
       setActiveTab('specs');
       setLoading(false);
@@ -88,15 +94,31 @@ const ProductDetail = ({
     setFailedImages((prev) => ({ ...prev, [url]: true }));
   };
 
+  const handleSelectImage = useCallback((targetIndex, explicitDirection) => {
+    if (galleryImages.length <= 1) return;
+    const nextSafe = ((targetIndex % galleryImages.length) + galleryImages.length) % galleryImages.length;
+    if (nextSafe === safeImageIndex) return;
+
+    const dir = explicitDirection || (nextSafe > safeImageIndex ? 'next' : 'prev');
+    setSlideTransition((prev) => ({
+      prevImage: currentImage,
+      direction: dir,
+      step: prev.step + 1
+    }));
+    setActiveImageIndex(nextSafe);
+  }, [galleryImages.length, safeImageIndex, currentImage]);
+
   const handlePrevImage = useCallback(() => {
     if (galleryImages.length <= 1) return;
-    setActiveImageIndex((prev) => (prev <= 0 ? galleryImages.length - 1 : prev - 1));
-  }, [galleryImages.length]);
+    const nextSafe = safeImageIndex <= 0 ? galleryImages.length - 1 : safeImageIndex - 1;
+    handleSelectImage(nextSafe, 'prev');
+  }, [galleryImages.length, safeImageIndex, handleSelectImage]);
 
   const handleNextImage = useCallback(() => {
     if (galleryImages.length <= 1) return;
-    setActiveImageIndex((prev) => (prev >= galleryImages.length - 1 ? 0 : prev + 1));
-  }, [galleryImages.length]);
+    const nextSafe = safeImageIndex >= galleryImages.length - 1 ? 0 : safeImageIndex + 1;
+    handleSelectImage(nextSafe, 'next');
+  }, [galleryImages.length, safeImageIndex, handleSelectImage]);
 
   // Related products
   const { relatedProducts, hasSameCategory } = useMemo(() => {
@@ -302,11 +324,25 @@ const ProductDetail = ({
                       }
                     }}
                   >
+                    {slideTransition.step > 0 &&
+                      slideTransition.prevImage &&
+                      slideTransition.prevImage !== currentImage && (
+                        <img
+                          key={`out-${slideTransition.step}`}
+                          src={slideTransition.prevImage}
+                          alt=""
+                          aria-hidden="true"
+                          className={`pd-main-img pd-main-img-outgoing is-${slideTransition.direction}`}
+                        />
+                      )}
+
                     <img
-                      key={currentImage}
+                      key={`in-${safeImageIndex}-${slideTransition.step}`}
                       src={currentImage}
                       alt={product.name}
-                      className="pd-main-img"
+                      className={`pd-main-img pd-main-img-incoming ${
+                        slideTransition.step > 0 ? `is-${slideTransition.direction}` : ''
+                      }`}
                       onError={() => handleImageError(currentImage)}
                     />
 
@@ -351,7 +387,7 @@ const ProductDetail = ({
                           key={imgUrl + idx}
                           type="button"
                           className={`pd-thumb-item ${safeImageIndex === idx ? 'active' : ''}`}
-                          onClick={() => setActiveImageIndex(idx)}
+                          onClick={() => handleSelectImage(idx)}
                           aria-label={`Xem hình ${idx + 1}`}
                           aria-selected={safeImageIndex === idx}
                         >
@@ -870,9 +906,12 @@ const ProductDetail = ({
 
           <div className="pd-lightbox-content" onClick={(e) => e.stopPropagation()}>
             <img
+              key={`lb-${safeImageIndex}-${slideTransition.step}`}
               src={galleryImages[safeImageIndex]}
               alt={`${product.name} - ảnh phóng to`}
-              className="pd-lightbox-img"
+              className={`pd-lightbox-img ${
+                slideTransition.step > 0 ? `is-${slideTransition.direction}` : ''
+              }`}
             />
 
             <div className="pd-lightbox-footer">
