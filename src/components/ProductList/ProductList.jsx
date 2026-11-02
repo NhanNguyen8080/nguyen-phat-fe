@@ -312,12 +312,6 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
                 >
                   {/* Thumbnail & Badges */}
                   <div className="product-card-thumb-wrap">
-                    <div className="product-card-top-badges">
-                      <span className="product-card-badge">
-                        {product.category_name || 'Tủ điện'}
-                      </span>
-                    </div>
-
                     <img 
                       src={product.thumbnail || 'https://diennguyenphat.com/upload/files/baiviet/thuydiensongbung2-w350%5B1%5D.jpg'} 
                       alt={product.name} 
@@ -327,6 +321,12 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
                         e.target.src = 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=800&auto=format&fit=crop';
                       }}
                     />
+
+                    <div className="product-card-top-badges">
+                      <span className="product-card-badge">
+                        {product.category_name || 'Tủ điện'}
+                      </span>
+                    </div>
                   </div>
 
                   {/* Body Content */}

@@ -852,9 +852,6 @@ const ProductDetail = ({
                   onClick={() => onSelectProduct && onSelectProduct(rel)}
                 >
                   <div className="pd-related-thumb-wrap">
-                    {rel.category_name && (
-                      <span className="pd-related-badge">{rel.category_name}</span>
-                    )}
                     {rel.thumbnail && !failedImages[rel.thumbnail] ? (
                       <img
                         src={rel.thumbnail}
@@ -871,6 +868,9 @@ const ProductDetail = ({
                           <polyline points="21 15 16 10 5 21"></polyline>
                         </svg>
                       </div>
+                    )}
+                    {rel.category_name && (
+                      <span className="pd-related-badge">{rel.category_name}</span>
                     )}
                   </div>
                   <div className="pd-related-body">

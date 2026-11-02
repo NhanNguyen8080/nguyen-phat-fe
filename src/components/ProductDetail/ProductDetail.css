@@ -965,6 +965,8 @@
   font-weight: 700;
   padding: 3px 8px;
   border-radius: var(--border-radius-xl);
+  z-index: 3;
+  pointer-events: none;
 }
 
 .pd-related-no-thumb {
