@@ -117,6 +117,18 @@ const ProjectList = ({ onNavigateHome, onSelectProject }) => {
     }
   };
 
+  const stripHtml = (html) => {
+    if (!html) return '';
+    return html
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/&amp;/g, '&')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/\s+/g, ' ')
+      .trim();
+  };
+
   const handlePageChange = (page) => {
     if (page < 1 || page > totalPages) return;
     setCurrentPageNum(page);
@@ -216,11 +228,12 @@ const ProjectList = ({ onNavigateHome, onSelectProject }) => {
           <>
             <div className="projects-grid">
               {paginatedProjects.map((project) => (
-                <article key={project.id || project.slug} className="project-card">
-                  <div 
-                    className="project-card-thumb-wrap"
-                    onClick={() => handleProjectClick(project)}
-                  >
+                <article 
+                  key={project.id || project.slug} 
+                  className="project-card"
+                  onClick={() => handleProjectClick(project)}
+                >
+                  <div className="project-card-thumb-wrap">
                     <span className="project-card-badge">
                       {project.category_name || 'Công trình'}
                     </span>
@@ -246,31 +259,11 @@ const ProjectList = ({ onNavigateHome, onSelectProject }) => {
                     )}
                     <h3 
                       className="project-card-title"
-                      onClick={() => handleProjectClick(project)}
+                      title={project.title}
                     >
                       {project.title}
                     </h3>
-                    <p className="project-card-desc">{project.content}</p>
-
-                    <div className="project-card-footer">
-                      <button 
-                        type="button" 
-                        className="btn-card-detail"
-                        onClick={() => handleProjectClick(project)}
-                      >
-                        Chi tiết
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                      </button>
-                      <button 
-                        type="button" 
-                        className="btn-card-quote"
-                        onClick={onNavigateHome}
-                      >
-                        Tư vấn
-                      </button>
-                    </div>
+                    <p className="project-card-desc">{stripHtml(project.content)}</p>
                   </div>
                 </article>
               ))}
@@ -352,7 +345,7 @@ const ProjectList = ({ onNavigateHome, onSelectProject }) => {
                   {selectedProject.category_name || 'Nguyên Phát'}
                 </span>
                 <h2 className="modal-title">{selectedProject.title}</h2>
-                <p className="modal-desc">{selectedProject.content}</p>
+                <p className="modal-desc">{stripHtml(selectedProject.content)}</p>
 
                 <div className="modal-meta">
                   <div><strong>Mã công trình:</strong> {selectedProject.slug || selectedProject.id}</div>

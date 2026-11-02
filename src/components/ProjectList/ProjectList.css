@@ -157,6 +157,7 @@
   flex-direction: column;
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease, box-shadow 0.3s ease;
   position: relative;
+  cursor: pointer;
 }
 
 .project-card:hover {
@@ -244,58 +245,12 @@
   font-size: 0.9rem;
   color: var(--text-gray);
   line-height: 1.55;
-  margin-bottom: 20px;
+  margin-bottom: 0;
   flex: 1;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  min-height: calc(0.9rem * 1.55 * 2);
-}
-
-.project-card-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-top: 14px;
-  border-top: 1px solid #f0f0f0;
-  gap: 10px;
-}
-
-.btn-card-detail {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background-color: var(--secondary-bg);
-  border: 1px solid #e0e0e0;
-  color: var(--text-dark);
-  padding: 8px 16px;
-  border-radius: var(--border-radius-sm);
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.btn-card-detail:hover {
-  background-color: #e8e8e8;
-  border-color: #ccc;
-}
-
-.btn-card-quote {
-  background-color: var(--accent-yellow);
-  color: var(--text-dark);
-  border: none;
-  padding: 8px 16px;
-  border-radius: var(--border-radius-sm);
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-
-.btn-card-quote:hover {
-  opacity: 0.9;
 }
 
 /* Empty State */

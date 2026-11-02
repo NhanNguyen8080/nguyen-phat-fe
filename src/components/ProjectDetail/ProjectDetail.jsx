@@ -2,6 +2,18 @@ import React, { useEffect, useState } from 'react';
 import './ProjectDetail.css';
 import { getProjectById, getProjects } from '../../services/projectService';
 
+const stripHtml = (html) => {
+  if (!html) return '';
+  return html
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
+};
+
 const ProjectDetail = ({ projectIdOrSlug, onNavigateBack, onNavigateContact, onSelectProject }) => {
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -192,7 +204,11 @@ const ProjectDetail = ({ projectIdOrSlug, onNavigateBack, onNavigateContact, onS
             <section className="project-section">
               <h2 className="section-subtitle">Tổng Quan Dự Án</h2>
               <div className="project-text-block">
-                <p>{project.content}</p>
+                {/<[a-z][\s\S]*>/i.test(project.content) ? (
+                  <div dangerouslySetInnerHTML={{ __html: project.content }} />
+                ) : (
+                  <p>{project.content}</p>
+                )}
                 <p>
                   Dự án được triển khai với yêu cầu kiểm soát chất lượng nghiêm ngặt ngay từ công đoạn cắt phôi thép tấm CNC Plasma, gá dầm hàn tự động dưới lớp thuốc hàn, cho đến khâu phun bi xử lý bề mặt đạt tiêu chuẩn Sa 2.5 và sơn phủ bảo vệ kháng ăn mòn công nghiệp.
                 </p>
@@ -281,7 +297,7 @@ const ProjectDetail = ({ projectIdOrSlug, onNavigateBack, onNavigateContact, onS
                   <div className="related-body">
                     <h3 className="related-title">{rel.title}</h3>
                     <p className="related-snippet">
-                      {rel.content ? rel.content.slice(0, 100) + '...' : ''}
+                      {rel.content ? stripHtml(rel.content).slice(0, 100) + '...' : ''}
                     </p>
                     <span className="related-link">
                       Xem chi tiết
