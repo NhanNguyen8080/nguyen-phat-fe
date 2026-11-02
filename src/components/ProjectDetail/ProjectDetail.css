@@ -161,7 +161,7 @@
 .project-main-image-wrap {
   position: relative;
   width: 100%;
-  height: 580px;
+  height: 660px;
   border-radius: var(--border-radius-lg);
   overflow: hidden;
   background-color: #f0f0f0;
@@ -586,7 +586,7 @@
   }
 
   .project-main-image-wrap {
-    height: 440px;
+    height: 500px;
   }
 
   .project-thumbs-list {
@@ -617,7 +617,7 @@
   }
 
   .project-main-image-wrap {
-    height: 330px;
+    height: 380px;
   }
 
   .project-thumbs-list {
