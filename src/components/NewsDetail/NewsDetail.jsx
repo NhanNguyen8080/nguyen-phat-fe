@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import './NewsDetail.css';
-import { getPostById, getPosts, MOCK_POSTS } from '../../services/newsService';
+import { getPostById, getPosts, MOCK_POSTS, DEFAULT_THUMBNAILS } from '../../services/newsService';
 
 const NewsDetail = ({ postIdOrSlug, onNavigateBack, onNavigateContact, onSelectNews }) => {
   const [post, setPost] = useState(null);
@@ -21,14 +21,26 @@ const NewsDetail = ({ postIdOrSlug, onNavigateBack, onNavigateContact, onSelectN
       if (isMounted) {
         setPost(data);
 
+        // 1. Bài viết liên quan ở chân trang: ưu tiên related_posts từ API
+        let related = [];
+        if (data?.related_posts && Array.isArray(data.related_posts) && data.related_posts.length > 0) {
+          related = data.related_posts;
+        } else if (allRes?.posts) {
+          related = allRes.posts.filter(p => p.id !== data?.id && p.slug !== data?.slug).slice(0, 3);
+        }
+        setRelatedPosts(related);
+
+        // 2. Bài viết cho Sidebar: ưu tiên bài có is_featured hoặc lượt views cao
         const allList = (allRes?.posts && allRes.posts.length > 0) ? allRes.posts : MOCK_POSTS;
         const others = allList.filter(p => p.id !== data?.id && p.slug !== data?.slug);
 
-        // 4 bài nổi bật cho Sidebar
-        setSidebarPosts(others.slice(0, 4));
-        // 3 bài cho phần liên quan ở chân trang
-        setRelatedPosts(others.slice(0, 3));
+        const sortedForSidebar = [...others].sort((a, b) => {
+          if (a.is_featured && !b.is_featured) return -1;
+          if (!a.is_featured && b.is_featured) return 1;
+          return (b.views || 0) - (a.views || 0);
+        });
 
+        setSidebarPosts(sortedForSidebar.slice(0, 4));
         setLoading(false);
       }
     };
@@ -54,35 +66,52 @@ const NewsDetail = ({ postIdOrSlug, onNavigateBack, onNavigateContact, onSelectN
     }
   };
 
-  // Tự động phân tích mục lục bài viết (Table of Contents)
+  // Mục lục bài viết (Table of Contents) - Ưu tiên từ API, fallback tự động phân tích
   const tocItems = useMemo(() => {
     if (!post) return [];
-    const items = [];
 
+    // 1. Ưu tiên mục lục trực tiếp từ API Backend
+    if (Array.isArray(post.toc) && post.toc.length > 0) {
+      return post.toc.map(item => ({
+        id: item.id,
+        label: item.title || item.label || 'Mục lục'
+      }));
+    }
+
+    // 2. Fallback: Tự động phân tích từ content/summary
+    const items = [];
     if (post.summary) {
       items.push({ id: 'sec-summary', label: 'Tóm tắt bài viết' });
     }
 
     if (post.content) {
-      const paragraphs = post.content.split('\n\n');
-      paragraphs.forEach((p, idx) => {
-        const trimmed = p.trim();
-        if (
-          trimmed.startsWith('1.') || 
-          trimmed.startsWith('2.') || 
-          trimmed.startsWith('3.') || 
-          trimmed.startsWith('4.') || 
-          trimmed.startsWith('-')
-        ) {
-          const firstLine = trimmed.split('\n')[0].replace(/\*\*/g, '').replace(/###/g, '').trim();
-          const cleanLabel = firstLine.length > 45 ? firstLine.slice(0, 42) + '...' : firstLine;
-          items.push({ id: `sec-block-${idx}`, label: cleanLabel });
-        }
-      });
-
-      if (items.length <= 1) {
-        items.push({ id: 'sec-content-main', label: 'Nội dung chi tiết & Đánh giá' });
+      const headingMatches = [...post.content.matchAll(/<h[23][^>]*id=["']([^"']+)["'][^>]*>(.*?)<\/h[23]>/gi)];
+      if (headingMatches.length > 0) {
+        headingMatches.forEach(m => {
+          const cleanText = m[2].replace(/<[^>]+>/g, '').trim();
+          items.push({ id: m[1], label: cleanText });
+        });
+      } else {
+        const paragraphs = post.content.split('\n\n');
+        paragraphs.forEach((p, idx) => {
+          const trimmed = p.trim();
+          if (
+            trimmed.startsWith('1.') || 
+            trimmed.startsWith('2.') || 
+            trimmed.startsWith('3.') || 
+            trimmed.startsWith('4.') || 
+            trimmed.startsWith('-')
+          ) {
+            const firstLine = trimmed.split('\n')[0].replace(/\*\*/g, '').replace(/###/g, '').trim();
+            const cleanLabel = firstLine.length > 45 ? firstLine.slice(0, 42) + '...' : firstLine;
+            items.push({ id: `sec-block-${idx}`, label: cleanLabel });
+          }
+        });
       }
+    }
+
+    if (items.length <= 1) {
+      items.push({ id: 'sec-content-main', label: 'Nội dung chi tiết & Đánh giá' });
     }
 
     items.push({ id: 'sec-consultation', label: 'Giải pháp & Tư vấn cơ điện' });
@@ -102,6 +131,8 @@ const NewsDetail = ({ postIdOrSlug, onNavigateBack, onNavigateContact, onSelectN
       });
     }
   };
+
+  const isHtmlContent = Boolean(post?.content && /<[a-z][\s\S]*>/i.test(post.content));
 
   if (loading) {
     return (
@@ -166,7 +197,7 @@ const NewsDetail = ({ postIdOrSlug, onNavigateBack, onNavigateContact, onSelectN
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                   </svg>
-                  {post.author || 'Ban Kỹ Thuật Nguyên Phát'}
+                  {post.author || 'Ban Kỹ Thuật Cơ Điện Nguyên Phát'}
                 </span>
                 <span className="meta-date">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -186,6 +217,15 @@ const NewsDetail = ({ postIdOrSlug, onNavigateBack, onNavigateContact, onSelectN
                     {post.readTime}
                   </span>
                 )}
+                {typeof post.views === 'number' && post.views > 0 && (
+                  <span className="meta-views">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    {post.views.toLocaleString('vi-VN')} lượt xem
+                  </span>
+                )}
               </div>
             </header>
 
@@ -195,7 +235,11 @@ const NewsDetail = ({ postIdOrSlug, onNavigateBack, onNavigateContact, onSelectN
                 <img 
                   src={post.thumbnail} 
                   alt={post.title} 
-                  className="news-featured-image" 
+                  className="news-featured-image"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = DEFAULT_THUMBNAILS[0];
+                  }}
                 />
               </div>
             )}
@@ -208,30 +252,38 @@ const NewsDetail = ({ postIdOrSlug, onNavigateBack, onNavigateContact, onSelectN
             )}
 
             {/* Article Body */}
-            <div id="sec-content-main" className="news-article-content">
-              {post.content ? (
-                post.content.split('\n\n').map((paragraph, index) => {
-                  if (
-                    paragraph.startsWith('1.') || 
-                    paragraph.startsWith('2.') || 
-                    paragraph.startsWith('3.') || 
-                    paragraph.startsWith('4.') || 
-                    paragraph.startsWith('-')
-                  ) {
-                    return (
-                      <div key={index} id={`sec-block-${index}`} className="content-highlight-block">
-                        {paragraph.split('\n').map((line, lIdx) => (
-                          <p key={lIdx} className="content-list-item">{line}</p>
-                        ))}
-                      </div>
-                    );
-                  }
-                  return <p key={index} className="content-paragraph">{paragraph}</p>;
-                })
-              ) : (
-                <p>Nội dung bài viết đang được cập nhật...</p>
-              )}
-            </div>
+            {isHtmlContent ? (
+              <div 
+                id="sec-content-main" 
+                className="news-article-content news-article-html-body"
+                dangerouslySetInnerHTML={{ __html: post.content }} 
+              />
+            ) : (
+              <div id="sec-content-main" className="news-article-content">
+                {post.content ? (
+                  post.content.split('\n\n').map((paragraph, index) => {
+                    if (
+                      paragraph.startsWith('1.') || 
+                      paragraph.startsWith('2.') || 
+                      paragraph.startsWith('3.') || 
+                      paragraph.startsWith('4.') || 
+                      paragraph.startsWith('-')
+                    ) {
+                      return (
+                        <div key={index} id={`sec-block-${index}`} className="content-highlight-block">
+                          {paragraph.split('\n').map((line, lIdx) => (
+                            <p key={lIdx} className="content-list-item">{line}</p>
+                          ))}
+                        </div>
+                      );
+                    }
+                    return <p key={index} className="content-paragraph">{paragraph}</p>;
+                  })
+                ) : (
+                  <p>Nội dung bài viết đang được cập nhật...</p>
+                )}
+              </div>
+            )}
 
             {/* Tags */}
             {post.tags && post.tags.length > 0 && (
@@ -303,19 +355,32 @@ const NewsDetail = ({ postIdOrSlug, onNavigateBack, onNavigateContact, onSelectN
                     Tin Tức Nổi Bật
                   </h4>
                   <div className="sidebar-news-list">
-                    {sidebarPosts.map((item) => (
+                    {sidebarPosts.map((item, idx) => (
                       <div 
                         key={item.id} 
                         className="sidebar-news-item" 
                         onClick={() => onSelectNews && onSelectNews(item)}
                       >
                         <div className="sidebar-news-thumb-wrap">
-                          <img src={item.thumbnail} alt={item.title} className="sidebar-news-thumb" />
+                          <img 
+                            src={item.thumbnail} 
+                            alt={item.title} 
+                            className="sidebar-news-thumb"
+                            onError={(e) => {
+                              e.currentTarget.onerror = null;
+                              e.currentTarget.src = DEFAULT_THUMBNAILS[(idx + 1) % DEFAULT_THUMBNAILS.length];
+                            }}
+                          />
                         </div>
                         <div className="sidebar-news-info">
                           <span className="sidebar-news-cat">{item.category_name}</span>
                           <h5 className="sidebar-news-title" title={item.title}>{item.title}</h5>
-                          <span className="sidebar-news-date">{formatDate(item.created_at)}</span>
+                          <div className="sidebar-news-meta-row">
+                            <span className="sidebar-news-date">{formatDate(item.created_at)}</span>
+                            {typeof item.views === 'number' && item.views > 0 && (
+                              <span className="sidebar-news-views">• {item.views} lượt xem</span>
+                            )}
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -361,14 +426,22 @@ const NewsDetail = ({ postIdOrSlug, onNavigateBack, onNavigateContact, onSelectN
               <span className="related-news-sub">Khám phá các bài viết kỹ thuật & giải pháp cơ điện mới nhất</span>
             </div>
             <div className="related-news-grid">
-              {relatedPosts.map((item) => (
+              {relatedPosts.map((item, idx) => (
                 <article 
                   key={item.id} 
                   className="related-news-card"
                   onClick={() => onSelectNews && onSelectNews(item)}
                 >
                   <div className="related-news-thumb-wrap">
-                    <img src={item.thumbnail} alt={item.title} className="related-news-thumb" />
+                    <img 
+                      src={item.thumbnail} 
+                      alt={item.title} 
+                      className="related-news-thumb"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = DEFAULT_THUMBNAILS[(idx + 2) % DEFAULT_THUMBNAILS.length];
+                      }}
+                    />
                     <span className="related-news-badge">{item.category_name}</span>
                   </div>
                   <div className="related-news-body">

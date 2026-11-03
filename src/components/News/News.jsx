@@ -1,14 +1,24 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './News.css';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
-import { MOCK_POSTS } from '../../services/newsService';
+import { getPosts, MOCK_POSTS, DEFAULT_THUMBNAILS } from '../../services/newsService';
 
 const News = ({ onNavigateNews, onSelectNews }) => {
   const headerRef = useScrollReveal();
   const gridRef = useScrollReveal({ threshold: 0.08 });
+  const [featuredPosts, setFeaturedPosts] = useState(MOCK_POSTS.slice(0, 3));
 
-  // Lấy 3 bài viết mới nhất hiển thị trên Trang Chủ
-  const featuredPosts = MOCK_POSTS.slice(0, 3);
+  useEffect(() => {
+    let isMounted = true;
+    getPosts().then((res) => {
+      if (isMounted && res?.posts && res.posts.length > 0) {
+        setFeaturedPosts(res.posts.slice(0, 3));
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const formatDate = (isoString) => {
     if (!isoString) return '';
@@ -60,6 +70,10 @@ const News = ({ onNavigateNews, onSelectNews }) => {
                   alt={post.title} 
                   className="home-news-thumb" 
                   loading="lazy" 
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = DEFAULT_THUMBNAILS[index % DEFAULT_THUMBNAILS.length];
+                  }}
                 />
                 <span className="home-news-badge">{post.category_name}</span>
               </div>

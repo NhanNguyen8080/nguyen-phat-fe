@@ -147,6 +147,35 @@ Tại Nguyên Phát, đội ngũ kỹ sư kết cấu thường xuyên thực hi
   }
 ];
 
+export const DEFAULT_THUMBNAILS = [
+  'https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=800&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=800&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=800&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=800&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800&auto=format&fit=crop'
+];
+
+export function sanitizeThumbnail(thumb, fallbackIndex = 0) {
+  if (!thumb || typeof thumb !== 'string' || thumb.includes('domain.com') || thumb.includes('example.com')) {
+    return DEFAULT_THUMBNAILS[Math.abs(fallbackIndex) % DEFAULT_THUMBNAILS.length];
+  }
+  return thumb;
+}
+
+export function stripHtml(rawText) {
+  if (!rawText) return '';
+  return rawText
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 /**
  * Lấy danh sách bài viết/tin tức
  * @param {string|null} category - Tên danh mục cần lọc (nếu null thì lấy tất cả)
@@ -170,18 +199,30 @@ export async function getPosts(category = null) {
     if (response.ok) {
       const data = await response.json();
       if (Array.isArray(data) && data.length > 0) {
-        // Chuẩn hóa dữ liệu theo PostResponse
-        const formatted = data.map(item => ({
-          id: item.id || Math.random().toString(),
-          title: item.title || 'Tin tức Nguyên Phát',
-          slug: item.slug || '',
-          category_name: item.category_name || item.category || 'Tin tức chung',
-          thumbnail: item.thumbnail || 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=800&auto=format&fit=crop',
-          content: item.content || item.summary || '',
-          summary: item.summary || (item.content ? item.content.slice(0, 160) + '...' : ''),
-          created_at: item.created_at || new Date().toISOString(),
-          updated_at: item.updated_at || new Date().toISOString(),
-        }));
+        // Chuẩn hóa dữ liệu theo PostResponse với đầy đủ các fields mới
+        const formatted = data.map((item, idx) => {
+          const cleanSummary = item.summary 
+            ? stripHtml(item.summary) 
+            : (item.content ? stripHtml(item.content).slice(0, 160) + '...' : '');
+
+          return {
+            id: item.id || Math.random().toString(),
+            title: item.title || 'Tin tức Nguyên Phát',
+            slug: item.slug || '',
+            category_name: item.category_name || item.category || 'Tin tức chung',
+            thumbnail: sanitizeThumbnail(item.thumbnail, idx),
+            content: item.content || item.summary || '',
+            summary: cleanSummary,
+            author: item.author || 'Ban Kỹ Thuật Cơ Điện Nguyên Phát',
+            readTime: item.read_time || item.readTime || '5 phút đọc',
+            read_time: item.read_time || item.readTime || '5 phút đọc',
+            tags: Array.isArray(item.tags) && item.tags.length > 0 ? item.tags : ['Cơ Điện Nguyên Phát', 'Hệ thống điện', 'Kỹ thuật'],
+            is_featured: !!item.is_featured,
+            views: typeof item.views === 'number' ? item.views : 0,
+            created_at: item.published_at || item.created_at || new Date().toISOString(),
+            updated_at: item.updated_at || new Date().toISOString(),
+          };
+        });
 
         const filtered = (category && category !== 'all'
           ? formatted.filter(p => p.category_name === category)
@@ -237,12 +278,27 @@ export async function getPostById(idOrSlug) {
   return enrichPost(found);
 }
 
-function enrichPost(post) {
+function enrichPost(post, fallbackIndex = 0) {
   if (!post) return null;
+  const cleanSummary = post.summary 
+    ? stripHtml(post.summary) 
+    : (post.content ? stripHtml(post.content).slice(0, 160) + '...' : '');
+
   return {
     ...post,
-    author: post.author || 'Ban Kỹ Thuật Nguyên Phát',
-    readTime: post.readTime || '5 phút đọc',
-    tags: post.tags || ['Kết cấu thép', 'Nhà xưởng công nghiệp', 'Nguyên Phát Steel', 'Tiêu chuẩn xây dựng']
+    thumbnail: sanitizeThumbnail(post.thumbnail, fallbackIndex),
+    summary: cleanSummary,
+    author: post.author || 'Ban Kỹ Thuật Cơ Điện Nguyên Phát',
+    readTime: post.read_time || post.readTime || '5 phút đọc',
+    read_time: post.read_time || post.readTime || '5 phút đọc',
+    tags: Array.isArray(post.tags) && post.tags.length > 0 ? post.tags : ['Cơ Điện Nguyên Phát', 'Kỹ thuật điện', 'Tiêu chuẩn IEC'],
+    views: typeof post.views === 'number' ? post.views : 0,
+    is_featured: !!post.is_featured,
+    toc: Array.isArray(post.toc) ? post.toc : [],
+    related_posts: Array.isArray(post.related_posts) ? post.related_posts.map((rp, rIdx) => ({
+      ...rp,
+      thumbnail: sanitizeThumbnail(rp.thumbnail, rIdx + 1),
+      summary: rp.summary ? stripHtml(rp.summary) : ''
+    })) : []
   };
 }

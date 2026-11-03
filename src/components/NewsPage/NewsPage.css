@@ -191,6 +191,25 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
+.news-featured-tag {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: linear-gradient(135deg, #ffb800, #ff8c00);
+  color: #1a1a1a;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: var(--border-radius-xl);
+  z-index: 2;
+  box-shadow: 0 4px 10px rgba(255, 184, 0, 0.4);
+}
+
+.news-views-count {
+  color: #94a3b8;
+  font-size: 0.78rem;
+}
+
 .news-body {
   padding: 22px 20px 20px;
   display: flex;

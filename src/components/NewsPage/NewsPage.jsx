@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './NewsPage.css';
-import { getPosts } from '../../services/newsService';
+import { getPosts, DEFAULT_THUMBNAILS } from '../../services/newsService';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -235,8 +235,15 @@ const NewsPage = ({ onNavigateHome, onSelectNews }) => {
                       alt={post.title} 
                       className="news-thumbnail"
                       loading="lazy"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = DEFAULT_THUMBNAILS[0];
+                      }}
                     />
                     <span className="news-badge">{post.category_name || 'Tin tức'}</span>
+                    {post.is_featured && (
+                      <span className="news-featured-tag">★ Nổi bật</span>
+                    )}
                   </div>
 
                   <div className="news-body">
@@ -257,6 +264,11 @@ const NewsPage = ({ onNavigateHome, onSelectNews }) => {
                             <polyline points="12 6 12 12 16 14"></polyline>
                           </svg>
                           {post.readTime}
+                        </span>
+                      )}
+                      {typeof post.views === 'number' && post.views > 0 && (
+                        <span className="news-views-count">
+                          • {post.views} xem
                         </span>
                       )}
                     </div>
