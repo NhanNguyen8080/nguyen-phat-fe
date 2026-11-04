@@ -51,9 +51,8 @@ const ProjectDetail = ({ projectIdOrSlug, onNavigateBack, onNavigateContact, onS
 
   if (loading) {
     return (
-      <div className="project-detail-loading container">
-        <div className="spinner"></div>
-        <p>Đang tải thông tin chi tiết công trình...</p>
+      <div className="page-loading-wrapper" aria-label="Đang tải thông tin chi tiết công trình">
+        <div className="yellow-spinner" role="status"></div>
       </div>
     );
   }

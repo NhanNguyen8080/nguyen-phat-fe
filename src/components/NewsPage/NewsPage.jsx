@@ -138,6 +138,14 @@ const NewsPage = ({ onNavigateHome, onSelectNews }) => {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="page-loading-wrapper" aria-label="Đang tải tin tức">
+        <div className="yellow-spinner" role="status"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="news-page">
       {/* Tiêu đề ngắn gọn duy nhất: News */}
@@ -195,12 +203,7 @@ const NewsPage = ({ onNavigateHome, onSelectNews }) => {
         </div>
 
         {/* Content Section */}
-        {loading ? (
-          <div className="loading-state">
-            <div className="spinner"></div>
-            <p>Đang tải tin tức mới nhất...</p>
-          </div>
-        ) : filteredPosts.length === 0 ? (
+        {filteredPosts.length === 0 ? (
           <div className="empty-state">
             <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1.5">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>

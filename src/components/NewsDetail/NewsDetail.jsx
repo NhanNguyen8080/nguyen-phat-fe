@@ -136,9 +136,8 @@ const NewsDetail = ({ postIdOrSlug, onNavigateBack, onNavigateContact, onSelectN
 
   if (loading) {
     return (
-      <div className="news-detail-loading container">
-        <div className="spinner"></div>
-        <p>Đang tải nội dung bài viết...</p>
+      <div className="page-loading-wrapper" aria-label="Đang tải nội dung bài viết">
+        <div className="yellow-spinner" role="status"></div>
       </div>
     );
   }

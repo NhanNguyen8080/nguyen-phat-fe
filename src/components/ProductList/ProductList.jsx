@@ -168,6 +168,14 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
     return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
   };
 
+  if (loading) {
+    return (
+      <div className="page-loading-wrapper" aria-label="Đang tải danh sách sản phẩm">
+        <div className="yellow-spinner" role="status"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="product-page">
       {/* Tiêu đề trang */}
@@ -251,22 +259,8 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
           </span>
         </div>
 
-        {/* Loading / Grid / Empty State */}
-        {loading ? (
-          <div className="products-grid">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="product-card-skeleton">
-                <div className="skeleton-thumb"></div>
-                <div className="skeleton-body">
-                  <div className="skeleton-line short"></div>
-                  <div className="skeleton-line title"></div>
-                  <div className="skeleton-line desc"></div>
-                  <div className="skeleton-specs"></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : filteredProducts.length === 0 ? (
+        {/* Grid / Empty State */}
+        {filteredProducts.length === 0 ? (
           <div className="product-empty">
             <h3 className="product-empty-title">Không tìm thấy sản phẩm phù hợp</h3>
             <p className="product-empty-desc">

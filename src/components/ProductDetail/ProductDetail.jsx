@@ -193,34 +193,10 @@ const ProductDetail = ({
     }
   };
 
-  // Shimmer Skeleton
   if (loading) {
     return (
-      <div className="pd-page">
-        <div className="pd-subnav">
-          <div className="container pd-subnav-inner">
-            <div className="pd-skeleton pd-sk-pill"></div>
-            <div className="pd-skeleton pd-sk-breadcrumb"></div>
-          </div>
-        </div>
-        <div className="container pd-hero-grid pd-skeleton-wrap">
-          <div className="pd-gallery-col">
-            <div className="pd-skeleton pd-sk-main-img"></div>
-            <div className="pd-sk-thumbs">
-              <div className="pd-skeleton pd-sk-thumb"></div>
-              <div className="pd-skeleton pd-sk-thumb"></div>
-              <div className="pd-skeleton pd-sk-thumb"></div>
-            </div>
-          </div>
-          <div className="pd-summary-col">
-            <div className="pd-skeleton pd-sk-badge"></div>
-            <div className="pd-skeleton pd-sk-title"></div>
-            <div className="pd-skeleton pd-sk-title-short"></div>
-            <div className="pd-skeleton pd-sk-paragraph"></div>
-            <div className="pd-skeleton pd-sk-meta-box"></div>
-            <div className="pd-skeleton pd-sk-cta"></div>
-          </div>
-        </div>
+      <div className="page-loading-wrapper" aria-label="Đang tải thông tin sản phẩm">
+        <div className="yellow-spinner" role="status"></div>
       </div>
     );
   }

@@ -149,6 +149,14 @@ const ProjectList = ({ onNavigateHome, onSelectProject }) => {
     document.body.style.overflow = '';
   };
 
+  if (loading) {
+    return (
+      <div className="page-loading-wrapper" aria-label="Đang tải danh sách công trình">
+        <div className="yellow-spinner" role="status"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="project-page">
       {/* Tiêu đề ngắn gọn duy nhất: Công trình */}
@@ -213,12 +221,8 @@ const ProjectList = ({ onNavigateHome, onSelectProject }) => {
           </span>
         </div>
 
-        {/* Loading / Grid / Empty */}
-        {loading ? (
-          <div className="project-empty">
-            <p className="project-empty-desc">Đang tải danh sách công trình...</p>
-          </div>
-        ) : filteredProjects.length === 0 ? (
+        {/* Grid / Empty */}
+        {filteredProjects.length === 0 ? (
           <div className="project-empty">
             <div className="project-empty-icon">🏗️</div>
             <h3 className="project-empty-title">Không tìm thấy công trình nào</h3>

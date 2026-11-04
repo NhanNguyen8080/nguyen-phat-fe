@@ -174,3 +174,34 @@ img {
   background-size: 200% auto;
   animation: btnShimmer 3.5s linear infinite;
 }
+
+/* =============================================
+   PAGE LOADING SPINNER (YELLOW)
+   ============================================= */
+.page-loading-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(85vh - 90px);
+  width: 100%;
+  padding: 60px 24px;
+}
+
+.yellow-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4.5px solid rgba(255, 184, 0, 0.2);
+  border-top-color: var(--accent-yellow);
+  border-radius: 50%;
+  animation: yellowSpinnerRotate 0.8s linear infinite;
+  box-sizing: border-box;
+}
+
+@keyframes yellowSpinnerRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
