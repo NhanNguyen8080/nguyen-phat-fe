@@ -51,7 +51,7 @@ const News = ({ onNavigateNews, onSelectNews }) => {
             <span className="text-yellow">News</span>
           </h2>
           <p className="home-news-subtitle reveal delay-3">
-            Cập nhật xu hướng kết cấu thép xanh, kỹ thuật xây dựng và tin tức nổi bật từ Nguyên Phát.
+            Cập nhật kiến thức kỹ thuật tủ bảng điện, hệ thống thang máng cáp và giải pháp cơ điện công nghiệp từ Nguyên Phát.
           </p>
         </div>
 

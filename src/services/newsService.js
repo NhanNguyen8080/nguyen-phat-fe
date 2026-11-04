@@ -1,160 +1,181 @@
 /**
- * Service kết nối API Tin tức / Bài viết Nguyên Phát
+ * Service kết nối API Tin tức / Bài viết Cơ Điện Nguyên Phát
  * API Base: https://nguyen-phat-admin.onrender.com/api/v1/posts/
- * Schema tương thích 100% với PostResponse trong OpenAPI spec của hệ thống.
+ * Schema tương thích 100% với PostResponse và PostDetailResponse trong OpenAPI specification của hệ thống:
+ * - id: string (uuid)
+ * - title: string
+ * - slug: string
+ * - category_name: string
+ * - thumbnail: string | null
+ * - summary: string | null
+ * - content: string | null (HTML)
+ * - author: string | null
+ * - read_time: string | null
+ * - tags: string[]
+ * - is_featured: boolean
+ * - views: integer
+ * - created_at: string (date-time)
+ * - updated_at: string (date-time)
+ * - toc: Array<{ id: string, title: string }> (Mục lục bài viết)
+ * - related_posts: Array<{ id, title, slug, category_name, thumbnail, created_at }> (Bài viết liên quan)
  */
 
 const API_BASE_URL = 'https://nguyen-phat-admin.onrender.com/api/v1';
 
-// Dữ liệu mẫu chuẩn cấu trúc PostResponse dùng khi API yêu cầu Bearer token hoặc mạng gián đoạn
+export const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+let cachedPostsList = null;
+
+// Dữ liệu mẫu chuẩn cấu trúc PostResponse / PostDetailResponse Cơ Điện Nguyên Phát
 export const MOCK_POSTS = [
   {
-    id: "n1-7a8c3e21-912b-4f3d-9d41-112345678901",
-    title: "Xu Hướng Ứng Dụng Kết Cấu Thép Xanh Trong Nhà Xưởng Công Nghiệp 2026",
-    slug: "xu-huong-ung-dung-ket-cau-thep-xanh-2026",
-    category_name: "Thị Trường Thép",
-    thumbnail: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=800&auto=format&fit=crop",
-    summary: "Việc sử dụng thép tái chế và quy trình chế tạo tiền chế giảm phát thải carbon đang trở thành tiêu chuẩn bắt buộc cho các nhà xưởng FDI đạt chứng chỉ LEED tại Việt Nam.",
-    content: `Trong bối cảnh toàn cầu hướng tới mục tiêu Net Zero 2050, ngành xây dựng công nghiệp tại Việt Nam đang chứng kiến sự chuyển mình mạnh mẽ sang các giải pháp 'thép xanh'. 
+    id: "b118bab1-2b04-40ef-8dd0-fd25e83d9dee",
+    title: "Hướng Dẫn Thiết Kế Tủ Điện Phân Phối Tổng MSB Đạt Chuẩn IEC 61439-1/2",
+    slug: "thiet-ke-tu-dien-phan-phoi-tong-msb-chuan-iec-61439",
+    category_name: "Tủ Bảng Điện & Trạm Biến Áp",
+    thumbnail: "https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=1200&q=80",
+    summary: "Phân tích chi tiết quy trình tính toán, lựa chọn thiết bị đóng cắt ACB/MCCB và thiết kế thanh cái đồng cho tủ điện phân phối tổng MSB công nghiệp.",
+    content: `<p>Tủ điện phân phối tổng (Main Switchboard - MSB) là trái tim của hệ thống phân phối điện hạ thế trong nhà máy, tòa nhà cao tầng và các trung tâm dữ liệu. Một tủ MSB đạt chuẩn phải đảm bảo khả năng cấp nguồn liên tục, an toàn vận hành và dễ dàng bảo trì.</p>
 
-Kết cấu thép tiền chế tối ưu tải trọng không chỉ giảm 30-40% lượng bê tông móng mà còn cho phép tái chế gần như 100% vòng đời công trình. Tại Nguyên Phát, chúng tôi tiên phong ứng dụng công nghệ cắt phôi CNC Plasma chính xác cao, hạn chế hao hụt thép dưới 1.5% và tối ưu hóa nhịp vượt khẩu độ lớn lên đến 60 mét không cột giữa.
+<h2 id="tieu-chuan-iec">Tiêu chuẩn quốc tế IEC 61439-1 và 61439-2</h2>
+<p>Bộ tiêu chuẩn IEC 61439 thay thế hoàn toàn tiêu chuẩn cũ IEC 60439, phân định rõ ràng giữa thiết kế tủ điện kiểm tra điển hình (Type-Tested) và trách nhiệm của đơn vị lắp ráp (Assembly Manufacturer). Mọi khía cạnh từ độ tăng nhiệt, khả năng chịu dòng ngắn mạch đến độ cách điện đều được kiểm chứng nghiêm ngặt.</p>
 
-Các nhà đầu tư FDI từ Nhật Bản, Hàn Quốc và Châu Âu hiện nay ưu tiên đặc biệt cho các nhà thầu có khả năng cung ứng giải pháp kết cấu thép đạt chứng nhận xanh, sử dụng sơn gốc nước không VOC và tích hợp sẵn mái tôn chuẩn bị cho điện mặt trời áp mái.`,
-    author: "Ban Kỹ Thuật Nguyên Phát",
-    readTime: "5 phút đọc",
-    created_at: "2026-10-25T08:30:00Z",
-    updated_at: "2026-10-28T14:20:00Z"
-  },
-  {
-    id: "n2-8b9d4f32-023c-5e4e-ae52-223456789012",
-    title: "Kỹ Thuật Xử Lý Chống Cháy Cho Kết Cấu Thép Theo Tiêu Chuẩn QCVN 06:2022",
-    slug: "ky-thuat-xu-ly-chong-chay-ket-cau-thep-qcvn-06",
-    category_name: "Kỹ Thuật Xây Dựng",
-    thumbnail: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=800&auto=format&fit=crop",
-    summary: "Tổng hợp các giải pháp bọc bảo vệ chống cháy hiệu quả từ sơn phồng chống cháy, vữa chống cháy vô cơ đến tấm thạch cao chịu lửa cho dầm cột kết cấu thép.",
-    content: `Quy chuẩn QCVN 06:2022/BXD đặt ra những yêu cầu khắt khe về giới hạn chịu lửa (R, E, I) đối với các cấu kiện thép chịu lực trong nhà xưởng công nghiệp quy mô lớn.
+<h2 id="tinh-toan-thanh-cai">1. Tính toán thanh cái đồng và dòng định mức</h2>
+<p>Thanh cái đồng (Busbar) cần được tính toán dựa trên dòng điện danh định và dòng chịu ngắn mạch cực đại Icw (thường từ 50kA/1s đến 100kA/1s). Độ dẫn điện của đồng thanh cái phải đạt từ 99.9% Cu-ETP trở lên, các điểm nối được mạ thiếc hoặc mạ bạc để giảm điện trở tiếp xúc.</p>
 
-Thép thông thường bắt đầu mất cường độ chịu lực nghiêm trọng khi nhiệt độ vượt quá 500°C. Do đó, việc ứng dụng các giải pháp bảo vệ thụ động là bắt buộc:
-1. **Sơn phồng chống cháy thế hệ mới:** Khi gặp nhiệt độ cao, màng sơn giãn nở gấp 50-80 lần tạo lớp xốp gốm cách nhiệt bảo vệ lõi thép trong 60 đến 120 phút.
-2. **Vữa chống cháy khoáng vô cơ:** Giải pháp kinh tế cho các cấu kiện cột chính khu vực kho vận nguy cơ cháy cao.
-3. **Giải pháp bao che panel lõi PIR:** Kháng cháy lan tuyệt đối và không sinh khói độc.
+<h2 id="phan-chia-form-tu">2. Phân chia Form tủ (Form of Separation)</h2>
+<p>Tùy theo yêu cầu an toàn, tủ MSB thường được chế tạo từ Form 2b đến Form 4b. Việc ngăn cách khoang thanh cái chính, khoang thiết bị đóng cắt và khoang đấu nối cáp giúp ngăn ngừa hồ quang lan truyền khi xảy ra sự cố.</p>
 
-Nguyên Phát cam kết 100% hồ sơ nghiệm thu PCCC được hỗ trợ trọn gói, đạt kiểm định của Cục Cảnh sát PCCC & CNCH.`,
-    author: "Ks. Trần Đức Minh",
-    readTime: "7 phút đọc",
-    created_at: "2026-10-22T09:15:00Z",
-    updated_at: "2026-10-27T11:00:00Z"
-  },
-  {
-    id: "n3-9c0e5a43-134d-6f5f-bf63-334567890123",
-    title: "Nguyên Phát Bàn Giao Tổ Hợp Nhà Xưởng Hansol 35.000m² Vượt Tiến Độ 15 Ngày",
-    slug: "nguyen-phat-ban-giao-nha-xuong-hansol-vuot-tien-do",
-    category_name: "Tin Công Ty",
-    thumbnail: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800&auto=format&fit=crop",
-    summary: "Dự án nhà máy sản xuất linh kiện điện tử Hansol tại KCN Yên Phong chính thức được bàn giao đưa vào vận hành thử nghiệm, nhận được thư khen ngợi từ tổng thầu.",
-    content: `Ngày 20/10/2026, Công ty Cổ phần Kết Cấu Thép & Cơ Khí Xây Dựng Nguyên Phát đã tổ chức lễ bàn giao hoàn thiện gói thầu chế tạo và lắp dựng kết cấu thép dự án Nhà máy Hansol Electronics.
-
-Với khối lượng hơn 1.800 tấn kết cấu thép tổ hợp, đội ngũ kỹ sư và công nhân Nguyên Phát đã thi công liên tục 3 ca, áp dụng mô hình quản lý BIM 4D để kiểm soát xung đột lắp dựng ngay trên bản vẽ 3D. Nhờ đó, dự án đã về đích sớm hơn 15 ngày so với hợp đồng ban đầu, đạt 0 tai nạn lao động và đáp ứng toàn diện tiêu chuẩn kiểm định quốc tế.
-
-Sự kiện một lần nữa khẳng định năng lực thi công vượt trội và chữ Tín hàng đầu của thương hiệu Nguyên Phát trong mắt các chủ đầu tư FDI.`,
-    author: "Ban Truyền Thông C&A",
+<h2 id="giai-phap-chong-ho-quang">3. Tích hợp rơ le bảo vệ hồ quang điện nội bộ</h2>
+<p>Việc trang bị các cảm biến quang học phát hiện hồ quang (Arc Flash Protection) kết hợp cắt nhanh ACB trong vòng dưới 50ms giúp bảo vệ an toàn tính mạng người vận hành và giảm thiểu hư hỏng thiết bị.</p>`,
+    author: "Ban Kỹ Thuật Cơ Điện Nguyên Phát",
     readTime: "4 phút đọc",
-    created_at: "2026-10-20T10:45:00Z",
-    updated_at: "2026-10-26T08:10:00Z"
+    read_time: "4 phút đọc",
+    tags: ["Tủ MSB", "Hạ thế", "IEC 61439", "Thanh cái đồng", "ACB"],
+    is_featured: true,
+    views: 2425,
+    created_at: "2026-10-19T01:01:22.973Z",
+    updated_at: "2026-11-04T08:42:36.558Z",
+    toc: [
+      { id: "tieu-chuan-iec", title: "Tiêu chuẩn quốc tế IEC 61439-1 và 61439-2" },
+      { id: "tinh-toan-thanh-cai", title: "1. Tính toán thanh cái đồng và dòng định mức" },
+      { id: "phan-chia-form-tu", title: "2. Phân chia Form tủ (Form of Separation)" },
+      { id: "giai-phap-chong-ho-quang", title: "3. Tích hợp rơ le bảo vệ hồ quang điện nội bộ" }
+    ],
+    related_posts: []
   },
   {
-    id: "n4-ad1f6b54-245e-7a6a-cf74-445678901234",
-    title: "Ứng Dụng Công Nghệ Mô Hình Hóa BIM 3D/4D Vào Quản Lý Xây Dựng Tiền Chế",
-    slug: "ung-dung-mo-hinh-hoa-bim-xay-dung-tien-che",
-    category_name: "Công Nghệ & Xu Hướng",
-    thumbnail: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=800&auto=format&fit=crop",
-    summary: "Chuyển đổi số trong thi công kết cấu thép giúp giảm thiểu 95% sai sót liên kết tại công trường và tối ưu hóa chuỗi cung ứng vật tư thép tấm.",
-    content: `Công nghệ BIM (Building Information Modeling) không còn là lựa chọn mà đã trở thành tiêu chuẩn cốt lõi tại Nguyên Phát.
+    id: "a31646e3-cd37-49fd-a114-85625b77d626",
+    title: "Kỹ Thuật Thi Công Thang Máng Cáp Điện Chuyên Nghiệp Trong Nhà Máy FDI",
+    slug: "ky-thuat-thi-cong-thang-mang-cap-nha-may-fdi",
+    category_name: "Thang Máng Cáp",
+    thumbnail: "https://images.unsplash.com/photo-1541888946425-d0fbb1861563?auto=format&fit=crop&w=1200&q=80",
+    summary: "Quy chuẩn khoảng cách ty treo, phương pháp xử lý co lơi, ngã 3 tee và tiếp địa liên tục cho hệ thống thang máng cáp công nghiệp nặng.",
+    content: `<p>Hệ thống thang cáp (Cable Ladder) và máng cáp (Cable Tray) đóng vai trò nâng đỡ toàn bộ mạng lưới truyền dẫn điện lực và điều khiển trong các tổ hợp nhà máy sản xuất.</p>
 
-Từ khâu thiết kế chi tiết trên Tekla Structures, dữ liệu số được truyền thẳng sang hệ thống máy cắt Plasma CNC và máy khoan dầm tự động. Các liên kết bu lông, sườn tăng cứng và bản mã được kiểm tra xung đột không gian tuyệt đối trước khi sản xuất hàng loạt.
+<h2 id="quy-chuan-tai-trong">1. Tính toán khoảng cách giá đỡ theo tiêu chuẩn NEMA VE-1</h2>
+<p>Khoảng cách giữa hai điểm treo đỡ máng cáp thông thường từ 1.5m đến 2.0m tùy theo tổng tải trọng dây cáp (kg/m) và chiều cao thành máng.</p>
 
-Khi bước sang giai đoạn lắp dựng, mô hình 4D liên kết trực tiếp tiến độ thực tế với mô hình 3D, giúp ban chỉ huy công trường điều phối cần cẩu, xe nâng và xe vận chuyển một cách nhịp nhàng, giảm thời gian chờ đợi lãng phí.`,
-    author: "Ks. Lê Hoàng Nam",
-    readTime: "6 phút đọc",
-    created_at: "2026-10-18T11:20:00Z",
-    updated_at: "2026-10-25T16:40:00Z"
+<h2 id="xu-ly-tiep-dia">2. Hệ thống nối đất đẳng thế liên tục</h2>
+<p>Mỗi mối nối giữa hai cây máng bắt buộc phải sử dụng dây bện đồng tiếp địa (Earthing Braid) hoặc bát nối có răng khía tiếp xúc kim loại, đảm bảo điện trở nối đất toàn tuyến dưới 0.1 Ohm.</p>`,
+    author: "Ks. Lê Anh Tuấn",
+    readTime: "3 phút đọc",
+    read_time: "3 phút đọc",
+    tags: ["Thang máng cáp", "Mạ kẽm nhúng nóng", "Tiếp địa", "Thi công cơ điện"],
+    is_featured: false,
+    views: 1341,
+    created_at: "2026-10-15T23:54:22.973Z",
+    updated_at: "2026-10-15T23:54:22.973Z",
+    toc: [
+      { id: "quy-chuan-tai-trong", title: "1. Tính toán khoảng cách giá đỡ theo tiêu chuẩn NEMA VE-1" },
+      { id: "xu-ly-tiep-dia", title: "2. Hệ thống nối đất đẳng thế liên tục" }
+    ],
+    related_posts: []
   },
   {
-    id: "n5-be2a7c65-356f-8b7b-d085-556789012345",
-    title: "Dự Báo Thị Trường Thép Xây Dựng Quý IV/2026: Nhu Cầu Tăng Trưởng Mạnh",
-    slug: "du-bao-thi-truong-thep-xay-dung-quy-iv-2026",
-    category_name: "Thị Trường Thép",
-    thumbnail: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=800&auto=format&fit=crop",
-    summary: "Làn sóng giải ngân vốn đầu tư công vào hạ tầng giao thông và bất động sản khu công nghiệp thúc đẩy nhu cầu tiêu thụ thép tấm và thép hình cỡ lớn.",
-    content: `Thị trường thép Việt Nam trong quý cuối năm 2026 ghi nhận nhiều tín hiệu phục hồi tích cực. Sự mở rộng của các khu công nghiệp vệ tinh tại Bình Dương, Long An, Hải Phòng, Bắc Ninh đang kéo theo nhu cầu khổng lồ về kết cấu thép tiền chế.
-
-Bên cạnh đó, giá phôi thép nhập khẩu và quặng sắt thế giới đang ổn định ở mức hợp lý, tạo điều kiện thuận lợi cho các tổng thầu chốt giá sớm cho các hợp đồng xây dựng năm 2027. Nguyên Phát hiện đã chủ động dự trữ phôi thép đạt chuẩn ASTM A36 / SS400 để đảm bảo bình ổn giá và cam kết tiến độ tối ưu nhất cho quý đối tác.`,
-    author: "Phòng Phân Tích Kinh Doanh",
-    readTime: "5 phút đọc",
-    created_at: "2026-10-15T13:00:00Z",
-    updated_at: "2026-10-24T09:30:00Z"
-  },
-  {
-    id: "n6-cf3b8d76-467a-9c8c-e196-667890123456",
-    title: "Nguyên Phát Đầu Tư Dây Chuyền Hàn Tự Động Robot Hiện Đại Nhất Khu Vực",
-    slug: "nguyen-phat-dau-tu-day-chuyen-han-tu-dong-robot",
-    category_name: "Tin Công Ty",
-    thumbnail: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800&auto=format&fit=crop",
-    summary: "Nhà máy Nguyên Phát nâng công suất chế tạo lên 2.500 tấn thép/tháng với tổ hợp robot hàn đa trục tự động dưới lớp thuốc hàn đạt chuẩn siêu âm quốc tế.",
-    content: `Nhằm đáp ứng yêu cầu ngày càng khắt khe của các dự án công trình nhịp lớn và kho bãi tự động hóa, Nguyên Phát đã hoàn tất lắp đặt và vận hành hệ thống trạm hàn robot tự động hiện đại.
-
-Hệ thống cho phép hàn ngấu sâu liên tục các dầm chữ I, dầm hộp có chiều cao bản bụng đến 2.5m, đường hàn đều đẹp, không rỗ khí và đạt độ đồng nhất 100% khi kiểm định bằng phương pháp siêu âm UT và chụp phim RT. Bước đi này giúp công ty tăng 40% năng suất chế tạo và rút ngắn thời gian chuẩn bị linh kiện cho các dự án trọng điểm.`,
-    author: "Ban Giám Đốc Nhà Máy",
+    id: "c99d5803-426b-4717-9adc-3ff2e20da065",
+    title: "Giải Pháp Bù Công Suất Phản Kháng & Lọc Sóng Hài Tích Cực (AHF)",
+    slug: "giai-phap-bu-cong-suat-phan-khang-loc-song-hai-ahf",
+    category_name: "Kỹ Thuật Cơ Điện",
+    thumbnail: "https://images.unsplash.com/photo-1513828583688-c52646db42da?auto=format&fit=crop&w=1200&q=80",
+    summary: "Nâng cao hệ số công suất Cosφ ≥ 0.98, triệt tiêu phạt tiền điện lực và bảo vệ tụ bù khỏi hiện tượng cộng hưởng sóng hài bậc cao.",
+    content: `<p>Trong môi trường nhà máy sử dụng nhiều biến tần, lò nung cảm ứng và máy hàn, sóng hài phi tuyến (THD) gây nóng dây dẫn, nổ tụ bù và nhảy CB bất thường. Giải pháp tích hợp cuộn kháng 7% hoặc bộ lọc sóng hài tích cực AHF là bắt buộc.</p>`,
+    author: "Ks. Nguyễn Hoàng Nam",
     readTime: "4 phút đọc",
-    created_at: "2026-10-12T14:10:00Z",
-    updated_at: "2026-10-23T10:15:00Z"
+    read_time: "4 phút đọc",
+    tags: ["Tụ bù", "Sóng hài AHF", "Cos phi", "Tiết kiệm điện"],
+    is_featured: true,
+    views: 2100,
+    created_at: "2026-10-12T22:47:22.973Z",
+    updated_at: "2026-10-12T22:47:22.973Z",
+    toc: [],
+    related_posts: []
   },
   {
-    id: "n7-de4c9e87-578b-0d9d-f207-778901234567",
-    title: "Tiêu Chí Lựa Chọn Sàn Thép Liên Hợp Deck Cho Tòa Nhà Văn Phòng Hiện Đại",
-    slug: "tieu-chi-lua-chon-san-thep-lien-hop-deck",
-    category_name: "Kỹ Thuật Xây Dựng",
-    thumbnail: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800&auto=format&fit=crop",
-    summary: "So sánh sàn deck mạ kẽm với sàn bê tông truyền thống về tải trọng, tốc độ đổ bê tông liên tục và khả năng chống rung cho các công trình cao tầng.",
-    content: `Sàn deck mạ kẽm sóng cường lực đang là giải pháp thay thế hoàn hảo cho phương pháp cốp pha truyền thống trong các tòa nhà văn phòng và trung tâm thương mại đa tầng.
-
-Ưu điểm nổi bật của hệ sàn deck thi công bởi Nguyên Phát:
-- **Tốc độ:** Có thể lắp đặt sàn đồng thời cho 3-4 tầng cùng lúc mà không cần hệ giáo chống tầng dưới.
-- **Tiết kiệm:** Giảm tới 30% thể tích bê tông và tải trọng tĩnh tác động lên cột móng.
-- **Thẩm mỹ:** Bề mặt mạ kẽm Z275 sáng bóng, có thể để trần theo phong cách kiến trúc Industrial hiện đại mà không cần đóng trần thạch cao.`,
-    author: "Ks. Vũ Tuấn Kiệt",
+    id: "f2723dde-17fb-49c0-9fda-4045af124c76",
+    title: "Hệ Thống SCADA & Giám Sát Năng Lượng Thông Minh Cho Nhà Xưởng Hiện Đại",
+    slug: "he-thong-scada-giam-sat-nang-luong-thong-minh",
+    category_name: "Năng Lượng & Tự Động Hóa",
+    thumbnail: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80",
+    summary: "Ứng dụng nền tảng IoT và chuẩn truyền thông Modbus/TCP, IEC 61850 trong giám sát điện năng tiêu thụ thời gian thực, tự động cảnh báo sự cố.",
+    content: `<p>Chuyển đổi số trong quản lý hạ tầng năng lượng (Energy Management System - EMS) đang trở thành tiêu chuẩn cốt lõi giúp các doanh nghiệp sản xuất tối ưu chi phí vận hành và đáp ứng các chứng chỉ phát thải xanh ESG.</p>`,
+    author: "Ks. Vũ Đình Trọng",
     readTime: "5 phút đọc",
-    created_at: "2026-10-08T15:00:00Z",
-    updated_at: "2026-10-21T12:00:00Z"
+    read_time: "5 phút đọc",
+    tags: ["SCADA", "EMS", "IoT công nghiệp", "Tiết kiệm điện năng"],
+    is_featured: false,
+    views: 1670,
+    created_at: "2026-10-08T21:40:22.973Z",
+    updated_at: "2026-10-08T21:40:22.973Z",
+    toc: [],
+    related_posts: []
   },
   {
-    id: "n8-ef5d0f98-689c-1e0e-0318-889012345678",
-    title: "Tối Ưu Hóa Chi Phí Xây Dựng Nhà Xưởng Bằng Giải Pháp Thiết Kế Value Engineering",
-    slug: "toi-uu-chi-phi-xay-dung-nha-xuong-value-engineering",
-    category_name: "Kỹ Thuật Xây Dựng",
-    thumbnail: "https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=800&auto=format&fit=crop",
-    summary: "Phương pháp kỹ thuật giá trị (VE) giúp chủ đầu tư cắt giảm 10-15% tổng chi phí đầu tư ban đầu mà vẫn đảm bảo độ bền kết cấu vượt trội trên 50 năm.",
-    content: `Value Engineering (VE) không phải là cắt giảm vật liệu rẻ tiền mà là phương pháp phân tích chức năng thông minh để tìm ra giải pháp tối ưu nhất về chi phí và hiệu năng.
-
-Tại Nguyên Phát, đội ngũ kỹ sư kết cấu thường xuyên thực hiện tính toán tái thiết kế phương án khung thép cho khách hàng:
-- Thay đổi sơ đồ nhịp dầm để tận dụng tối đa mô-men uốn và giảm tiết diện thép ở những vị trí nội lực nhỏ.
-- Ứng dụng thép cường độ cao Q345B/SM490 cho các cấu kiện cột chính, giảm tự trọng bản thân công trình.
-- Sử dụng xà gồ chữ Z mạ kẽm nối chồng liên tục thay vì xà gồ đơn giản để tăng khả năng chịu tải võng của mái tôn.`,
-    author: "Giám Đốc Kỹ Thuật George Brian",
-    readTime: "6 phút đọc",
-    created_at: "2026-10-05T09:00:00Z",
-    updated_at: "2026-10-19T11:30:00Z"
+    id: "d6842fa2-69d8-4cc9-b772-7fbeed8d8df6",
+    title: "Tìm Hiểu Về Trạm Biến Áp Hợp Bộ Kiosk 24kV/35kV Chuẩn Điện Lực",
+    slug: "tram-bien-ap-hop-bo-kiosk-24kv-chuan-dien-luc",
+    category_name: "Tủ Bảng Điện & Trạm Biến Áp",
+    thumbnail: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=1200&q=80",
+    summary: "Cấu tạo khoang trung thế RMU, khoang máy biến áp và khoang hạ thế tổng tích hợp trong một vỏ trạm kiosk ngoài trời thẩm mỹ cao.",
+    content: `<p>Trạm biến áp Kiosk là giải pháp tối ưu cho các khu đô thị và nhà máy có diện tích mặt bằng hạn chế, đáp ứng các tiêu chuẩn nghiêm ngặt của Tập đoàn Điện lực Việt Nam (EVN).</p>`,
+    author: "Ban Kỹ Thuật Cơ Điện Nguyên Phát",
+    readTime: "4 phút đọc",
+    read_time: "4 phút đọc",
+    tags: ["Trạm Kiosk", "Trung thế 24kV", "Máy biến áp", "Tủ RMU"],
+    is_featured: true,
+    views: 2750,
+    created_at: "2026-09-28T19:26:22.973Z",
+    updated_at: "2026-09-28T19:26:22.973Z",
+    toc: [],
+    related_posts: []
+  },
+  {
+    id: "1afb47f9-0f72-4673-97c1-32326f080c43",
+    title: "Tủ Tự Động Chuyển Nguồn ATS: Giải Pháp Đảm Bảo Cấp Điện 24/7",
+    slug: "tu-tu-dong-chuyen-nguon-ats-cap-dien-lien-tuc",
+    category_name: "Tủ Bảng Điện & Trạm Biến Áp",
+    thumbnail: "https://images.unsplash.com/photo-1513828583688-c52646db42da?auto=format&fit=crop&w=1200&q=80",
+    summary: "Nguyên lý hoạt động và cơ chế khóa liên động kép cơ - điện an toàn tuyệt đối khi chuyển đổi giữa nguồn điện lưới và máy phát điện dự phòng.",
+    content: `<p>Đối với các cơ sở y tế, trung tâm dữ liệu và dây chuyền sản xuất liên tục, việc mất điện lưới đột ngột gây tổn thất nghiêm trọng. Tủ ATS Nguyên Phát sử dụng bộ chuyển nguồn Socomec/Osung/Schneider chuyển mạch tự động trong vòng 1-3 giây.</p>`,
+    author: "Ks. Lê Anh Tuấn",
+    readTime: "3 phút đọc",
+    read_time: "3 phút đọc",
+    tags: ["Tủ ATS", "Nguồn dự phòng", "Khóa liên động", "Máy phát điện"],
+    is_featured: true,
+    views: 2580,
+    created_at: "2026-08-29T12:44:22.973Z",
+    updated_at: "2026-08-29T12:44:22.973Z",
+    toc: [],
+    related_posts: []
   }
 ];
 
 export const DEFAULT_THUMBNAILS = [
-  'https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=800&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1504307651254-35680f356dfd?q=80&w=800&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=800&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=800&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800&auto=format&fit=crop'
+  'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1541888946425-d0fbb1861563?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1513828583688-c52646db42da?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=800&q=80'
 ];
 
 export function sanitizeThumbnail(thumb, fallbackIndex = 0) {
@@ -177,16 +198,58 @@ export function stripHtml(rawText) {
 }
 
 /**
+ * Chuẩn hóa 1 bài viết theo schema PostResponse / PostDetailResponse
+ */
+export function normalizePost(item, idx = 0) {
+  if (!item || typeof item !== 'object') return null;
+
+  const cleanSummary = item.summary 
+    ? stripHtml(item.summary) 
+    : (item.content ? stripHtml(item.content).slice(0, 160) + '...' : '');
+
+  const readTime = item.read_time || item.readTime || '4 phút đọc';
+
+  return {
+    id: item.id || '',
+    title: item.title || 'Tin tức Cơ Điện Nguyên Phát',
+    slug: item.slug || item.id || '',
+    category_name: item.category_name || item.category || 'Kỹ Thuật Cơ Điện',
+    thumbnail: sanitizeThumbnail(item.thumbnail, idx),
+    content: item.content || item.summary || '',
+    summary: cleanSummary,
+    author: item.author || 'Ban Kỹ Thuật Cơ Điện Nguyên Phát',
+    readTime,
+    read_time: readTime,
+    tags: Array.isArray(item.tags) && item.tags.length > 0 ? item.tags : ['Cơ Điện Nguyên Phát', 'Hệ thống điện', 'Tiêu chuẩn IEC'],
+    is_featured: Boolean(item.is_featured),
+    views: typeof item.views === 'number' ? item.views : 0,
+    created_at: item.published_at || item.created_at || new Date().toISOString(),
+    updated_at: item.updated_at || new Date().toISOString(),
+    toc: Array.isArray(item.toc) ? item.toc : [],
+    related_posts: Array.isArray(item.related_posts) ? item.related_posts.map((rp, rIdx) => ({
+      ...rp,
+      thumbnail: sanitizeThumbnail(rp.thumbnail, rIdx + 1),
+      summary: rp.summary ? stripHtml(rp.summary) : ''
+    })) : []
+  };
+}
+
+/**
  * Lấy danh sách bài viết/tin tức
  * @param {string|null} category - Tên danh mục cần lọc (nếu null thì lấy tất cả)
  * @returns {Promise<{posts: Array, isLiveApi: boolean}>}
  */
 export async function getPosts(category = null) {
+  if (!category && Array.isArray(cachedPostsList) && cachedPostsList.length > 0) {
+    return { posts: cachedPostsList, isLiveApi: true };
+  }
+
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4500);
+    const timeoutId = setTimeout(() => controller.abort(), 6000);
 
-    const response = await fetch(`${API_BASE_URL}/posts/`, {
+    const url = `${API_BASE_URL}/posts/?skip=0&limit=100`;
+    const response = await fetch(url, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -199,106 +262,84 @@ export async function getPosts(category = null) {
     if (response.ok) {
       const data = await response.json();
       if (Array.isArray(data) && data.length > 0) {
-        // Chuẩn hóa dữ liệu theo PostResponse với đầy đủ các fields mới
-        const formatted = data.map((item, idx) => {
-          const cleanSummary = item.summary 
-            ? stripHtml(item.summary) 
-            : (item.content ? stripHtml(item.content).slice(0, 160) + '...' : '');
+        const formatted = data
+          .map((item, idx) => normalizePost(item, idx))
+          .filter(Boolean)
+          .sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
 
-          return {
-            id: item.id || Math.random().toString(),
-            title: item.title || 'Tin tức Nguyên Phát',
-            slug: item.slug || '',
-            category_name: item.category_name || item.category || 'Tin tức chung',
-            thumbnail: sanitizeThumbnail(item.thumbnail, idx),
-            content: item.content || item.summary || '',
-            summary: cleanSummary,
-            author: item.author || 'Ban Kỹ Thuật Cơ Điện Nguyên Phát',
-            readTime: item.read_time || item.readTime || '5 phút đọc',
-            read_time: item.read_time || item.readTime || '5 phút đọc',
-            tags: Array.isArray(item.tags) && item.tags.length > 0 ? item.tags : ['Cơ Điện Nguyên Phát', 'Hệ thống điện', 'Kỹ thuật'],
-            is_featured: !!item.is_featured,
-            views: typeof item.views === 'number' ? item.views : 0,
-            created_at: item.published_at || item.created_at || new Date().toISOString(),
-            updated_at: item.updated_at || new Date().toISOString(),
-          };
-        });
+        if (!category || category === 'all') {
+          cachedPostsList = formatted;
+        }
 
-        const filtered = (category && category !== 'all'
+        const filtered = (category && category !== 'all')
           ? formatted.filter(p => p.category_name === category)
-          : formatted
-        ).sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+          : formatted;
 
         return { posts: filtered, isLiveApi: true };
       }
     }
   } catch (error) {
-    // API có thể yêu cầu Bearer Auth hoặc mạng chậm -> Fallback về MOCK_POSTS chuẩn schema
-    console.warn('[newsService] Live API không khả dụng hoặc yêu cầu Token, sử dụng dữ liệu chuẩn schema:', error.message);
+    console.warn('[newsService] Live API không khả dụng, dùng Mock Posts chuẩn:', error.message);
   }
 
-  // Fallback an toàn với MOCK_POSTS (luôn sắp xếp bài tạo mới nhất đứng đầu)
-  const filtered = (category && category !== 'all'
-    ? MOCK_POSTS.filter(p => p.category_name === category)
-    : [...MOCK_POSTS]
-  ).sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+  // Fallback an toàn với MOCK_POSTS
+  const normalizedMock = MOCK_POSTS
+    .map((item, idx) => normalizePost(item, idx))
+    .filter(Boolean)
+    .sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+
+  cachedPostsList = normalizedMock;
+
+  const filtered = (category && category !== 'all')
+    ? normalizedMock.filter(p => p.category_name === category)
+    : normalizedMock;
 
   return { posts: filtered, isLiveApi: false };
 }
 
 /**
- * Lấy chi tiết bài viết theo ID hoặc Slug
+ * Lấy chi tiết bài viết theo UUID hoặc Slug (gọi chuẩn endpoint backend)
  * @param {string} idOrSlug - ID hoặc Slug của bài viết
  * @returns {Promise<Object|null>}
  */
 export async function getPostById(idOrSlug) {
-  if (idOrSlug) {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4500);
+  if (!idOrSlug) return null;
 
-      const response = await fetch(`${API_BASE_URL}/posts/${idOrSlug}`, {
-        headers: { 'Accept': 'application/json' },
-        signal: controller.signal
-      });
-      clearTimeout(timeoutId);
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 6000);
 
-      if (response.ok) {
-        const data = await response.json();
-        if (data && (data.id || data.title)) {
-          return enrichPost(data);
-        }
+    // 1. Phân định UUID vs Slug để gọi đúng endpoint backend
+    const url = UUID_REGEX.test(idOrSlug)
+      ? `${API_BASE_URL}/posts/${encodeURIComponent(idOrSlug)}`
+      : `${API_BASE_URL}/posts/slug/${encodeURIComponent(idOrSlug)}`;
+
+    const response = await fetch(url, {
+      headers: { 'Accept': 'application/json' },
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+
+    if (response.ok) {
+      const data = await response.json();
+      if (data && (data.id || data.title)) {
+        return normalizePost(data);
       }
-    } catch (error) {
-      console.warn(`[newsService] Fetch detail failed for id/slug ${idOrSlug}:`, error.message);
     }
+  } catch (error) {
+    console.warn(`[newsService] Fetch detail failed for id/slug ${idOrSlug}:`, error.message);
   }
 
-  const found = MOCK_POSTS.find(p => p.id === idOrSlug || p.slug === idOrSlug) || MOCK_POSTS[0];
-  return enrichPost(found);
-}
+  // 2. Tìm kiếm trong Cache hoặc MOCK_POSTS
+  let list = cachedPostsList;
+  if (!Array.isArray(list) || list.length === 0) {
+    const res = await getPosts();
+    list = res.posts || [];
+  }
 
-function enrichPost(post, fallbackIndex = 0) {
-  if (!post) return null;
-  const cleanSummary = post.summary 
-    ? stripHtml(post.summary) 
-    : (post.content ? stripHtml(post.content).slice(0, 160) + '...' : '');
+  const found = list.find(p => p.id === idOrSlug || p.slug === idOrSlug) ||
+    MOCK_POSTS.map((item, idx) => normalizePost(item, idx)).find(p => p.id === idOrSlug || p.slug === idOrSlug) ||
+    normalizePost(MOCK_POSTS[0]);
 
-  return {
-    ...post,
-    thumbnail: sanitizeThumbnail(post.thumbnail, fallbackIndex),
-    summary: cleanSummary,
-    author: post.author || 'Ban Kỹ Thuật Cơ Điện Nguyên Phát',
-    readTime: post.read_time || post.readTime || '5 phút đọc',
-    read_time: post.read_time || post.readTime || '5 phút đọc',
-    tags: Array.isArray(post.tags) && post.tags.length > 0 ? post.tags : ['Cơ Điện Nguyên Phát', 'Kỹ thuật điện', 'Tiêu chuẩn IEC'],
-    views: typeof post.views === 'number' ? post.views : 0,
-    is_featured: !!post.is_featured,
-    toc: Array.isArray(post.toc) ? post.toc : [],
-    related_posts: Array.isArray(post.related_posts) ? post.related_posts.map((rp, rIdx) => ({
-      ...rp,
-      thumbnail: sanitizeThumbnail(rp.thumbnail, rIdx + 1),
-      summary: rp.summary ? stripHtml(rp.summary) : ''
-    })) : []
-  };
+  return found;
 }

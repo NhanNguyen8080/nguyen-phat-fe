@@ -14,11 +14,23 @@ const TIME_FILTERS = [
 const NewsPage = ({ onNavigateHome, onSelectNews }) => {
   const [allPosts, setAllPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedTimeFilter, setSelectedTimeFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const [currentPageNum, setCurrentPageNum] = useState(1);
   const [selectedPost, setSelectedPost] = useState(null);
+
+  // Danh mục chuyên mục kỹ thuật động từ dữ liệu API
+  const categoryPills = useMemo(() => {
+    const list = [{ id: 'all', name: 'Tất cả chủ đề' }];
+    allPosts.forEach((p) => {
+      if (p.category_name && !list.some(item => item.name === p.category_name)) {
+        list.push({ id: p.category_name, name: p.category_name });
+      }
+    });
+    return list;
+  }, [allPosts]);
 
   // Load toàn bộ tin tức 1 lần duy nhất khi mount
   useEffect(() => {
@@ -53,6 +65,9 @@ const NewsPage = ({ onNavigateHome, onSelectNews }) => {
 
     return allPosts
       .filter((p) => {
+        const matchesCategory =
+          selectedCategory === 'all' || p.category_name === selectedCategory;
+
         let matchesTime = true;
         if (activeFilter && activeFilter.days) {
           const itemTime = new Date(p.created_at || 0).getTime();
@@ -67,7 +82,7 @@ const NewsPage = ({ onNavigateHome, onSelectNews }) => {
           (p.content && p.content.toLowerCase().includes(term)) ||
           (p.category_name && p.category_name.toLowerCase().includes(term));
 
-        return matchesTime && matchesSearch;
+        return matchesCategory && matchesTime && matchesSearch;
       })
       .sort((a, b) => {
         const timeA = new Date(a.created_at || 0).getTime();
@@ -87,6 +102,12 @@ const NewsPage = ({ onNavigateHome, onSelectNews }) => {
     const start = (currentPageNum - 1) * ITEMS_PER_PAGE;
     return filteredPosts.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredPosts, currentPageNum]);
+
+  // Chọn chuyên mục: lọc tức thì, reset về trang 1
+  const handleSelectCategory = (catId) => {
+    setSelectedCategory(catId);
+    setCurrentPageNum(1);
+  };
 
   // Chọn bộ lọc thời gian: lọc tức thì, không reload, reset về trang 1
   const handleSelectTimeFilter = (filterId) => {
@@ -186,17 +207,42 @@ const NewsPage = ({ onNavigateHome, onSelectNews }) => {
             </div>
           </div>
 
-          {/* Time Filter Pills - lọc theo thời gian tạo */}
+          {/* Chuyên mục kỹ thuật (Categories) */}
           <div className="category-pills">
+            {categoryPills.map((cat) => (
+              <button
+                key={cat.id}
+                type="button"
+                className={`category-pill ${selectedCategory === cat.id ? 'active' : ''}`}
+                onClick={() => handleSelectCategory(cat.id)}
+              >
+                {cat.name}
+                {cat.id === 'all' ? ` (${allPosts.length})` : ''}
+              </button>
+            ))}
+          </div>
+
+          {/* Time Filter Pills - lọc theo khoảng thời gian */}
+          <div className="time-filter-row" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '12px' }}>
             {TIME_FILTERS.map((filter) => (
               <button
                 key={filter.id}
                 type="button"
-                className={`category-pill ${selectedTimeFilter === filter.id ? 'active' : ''}`}
+                className={`time-pill ${selectedTimeFilter === filter.id ? 'active' : ''}`}
                 onClick={() => handleSelectTimeFilter(filter.id)}
+                style={{
+                  padding: '5px 14px',
+                  borderRadius: '9999px',
+                  fontSize: '0.82rem',
+                  border: '1px solid var(--border-color, #e2e8f0)',
+                  background: selectedTimeFilter === filter.id ? 'var(--primary-yellow, #ffb800)' : 'transparent',
+                  color: selectedTimeFilter === filter.id ? '#1a202c' : 'inherit',
+                  fontWeight: selectedTimeFilter === filter.id ? '600' : '400',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
               >
                 {filter.label}
-                {filter.id === 'all' ? ` (${allPosts.length})` : ''}
               </button>
             ))}
           </div>
@@ -217,7 +263,7 @@ const NewsPage = ({ onNavigateHome, onSelectNews }) => {
             <button 
               type="button"
               className="btn-primary" 
-              onClick={() => { setSelectedTimeFilter('all'); setSearchTerm(''); }}
+              onClick={() => { setSelectedCategory('all'); setSelectedTimeFilter('all'); setSearchTerm(''); }}
             >
               Xem tất cả bài viết
             </button>
