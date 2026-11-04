@@ -216,16 +216,7 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
                   </div>
 
                   <div className="service-title-container">
-                    {product.code && (
-                      <span className="service-card-code">{product.code}</span>
-                    )}
                     <h4 className="service-title">{productName}</h4>
-                    <div className="service-card-action">
-                      <span>Xem chi tiết</span>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="9 18 15 12 9 6" />
-                      </svg>
-                    </div>
                   </div>
                 </div>
               );
