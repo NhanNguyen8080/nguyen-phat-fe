@@ -193,7 +193,10 @@ function App() {
         <main>
           <Hero onNavigateAbout={navigateToAbout} />
           <About onNavigateAbout={navigateToAbout} />
-          <Services onNavigateProducts={navigateToProducts} />
+          <Services 
+            onNavigateProducts={navigateToProducts} 
+            onSelectProduct={navigateToProductDetail}
+          />
           <WhyChooseUs />
           <Portfolio onNavigateProjects={navigateToProjects} />
           <News 
