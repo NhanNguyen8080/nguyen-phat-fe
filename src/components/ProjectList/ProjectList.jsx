@@ -239,7 +239,7 @@ const ProjectList = ({ onNavigateHome, onSelectProject }) => {
                 >
                   <div className="project-card-thumb-wrap">
                     <span className="project-card-badge">
-                      {project.category_name || 'Công trình'}
+                      {project.project_type || project.category_name || 'Công trình'}
                     </span>
                     <img 
                       src={project.thumbnail || 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=800&auto=format&fit=crop'} 
@@ -346,15 +346,16 @@ const ProjectList = ({ onNavigateHome, onSelectProject }) => {
               {/* Info column */}
               <div className="modal-info">
                 <span className="modal-category">
-                  {selectedProject.category_name || 'Nguyên Phát'}
+                  {selectedProject.project_type || selectedProject.category_name || 'Nguyên Phát'}
                 </span>
                 <h2 className="modal-title">{selectedProject.title}</h2>
                 <p className="modal-desc">{stripHtml(selectedProject.content)}</p>
 
                 <div className="modal-meta">
-                  <div><strong>Mã công trình:</strong> {selectedProject.slug || selectedProject.id}</div>
-                  <div><strong>Thời gian hoàn thành:</strong> {selectedProject.created_at ? new Date(selectedProject.created_at).toLocaleDateString('vi-VN') : 'Đang cập nhật'}</div>
-                  <div><strong>Tiêu chuẩn nghiệm thu:</strong> Kiểm định an toàn chất lượng ASTM / TCVN</div>
+                  <div><strong>Chủ đầu tư / Đối tác:</strong> {selectedProject.client || selectedProject.investor || 'Chủ đầu tư dự án'}</div>
+                  <div><strong>Hạng mục đảm nhận:</strong> {selectedProject.scope_of_work || selectedProject.scope || 'Sản xuất và lắp đặt Tủ điện, Thang máng cáp'}</div>
+                  <div><strong>Thời gian hoàn thành:</strong> {selectedProject.completion_year ? `Năm ${selectedProject.completion_year}` : (selectedProject.created_at ? new Date(selectedProject.created_at).toLocaleDateString('vi-VN') : 'Đang cập nhật')}</div>
+                  <div><strong>Tiêu chuẩn nghiệm thu:</strong> Kiểm định an toàn chất lượng IEC 61439-1/2 &amp; TCVN</div>
                 </div>
 
                 <div className="modal-actions">
