@@ -672,7 +672,7 @@ export async function getProductById(idOrSlug, customToken = null) {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  // Nếu là UUID hợp lệ, gọi trực tiếp endpoint GET /api/v1/products/{product_id}
+  // 1. Nếu là UUID hợp lệ, gọi trực tiếp endpoint GET /api/v1/products/{product_id}
   if (UUID_REGEX.test(idOrSlug)) {
     try {
       const res = await fetch(`${API_BASE_URL}/products/${encodeURIComponent(idOrSlug)}`, { headers });
@@ -684,6 +684,19 @@ export async function getProductById(idOrSlug, customToken = null) {
       }
     } catch (err) {
       console.warn('Lỗi gọi API GET /api/v1/products/{id}:', err.message);
+    }
+  } else {
+    // 2. Nếu là Slug, gọi trực tiếp endpoint GET /api/v1/products/slug/{slug} đã deploy trên backend
+    try {
+      const res = await fetch(`${API_BASE_URL}/products/slug/${encodeURIComponent(idOrSlug)}`, { headers });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.id) {
+          return normalizeProduct(data);
+        }
+      }
+    } catch (err) {
+      console.warn('Lỗi gọi API GET /api/v1/products/slug/{slug}:', err.message);
     }
   }
 
