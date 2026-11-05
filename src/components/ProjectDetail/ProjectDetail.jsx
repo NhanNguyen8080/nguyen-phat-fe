@@ -179,7 +179,7 @@ const ProjectDetail = ({ projectIdOrSlug, onNavigateBack, onNavigateContact, onS
               </svg>
             </div>
             <div className="spec-label">Tiêu Chuẩn Sản Xuất</div>
-            <div className="spec-value">{project.standards || 'IEC 61439-1/2, TCVN'}</div>
+            <div className="spec-value">{project.standards || ''}</div>
           </div>
         </div>
 
@@ -231,23 +231,23 @@ const ProjectDetail = ({ projectIdOrSlug, onNavigateBack, onNavigateContact, onS
               <div className="sidebar-specs">
                 <div className="sidebar-spec-row">
                   <span className="spec-name">Chủ đầu tư:</span>
-                  <span className="spec-data">{project.client || project.investor || 'Chủ đầu tư dự án'}</span>
+                  <span className="spec-data">{project.client || project.investor || ''}</span>
                 </div>
                 <div className="sidebar-spec-row">
                   <span className="spec-name">Địa điểm:</span>
-                  <span className="spec-data">{project.location || 'Việt Nam'}</span>
+                  <span className="spec-data">{project.location || ''}</span>
                 </div>
                 <div className="sidebar-spec-row">
                   <span className="spec-name">Hạng mục đảm nhận:</span>
-                  <span className="spec-data">{project.scope_of_work || project.scope || 'Sản xuất, cung cấp và lắp đặt trọn gói hệ thống Tủ điện phân phối và Thang máng cáp'}</span>
+                  <span className="spec-data">{project.scope_of_work || project.scope || ''}</span>
                 </div>
                 <div className="sidebar-spec-row">
                   <span className="spec-name">Năm hoàn thành:</span>
-                  <span className="spec-data">{project.completion_year ? `Năm ${project.completion_year}` : 'Năm 2022'}</span>
+                  <span className="spec-data">{project.completion_year ? `Năm ${project.completion_year}` : ''}</span>
                 </div>
                 <div className="sidebar-spec-row">
                   <span className="spec-name">Tiêu chuẩn:</span>
-                  <span className="spec-data">{project.standards || 'IEC 61439-1/2, TCVN 7994'}</span>
+                  <span className="spec-data">{project.standards || ''}</span>
                 </div>
               </div>
 

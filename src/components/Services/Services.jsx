@@ -181,7 +181,7 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
 
             {products.map((product, index) => {
               const productName = decodeMojibake(product.name);
-              const categoryName = decodeMojibake(product.category_name) || 'Tủ điện';
+              const categoryName = decodeMojibake(product.category_name) || '';
               const isOffset = index % 2 !== 0;
 
               return (
@@ -210,9 +210,11 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
                       }}
                     />
                     <div className="service-image-overlay" />
-                    <span className="service-category-tag">
-                      {categoryName}
-                    </span>
+                    {categoryName && (
+                      <span className="service-category-tag">
+                        {categoryName}
+                      </span>
+                    )}
                   </div>
 
                   <div className="service-title-container">

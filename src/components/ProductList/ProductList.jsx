@@ -295,24 +295,28 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
                       }}
                     />
 
-                    <div className="product-card-top-badges">
-                      <span className="product-card-badge">
-                        {product.category_name || 'Tủ điện'}
-                      </span>
-                    </div>
+                    {product.category_name && (
+                      <div className="product-card-top-badges">
+                        <span className="product-card-badge">
+                          {product.category_name}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   {/* Body Content */}
                   <div className="product-card-body">
                     {/* Mã sản phẩm (Code) & Thương hiệu (Brand) */}
-                    <div className="product-card-meta-line">
-                      {product.code ? (
-                        <span className="product-card-code">{product.code}</span>
-                      ) : (
-                        <span className="product-card-code">NP-STD</span>
-                      )}
-                      <span className="product-card-brand">{product.brand || 'Nguyên Phát'}</span>
-                    </div>
+                    {(product.code || product.brand) && (
+                      <div className="product-card-meta-line">
+                        {product.code ? (
+                          <span className="product-card-code">{product.code}</span>
+                        ) : null}
+                        {product.brand ? (
+                          <span className="product-card-brand">{product.brand}</span>
+                        ) : null}
+                      </div>
+                    )}
 
                     {/* Tên sản phẩm */}
                     <h3 
@@ -346,9 +350,11 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
                       )}
                     </div>
 
-                    <p className="product-card-desc">
-                      {stripHtml(product.description) || 'Thiết bị cơ điện chất lượng cao sản xuất theo tiêu chuẩn quốc tế IEC.'}
-                    </p>
+                    {Boolean(product.description && stripHtml(product.description)) && (
+                      <p className="product-card-desc">
+                        {stripHtml(product.description)}
+                      </p>
+                    )}
                   </div>
                 </article>
               ))}
@@ -440,9 +446,11 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
 
               <div className="modal-info">
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                  <span className="modal-category">
-                    {selectedProduct.category_name || 'Cơ Điện'}
-                  </span>
+                  {selectedProduct.category_name && (
+                    <span className="modal-category">
+                      {selectedProduct.category_name}
+                    </span>
+                  )}
                   {selectedProduct.code && (
                     <span className="product-card-code">{selectedProduct.code}</span>
                   )}

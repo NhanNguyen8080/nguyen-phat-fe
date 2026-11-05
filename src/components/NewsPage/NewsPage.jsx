@@ -290,7 +290,9 @@ const NewsPage = ({ onNavigateHome, onSelectNews }) => {
                         e.currentTarget.src = DEFAULT_THUMBNAILS[0];
                       }}
                     />
-                    <span className="news-badge">{post.category_name || 'Tin tức'}</span>
+                    {post.category_name && (
+                      <span className="news-badge">{post.category_name}</span>
+                    )}
                     {post.is_featured && (
                       <span className="news-featured-tag">★ Nổi bật</span>
                     )}
@@ -397,7 +399,9 @@ const NewsPage = ({ onNavigateHome, onSelectNews }) => {
             </button>
 
             <div className="post-modal-header">
-              <div className="post-modal-category">{selectedPost.category_name || 'Tin tức'}</div>
+              {selectedPost.category_name && (
+                <div className="post-modal-category">{selectedPost.category_name}</div>
+              )}
               <h2 className="post-modal-title">{selectedPost.title}</h2>
               <div className="post-modal-meta">
                 <span>

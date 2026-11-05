@@ -554,40 +554,44 @@ export function normalizeProduct(raw) {
 
   const rawCatId = raw.category_id ?? null;
   const rawCatName = cleanString(raw.category_name);
-  const rawName = cleanString(raw.name) || 'Sản phẩm Cơ Điện Nguyên Phát';
+  const rawName = cleanString(raw.name) || '';
 
-  // Xác định phân cấp cha chuẩn 1 cấp duy nhất (bỏ con, bỏ hình ảnh thiết bị)
-  const parentCat = resolveParentCategory(rawCatId, rawCatName, rawName);
+  // Xác định phân cấp cha chuẩn 1 cấp duy nhất
+  const parentCat = (rawCatId || rawCatName || rawName)
+    ? resolveParentCategory(rawCatId, rawCatName, rawName)
+    : { id: null, name: '', slug: '', isFacility: false };
 
   return {
     id: raw.id || '',
     name: rawName,
     slug: cleanString(raw.slug) || raw.id || '',
-    code: cleanString(raw.code),
-    brand: cleanString(raw.brand) || 'Nguyên Phát',
-    product_type: cleanString(raw.product_type) || 'switchboard',
-    category_id: parentCat.id || rawCatId,
-    category_name: parentCat.name || 'Tủ điện',
-    raw_category_name: rawCatName,
-    is_facility_equipment: parentCat.isFacility,
+    code: cleanString(raw.code) || '',
+    brand: cleanString(raw.brand) || '',
+    product_type: cleanString(raw.product_type) || '',
+    category_id: parentCat.id || rawCatId || '',
+    category_name: parentCat.name || rawCatName || '',
+    raw_category_name: rawCatName || '',
+    is_facility_equipment: Boolean(parentCat.isFacility),
     description: typeof raw.description === 'string' && raw.description !== 'string' ? raw.description : '',
     thumbnail: cleanUrl(raw.thumbnail),
     images: cleanArrayOfStrings(raw.images),
-    rated_voltage: cleanString(raw.rated_voltage),
-    rated_current: cleanString(raw.rated_current),
-    frequency: cleanString(raw.frequency) || (raw.rated_voltage ? '50 Hz' : null),
-    ip_rating: cleanString(raw.ip_rating),
-    standards: cleanString(raw.standards),
-    short_circuit_current: cleanString(raw.short_circuit_current),
-    material: cleanString(raw.material),
-    thickness: cleanString(raw.thickness),
-    surface_finish: cleanString(raw.surface_finish),
-    dimensions: cleanString(raw.dimensions),
-    main_components: cleanString(raw.main_components),
+    rated_voltage: cleanString(raw.rated_voltage) || '',
+    rated_current: cleanString(raw.rated_current) || '',
+    frequency: cleanString(raw.frequency) || '',
+    ip_rating: cleanString(raw.ip_rating) || '',
+    standards: cleanString(raw.standards) || '',
+    short_circuit_current: cleanString(raw.short_circuit_current) || '',
+    material: cleanString(raw.material) || '',
+    thickness: cleanString(raw.thickness) || '',
+    surface_finish: cleanString(raw.surface_finish) || '',
+    dimensions: cleanString(raw.dimensions) || '',
+    main_components: cleanString(raw.main_components) || '',
     specifications: (raw.specifications && typeof raw.specifications === 'object') ? raw.specifications : {},
     documents: Array.isArray(raw.documents) ? raw.documents : [],
     is_featured: Boolean(raw.is_featured),
-    warranty_months: typeof raw.warranty_months === 'number' ? raw.warranty_months : 24,
+    warranty_months: typeof raw.warranty_months === 'number'
+      ? raw.warranty_months
+      : (raw.warranty_months && !isNaN(Number(raw.warranty_months)) ? Number(raw.warranty_months) : null),
     created_at: raw.created_at || null,
     updated_at: raw.updated_at || null
   };

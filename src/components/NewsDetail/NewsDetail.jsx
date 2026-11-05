@@ -181,17 +181,21 @@ const NewsDetail = ({ postIdOrSlug, onNavigateBack, onNavigateContact, onSelectN
           <article className="news-detail-article">
             {/* Header */}
             <header className="news-article-header">
-              <div className="news-article-badge">{post.category_name || 'Tin tức'}</div>
+              {post.category_name && (
+                <div className="news-article-badge">{post.category_name}</div>
+              )}
               <h1 className="news-article-title">{post.title}</h1>
 
               <div className="news-article-meta">
-                <span className="meta-author">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                  </svg>
-                  {post.author || 'Ban Kỹ Thuật Cơ Điện Nguyên Phát'}
-                </span>
+                {post.author && (
+                  <span className="meta-author">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    {post.author}
+                  </span>
+                )}
                 <span className="meta-date">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>

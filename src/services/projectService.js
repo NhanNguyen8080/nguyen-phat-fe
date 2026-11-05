@@ -151,11 +151,11 @@ export const MOCK_PROJECTS = [
 export function normalizeProject(raw) {
   if (!raw || typeof raw !== 'object') return null;
 
-  const client = raw.client || raw.investor || 'Chủ đầu tư dự án';
-  const scopeOfWork = raw.scope_of_work || raw.scope || 'Sản xuất, cung cấp và lắp đặt trọn gói hệ thống Tủ điện phân phối và Thang máng cáp';
-  const projectType = raw.project_type || raw.category_name || 'Nhà máy Sản xuất & KCN';
-  const location = raw.location && raw.location !== 'string' ? raw.location : 'Việt Nam';
-  const completionYear = raw.completion_year || (raw.created_at ? new Date(raw.created_at).getFullYear() : 2022);
+  const client = raw.client || raw.investor || '';
+  const scopeOfWork = raw.scope_of_work || raw.scope || '';
+  const projectType = raw.project_type || raw.category_name || '';
+  const location = raw.location && raw.location !== 'string' ? raw.location : '';
+  const completionYear = raw.completion_year || (raw.created_at ? new Date(raw.created_at).getFullYear() : null);
 
   const images = Array.isArray(raw.images) && raw.images.length > 0
     ? raw.images.filter(Boolean)
@@ -163,9 +163,9 @@ export function normalizeProject(raw) {
 
   return {
     id: raw.id || '',
-    title: raw.title || 'Công trình Cơ Điện Nguyên Phát',
+    title: raw.title || '',
     slug: raw.slug || raw.id || '',
-    thumbnail: raw.thumbnail || (images[0] || 'http://diennguyenphat.com/upload/files/image004.jpg'),
+    thumbnail: raw.thumbnail || (images[0] || ''),
     content: typeof raw.content === 'string' && raw.content !== 'string' ? raw.content : '',
     client,
     investor: client, // backwards compatibility
@@ -180,7 +180,7 @@ export function normalizeProject(raw) {
     is_featured: Boolean(raw.is_featured),
     created_at: raw.created_at || null,
     updated_at: raw.updated_at || null,
-    standards: 'IEC 61439-1/2, IEC 60529, TCVN 7994'
+    standards: raw.standards || ''
   };
 }
 

@@ -197,20 +197,20 @@ export function normalizePost(item, idx = 0) {
     ? stripHtml(item.summary) 
     : (item.content ? stripHtml(item.content).slice(0, 160) + '...' : '');
 
-  const readTime = item.read_time || item.readTime || '4 phút đọc';
+  const readTime = item.read_time || item.readTime || '';
 
   return {
     id: item.id || '',
-    title: item.title || 'Tin tức Cơ Điện Nguyên Phát',
+    title: item.title || '',
     slug: item.slug || item.id || '',
-    category_name: item.category_name || item.category || 'Kỹ Thuật Cơ Điện',
+    category_name: item.category_name || item.category || '',
     thumbnail: sanitizeThumbnail(item.thumbnail, idx),
     content: item.content || item.summary || '',
     summary: cleanSummary,
-    author: item.author || 'Ban Kỹ Thuật Cơ Điện Nguyên Phát',
+    author: item.author || '',
     readTime,
     read_time: readTime,
-    tags: Array.isArray(item.tags) && item.tags.length > 0 ? item.tags : ['Cơ Điện Nguyên Phát', 'Hệ thống điện', 'Tiêu chuẩn IEC'],
+    tags: Array.isArray(item.tags) ? item.tags : [],
     is_featured: Boolean(item.is_featured),
     views: typeof item.views === 'number' ? item.views : 0,
     created_at: item.published_at || item.created_at || new Date().toISOString(),
