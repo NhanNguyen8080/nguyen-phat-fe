@@ -436,7 +436,7 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
                         className={`modal-thumb-btn ${activeImageIndex === idx ? 'active' : ''}`}
                         onClick={() => setActiveImageIndex(idx)}
                       >
-                        <img src={img} alt="Thumbnail preview" className="modal-thumb-img" />
+                        <img src={img} alt="Ảnh sản phẩm thu nhỏ" className="modal-thumb-img" />
                       </button>
                     ))}
                   </div>

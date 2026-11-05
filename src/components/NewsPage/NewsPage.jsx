@@ -172,7 +172,7 @@ const NewsPage = ({ onNavigateHome, onSelectNews }) => {
       {/* Tiêu đề ngắn gọn duy nhất: News */}
       <div className="news-page-title-wrap">
         <div className="container">
-          <h1 className="section-title"><span className="text-yellow">News</span></h1>
+          <h1 className="section-title"><span className="text-yellow">Tin tức</span> &amp; Sự kiện</h1>
         </div>
       </div>
 

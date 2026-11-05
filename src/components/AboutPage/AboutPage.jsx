@@ -83,7 +83,7 @@ const AboutPage = ({ onNavigateHome }) => {
       {/* Tiêu đề trang sạch sẽ */}
       <div className="about-page-title-wrap">
         <div className="container">
-          <h1 className="section-title">About <span className="text-yellow">Us</span></h1>
+          <h1 className="section-title">Về <span className="text-yellow">Chúng Tôi</span></h1>
           <p className="about-page-subtitle">
             Hơn 15 năm kiến tạo giải pháp nhà thép tiền chế và xây dựng công nghiệp bền vững, đồng hành cùng sự thịnh vượng của hàng trăm doanh nghiệp.
           </p>
@@ -149,7 +149,7 @@ const AboutPage = ({ onNavigateHome }) => {
         {/* Thông tin CEO & Lãnh đạo */}
         <section className="about-ceo-section">
           <div className="about-ceo-header">
-            <h3>Thông Điệp Từ <span className="text-yellow">CEO &amp; Nhà Sáng Lập</span></h3>
+            <h3>Thông Điệp Từ <span className="text-yellow">Tổng Giám Đốc &amp; Nhà Sáng Lập</span></h3>
             <p style={{ color: 'var(--text-gray)', fontSize: '0.95rem', marginTop: '6px' }}>Tầm nhìn chiến lược và cam kết đồng hành bền vững cùng khách hàng</p>
           </div>
 
@@ -159,13 +159,13 @@ const AboutPage = ({ onNavigateHome }) => {
               <div className="ceo-avatar-wrap">
                 <img 
                   src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop" 
-                  alt="George Brian - CEO C&A" 
+                  alt="George Brian - Tổng Giám Đốc Nguyên Phát" 
                   className="ceo-avatar-img"
                 />
               </div>
-              <span className="ceo-badge">CEO &amp; Founder</span>
+              <span className="ceo-badge">Tổng Giám Đốc &amp; Nhà Sáng Lập</span>
               <h4 className="ceo-name">George Brian</h4>
-              <p className="ceo-title">Tổng Giám Đốc / Nhà Sáng Lập C&amp;A</p>
+              <p className="ceo-title">Tổng Giám Đốc / Nhà Sáng Lập Nguyên Phát</p>
             </div>
 
             {/* Cột thông điệp & profile */}

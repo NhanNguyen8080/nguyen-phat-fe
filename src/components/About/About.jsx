@@ -11,16 +11,16 @@ const About = ({ onNavigateAbout }) => {
       <div className="container about-container" ref={containerRef}>
         
         <div className="about-left reveal-left">
-          <span className="about-badge">About Us</span>
-          <h2 className="about-title">Who we are?</h2>
+          <span className="about-badge">Về chúng tôi</span>
+          <h2 className="about-title">Chúng tôi là ai?</h2>
           <p className="about-description">
-            At our company, we pride ourselves on being a dynamic team of over 1,500 dedicated professionals. Each member brings unique skills and perspectives, contributing to a collaborative environment where innovation thrives. Together, we work towards a common goal of delivering exceptional solutions and services that meet the diverse needs of our clients.
+            Tại Nguyên Phát, chúng tôi tự hào quy tụ đội ngũ hơn 1.500 chuyên gia, kỹ sư và kỹ thuật viên giàu kinh nghiệm, tận tâm với nghề. Mỗi thành viên đóng góp những kỹ năng và giải pháp kỹ thuật độc đáo, xây dựng môi trường làm việc hợp tác và đổi mới sáng tạo không ngừng. Cùng nhau, chúng tôi nỗ lực hướng tới mục tiêu chung: mang đến các giải pháp tủ bảng điện và hệ thống cơ điện toàn diện, tối ưu và chuẩn xác nhất cho mọi dự án của đối tác.
           </p>
           <div className="about-author">
             <div className="author-avatar"></div>
             <div className="author-info">
               <strong>George Brian</strong>
-              <span>CEO / C&amp;A</span>
+              <span>Tổng Giám Đốc / Nguyên Phát</span>
             </div>
           </div>
 
@@ -53,22 +53,22 @@ const About = ({ onNavigateAbout }) => {
         <div className="about-center reveal-scale">
           <img 
             src={aboutImage}
-            alt="Workers on scaffolding" 
+            alt="Kỹ sư Cơ Điện Nguyên Phát thi công lắp đặt" 
             className="about-image"
           />
         </div>
 
         <div className="about-right reveal-right">
           <div className="mission-vision reveal delay-2">
-            <h3 className="mv-title">Our <span className="text-yellow">Mission</span></h3>
+            <h3 className="mv-title">Sứ <span className="text-yellow">Mệnh</span></h3>
             <p className="mv-description">
-              We empower a diverse team of 1,500 passionate individuals who drive innovation and excellence. Our commitment is to deliver outstanding solutions that meet our clients' unique needs, creativity, and teamwork.
+              Chúng tôi phát huy năng lực của tập thể hơn 1.500 nhân sự nhiệt huyết, không ngừng cải tiến và sáng tạo. Cam kết cung cấp giải pháp cơ điện và tủ bảng điện đạt chuẩn chất lượng quốc tế, đáp ứng toàn diện tiến độ và độ an toàn của mỗi dự án.
             </p>
           </div>
           <div className="mission-vision reveal delay-4">
-            <h3 className="mv-title">Our <span className="text-yellow">Vision</span></h3>
+            <h3 className="mv-title">Tầm <span className="text-yellow">Nhìn</span></h3>
             <p className="mv-description">
-              We aim to inspire a vibrant community of 1,500 professionals who drive creativity and innovation, delivering tailored solutions that foster collaboration.
+              Trở thành thương hiệu hàng đầu trong lĩnh vực sản xuất tủ điện và thiết bị cơ điện công nghiệp tại Việt Nam, mang đến giá trị thực chất và đồng hành lâu dài cùng khách hàng.
             </p>
           </div>
         </div>

@@ -74,7 +74,7 @@ const ProjectDetail = ({ projectIdOrSlug, onNavigateBack, onNavigateContact, onS
       {/* Breadcrumb Navigation */}
       <div className="project-detail-nav">
         <div className="container project-detail-nav-inner">
-          <nav className="breadcrumbs" aria-label="Breadcrumb">
+          <nav className="breadcrumbs" aria-label="Đường dẫn điều hướng">
             <button 
               type="button" 
               className="breadcrumb-item breadcrumb-link" 

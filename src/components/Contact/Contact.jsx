@@ -11,10 +11,10 @@ const Contact = () => {
         <div className="contact-panel" ref={panelRef}>
           <div className="contact-header reveal">
             <h2 className="section-title">
-              Contact <span className="text-yellow">Us</span>
+              Liên Hệ <span className="text-yellow">Với Chúng Tôi</span>
             </h2>
             <p className="contact-subtitle">
-              Ready to start your next project? Get in touch with our team and we will help you build something exceptional.
+              Sẵn sàng bắt đầu dự án tiếp theo của bạn? Hãy kết nối ngay với đội ngũ kỹ sư của Nguyên Phát để được tư vấn phương án kỹ thuật và nhận báo giá tốt nhất.
             </p>
           </div>
 
@@ -22,34 +22,34 @@ const Contact = () => {
             <div className="contact-info reveal-left delay-2">
               <div className="contact-info-item">
                 <h4 className="contact-info-title">Email</h4>
-                <p className="contact-info-text">hello@canda.com</p>
+                <p className="contact-info-text">kinhdoanh@diennguyenphat.com</p>
               </div>
               <div className="contact-info-item">
-                <h4 className="contact-info-title">Phone</h4>
-                <p className="contact-info-text">+1 (555) 123-4567</p>
+                <h4 className="contact-info-title">Hotline / Điện thoại</h4>
+                <p className="contact-info-text">0903.333.333 / (028) 3750 8888</p>
               </div>
               <div className="contact-info-item">
-                <h4 className="contact-info-title">Office</h4>
+                <h4 className="contact-info-title">Trụ sở &amp; Nhà máy</h4>
                 <p className="contact-info-text">
-                  123 Construction Ave,
+                  Khu Công Nghiệp Tân Tạo,
                   <br />
-                  Silicon Valley, CA 94025
+                  Quận Bình Tân, TP. Hồ Chí Minh
                 </p>
               </div>
             </div>
 
             <form className="contact-form reveal-right delay-3" onSubmit={(e) => e.preventDefault()}>
               <div className="contact-form-row">
-                <input type="text" className="contact-input" placeholder="Your Name" />
-                <input type="email" className="contact-input" placeholder="Your Email" />
+                <input type="text" className="contact-input" placeholder="Họ và tên của bạn" />
+                <input type="email" className="contact-input" placeholder="Địa chỉ email" />
               </div>
               <textarea
                 className="contact-input contact-textarea"
-                placeholder="Tell us about your project"
+                placeholder="Mô tả nhu cầu dự án hoặc yêu cầu báo giá của bạn..."
                 rows={5}
               />
               <button type="submit" className="btn-primary contact-submit">
-                Send Message
+                Gửi Tin Nhắn
               </button>
             </form>
           </div>

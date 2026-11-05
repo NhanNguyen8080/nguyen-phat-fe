@@ -10,9 +10,9 @@ const WhyChooseUs = () => {
       <div className="container">
         <div className="wcu-panel" ref={panelRef}>
           <div className="wcu-header reveal">
-            <h2 className="section-title">Why choose <span className="text-yellow">C&amp;A?</span></h2>
+            <h2 className="section-title">Tại sao chọn <span className="text-yellow">Nguyên Phát?</span></h2>
             <p className="wcu-subtitle">
-              Our organization boasts a vibrant team of over 1,500 dedicated experts, each bringing unique talents and perspectives. Together, we aim to deliver exceptional solutions tailored to our clients' diverse needs.
+              Chúng tôi tự hào với đội ngũ hơn 1.500 chuyên gia và kỹ sư tay nghề cao, luôn tận tâm mang đến những giải pháp cơ điện và tủ bảng điện tối ưu, an toàn và bền vững nhất.
             </p>
           </div>
 
@@ -26,9 +26,9 @@ const WhyChooseUs = () => {
                   <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                 </svg>
               </div>
-              <h4 className="feature-title">Dynamic Team of Engineers</h4>
+              <h4 className="feature-title">Đội Ngũ Kỹ Sư Giàu Kinh Nghiệm</h4>
               <p className="feature-desc">
-                Choosing our construction company means partnering with a dynamic team of over 1,500 skilled professionals, each contributing their own expertise and innovative ideas to every project.
+                Hợp tác cùng Nguyên Phát là đồng hành cùng đội ngũ kỹ thuật lành nghề, luôn đưa ra các giải pháp thiết kế và lắp đặt tối ưu hiệu suất cho từng hệ thống điện.
               </p>
             </div>
 
@@ -44,9 +44,9 @@ const WhyChooseUs = () => {
                   <path d="M17 16h1" />
                 </svg>
               </div>
-              <h4 className="feature-title">Top Quality Buildings</h4>
+              <h4 className="feature-title">Chất Lượng Đạt Chuẩn Quốc Tế</h4>
               <p className="feature-desc">
-                When you select our construction company, you gain access to a vibrant workforce of more than 1,500 dedicated specialists, all of whom bring diverse skills and insights to the table.
+                Mỗi tủ điện và hệ thống thang máng cáp đều được sản xuất, kiểm định nghiêm ngặt theo tiêu chuẩn quốc tế IEC 61439-1/2 và quy chuẩn kỹ thuật an toàn.
               </p>
             </div>
 
@@ -58,16 +58,16 @@ const WhyChooseUs = () => {
                   <path d="m13 3 8 8" />
                 </svg>
               </div>
-              <h4 className="feature-title">Best Tools On the Market</h4>
+              <h4 className="feature-title">Trang Thiết Bị Cơ Khí Hiện Đại</h4>
               <p className="feature-desc">
-                Opting for our construction company means collaborating with a passionate team of over 1,500 committed experts, each offering unique abilities and perspectives that enhance our projects.
+                Nhà máy trang bị hệ thống máy đột dập CNC, máy chấn tự động và công nghệ sơn tĩnh điện tiên tiến giúp đảm bảo độ chính xác cơ khí cao nhất.
               </p>
             </div>
           </div>
 
           <div className="wcu-footer reveal delay-5">
-            <button type="button" className="btn-primary">Start A Project</button>
-            <span className="wcu-footer-text">We are the leading company in the market, providing top-notch services.</span>
+            <a href="#contact" className="btn-primary" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>Bắt Đầu Dự Án</a>
+            <span className="wcu-footer-text">Đơn vị uy tín hàng đầu cung cấp giải pháp cơ điện và tủ bảng điện chuyên nghiệp.</span>
           </div>
         </div>
       </div>

@@ -232,7 +232,7 @@ const ProductDetail = ({
       {/* Sticky Secondary Navigation Bar */}
       <div className="pd-subnav">
         <div className="container pd-subnav-inner">
-          <nav className="pd-breadcrumbs" aria-label="Breadcrumb">
+          <nav className="pd-breadcrumbs" aria-label="Đường dẫn điều hướng">
             <button
               type="button"
               className="pd-crumb-link"

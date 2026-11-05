@@ -48,7 +48,7 @@ const News = ({ onNavigateNews, onSelectNews }) => {
       <div className="container">
         <div className="home-news-header" ref={headerRef}>
           <h2 className="section-title reveal delay-1">
-            <span className="text-yellow">News</span>
+            <span className="text-yellow">Tin tức</span> &amp; Sự kiện
           </h2>
           <p className="home-news-subtitle reveal delay-3">
             Cập nhật kiến thức kỹ thuật tủ bảng điện, hệ thống thang máng cáp và giải pháp cơ điện công nghiệp từ Nguyên Phát.

@@ -159,7 +159,7 @@ const NewsDetail = ({ postIdOrSlug, onNavigateBack, onNavigateContact, onSelectN
       {/* Top Breadcrumb Nav */}
       <div className="news-detail-nav">
         <div className="container news-detail-nav-inner">
-          <nav className="breadcrumbs" aria-label="Breadcrumb">
+          <nav className="breadcrumbs" aria-label="Đường dẫn điều hướng">
             <button 
               type="button" 
               className="breadcrumb-item breadcrumb-link" 

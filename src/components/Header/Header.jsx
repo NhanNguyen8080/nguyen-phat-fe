@@ -196,7 +196,7 @@ const Header = ({
           style={{ cursor: 'pointer' }} 
           onClick={(e) => handleNavClick(e, '#home')}
         >
-          <span className="logo-text">C<span className="text-yellow">&amp;</span>A</span>
+          <span className="logo-text">Nguyên <span className="text-yellow">Phát</span></span>
         </div>
         
         <nav className="nav-menu">
@@ -207,7 +207,7 @@ const Header = ({
                 className={`nav-link ${activeSection === 'home' ? 'active' : ''}`}
                 onClick={(e) => handleNavClick(e, '#home')}
               >
-                Home
+                Trang chủ
               </a>
             </li>
             <li>
@@ -216,7 +216,7 @@ const Header = ({
                 className={`nav-link ${activeSection === 'about' ? 'active' : ''}`}
                 onClick={(e) => handleNavClick(e, '#about')}
               >
-                About Us
+                Giới thiệu
               </a>
             </li>
             <li>
@@ -225,7 +225,7 @@ const Header = ({
                 className={`nav-link ${activeSection === 'product' ? 'active' : ''}`}
                 onClick={(e) => handleNavClick(e, '#product')}
               >
-                Product
+                Sản phẩm
               </a>
             </li>
             <li>
@@ -234,7 +234,7 @@ const Header = ({
                 className={`nav-link ${activeSection === 'project' ? 'active' : ''}`}
                 onClick={(e) => handleNavClick(e, '#project')}
               >
-                Project
+                Công trình
               </a>
             </li>
             <li>
@@ -243,7 +243,7 @@ const Header = ({
                 className={`nav-link ${activeSection === 'news' ? 'active' : ''}`}
                 onClick={(e) => handleNavClick(e, '#news')}
               >
-                News
+                Tin tức
               </a>
             </li>
           </ul>
@@ -255,7 +255,7 @@ const Header = ({
             className="btn-primary"
             onClick={(e) => handleNavClick(e, '#contact')}
           >
-            Contact
+            Liên hệ
           </a>
         </div>
       </div>
