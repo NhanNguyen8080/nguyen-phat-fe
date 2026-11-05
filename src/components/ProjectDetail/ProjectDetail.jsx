@@ -179,7 +179,7 @@ const ProjectDetail = ({ projectIdOrSlug, onNavigateBack, onNavigateContact, onS
               </svg>
             </div>
             <div className="spec-label">Tiêu Chuẩn Sản Xuất</div>
-            <div className="spec-value">{project.standards || ''}</div>
+            <div className="spec-value">{project.standards || 'TCVN / IEC 61439'}</div>
           </div>
         </div>
 
@@ -247,7 +247,7 @@ const ProjectDetail = ({ projectIdOrSlug, onNavigateBack, onNavigateContact, onS
                 </div>
                 <div className="sidebar-spec-row">
                   <span className="spec-name">Tiêu chuẩn:</span>
-                  <span className="spec-data">{project.standards || ''}</span>
+                  <span className="spec-data">{project.standards || 'TCVN / IEC 61439'}</span>
                 </div>
               </div>
 
