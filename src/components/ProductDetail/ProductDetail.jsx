@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './ProductDetail.css';
 import { getProductDetailData } from '../../services/productService';
+import { getExcerpt, stripHtml, formatHtmlContent } from '../../utils/textUtils';
 
 const IMAGE_VIEW_META = [
   { tag: 'Phối cảnh toàn diện', desc: 'Kiến trúc & kết cấu tổng quan tủ điện' },
@@ -15,7 +16,7 @@ const ProductDetail = ({
   productIdOrSlug,
   onNavigateBack,
   onNavigateCategory,
-  onNavigateHome,
+  onNavigateHome: _onNavigateHome,
   onNavigateContact: _onNavigateContact,
   onSelectProduct
 }) => {
@@ -486,9 +487,11 @@ const ProductDetail = ({
             {/* Lead Description Preview */}
             <div className="pd-lead-wrap">
               <p className="pd-lead-desc">
-                {product.description
-                  ? product.description.replace(/<[^>]+>/g, ' ').slice(0, 190) + '...'
-                  : 'Sản phẩm tủ điện công nghiệp chế tạo theo tiêu chuẩn quốc tế IEC, đáp ứng nghiêm ngặt an toàn vận hành và thẩm mỹ công trình.'}
+                {getExcerpt(
+                  product.description,
+                  220,
+                  'Sản phẩm tủ điện công nghiệp chế tạo theo tiêu chuẩn quốc tế IEC, đáp ứng nghiêm ngặt an toàn vận hành và thẩm mỹ công trình.'
+                )}
               </p>
               <button
                 type="button"
@@ -674,10 +677,10 @@ const ProductDetail = ({
             {activeTab === 'desc' && (
               <div className="pd-tab-pane pd-desc-pane">
                 <div className="pd-desc-content-card">
-                  {product.description ? (
+                  {product.description && stripHtml(product.description) ? (
                     <div 
                       className="pd-html-description"
-                      dangerouslySetInnerHTML={{ __html: product.description }}
+                      dangerouslySetInnerHTML={{ __html: formatHtmlContent(product.description) }}
                     />
                   ) : (
                     <div className="pd-desc-empty">

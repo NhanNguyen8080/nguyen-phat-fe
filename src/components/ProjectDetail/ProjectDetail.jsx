@@ -1,18 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './ProjectDetail.css';
 import { getProjectById, getProjects } from '../../services/projectService';
-
-const stripHtml = (html) => {
-  if (!html) return '';
-  return html
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/\s+/g, ' ')
-    .trim();
-};
+import { stripHtml } from '../../utils/textUtils';
 
 const ProjectDetail = ({ projectIdOrSlug, onNavigateBack, onNavigateContact, onSelectProject }) => {
   const [project, setProject] = useState(null);

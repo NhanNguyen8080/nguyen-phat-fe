@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import './NewsDetail.css';
 import { getPostById, getPosts, MOCK_POSTS, DEFAULT_THUMBNAILS } from '../../services/newsService';
+import { stripHtml } from '../../utils/textUtils';
 
 const NewsDetail = ({ postIdOrSlug, onNavigateBack, onNavigateContact, onSelectNews }) => {
   const [post, setPost] = useState(null);
@@ -88,7 +89,7 @@ const NewsDetail = ({ postIdOrSlug, onNavigateBack, onNavigateContact, onSelectN
       const headingMatches = [...post.content.matchAll(/<h[23][^>]*id=["']([^"']+)["'][^>]*>(.*?)<\/h[23]>/gi)];
       if (headingMatches.length > 0) {
         headingMatches.forEach(m => {
-          const cleanText = m[2].replace(/<[^>]+>/g, '').trim();
+          const cleanText = stripHtml(m[2]);
           items.push({ id: m[1], label: cleanText });
         });
       } else {

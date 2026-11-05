@@ -612,6 +612,7 @@
   font-size: 0.96rem;
   line-height: 1.75;
   color: #374151;
+  word-break: break-word;
 }
 
 .pd-html-description h2,
@@ -633,8 +634,14 @@
   margin-bottom: 14px;
 }
 
-.pd-html-description ul,
+.pd-html-description ul {
+  list-style-type: disc;
+  padding-left: 24px;
+  margin-bottom: 16px;
+}
+
 .pd-html-description ol {
+  list-style-type: decimal;
   padding-left: 24px;
   margin-bottom: 16px;
 }
@@ -646,6 +653,50 @@
 .pd-html-description strong {
   color: var(--text-dark);
   font-weight: 700;
+}
+
+.pd-html-description em {
+  font-style: italic;
+}
+
+/* Quill alignment and formatting classes */
+.pd-html-description .ql-align-justify {
+  text-align: justify;
+}
+
+.pd-html-description .ql-align-center {
+  text-align: center;
+}
+
+.pd-html-description .ql-align-right {
+  text-align: right;
+}
+
+.pd-html-description img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 14px 0;
+}
+
+.pd-html-description table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+}
+
+.pd-html-description th,
+.pd-html-description td {
+  border: 1px solid #e5e7eb;
+  padding: 8px 12px;
+}
+
+.pd-html-description blockquote {
+  border-left: 4px solid var(--accent-yellow);
+  padding-left: 16px;
+  margin: 16px 0;
+  color: #4b5563;
+  font-style: italic;
 }
 
 .pd-quality-commitments-grid {

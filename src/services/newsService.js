@@ -185,17 +185,7 @@ export function sanitizeThumbnail(thumb, fallbackIndex = 0) {
   return thumb;
 }
 
-export function stripHtml(rawText) {
-  if (!rawText) return '';
-  return rawText
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/\s+/g, ' ')
-    .trim();
-}
+export { stripHtml } from '../utils/textUtils';
 
 /**
  * Chuẩn hóa 1 bài viết theo schema PostResponse / PostDetailResponse

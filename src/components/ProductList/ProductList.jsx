@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './ProductList.css';
 import { getProducts, getCategories } from '../../services/productService';
+import { stripHtml } from '../../utils/textUtils';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -161,12 +162,6 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
     }
     return list;
   }, [selectedProduct]);
-
-  // Strip HTML tags for card description preview
-  const stripHtml = (html) => {
-    if (!html) return '';
-    return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-  };
 
   if (loading) {
     return (

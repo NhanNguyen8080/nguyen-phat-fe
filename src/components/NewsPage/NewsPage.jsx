@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './NewsPage.css';
 import { getPosts, DEFAULT_THUMBNAILS } from '../../services/newsService';
+import { stripHtml } from '../../utils/textUtils';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -324,7 +325,7 @@ const NewsPage = ({ onNavigateHome, onSelectNews }) => {
 
                     <h2 className="news-title">{post.title}</h2>
                     <p className="news-summary">
-                      {post.summary || (post.content ? post.content.slice(0, 140) + '...' : '')}
+                      {post.summary || (post.content ? stripHtml(post.content).slice(0, 140) + '...' : '')}
                     </p>
 
                     <div className="news-footer">

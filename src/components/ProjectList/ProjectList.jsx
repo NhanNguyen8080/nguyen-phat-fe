@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './ProjectList.css';
 import { getProjects } from '../../services/projectService';
+import { stripHtml } from '../../utils/textUtils';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -115,18 +116,6 @@ const ProjectList = ({ onNavigateHome, onSelectProject }) => {
     } catch {
       return isoString;
     }
-  };
-
-  const stripHtml = (html) => {
-    if (!html) return '';
-    return html
-      .replace(/<[^>]+>/g, ' ')
-      .replace(/&nbsp;/g, ' ')
-      .replace(/&amp;/g, '&')
-      .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'")
-      .replace(/\s+/g, ' ')
-      .trim();
   };
 
   const handlePageChange = (page) => {
