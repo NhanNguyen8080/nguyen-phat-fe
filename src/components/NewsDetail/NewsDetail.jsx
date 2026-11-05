@@ -159,21 +159,14 @@ const NewsDetail = ({ postIdOrSlug, onNavigateBack, onNavigateContact, onSelectN
       {/* Top Breadcrumb Nav */}
       <div className="news-detail-nav">
         <div className="container news-detail-nav-inner">
-          <button 
-            type="button" 
-            className="back-btn" 
-            onClick={onNavigateBack}
-            title="Quay lại danh sách tin tức"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="19" y1="12" x2="5" y2="12"></line>
-              <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            <span>Quay lại danh sách</span>
-          </button>
-
           <nav className="breadcrumbs" aria-label="Breadcrumb">
-            <span className="breadcrumb-item" onClick={onNavigateBack} style={{ cursor: 'pointer' }}>Tin Tức</span>
+            <button 
+              type="button" 
+              className="breadcrumb-item breadcrumb-link" 
+              onClick={onNavigateBack}
+            >
+              Tin Tức
+            </button>
             <span className="breadcrumb-separator">/</span>
             <span className="breadcrumb-item active">{post.title}</span>
           </nav>

@@ -232,53 +232,29 @@ const ProductDetail = ({
       {/* Sticky Secondary Navigation Bar */}
       <div className="pd-subnav">
         <div className="container pd-subnav-inner">
-          <div className="pd-subnav-left">
+          <nav className="pd-breadcrumbs" aria-label="Breadcrumb">
             <button
               type="button"
-              className="pd-back-btn"
+              className="pd-crumb-link"
               onClick={onNavigateBack}
-              title="Quay lại danh sách sản phẩm"
             >
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-              </svg>
-              <span>Danh sách sản phẩm</span>
+              Sản phẩm
             </button>
-
-            <nav className="pd-breadcrumbs" aria-label="Breadcrumb">
-              <button
-                type="button"
-                className="pd-crumb-link"
-                onClick={() => onNavigateHome && onNavigateHome('#home')}
-              >
-                Trang chủ
-              </button>
-              <span className="pd-crumb-sep">/</span>
-              <button
-                type="button"
-                className="pd-crumb-link"
-                onClick={onNavigateBack}
-              >
-                Sản phẩm
-              </button>
-              {product.category_name && (
-                <>
-                  <span className="pd-crumb-sep">/</span>
-                  <button
-                    type="button"
-                    className="pd-crumb-link"
-                    onClick={handleCategoryClick}
-                  >
-                    {product.category_name}
-                  </button>
-                </>
-              )}
-              <span className="pd-crumb-sep">/</span>
-              <span className="pd-crumb-current">{product.name}</span>
-            </nav>
-          </div>
-
+            {product.category_name && (
+              <>
+                <span className="pd-crumb-sep">/</span>
+                <button
+                  type="button"
+                  className="pd-crumb-link"
+                  onClick={handleCategoryClick}
+                >
+                  {product.category_name}
+                </button>
+              </>
+            )}
+            <span className="pd-crumb-sep">/</span>
+            <span className="pd-crumb-current">{product.name}</span>
+          </nav>
         </div>
       </div>
 

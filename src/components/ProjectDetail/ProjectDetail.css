@@ -23,31 +23,9 @@
 .project-detail-nav-inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 16px;
   flex-wrap: wrap;
-}
-
-.back-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background-color: var(--secondary-bg);
-  border: 1px solid #e0e0e0;
-  padding: 8px 18px;
-  border-radius: var(--border-radius-xl);
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--text-dark);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.back-btn:hover {
-  background-color: var(--accent-yellow);
-  border-color: var(--accent-yellow);
-  color: #ffffff;
-  transform: translateX(-3px);
 }
 
 .breadcrumbs {
@@ -56,11 +34,28 @@
   gap: 8px;
   font-size: 0.88rem;
   color: var(--text-gray);
+  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+.breadcrumb-item {
+  color: var(--text-gray);
+  transition: color 0.2s ease;
+}
+
+.breadcrumb-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--text-gray);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.breadcrumb-link:hover,
 .breadcrumb-item:hover:not(.active) {
   color: var(--text-dark);
   text-decoration: underline;
@@ -69,7 +64,6 @@
 .breadcrumb-item.active {
   color: var(--text-dark);
   font-weight: 600;
-  max-width: 380px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
