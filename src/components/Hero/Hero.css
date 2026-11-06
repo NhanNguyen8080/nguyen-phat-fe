@@ -62,22 +62,21 @@
   text-align: center;
 }
 
-
 .hero-top {
   display: grid;
-  grid-template-columns: minmax(180px, 250px) minmax(0, 1fr) minmax(170px, 230px);
+  grid-template-columns: minmax(180px, 240px) minmax(0, 1fr) minmax(180px, 240px);
   grid-template-areas:
     'location titleTop .'
     '. titleBottom description';
-  column-gap: 18px;
-  row-gap: 6px;
+  column-gap: 20px;
+  row-gap: 8px;
   margin-bottom: 38px;
 }
 
 .hero-location,
 .hero-description {
   text-align: left;
-  font-size: 0.62rem;
+  font-size: 0.65rem;
   line-height: 1.45;
   color: var(--text-gray);
 }
@@ -86,14 +85,14 @@
   grid-area: location;
   align-self: center;
   justify-self: start;
-  transform: translateX(28px) translateY(-6px);
+  transform: translateY(-4px);
 }
 
 .hero-description {
   grid-area: description;
   align-self: center;
   justify-self: start;
-  transform: translateX(-40px) translateY(2px);
+  transform: translateY(2px);
 }
 
 .hero-title-main {
@@ -103,29 +102,29 @@
 .hero-title-main-top {
   grid-area: titleTop;
   justify-self: start;
-  margin-left: 18px;
+  margin-left: 0;
 }
 
 .hero-title-main-bottom {
   grid-area: titleBottom;
   justify-self: start;
-  margin-left: 340px;
+  margin-left: clamp(40px, 8vw, 150px);
 }
 
 .hero-title {
-  font-size: 3.45rem;
+  font-size: clamp(2.35rem, 3.4vw, 3.45rem);
   font-weight: 700;
-  line-height: 0.98;
-  letter-spacing: -1.5px;
+  line-height: 1.05;
+  letter-spacing: -1.2px;
   white-space: nowrap;
 }
 
 .hero-title-main-top .hero-title {
-  padding-bottom: 6px;
+  padding-bottom: 4px;
 }
 
 .hero-title-main-bottom .hero-title {
-  padding-top: 6px;
+  padding-top: 4px;
 }
 
 .hero-actions {
@@ -209,32 +208,34 @@
 
 @media (max-width: 1024px) {
   .hero-top {
-    grid-template-columns: minmax(150px, 210px) minmax(0, 1fr) minmax(150px, 190px);
+    grid-template-columns: minmax(150px, 200px) minmax(0, 1fr) minmax(150px, 200px);
+    column-gap: 16px;
+    row-gap: 6px;
   }
 
   .hero-location {
-    transform: translateX(12px) translateY(-4px);
+    transform: translateY(-2px);
   }
 
   .hero-description {
-    transform: translateX(4px) translateY(0);
+    transform: translateY(2px);
   }
 
   .hero-title-main-top {
-    margin-left: 8px;
+    margin-left: 0;
   }
 
   .hero-title-main-bottom {
-    margin-left: 180px;
+    margin-left: clamp(24px, 5vw, 70px);
   }
 
   .hero-location,
   .hero-description {
-    font-size: 0.58rem;
+    font-size: 0.6rem;
   }
 
   .hero-title {
-    font-size: 2.95rem;
+    font-size: clamp(1.9rem, 3vw, 2.45rem);
   }
 
   .hero-image {
@@ -265,8 +266,8 @@
   }
 
   .hero-title {
-    font-size: 2.35rem;
-    line-height: 1.02;
+    font-size: 2.15rem;
+    line-height: 1.1;
     white-space: normal;
   }
 
