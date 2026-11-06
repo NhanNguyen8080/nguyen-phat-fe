@@ -1,15 +1,27 @@
 .header {
-  padding: 14px 0 30px;
-  background-color: var(--primary-bg);
+  padding: 14px 0 24px;
+  background-color: transparent;
   position: sticky;
   top: 0;
   z-index: 100;
-  transition: background-color 0.2s ease;
+  border-bottom: 1px solid transparent;
+  transition: 
+    background-color 0.3s ease, 
+    backdrop-filter 0.3s ease, 
+    -webkit-backdrop-filter 0.3s ease, 
+    padding 0.3s ease, 
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
   animation: headerSlideDown 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .header.header-scrolled {
-  background-color: transparent;
+  padding: 12px 0 14px;
+  background-color: rgba(220, 224, 230, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom-color: rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .header-container {
@@ -91,4 +103,3 @@
     opacity: 1;
   }
 }
-

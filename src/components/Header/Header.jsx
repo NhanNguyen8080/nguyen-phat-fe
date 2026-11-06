@@ -14,40 +14,28 @@ const Header = ({
 
   useEffect(() => {
     if (currentPage === 'about') {
-      setIsScrolled(false);
       setActiveSection('about');
-      return;
-    }
-
-    if (currentPage === 'products' || currentPage === 'product-detail') {
-      setIsScrolled(false);
+    } else if (currentPage === 'products' || currentPage === 'product-detail') {
       setActiveSection('product');
-      return;
-    }
-
-    if (currentPage === 'projects' || currentPage === 'project-detail') {
-      setIsScrolled(false);
+    } else if (currentPage === 'projects' || currentPage === 'project-detail') {
       setActiveSection('project');
-      return;
-    }
-
-    if (currentPage === 'news' || currentPage === 'news-detail') {
-      setIsScrolled(false);
+    } else if (currentPage === 'news' || currentPage === 'news-detail') {
       setActiveSection('news');
-      return;
     }
 
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      setIsScrolled(window.scrollY > 20);
 
-      const sectionIds = ['contact', 'news', 'project', 'product', 'about', 'home'];
-      const scrollPosition = window.scrollY + 140;
+      if (currentPage === 'home') {
+        const sectionIds = ['contact', 'news', 'project', 'product', 'about', 'home'];
+        const scrollPosition = window.scrollY + 140;
 
-      for (const id of sectionIds) {
-        const element = document.getElementById(id);
-        if (element && element.offsetTop <= scrollPosition) {
-          setActiveSection(id);
-          break;
+        for (const id of sectionIds) {
+          const element = document.getElementById(id);
+          if (element && element.offsetTop <= scrollPosition) {
+            setActiveSection(id);
+            break;
+          }
         }
       }
     };
