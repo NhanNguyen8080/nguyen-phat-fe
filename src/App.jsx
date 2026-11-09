@@ -7,6 +7,7 @@ import WhyChooseUs from './components/WhyChooseUs/WhyChooseUs';
 import Portfolio from './components/Portfolio/Portfolio';
 import News from './components/News/News';
 import Contact from './components/Contact/Contact';
+import Footer from './components/Footer/Footer';
 import ProductList from './components/ProductList/ProductList';
 import ProductDetail from './components/ProductDetail/ProductDetail';
 import ProjectList from './components/ProjectList/ProjectList';
@@ -206,6 +207,13 @@ function App() {
           <Contact />
         </main>
       )}
+      <Footer
+        onNavigateHome={navigateToHome}
+        onNavigateAbout={navigateToAbout}
+        onNavigateProducts={navigateToProducts}
+        onNavigateProjects={navigateToProjects}
+        onNavigateNews={navigateToNews}
+      />
     </div>
   );
 }

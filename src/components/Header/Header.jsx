@@ -386,8 +386,8 @@ const Header = ({
             Liên hệ ngay
           </a>
           <div className="mobile-contact-quick">
-            <p>Hotline: <strong>0903 000 xxx</strong></p>
-            <p>Email: <strong>contact@nguyenphat.vn</strong></p>
+            <p>Hotline: <a href="tel:0903625628" style={{ color: 'inherit', fontWeight: 'bold' }}>0903 625 628</a></p>
+            <p>Email: <a href="mailto:codiennguyenphat@gmail.com" style={{ color: 'inherit', fontWeight: 'bold' }}>codiennguyenphat@gmail.com</a></p>
           </div>
         </div>
       </div>

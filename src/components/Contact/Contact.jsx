@@ -22,18 +22,26 @@ const Contact = () => {
             <div className="contact-info reveal-left delay-2">
               <div className="contact-info-item">
                 <h4 className="contact-info-title">Email</h4>
-                <p className="contact-info-text">kinhdoanh@diennguyenphat.com</p>
+                <p className="contact-info-text">
+                  <a href="mailto:codiennguyenphat@gmail.com" style={{ color: 'inherit' }}>
+                    codiennguyenphat@gmail.com
+                  </a>
+                </p>
               </div>
               <div className="contact-info-item">
                 <h4 className="contact-info-title">Hotline / Điện thoại</h4>
-                <p className="contact-info-text">0903.333.333 / (028) 3750 8888</p>
+                <p className="contact-info-text">
+                  <a href="tel:0903625628" style={{ color: 'inherit', fontWeight: '600' }}>0903 625 628</a> - <a href="tel:0903625629" style={{ color: 'inherit', fontWeight: '600' }}>0903 625 629</a>
+                  <br />
+                  <span>Tel: (028) 3765 5395 - Fax: (028) 3765 5385</span>
+                </p>
               </div>
               <div className="contact-info-item">
-                <h4 className="contact-info-title">Trụ sở &amp; Nhà máy</h4>
+                <h4 className="contact-info-title">Văn phòng &amp; Xưởng sản xuất</h4>
                 <p className="contact-info-text">
-                  Khu Công Nghiệp Tân Tạo,
+                  <strong>VP:</strong> F4/8L Ấp 6, Xã Vĩnh Lộc A, Huyện Bình Chánh, TP. HCM
                   <br />
-                  Quận Bình Tân, TP. Hồ Chí Minh
+                  <strong>Xưởng:</strong> F5/4 Liên Ấp 26, Xã Vĩnh Lộc A, Huyện Bình Chánh, TP. HCM
                 </p>
               </div>
             </div>

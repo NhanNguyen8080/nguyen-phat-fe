@@ -400,7 +400,7 @@ const NewsDetail = ({ postIdOrSlug, onNavigateBack, onNavigateContact, onSelectN
                   </div>
                   <div>
                     <span className="hotline-label">Hotline Kỹ Thuật Trực Tiếp:</span>
-                    <a href="tel:0903333333" className="hotline-number">0903.333.333</a>
+                    <a href="tel:0903625628" className="hotline-number">0903 625 628</a>
                   </div>
                 </div>
                 <button 
