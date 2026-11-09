@@ -124,8 +124,24 @@
 
 @media (max-width: 640px) {
   .contact-panel {
-    padding: 40px 24px;
-    border-radius: 32px;
+    padding: 36px 20px;
+    border-radius: 28px;
+  }
+
+  .contact-header {
+    margin-bottom: 32px;
+  }
+
+  .contact-header .section-title {
+    font-size: 1.75rem;
+  }
+
+  .contact-content {
+    gap: 28px;
+  }
+
+  .contact-info {
+    gap: 24px;
   }
 
   .contact-form-row {
@@ -134,5 +150,13 @@
 
   .contact-submit {
     width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-panel {
+    padding: 28px 16px;
+    border-radius: 20px;
   }
 }

@@ -88,6 +88,8 @@
   overflow-x: auto;
   padding-bottom: 6px;
   scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 }
 
 .category-pill {
@@ -506,6 +508,10 @@
 }
 
 @media (max-width: 768px) {
+  .projects-page-title-wrap .section-title {
+    font-size: 2rem;
+  }
+
   .projects-grid {
     grid-template-columns: 1fr;
   }
@@ -517,5 +523,64 @@
 
   .search-box-wrapper {
     max-width: 100%;
+  }
+
+  .pagination-container {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .modal-overlay {
+    padding: 12px;
+  }
+
+  .modal-content {
+    max-height: 88vh;
+  }
+
+  .modal-body {
+    padding: 20px 16px;
+    gap: 20px;
+  }
+
+  .modal-main-image-wrap {
+    height: 220px;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .modal-actions .btn-primary,
+  .modal-actions .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .projects-page-title-wrap .section-title {
+    font-size: 1.75rem;
+  }
+
+  .project-controls-right {
+    width: 100%;
+  }
+
+  .sort-select {
+    width: 100%;
+  }
+
+  .pagination-page-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 0.85rem;
+  }
+
+  .pagination-btn {
+    padding: 8px 14px;
+    font-size: 0.85rem;
   }
 }

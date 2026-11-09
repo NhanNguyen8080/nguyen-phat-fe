@@ -3,10 +3,18 @@ import './Services.css';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { getProducts, MOCK_PRODUCTS } from '../../services/productService';
 
-const CARD_WIDTH = 280;
-const CARD_GAP = 24;
-const CARD_STEP = CARD_WIDTH + CARD_GAP;
-const PEEK_OFFSET = CARD_WIDTH / 2;
+const getCardMetrics = () => {
+  if (typeof window === 'undefined') {
+    return { width: 280, gap: 24 };
+  }
+  if (window.innerWidth <= 480) {
+    return { width: 240, gap: 16 };
+  }
+  if (window.innerWidth <= 768) {
+    return { width: 250, gap: 18 };
+  }
+  return { width: 280, gap: 24 };
+};
 
 const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=800&q=80';
 
@@ -41,20 +49,25 @@ const decodeMojibake = (str) => {
   return str;
 };
 
-const getMaxIndex = (viewportWidth, totalItems) => {
+const getMaxIndex = (viewportWidth, totalItems, metrics) => {
   if (!totalItems || totalItems <= 0) return 0;
+  const { width, gap } = metrics;
+  const step = width + gap;
+  const peek = width / 2;
   const totalCards = totalItems + 2;
   const totalGaps = Math.max(0, totalCards - 1);
-  const trackWidth = totalCards * CARD_WIDTH + totalGaps * CARD_GAP;
-  const maxOffset = trackWidth - PEEK_OFFSET - viewportWidth;
-  const maxIndex = Math.floor((maxOffset - PEEK_OFFSET) / CARD_STEP);
+  const trackWidth = totalCards * width + totalGaps * gap;
+  const maxOffset = trackWidth - peek - viewportWidth;
+  const maxIndex = Math.floor((maxOffset - peek) / step);
   return Math.max(0, maxIndex);
 };
 
 const Services = ({ onNavigateProducts, onSelectProduct }) => {
   const viewportRef = useRef(null);
+  const touchStartX = useRef(null);
   const [products, setProducts] = useState(() => MOCK_PRODUCTS.slice(0, 10));
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [metrics, setMetrics] = useState(() => getCardMetrics());
   const [maxIndex, setMaxIndex] = useState(0);
   const [, setLoading] = useState(false);
   const headerRef = useScrollReveal();
@@ -87,7 +100,9 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
     if (!viewport) return;
 
     const updateMaxIndex = () => {
-      const nextMaxIndex = getMaxIndex(viewport.clientWidth, products.length);
+      const currentMetrics = getCardMetrics();
+      setMetrics(currentMetrics);
+      const nextMaxIndex = getMaxIndex(viewport.clientWidth, products.length, currentMetrics);
       setMaxIndex(nextMaxIndex);
       setCurrentIndex((index) => Math.min(index, nextMaxIndex));
     };
@@ -108,6 +123,26 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
     setCurrentIndex((index) => Math.min(maxIndex, index + 1));
   };
 
+  const handleTouchStart = (e) => {
+    if (e.touches && e.touches.length > 0) {
+      touchStartX.current = e.touches[0].clientX;
+    }
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    if (e.changedTouches && e.changedTouches.length > 0) {
+      const touchEndX = e.changedTouches[0].clientX;
+      const diff = touchStartX.current - touchEndX;
+      if (diff > 40) {
+        handleNext();
+      } else if (diff < -40) {
+        handlePrev();
+      }
+    }
+    touchStartX.current = null;
+  };
+
   const handleCardClick = (product) => {
     if (!product) return;
     if (onSelectProduct) {
@@ -120,7 +155,9 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
     }
   };
 
-  const trackOffset = PEEK_OFFSET + currentIndex * CARD_STEP;
+  const step = metrics.width + metrics.gap;
+  const peekOffset = metrics.width / 2;
+  const trackOffset = peekOffset + currentIndex * step;
   const peekLeftProduct = products.length > 0 ? products[products.length - 1] : null;
   const peekRightProduct = products.length > 0 ? products[0] : null;
 
@@ -151,7 +188,12 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
           </svg>
         </button>
 
-        <div className="services-slider-viewport" ref={viewportRef}>
+        <div 
+          className="services-slider-viewport" 
+          ref={viewportRef}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           <div
             className="services-slider-track"
             style={{ transform: `translateX(-${trackOffset}px)` }}

@@ -93,6 +93,8 @@
   overflow-x: auto;
   padding-bottom: 6px;
   scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
 }
 
 .category-pill {
@@ -537,7 +539,12 @@
 
 @media (max-width: 768px) {
   .news-page-title-wrap .section-title {
-    font-size: 2.2rem;
+    font-size: 2rem;
+  }
+
+  .news-search-row {
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .news-cards-grid {
@@ -559,5 +566,36 @@
 
   .post-modal-footer {
     padding: 16px 20px;
+  }
+
+  .pagination-container {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .news-page-title-wrap .section-title {
+    font-size: 1.75rem;
+  }
+
+  .news-controls-right {
+    width: 100%;
+  }
+
+  .sort-select {
+    width: 100%;
+  }
+
+  .pagination-page-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 0.85rem;
+  }
+
+  .pagination-btn {
+    padding: 8px 14px;
+    font-size: 0.85rem;
   }
 }

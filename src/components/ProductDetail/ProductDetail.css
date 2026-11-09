@@ -1272,17 +1272,26 @@
   }
 }
 
+@media (max-width: 992px) {
+  .pd-subnav {
+    top: 60px;
+  }
+}
+
 @media (max-width: 768px) {
   .pd-subnav {
-    top: 75px;
+    top: 56px;
+    padding: 8px 0;
   }
 
   .pd-subnav-inner {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .pd-title {
-    font-size: 1.75rem;
+    font-size: clamp(1.5rem, 5vw, 1.85rem);
   }
 
   .pd-hero-specs-grid {
@@ -1293,21 +1302,32 @@
     flex-direction: column;
   }
 
+  .pd-cta-group .btn-primary,
+  .pd-cta-group .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
   .pd-tabs-nav {
     justify-content: flex-start;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
   }
 
   .pd-tabs-content {
-    padding: 24px 16px;
+    padding: 20px 14px;
   }
 
   .pd-specs-table th {
     width: 45%;
     padding: 10px 12px;
+    font-size: 0.85rem;
   }
 
   .pd-specs-table td {
     padding: 10px 12px;
+    font-size: 0.85rem;
   }
 
   .pd-related-grid {

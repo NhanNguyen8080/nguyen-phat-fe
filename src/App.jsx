@@ -128,7 +128,7 @@ function App() {
       const id = targetId.replace('#', '');
       const element = document.getElementById(id);
       if (element) {
-        const headerOffset = 85;
+        const headerOffset = window.innerWidth <= 768 ? 62 : 85;
         const elementPosition = element.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
         window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
