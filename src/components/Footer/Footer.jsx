@@ -40,11 +40,32 @@ const PARTNERS = [
   }
 ];
 
-const GOOGLE_MAPS_SEARCH_URL =
-  'https://www.google.com/maps/search/?api=1&query=F4%2F8L+%E1%BA%A4p+6%2C+X%C3%A3+V%C4%A9nh+L%E1%BB%99c+A%2C+Huy%E1%BB%87n+B%C3%ACnh+Ch%C3%A1nh%2C+TP.+H%E1%BB%93+Ch%C3%AD+Minh';
-
-const GOOGLE_MAPS_EMBED_URL =
-  'https://www.google.com/maps/d/embed?mid=1hC-BN2b3LyyeYbyOmv20tP5shVo';
+const LOCATIONS = {
+  office: {
+    id: 'office',
+    label: 'Văn Phòng Đại Diện',
+    badge: 'Trụ sở chính',
+    address: 'F4/8L Ấp 6, Xã Vĩnh Lộc A, Huyện Bình Chánh, TP. Hồ Chí Minh',
+    embedUrl: 'https://www.google.com/maps/embed?origin=mfe&pb=!1m3!2m1!1zRjQvOEwg4bqkcCA2LCBYw6MgVsSpbmggTOG7mWMgQSwgSHV54buHbiBCw6xuaCBDaMOhbmgsIFRQLiBI4buTIENow60gTWluaA!6i15',
+    searchUrl: 'https://www.google.com/maps/search/?api=1&query=F4%2F8L+%E1%BA%A4p+6%2C+X%C3%A3+V%C4%A9nh+L%E1%BB%99c+A%2C+Huy%E1%BB%87n+B%C3%ACnh+Ch%C3%A1nh%2C+TP.+H%E1%BB%93+Ch%C3%AD+Minh'
+  },
+  factory: {
+    id: 'factory',
+    label: 'Xưởng Sản Xuất',
+    badge: 'Nhà máy',
+    address: 'F5/4 đường Liên Ấp 26, Xã Vĩnh Lộc A, Huyện Bình Chánh, TP. Hồ Chí Minh',
+    embedUrl: 'https://www.google.com/maps/embed?origin=mfe&pb=!1m3!2m1!1zRjUvNCBMacOqbiDhuqRwIDI2LCBWxKluaCBM4buZYyBBLCBCw6xuaCBDaMOhbmgsIFRQLiBI4buTIENow60gTWluaA!6i15',
+    searchUrl: 'https://www.google.com/maps/search/?api=1&query=F5%2F4+%C4%91%C6%B0%E1%BB%9Dng+Li%C3%AAn+%E1%BA%A4p+26%2C+X%C3%A3+V%C4%A9nh+L%E1%BB%99c+A%2C+Huy%E1%BB%87n+B%C3%ACnh+Ch%C3%A1nh%2C+TP.+H%E1%BB%93+Ch%C3%AD+Minh'
+  },
+  blueprint: {
+    id: 'blueprint',
+    label: 'Sơ Đồ Gốc (Lưu Trữ)',
+    badge: 'diennguyenphat.com',
+    address: 'Sơ đồ định vị xưởng & văn phòng cào từ website cũ của Nguyên Phát',
+    imageUrl: '/images/footer/map-footer.jpg',
+    searchUrl: 'https://www.google.com/maps/search/?api=1&query=F4%2F8L+%E1%BA%A4p+6%2C+X%C3%A3+V%C4%A9nh+L%E1%BB%99c+A%2C+Huy%E1%BB%87n+B%C3%ACnh+Ch%C3%A1nh%2C+TP.+H%E1%BB%93+Ch%C3%AD+Minh'
+  }
+};
 
 const Footer = ({
   onNavigateHome,
@@ -54,6 +75,7 @@ const Footer = ({
   onNavigateNews
 }) => {
   const [showMapModal, setShowMapModal] = useState(false);
+  const [activeMapTab, setActiveMapTab] = useState('office');
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
@@ -64,6 +86,17 @@ const Footer = ({
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Đóng modal khi nhấn phím Escape
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && showMapModal) {
+        setShowMapModal(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showMapModal]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -77,6 +110,8 @@ const Footer = ({
       onNavigateHome(hash || '#home');
     }
   };
+
+  const currentLoc = LOCATIONS[activeMapTab] || LOCATIONS.office;
 
   return (
     <>
@@ -103,7 +138,6 @@ const Footer = ({
                       alt={partner.name}
                       loading="lazy"
                       onError={(e) => {
-                        // Fallback text if image missing
                         e.currentTarget.style.display = 'none';
                         const parent = e.currentTarget.parentElement;
                         if (parent && !parent.querySelector('.partner-fallback')) {
@@ -350,8 +384,11 @@ const Footer = ({
                 <div className="footer-map-card">
                   <div
                     className="map-thumbnail-wrap"
-                    onClick={() => setShowMapModal(true)}
-                    title="Bấm để xem bản đồ phóng to"
+                    onClick={() => {
+                      setActiveMapTab('office');
+                      setShowMapModal(true);
+                    }}
+                    title="Bấm để xem bản đồ chỉ đường chi tiết"
                   >
                     <img
                       src="/images/footer/map-footer.jpg"
@@ -361,7 +398,7 @@ const Footer = ({
                     />
                     <div className="map-overlay">
                       <span className="map-overlay-icon">📍</span>
-                      <span className="map-overlay-text">Bấm xem bản đồ phóng to</span>
+                      <span className="map-overlay-text">Bấm mở bản đồ vị trí</span>
                     </div>
                   </div>
 
@@ -369,7 +406,10 @@ const Footer = ({
                     <button
                       type="button"
                       className="btn-map-action btn-map-view"
-                      onClick={() => setShowMapModal(true)}
+                      onClick={() => {
+                        setActiveMapTab('office');
+                        setShowMapModal(true);
+                      }}
                     >
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <circle cx="11" cy="11" r="8"></circle>
@@ -377,11 +417,11 @@ const Footer = ({
                         <line x1="11" y1="8" x2="11" y2="14"></line>
                         <line x1="8" y1="11" x2="14" y2="11"></line>
                       </svg>
-                      <span>Xem Bản Đồ Nhúng</span>
+                      <span>Xem Bản Đồ</span>
                     </button>
 
                     <a
-                      href={GOOGLE_MAPS_SEARCH_URL}
+                      href={LOCATIONS.office.searchUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn-map-action btn-map-direct"
@@ -440,7 +480,7 @@ const Footer = ({
                 <span className="modal-title-icon">📍</span>
                 <div>
                   <h4 className="footer-modal-title">Bản Đồ Vị Trí Cơ Điện Nguyên Phát</h4>
-                  <p className="footer-modal-subtitle">F4/8L Ấp 6, Xã Vĩnh Lộc A, Huyện Bình Chánh, TP. Hồ Chí Minh</p>
+                  <p className="footer-modal-subtitle">{currentLoc.address}</p>
                 </div>
               </div>
               <button
@@ -453,16 +493,55 @@ const Footer = ({
               </button>
             </div>
 
+            {/* Modal Tabs for Office, Factory, and Original Blueprint */}
+            <div className="footer-modal-tabs">
+              <button
+                type="button"
+                className={`modal-tab-btn ${activeMapTab === 'office' ? 'active' : ''}`}
+                onClick={() => setActiveMapTab('office')}
+              >
+                🏢 Văn Phòng Đại Diện
+              </button>
+              <button
+                type="button"
+                className={`modal-tab-btn ${activeMapTab === 'factory' ? 'active' : ''}`}
+                onClick={() => setActiveMapTab('factory')}
+              >
+                🏭 Xưởng Sản Xuất
+              </button>
+              <button
+                type="button"
+                className={`modal-tab-btn ${activeMapTab === 'blueprint' ? 'active' : ''}`}
+                onClick={() => setActiveMapTab('blueprint')}
+              >
+                🗺️ Sơ Đồ Gốc (Lưu Trữ)
+              </button>
+            </div>
+
             <div className="footer-modal-body">
-              <iframe
-                title="Bản đồ Vị Trí Cơ Điện Nguyên Phát"
-                src={GOOGLE_MAPS_EMBED_URL}
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                loading="lazy"
-                allowFullScreen
-              />
+              {activeMapTab === 'blueprint' ? (
+                <div className="modal-blueprint-wrap">
+                  <img
+                    src={LOCATIONS.blueprint.imageUrl}
+                    alt="Sơ đồ vị trí Nguyên Phát gốc"
+                    className="modal-blueprint-img"
+                  />
+                  <div className="blueprint-caption">
+                    <span>Sơ đồ chỉ dẫn đường đến xưởng và văn phòng Cơ điện Nguyên Phát tại Bình Chánh.</span>
+                  </div>
+                </div>
+              ) : (
+                <iframe
+                  key={currentLoc.id}
+                  title={`Bản đồ ${currentLoc.label}`}
+                  src={currentLoc.embedUrl}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  allowFullScreen
+                />
+              )}
             </div>
 
             <div className="footer-modal-footer">
@@ -471,12 +550,15 @@ const Footer = ({
               </span>
               <div className="modal-actions">
                 <a
-                  href={GOOGLE_MAPS_SEARCH_URL}
+                  href={currentLoc.searchUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-primary modal-action-btn"
                 >
-                  Mở Trên Google Maps
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" style={{ marginRight: 6 }}>
+                    <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                  </svg>
+                  Mở Google Maps Chỉ Đường
                 </a>
                 <button
                   type="button"
