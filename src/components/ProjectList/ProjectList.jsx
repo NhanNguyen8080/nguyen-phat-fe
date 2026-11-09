@@ -142,6 +142,7 @@ const ProjectList = ({ onNavigateHome, onSelectProject }) => {
     return (
       <div className="page-loading-wrapper" aria-label="Đang tải danh sách công trình">
         <div className="yellow-spinner" role="status"></div>
+        <span className="loading-text">Đang tải danh sách công trình...</span>
       </div>
     );
   }

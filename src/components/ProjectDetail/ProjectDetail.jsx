@@ -42,6 +42,7 @@ const ProjectDetail = ({ projectIdOrSlug, onNavigateBack, onNavigateContact, onS
     return (
       <div className="page-loading-wrapper" aria-label="Đang tải thông tin chi tiết công trình">
         <div className="yellow-spinner" role="status"></div>
+        <span className="loading-text">Đang tải thông tin công trình...</span>
       </div>
     );
   }

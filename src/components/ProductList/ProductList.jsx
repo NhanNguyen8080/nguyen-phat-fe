@@ -167,6 +167,7 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
     return (
       <div className="page-loading-wrapper" aria-label="Đang tải danh sách sản phẩm">
         <div className="yellow-spinner" role="status"></div>
+        <span className="loading-text">Đang tải danh sách sản phẩm...</span>
       </div>
     );
   }

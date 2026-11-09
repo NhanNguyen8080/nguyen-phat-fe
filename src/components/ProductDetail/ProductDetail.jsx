@@ -205,6 +205,7 @@ const ProductDetail = ({
     return (
       <div className="page-loading-wrapper" aria-label="Đang tải thông tin sản phẩm">
         <div className="yellow-spinner" role="status"></div>
+        <span className="loading-text">Đang tải thông tin sản phẩm...</span>
       </div>
     );
   }

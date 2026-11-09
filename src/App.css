@@ -1,4 +1,20 @@
-/* App component specific styles can go here */
+/* App layout & sticky footer */
 .app {
   width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app > main,
+.app > .product-page,
+.app > .project-page,
+.app > .news-page,
+.app > .about-page,
+.app > .pd-page,
+.app > .project-detail-page,
+.app > .news-detail-page,
+.app > .page-loading-wrapper {
+  flex: 1 0 auto;
 }

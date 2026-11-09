@@ -164,6 +164,7 @@ const NewsPage = ({ onNavigateHome, onSelectNews }) => {
     return (
       <div className="page-loading-wrapper" aria-label="Đang tải tin tức">
         <div className="yellow-spinner" role="status"></div>
+        <span className="loading-text">Đang tải tin tức...</span>
       </div>
     );
   }
