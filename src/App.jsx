@@ -199,7 +199,10 @@ function App() {
             onSelectProduct={navigateToProductDetail}
           />
           <WhyChooseUs />
-          <Portfolio onNavigateProjects={navigateToProjects} />
+          <Portfolio 
+            onNavigateProjects={navigateToProjects} 
+            onSelectProject={navigateToProjectDetail}
+          />
           <News 
             onNavigateNews={navigateToNews} 
             onSelectNews={navigateToNewsDetail}

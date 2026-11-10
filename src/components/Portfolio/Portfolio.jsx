@@ -1,9 +1,51 @@
 import React, { useEffect, useState } from 'react';
 import './Portfolio.css';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
-import { getProjects } from '../../services/projectService';
+import { getProjects, MOCK_PROJECTS } from '../../services/projectService';
 
-const Portfolio = ({ onNavigateProjects }) => {
+const getCleanTitle = (project) => {
+  if (!project) return '';
+  const matched = MOCK_PROJECTS.find(
+    (m) => m.id === project.id || m.slug === project.slug || (project.thumbnail && m.thumbnail === project.thumbnail)
+  );
+  if (matched && matched.title) {
+    return matched.title;
+  }
+  return project.title || 'Công trình Cơ Điện Nguyên Phát';
+};
+
+const FALLBACK_PROJECTS = [
+  {
+    id: '47792699-c75d-479e-bb27-f0540f15f1f7',
+    slug: 'nha-may-sx-coc-vach-nhua-upvc-kcn-hiep-phuoc-nha-be-34',
+    title: 'Nhà Máy SX Cọc Vách Nhựa UPVC - KCN Hiệp Phước',
+    desc: 'Sản xuất, cung cấp và lắp đặt trọn gói hệ thống Tủ điện phân phối và Thang máng cáp',
+    image: 'http://diennguyenphat.com/upload/files/image004.jpg',
+  },
+  {
+    id: 'd34e5709-db4c-4ea2-92f4-9cdbe7344eec',
+    slug: 'khu-tai-dinh-cu-tan-hoa-dong-quan-6-35',
+    title: 'Khu Tái Định Cư Tân Hòa Đông - Quận 6',
+    desc: 'Cung cấp trọn gói tủ điện MSB, ATS 400A và thang máng cáp',
+    image: 'http://diennguyenphat.com/upload/files/image007.jpg',
+  },
+  {
+    id: 'aea46dc7-bb75-4e90-a568-53d947e0f819',
+    slug: 'kcn-long-duc-dong-nai-36',
+    title: 'Nhà Xưởng KCN Long Đức - Đồng Nai',
+    desc: 'Tủ điện điều khiển MCC, tủ bù công suất phản kháng và máng cáp',
+    image: 'http://diennguyenphat.com/upload/files/image009.jpg',
+  },
+  {
+    id: '530c7ac4-a340-4251-a139-8a54822cdc7d',
+    slug: 'toa-nha-van-phong-dai-dien-phia-nam-cty-319-invest-tan-binh-39',
+    title: 'Tòa Nhà Văn Phòng Đại Diện Cty 319 Invest',
+    desc: 'Cung cấp toàn bộ hệ thống tủ phân phối tầng và thang máng cáp',
+    image: 'http://diennguyenphat.com/upload/files/image014.jpg',
+  }
+];
+
+const Portfolio = ({ onNavigateProjects, onSelectProject }) => {
   const headerRef = useScrollReveal();
   const gridRef = useScrollReveal({ threshold: 0.08 });
   const [projectList, setProjectList] = useState([]);
@@ -23,32 +65,20 @@ const Portfolio = ({ onNavigateProjects }) => {
   const displayProjects = projectList.length > 0
     ? projectList.map((p, idx) => ({
         id: p.id || idx,
-        title: p.title,
+        slug: p.slug || p.id,
+        title: getCleanTitle(p),
         desc: p.scope_of_work || p.project_type || 'Sản xuất và lắp đặt tủ điện, thang máng cáp',
         image: p.thumbnail || (p.images && p.images[0]) || 'http://diennguyenphat.com/upload/files/image004.jpg',
-        featured: idx === 0
       }))
-    : [
-        {
-          id: 1,
-          title: 'Nhà Máy SX Cọc Vách Nhựa UPVC',
-          desc: 'Sản xuất, cung cấp và lắp đặt trọn gói hệ thống Tủ điện phân phối và Thang máng cáp',
-          image: 'http://diennguyenphat.com/upload/files/image004.jpg',
-          featured: true
-        },
-        {
-          id: 2,
-          image: 'http://diennguyenphat.com/upload/files/image007.jpg'
-        },
-        {
-          id: 3,
-          image: 'http://diennguyenphat.com/upload/files/image009.jpg'
-        },
-        {
-          id: 4,
-          image: 'http://diennguyenphat.com/upload/files/image014.jpg'
-        }
-      ];
+    : FALLBACK_PROJECTS;
+
+  const handleProjectClick = (project) => {
+    if (onSelectProject && (project.slug || project.id)) {
+      onSelectProject(project.slug || project.id);
+    } else if (onNavigateProjects) {
+      onNavigateProjects();
+    }
+  };
 
   return (
     <section className="portfolio" id="project">
@@ -63,19 +93,29 @@ const Portfolio = ({ onNavigateProjects }) => {
         <div className="portfolio-grid" ref={gridRef}>
           {displayProjects.map((project, index) => (
             <div
-              key={project.id}
-              className={`portfolio-item reveal ${index === 0 ? 'featured-item' : ''}`}
-              style={{ transitionDelay: `${index * 0.12}s`, cursor: 'pointer' }}
-              onClick={onNavigateProjects}
-              title="Xem danh sách công trình"
+              key={project.id || index}
+              className="portfolio-item reveal"
+              style={{ transitionDelay: `${index * 0.1}s`, cursor: 'pointer' }}
+              onClick={() => handleProjectClick(project)}
+              title={`Xem chi tiết: ${project.title}`}
             >
-              <img src={project.image} alt={project.title || "Công trình Nguyên Phát"} className="portfolio-image" />
-              {project.featured && (
-                <div className="portfolio-info">
-                  <h4 className="portfolio-item-title">{project.title}</h4>
-                  <p className="portfolio-item-desc">{project.desc}</p>
-                </div>
-              )}
+              <div className="portfolio-image-wrap">
+                <img 
+                  src={project.image} 
+                  alt={project.title || "Công trình Nguyên Phát"} 
+                  className="portfolio-image"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=800&auto=format&fit=crop';
+                  }}
+                />
+              </div>
+              <div className="portfolio-info">
+                <h4 className="portfolio-item-title" title={project.title}>
+                  {project.title}
+                </h4>
+              </div>
             </div>
           ))}
         </div>
