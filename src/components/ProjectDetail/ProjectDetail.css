@@ -14,10 +14,6 @@
   background-color: #ffffff;
   border-bottom: 1px solid #ebebeb;
   padding: 14px 0;
-  position: sticky;
-  top: 80px;
-  z-index: 40;
-  backdrop-filter: blur(8px);
 }
 
 .project-detail-nav-inner {
@@ -382,7 +378,7 @@
   padding: 28px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
   position: sticky;
-  top: 150px;
+  top: 100px;
 }
 
 .sidebar-title {
@@ -570,10 +566,6 @@
 
 /* Responsive */
 @media (max-width: 992px) {
-  .project-detail-nav {
-    top: 60px;
-  }
-
   .project-specs-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -631,10 +623,6 @@
     width: 58px;
     height: 40px;
     border-radius: 5px;
-  }
-
-  .project-detail-nav {
-    top: 56px;
   }
 
   .project-detail-nav-inner {
