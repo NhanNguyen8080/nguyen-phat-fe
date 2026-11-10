@@ -1,6 +1,8 @@
 import React from 'react';
 import './Hero.css';
-import heroImage from '../../assets/hero.png';
+import bannerImageFallback from '../../assets/banner-3.jpg';
+
+const HERO_BANNER_URL = 'https://diennguyenphat.com/upload/files/chung/banner-3.jpg';
 
 const Hero = ({ onNavigateAbout }) => {
   return (
@@ -45,9 +47,13 @@ const Hero = ({ onNavigateAbout }) => {
 
         <div className="hero-image-wrapper">
           <img 
-            src={heroImage} 
-            alt="Đội ngũ kỹ sư Cơ Điện Nguyên Phát trên công trường" 
+            src={HERO_BANNER_URL} 
+            alt="Cơ Điện Nguyên Phát" 
             className="hero-image"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = bannerImageFallback;
+            }}
           />
         </div>
       </div>
