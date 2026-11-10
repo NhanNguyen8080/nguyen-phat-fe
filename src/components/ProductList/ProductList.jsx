@@ -3,6 +3,20 @@ import './ProductList.css';
 import { getProducts, getCategories } from '../../services/productService';
 import { stripHtml } from '../../utils/textUtils';
 
+const cleanDescription = (desc, name) => {
+  if (!desc) return '';
+  let text = stripHtml(desc);
+  if (name && typeof name === 'string') {
+    const trimmedName = name.trim();
+    const escapedName = trimmedName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const doubleNameRegex = new RegExp(`^(${escapedName}\\s+){2,}`, 'i');
+    if (doubleNameRegex.test(text)) {
+      text = text.replace(doubleNameRegex, `${trimmedName} `);
+    }
+  }
+  return text;
+};
+
 const ITEMS_PER_PAGE = 6;
 
 const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initialCategory = 'all' }) => {
@@ -351,11 +365,9 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
                       )}
                     </div>
 
-                    {Boolean(product.description && stripHtml(product.description)) && (
-                      <p className="product-card-desc">
-                        {stripHtml(product.description)}
-                      </p>
-                    )}
+                    <p className="product-card-desc">
+                      {cleanDescription(product.description, product.name) || '\u00A0'}
+                    </p>
                   </div>
                 </article>
               ))}
