@@ -99,18 +99,17 @@ const Portfolio = ({ onNavigateProjects, onSelectProject }) => {
               onClick={() => handleProjectClick(project)}
               title={`Xem chi tiết: ${project.title}`}
             >
-              <div className="portfolio-image-wrap">
-                <img 
-                  src={project.image} 
-                  alt={project.title || "Công trình Nguyên Phát"} 
-                  className="portfolio-image"
-                  loading="lazy"
-                  onError={(e) => {
-                    e.currentTarget.onerror = null;
-                    e.currentTarget.src = 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=800&auto=format&fit=crop';
-                  }}
-                />
-              </div>
+              <img 
+                src={project.image} 
+                alt={project.title || "Công trình Nguyên Phát"} 
+                className="portfolio-image"
+                loading="lazy"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=800&auto=format&fit=crop';
+                }}
+              />
+              <div className="portfolio-overlay" />
               <div className="portfolio-info">
                 <h4 className="portfolio-item-title" title={project.title}>
                   {project.title}
