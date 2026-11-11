@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import './NewsDetail.css';
-import { getPostById, getPosts, MOCK_POSTS, DEFAULT_THUMBNAILS } from '../../services/newsService';
+import { getPostById, getPosts, DEFAULT_THUMBNAILS } from '../../services/newsService';
 import { stripHtml } from '../../utils/textUtils';
 
 const NewsDetail = ({ postIdOrSlug, onNavigateBack, onNavigateContact, onSelectNews }) => {
@@ -32,7 +32,7 @@ const NewsDetail = ({ postIdOrSlug, onNavigateBack, onNavigateContact, onSelectN
         setRelatedPosts(related);
 
         // 2. Bài viết cho Sidebar: ưu tiên bài có is_featured hoặc lượt views cao
-        const allList = (allRes?.posts && allRes.posts.length > 0) ? allRes.posts : MOCK_POSTS;
+        const allList = (allRes?.posts && allRes.posts.length > 0) ? allRes.posts : [];
         const others = allList.filter(p => p.id !== data?.id && p.slug !== data?.slug);
 
         const sortedForSidebar = [...others].sort((a, b) => {

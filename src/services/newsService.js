@@ -236,7 +236,7 @@ export async function getPosts(category = null) {
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 6000);
+    const timeoutId = setTimeout(() => controller.abort(), 20000);
 
     const url = `${API_BASE_URL}/posts/?skip=0&limit=100`;
     const response = await fetch(url, {
@@ -251,7 +251,7 @@ export async function getPosts(category = null) {
 
     if (response.ok) {
       const data = await response.json();
-      if (Array.isArray(data) && data.length > 0) {
+      if (Array.isArray(data)) {
         const formatted = data
           .map((item, idx) => normalizePost(item, idx))
           .filter(Boolean)
@@ -269,20 +269,14 @@ export async function getPosts(category = null) {
       }
     }
   } catch (error) {
-    console.warn('[newsService] Live API không khả dụng, dùng Mock Posts chuẩn:', error.message);
+    console.warn('[newsService] Live API không khả dụng:', error.message);
   }
 
-  // Fallback an toàn với MOCK_POSTS
-  const normalizedMock = MOCK_POSTS
-    .map((item, idx) => normalizePost(item, idx))
-    .filter(Boolean)
-    .sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
-
-  cachedPostsList = normalizedMock;
-
+  // Không dùng fallback mock, trả về rỗng nếu backend lỗi hoặc không có dữ liệu
+  const cached = Array.isArray(cachedPostsList) ? cachedPostsList : [];
   const filtered = (category && category !== 'all')
-    ? normalizedMock.filter(p => p.category_name === category)
-    : normalizedMock;
+    ? cached.filter(p => p.category_name === category)
+    : cached;
 
   return { posts: filtered, isLiveApi: false };
 }
@@ -297,7 +291,7 @@ export async function getPostById(idOrSlug) {
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 6000);
+    const timeoutId = setTimeout(() => controller.abort(), 20000);
 
     // 1. Phân định UUID vs Slug để gọi đúng endpoint backend
     const url = UUID_REGEX.test(idOrSlug)
@@ -320,16 +314,13 @@ export async function getPostById(idOrSlug) {
     console.warn(`[newsService] Fetch detail failed for id/slug ${idOrSlug}:`, error.message);
   }
 
-  // 2. Tìm kiếm trong Cache hoặc MOCK_POSTS
+  // 2. Tìm kiếm trong Cache nếu đã tải danh sách trước đó
   let list = cachedPostsList;
   if (!Array.isArray(list) || list.length === 0) {
     const res = await getPosts();
     list = res.posts || [];
   }
 
-  const found = list.find(p => p.id === idOrSlug || p.slug === idOrSlug) ||
-    MOCK_POSTS.map((item, idx) => normalizePost(item, idx)).find(p => p.id === idOrSlug || p.slug === idOrSlug) ||
-    normalizePost(MOCK_POSTS[0]);
-
-  return found;
+  const found = list.find(p => p.id === idOrSlug || p.slug === idOrSlug);
+  return found || null;
 }

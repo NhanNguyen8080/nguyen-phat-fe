@@ -54,6 +54,30 @@ function App() {
   const [productCategoryFilter, setProductCategoryFilter] = useState('all');
 
   useEffect(() => {
+    // Đảm bảo trình duyệt không tự khôi phục vị trí cuộn cũ khi reload (F5)
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+
+    // Dọn sạch hash section nếu có trên URL khi load / reload
+    const currentHash = window.location.hash || '';
+    const homeSectionHashes = [
+      '#product', '#project', '#news', '#about', '#contact', '#home',
+      '#services', '#portfolio', '#tin-tuc', '#cong-trinh'
+    ];
+    if (homeSectionHashes.includes(currentHash)) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+
+    // Nếu đang ở trang chủ khi mở hoặc F5 reload, luôn cuộn ngay lên đầu trang
+    const initialRoute = parseLocation();
+    if (initialRoute.page === 'home') {
+      window.scrollTo(0, 0);
+      requestAnimationFrame(() => {
+        window.scrollTo(0, 0);
+      });
+    }
+
     const handleLocationChange = () => {
       setRoute(parseLocation());
     };
@@ -123,20 +147,28 @@ function App() {
   };
 
   const navigateToHome = (targetId = '#home') => {
-    window.location.hash = targetId;
     setRoute({ page: 'home', id: '' });
-    setTimeout(() => {
-      const id = targetId.replace('#', '');
-      const element = document.getElementById(id);
-      if (element) {
-        const headerOffset = window.innerWidth <= 768 ? 62 : 85;
-        const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-      } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    }, 60);
+    // Dọn sạch hash trên thanh URL để khi reload (F5) trang sẽ luôn ở đầu trang
+    if (window.location.hash) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+
+    if (targetId && targetId !== '#home') {
+      setTimeout(() => {
+        const id = targetId.replace('#', '');
+        const element = document.getElementById(id);
+        if (element) {
+          const headerOffset = window.innerWidth <= 768 ? 62 : 85;
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+          window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, 60);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (

@@ -202,7 +202,10 @@ const Header = ({
         behavior: 'smooth'
       });
       setActiveSection(id);
-      window.history.pushState(null, '', targetId);
+      // Giữ URL sạch (không lưu anchor hash) để khi reload (F5) trang chủ luôn nhảy về đầu trang
+      if (window.location.hash) {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
     } else if (targetId === '#news' && onNavigateNews) {
       onNavigateNews();
     }
