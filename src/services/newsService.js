@@ -185,7 +185,8 @@ export function sanitizeThumbnail(thumb, fallbackIndex = 0) {
   return thumb;
 }
 
-export { stripHtml } from '../utils/textUtils';
+import { stripHtml } from '../utils/textUtils';
+export { stripHtml };
 
 /**
  * Chuẩn hóa 1 bài viết theo schema PostResponse / PostDetailResponse
@@ -236,7 +237,7 @@ export async function getPosts(category = null) {
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 20000);
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
 
     const url = `${API_BASE_URL}/posts/?skip=0&limit=100`;
     const response = await fetch(url, {
@@ -291,7 +292,7 @@ export async function getPostById(idOrSlug) {
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 20000);
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
 
     // 1. Phân định UUID vs Slug để gọi đúng endpoint backend
     const url = UUID_REGEX.test(idOrSlug)
