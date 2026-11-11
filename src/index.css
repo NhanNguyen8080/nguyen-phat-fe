@@ -1,13 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --primary-bg: #ffffff;
-  --secondary-bg: #f9f9f9;
-  --dark-bg: #1a1a1a;
+  --primary-bg: #341111;
+  --secondary-bg: #421616;
+  --card-bg: #4c1a1a;
+  --dark-bg: #220808;
   --accent-yellow: #ffb800;
-  --text-dark: #121212;
+  --text-dark: #fcf6f3;
   --text-light: #ffffff;
-  --text-gray: #666666;
+  --text-gray: #d4bcb8;
+  --border-color: rgba(255, 255, 255, 0.12);
   --border-radius-sm: 8px;
   --border-radius-md: 16px;
   --border-radius-lg: 32px;
@@ -88,8 +90,8 @@ img {
 
 .btn-primary {
   background-color: var(--accent-yellow);
-  color: var(--text-dark);
-  font-weight: 600;
+  color: #1a0808;
+  font-weight: 700;
   padding: 12px 24px;
   border-radius: var(--border-radius-lg);
   border: none;
@@ -102,16 +104,16 @@ img {
 }
 
 .btn-primary:hover {
-  opacity: 0.9;
+  opacity: 0.92;
 }
 
 .btn-secondary {
-  background-color: #f0f0f0;
-  color: var(--text-dark);
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
   font-weight: 600;
   padding: 12px 24px;
   border-radius: var(--border-radius-lg);
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.2s ease;
   min-height: 44px;
@@ -121,7 +123,7 @@ img {
 }
 
 .btn-secondary:hover {
-  background-color: #e0e0e0;
+  background-color: rgba(255, 255, 255, 0.22);
 }
 
 .section-title {
@@ -241,7 +243,7 @@ img {
 
 .page-loading-wrapper .loading-text {
   font-size: 0.92rem;
-  color: #6b7280;
+  color: var(--text-gray);
   font-weight: 500;
   letter-spacing: 0.3px;
   animation: loadingTextPulse 1.8s ease-in-out infinite;

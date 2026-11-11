@@ -7,6 +7,7 @@
   color: var(--text-light);
   padding: 72px 64px;
   border-radius: 48px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .wcu-header {
@@ -23,7 +24,7 @@
 }
 
 .wcu-subtitle {
-  color: #b0b0b0;
+  color: var(--text-gray);
   font-size: 0.95rem;
   line-height: 1.7;
 }
@@ -78,7 +79,7 @@
 }
 
 .feature-desc {
-  color: #b0b0b0;
+  color: var(--text-gray);
   font-size: 0.88rem;
   line-height: 1.65;
 }
@@ -91,7 +92,7 @@
 }
 
 .wcu-footer-text {
-  color: #b0b0b0;
+  color: var(--text-gray);
   font-size: 0.88rem;
   line-height: 1.5;
 }

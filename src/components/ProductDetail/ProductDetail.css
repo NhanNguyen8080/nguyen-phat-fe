@@ -12,8 +12,8 @@
 
 /* --- Breadcrumb Bar --- */
 .pd-subnav {
-  background-color: #ffffff;
-  border-bottom: 1px solid #ebebeb;
+  background-color: var(--secondary-bg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding: 12px 0;
   transition: all 0.25s ease;
 }
@@ -100,9 +100,9 @@
   aspect-ratio: 4 / 3;
   border-radius: 16px;
   overflow: hidden;
-  background-color: #ffffff;
-  border: 1px solid #e7e9ec;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  background-color: var(--card-bg, #4c1a1a);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   cursor: zoom-in;
   display: flex;
   align-items: center;
@@ -111,8 +111,8 @@
 }
 
 .pd-main-stage:hover {
-  border-color: #d1d5db;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+  border-color: rgba(255, 184, 0, 0.5);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
 }
 
 .pd-main-img {
@@ -254,8 +254,8 @@
   aspect-ratio: 16 / 11;
   border-radius: 10px;
   overflow: hidden;
-  border: 2px solid #e5e7eb;
-  background-color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  background-color: #421616;
   padding: 4px;
   box-sizing: border-box;
   display: flex;
@@ -266,7 +266,7 @@
 }
 
 .pd-thumb-item:hover {
-  border-color: #d1d5db;
+  border-color: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
 }
 
@@ -289,8 +289,8 @@
   width: 100%;
   aspect-ratio: 4 / 3;
   border-radius: 16px;
-  border: 2px dashed #d1d5db;
-  background-color: #f9fafb;
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  background-color: var(--secondary-bg);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -308,8 +308,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 16px;
-  background-color: #fafafa;
-  border: 1px solid #eaeaea;
+  background-color: var(--secondary-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   gap: 8px;
 }
@@ -320,7 +320,7 @@
   gap: 6px;
   font-size: 0.78rem;
   font-weight: 600;
-  color: #374151;
+  color: var(--text-dark);
 }
 
 .pd-trust-icon {
@@ -426,22 +426,22 @@
   flex-direction: column;
   justify-content: center;
   padding: 16px 18px;
-  background-color: #ffffff;
-  border: 1px solid #e8eaed;
+  background-color: var(--card-bg, #4c1a1a);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   transition: all 0.2s ease;
   min-height: 84px;
 }
 
 .pd-hero-spec-card:hover {
   border-color: rgba(255, 184, 0, 0.5);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   transform: translateY(-2px);
 }
 
 .pd-hero-spec-card.highlight {
-  background-color: #fffdf5;
+  background-color: #551e1e;
   border-color: rgba(255, 184, 0, 0.6);
 }
 
@@ -466,7 +466,7 @@
 .pd-lead-wrap {
   margin-bottom: 24px;
   padding: 14px 18px;
-  background-color: #f8fafc;
+  background-color: var(--secondary-bg);
   border-left: 3px solid var(--accent-yellow);
   border-radius: 0 8px 8px 0;
 }
@@ -474,7 +474,7 @@
 .pd-lead-desc {
   font-size: 0.92rem;
   line-height: 1.6;
-  color: #4b5563;
+  color: var(--text-dark);
   margin-bottom: 6px;
 }
 
@@ -484,13 +484,13 @@
   padding: 0;
   font-size: 0.85rem;
   font-weight: 700;
-  color: #b37a00;
+  color: var(--accent-yellow);
   cursor: pointer;
   transition: color 0.2s ease;
 }
 
 .pd-jump-desc-btn:hover {
-  color: #8c5f00;
+  color: #ffcc33;
   text-decoration: underline;
 }
 
@@ -500,17 +500,17 @@
 .pd-tabs-section {
   margin-top: 20px;
   margin-bottom: 60px;
-  background-color: #ffffff;
+  background-color: var(--card-bg, #4c1a1a);
   border-radius: 16px;
-  border: 1px solid #e8eaed;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   overflow: hidden;
 }
 
 .pd-tabs-nav {
   display: flex;
-  background-color: #f8fafc;
-  border-bottom: 1px solid #e5e7eb;
+  background-color: var(--secondary-bg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -531,7 +531,7 @@
   border-bottom: 3px solid transparent;
   font-size: 0.95rem;
   font-weight: 700;
-  color: #6b7280;
+  color: var(--text-gray);
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.2s ease;
@@ -539,12 +539,12 @@
 
 .pd-tab-btn:hover {
   color: var(--text-dark);
-  background-color: #ffffff;
+  background-color: var(--card-bg);
 }
 
 .pd-tab-btn.active {
   color: var(--text-dark);
-  background-color: #ffffff;
+  background-color: var(--card-bg);
   border-bottom-color: var(--accent-yellow);
 }
 
@@ -560,15 +560,15 @@
 }
 
 .pd-specs-group-card {
-  border: 1px solid #e8eaed;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   overflow: hidden;
 }
 
 .pd-specs-group-head {
   padding: 14px 20px;
-  background-color: #f9fafb;
-  border-bottom: 1px solid #e8eaed;
+  background-color: var(--secondary-bg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .pd-specs-group-head h3 {
@@ -584,7 +584,7 @@
 }
 
 .pd-specs-table tr {
-  border-bottom: 1px solid #f1f3f5;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   transition: background-color 0.15s ease;
 }
 
@@ -593,7 +593,7 @@
 }
 
 .pd-specs-table tr:hover {
-  background-color: #fafbfc;
+  background-color: rgba(255, 255, 255, 0.04);
 }
 
 .pd-specs-table th {
@@ -601,10 +601,10 @@
   padding: 14px 20px;
   font-size: 0.9rem;
   font-weight: 600;
-  color: #4b5563;
+  color: var(--text-gray);
   text-align: left;
-  background-color: #fafbfc;
-  border-right: 1px solid #f1f3f5;
+  background-color: rgba(0, 0, 0, 0.15);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .pd-specs-table td {
@@ -617,8 +617,8 @@
 /* --- Tab 2: Desc Pane --- */
 .pd-desc-content-card {
   padding: 24px;
-  background-color: #fafbfc;
-  border: 1px solid #e8eaed;
+  background-color: var(--secondary-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   margin-bottom: 32px;
 }
@@ -626,7 +626,7 @@
 .pd-html-description {
   font-size: 0.96rem;
   line-height: 1.75;
-  color: #374151;
+  color: var(--text-dark);
   word-break: break-word;
 }
 
@@ -710,7 +710,7 @@
   border-left: 4px solid var(--accent-yellow);
   padding-left: 16px;
   margin: 16px 0;
-  color: #4b5563;
+  color: var(--text-dark);
   font-style: italic;
 }
 
@@ -722,10 +722,10 @@
 
 .pd-commitment-card {
   padding: 24px 20px;
-  background-color: #ffffff;
-  border: 1px solid #e8eaed;
+  background-color: var(--secondary-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border-top: 3px solid var(--accent-yellow);
 }
 
@@ -794,8 +794,8 @@
   position: relative;
   border-radius: 14px;
   overflow: hidden;
-  background-color: #ffffff;
-  border: 1px solid #e7e9ec;
+  background-color: var(--secondary-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   cursor: zoom-in;
   display: flex;
   align-items: center;
@@ -899,8 +899,8 @@
   overflow: hidden;
   position: relative;
   cursor: zoom-in;
-  background-color: #ffffff;
-  border: 1px solid #e7e9ec;
+  background-color: var(--secondary-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -974,9 +974,9 @@
 }
 
 .pd-related-card {
-  background-color: #ffffff;
+  background-color: var(--card-bg, #4c1a1a);
   border-radius: 12px;
-  border: 1px solid #eaeaea;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   overflow: hidden;
   cursor: pointer;
   transition: all 0.25s ease;
@@ -987,14 +987,14 @@
 .pd-related-card:hover {
   transform: translateY(-4px);
   border-color: rgba(255, 184, 0, 0.6);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
 }
 
 .pd-related-thumb-wrap {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 10;
-  background-color: #f5f5f5;
+  background-color: #2b0c0c;
   overflow: hidden;
 }
 

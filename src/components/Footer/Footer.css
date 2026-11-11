@@ -4,8 +4,8 @@
 
 .site-footer {
   width: 100%;
-  background-color: #0f131a;
-  color: #d1d5db;
+  background-color: #1a0606;
+  color: #d4bcb8;
   font-family: 'Inter', sans-serif;
   position: relative;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -14,7 +14,7 @@
 /* ===================== PARTNERS STRIP ===================== */
 .footer-partners-section {
   padding: 56px 0 44px;
-  background: linear-gradient(180deg, #161b24 0%, #11151e 100%);
+  background: linear-gradient(180deg, #260a0a 0%, #1a0606 100%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -59,8 +59,8 @@
 }
 
 .partner-card {
-  background-color: #1a202c;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background-color: #2e0e0e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   padding: 16px 12px;
   display: flex;
@@ -69,14 +69,14 @@
   justify-content: center;
   text-align: center;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 }
 
 .partner-card:hover {
   transform: translateY(-4px);
-  background-color: #202736;
+  background-color: #3d1414;
   border-color: rgba(255, 184, 0, 0.4);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 .partner-logo-box {
@@ -416,11 +416,11 @@
 }
 
 .footer-map-card {
-  background-color: #161b24;
+  background-color: #250a0a;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
 }
 
 .map-thumbnail-wrap {
@@ -429,7 +429,7 @@
   height: 140px;
   cursor: pointer;
   overflow: hidden;
-  background-color: #202736;
+  background-color: #310d0d;
 }
 
 .map-thumbnail {
@@ -478,7 +478,7 @@
   grid-template-columns: 1.2fr 1fr;
   gap: 8px;
   padding: 10px;
-  background-color: #141821;
+  background-color: #200808;
 }
 
 .btn-map-action {
@@ -517,7 +517,7 @@
 
 /* ===================== FOOTER BOTTOM ===================== */
 .footer-bottom {
-  background-color: #090c11;
+  background-color: #140404;
   padding: 20px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
@@ -565,7 +565,7 @@
   justify-content: center;
   width: 18px;
   height: 22px;
-  background-color: #1e2433;
+  background-color: #300d0d;
   color: var(--accent-yellow);
   border-radius: 3px;
   font-family: monospace;
@@ -628,7 +628,7 @@
 }
 
 .footer-modal-card {
-  background-color: #161b24;
+  background-color: #250a0a;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 16px;
   width: 100%;
@@ -642,7 +642,7 @@
 
 .footer-modal-header {
   padding: 16px 20px;
-  background-color: #12161f;
+  background-color: #1e0808;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -693,7 +693,7 @@
 /* Modal Tabs */
 .footer-modal-tabs {
   display: flex;
-  background-color: #0f131a;
+  background-color: #180606;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   padding: 8px 16px 0;
   gap: 8px;
@@ -728,7 +728,7 @@
 .footer-modal-body {
   width: 100%;
   height: 440px;
-  background-color: #0a0d14;
+  background-color: #140505;
   position: relative;
 }
 
@@ -740,7 +740,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #0c0f15;
+  background-color: #140505;
   padding: 16px;
   overflow: auto;
 }
@@ -763,7 +763,7 @@
 
 .footer-modal-footer {
   padding: 14px 20px;
-  background-color: #12161f;
+  background-color: #1e0808;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   align-items: center;

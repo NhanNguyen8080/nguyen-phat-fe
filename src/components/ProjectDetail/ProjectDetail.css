@@ -11,8 +11,8 @@
 
 /* --- Top Navigation & Breadcrumbs --- */
 .project-detail-nav {
-  background-color: #ffffff;
-  border-bottom: 1px solid #ebebeb;
+  background-color: var(--secondary-bg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding: 14px 0;
 }
 
@@ -243,17 +243,18 @@
 }
 
 .spec-card {
-  background-color: #ffffff;
-  border: 1px solid #eaeaea;
+  background-color: var(--card-bg, #4c1a1a);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--border-radius-md);
   padding: 22px 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   transition: all 0.25s ease;
 }
 
 .spec-card:hover {
   transform: translateY(-4px);
   border-color: var(--accent-yellow);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
 }
 
 .spec-icon {
@@ -318,7 +319,7 @@
 .project-text-block p {
   font-size: 1rem;
   line-height: 1.85;
-  color: #444;
+  color: var(--text-dark);
   margin-bottom: 18px;
   text-align: justify;
 }
@@ -334,8 +335,8 @@
   position: relative;
   font-size: 0.98rem;
   line-height: 1.7;
-  color: #444;
-  border-bottom: 1px dashed #eee;
+  color: var(--text-dark);
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
 }
 
 .project-features-list li::before {
@@ -343,12 +344,12 @@
   position: absolute;
   left: 0;
   top: 12px;
-  color: #c98e00;
+  color: var(--accent-yellow);
   font-weight: 800;
 }
 
 .project-quote-box {
-  background-color: #fffbf0;
+  background-color: var(--secondary-bg);
   border-left: 4px solid var(--accent-yellow);
   border-radius: 0 8px 8px 0;
   padding: 24px 28px;
@@ -360,7 +361,7 @@
   font-size: 1.05rem;
   font-style: italic;
   line-height: 1.75;
-  color: #333;
+  color: var(--text-dark);
   margin: 12px 0 10px;
 }
 
@@ -372,11 +373,11 @@
 
 /* Sidebar */
 .project-sidebar .sidebar-card {
-  background-color: #ffffff;
-  border: 1px solid #e8e8e8;
+  background-color: var(--card-bg, #4c1a1a);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--border-radius-lg);
   padding: 28px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   position: sticky;
   top: 100px;
 }
@@ -459,9 +460,9 @@
 }
 
 .related-project-card {
-  background-color: #ffffff;
+  background-color: var(--card-bg, #4c1a1a);
   border-radius: var(--border-radius-md);
-  border: 1px solid #eaeaea;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   overflow: hidden;
   cursor: pointer;
   transition: all 0.25s ease;
@@ -472,13 +473,13 @@
 .related-project-card:hover {
   transform: translateY(-5px);
   border-color: rgba(255, 184, 0, 0.6);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
 }
 
 .related-thumb-wrap {
   position: relative;
   height: 190px;
-  background-color: #f5f5f5;
+  background-color: #2b0c0c;
   overflow: hidden;
 }
 
