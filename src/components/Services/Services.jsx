@@ -16,7 +16,7 @@ const getCardMetrics = () => {
   return { width: 280, gap: 24 };
 };
 
-const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=800&q=80';
+const FALLBACK_IMAGE = '/images/products/tu-msb-3200a.png';
 
 const getProductThumbnail = (product) => {
   if (!product) return FALLBACK_IMAGE;

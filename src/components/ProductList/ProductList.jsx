@@ -301,12 +301,12 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
                   {/* Thumbnail & Badges */}
                   <div className="product-card-thumb-wrap">
                     <img 
-                      src={product.thumbnail || 'https://diennguyenphat.com/upload/files/baiviet/thuydiensongbung2-w350%5B1%5D.jpg'} 
+                      src={product.thumbnail || '/images/products/tu-msb-3200a.png'} 
                       alt={product.name} 
                       className="product-card-thumb"
                       loading="lazy"
                       onError={(e) => {
-                        e.target.src = 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?q=80&w=800&auto=format&fit=crop';
+                        e.target.src = '/images/products/tu-msb-3200a.png';
                       }}
                     />
 

@@ -109,14 +109,9 @@ export const MOCK_PRODUCTS = [
   <li>Thanh cái đồng đỏ nguyên chất mạ thiếc 99.9% đảm bảo độ dẫn điện tối ưu và khả năng chịu dòng ngắn mạch 50kA/1s.</li>
   <li>Được kiểm tra chất lượng và thử nghiệm xuất xưởng KCS nghiêm ngặt trước khi bàn giao công trình.</li>
 </ul>`,
-    thumbnail: "https://diennguyenphat.com/upload/files/baiviet/thuydiensongbung2-w350%5B1%5D.jpg",
+    thumbnail: "/images/products/tu-msb-3200a.png",
     images: [
-      "https://diennguyenphat.com/upload/files/baiviet/img20160617151604-w350%5B1%5D.jpg",
-      "https://diennguyenphat.com/upload/files/baiviet/182854-news-bworldbank%5B1%5D.jpg",
-      "https://diennguyenphat.com/upload/files/image004.jpg",
-      "https://diennguyenphat.com/upload/files/image008.jpg",
-      "https://diennguyenphat.com/upload/files/image009.jpg",
-      "https://diennguyenphat.com/upload/files/image011.jpg"
+      "/images/products/tu-msb-3200a.png"
     ],
     rated_voltage: "220V/380V - 440V",
     rated_current: "3200A",
@@ -166,10 +161,9 @@ export const MOCK_PRODUCTS = [
     category_name: "Tủ điện",
     description: `<h3>Tủ Điều Khiển Bơm Tích Hợp Biến Tần VFD</h3>
 <p><strong>Tủ bơm biến tần</strong> chuyên dụng cho hệ thống cấp nước sinh hoạt, tuần hoàn giải nhiệt và phòng cháy chữa cháy công nghiệp. Giúp ổn định áp suất đường ống và tiết kiệm điện năng lên đến 40%.</p>`,
-    thumbnail: "https://diennguyenphat.com/upload/files/baiviet/img20160617151604-w350%5B1%5D.jpg",
+    thumbnail: "/images/products/tu-bom-bien-tan-vfd.png",
     images: [
-      "https://diennguyenphat.com/upload/files/baiviet/img20160617151604-w350%5B1%5D.jpg",
-      "https://diennguyenphat.com/upload/files/baiviet/thuydiensongbung2-w350%5B1%5D.jpg"
+      "/images/products/tu-bom-bien-tan-vfd.png"
     ],
     rated_voltage: "380V - 415V AC",
     rated_current: "150A",
@@ -204,9 +198,9 @@ export const MOCK_PRODUCTS = [
     category_name: "Tủ điện",
     description: `<h3>Tủ Chuyển Đổi Nguồn Tự Động ATS 4P 400A</h3>
 <p>Đảm bảo nguồn điện dự phòng liên tục cho công trình. Tự động chuyển đổi giữa nguồn điện lưới và máy phát điện dự phòng trong thời gian chưa đầy 3 giây.</p>`,
-    thumbnail: "https://diennguyenphat.com/upload/files/baiviet/182854-news-bworldbank%5B1%5D.jpg",
+    thumbnail: "/images/products/tu-ats-400a.png",
     images: [
-      "https://diennguyenphat.com/upload/files/baiviet/182854-news-bworldbank%5B1%5D.jpg"
+      "/images/products/tu-ats-400a.png"
     ],
     rated_voltage: "380V - 440V / 3P + N",
     rated_current: "400A",
@@ -241,9 +235,9 @@ export const MOCK_PRODUCTS = [
     category_name: "Tủ điện",
     description: `<h3>Tủ Máy Cắt Chân Không Trung Thế VCB 24kV</h3>
 <p>Sản phẩm tủ trung thế bảo vệ trạm biến áp phân phối nhà máy sản xuất công nghiệp, điện áp vận hành đến 24kV, máy cắt chân không tiêu chuẩn quốc tế.</p>`,
-    thumbnail: "https://diennguyenphat.com/upload/files/image004.jpg",
+    thumbnail: "/images/products/tu-trung-the-vcb-24kv.png",
     images: [
-      "https://diennguyenphat.com/upload/files/image004.jpg"
+      "/images/products/tu-trung-the-vcb-24kv.png"
     ],
     rated_voltage: "24 kV",
     rated_current: "630A - 1250A",
@@ -277,9 +271,9 @@ export const MOCK_PRODUCTS = [
     category_name: "Tủ điện",
     description: `<h3>Tủ Tụ Bù Tự Động 500kVAR Tích Hợp Cuộn Kháng Lọc Sóng Hài</h3>
 <p>Bù công suất vô công cosφ > 0.95, triệt tiêu tiền phạt cos phi của điện lực và giảm tổn thất trên đường dây truyền tải.</p>`,
-    thumbnail: "https://diennguyenphat.com/upload/files/image008.jpg",
+    thumbnail: "/images/products/tu-tu-bu-500kvar.png",
     images: [
-      "https://diennguyenphat.com/upload/files/image008.jpg"
+      "/images/products/tu-tu-bu-500kvar.png"
     ],
     rated_voltage: "440V / 3P",
     rated_current: "650A",
@@ -313,10 +307,9 @@ export const MOCK_PRODUCTS = [
     category_name: "Thang máng cáp",
     description: `<h3>Hệ Thống Thang Máng Cáp Cơ Điện MEP</h3>
 <p>Gia công trên dây chuyền chấn đột CNC chính xác từng milimet. Đa dạng kích thước và chủng loại: Mạ kẽm nhúng nóng, Sơn tĩnh điện, Inox 304.</p>`,
-    thumbnail: "https://diennguyenphat.com/upload/files/image009.jpg",
+    thumbnail: "/images/products/thang-mang-cap-dien.png",
     images: [
-      "https://diennguyenphat.com/upload/files/image009.jpg",
-      "https://diennguyenphat.com/upload/files/image011.jpg"
+      "/images/products/thang-mang-cap-dien.png"
     ],
     rated_voltage: null,
     rated_current: null,
@@ -350,9 +343,9 @@ export const MOCK_PRODUCTS = [
     category_name: "Thiết bị đóng cắt",
     description: `<h3>Rơ Le Kỹ Thuật Số Giám Sát Điện Áp 3 Pha</h3>
 <p>Thiết bị giám sát quá áp, thấp áp, mất pha, thứ tự pha và lệch pha tự động ngắt cuộn hút khởi động từ bảo vệ an toàn cho động cơ và tải điện.</p>`,
-    thumbnail: "https://diennguyenphat.com/upload/files/image011.jpg",
+    thumbnail: "/images/products/ro-le-selec-600vpr.png",
     images: [
-      "https://diennguyenphat.com/upload/files/image011.jpg"
+      "/images/products/ro-le-selec-600vpr.png"
     ],
     rated_voltage: "280V - 520V AC (L-L)",
     rated_current: "Tiếp điểm 5A / 250V AC",
