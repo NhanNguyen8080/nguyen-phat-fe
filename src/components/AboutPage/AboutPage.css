@@ -309,12 +309,13 @@
   height: 32px;
   border-radius: 50%;
   background-color: rgba(255, 184, 0, 0.15);
-  color: #b37d00;
+  color: var(--accent-yellow);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   margin-top: 2px;
+  border: 1px solid rgba(255, 184, 0, 0.3);
 }
 
 .ceo-point-text strong {

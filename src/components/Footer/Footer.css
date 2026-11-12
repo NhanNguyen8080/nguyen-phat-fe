@@ -47,7 +47,7 @@
 }
 
 .partners-subtitle {
-  color: #9ca3af;
+  color: var(--text-gray);
   font-size: 0.92rem;
   line-height: 1.6;
 }
@@ -123,7 +123,7 @@
 }
 
 .partner-origin {
-  color: #9ca3af;
+  color: var(--text-gray);
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -175,7 +175,7 @@
 }
 
 .company-desc {
-  color: #9ca3af;
+  color: var(--text-gray);
   font-size: 0.88rem;
   line-height: 1.65;
   margin-bottom: 20px;
@@ -311,7 +311,7 @@
 
 .contact-label {
   font-size: 0.76rem;
-  color: #9ca3af;
+  color: var(--text-gray);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: 600;
@@ -340,11 +340,11 @@
 }
 
 .sep {
-  color: #6b7280;
+  color: rgba(255, 255, 255, 0.25);
 }
 
 .contact-plain {
-  color: #d1d5db;
+  color: var(--text-gray);
 }
 
 /* Col 3: Quick Navigation Links */
@@ -399,7 +399,7 @@
 
 .working-hours-text {
   font-size: 0.78rem;
-  color: #9ca3af;
+  color: var(--text-gray);
   line-height: 1.5;
 }
 
@@ -409,7 +409,7 @@
 
 /* Col 4: Map & Location */
 .map-intro-text {
-  color: #9ca3af;
+  color: var(--text-gray);
   font-size: 0.84rem;
   line-height: 1.5;
   margin-bottom: 14px;
@@ -531,7 +531,7 @@
 }
 
 .copyright-text {
-  color: #9ca3af;
+  color: var(--text-gray);
   font-size: 0.82rem;
   line-height: 1.5;
 }
@@ -551,7 +551,7 @@
   align-items: center;
   gap: 8px;
   font-size: 0.8rem;
-  color: #9ca3af;
+  color: var(--text-gray);
 }
 
 .stat-counter-digits {
@@ -666,7 +666,7 @@
 }
 
 .footer-modal-subtitle {
-  color: #9ca3af;
+  color: var(--text-gray);
   font-size: 0.8rem;
   margin-top: 2px;
 }
@@ -674,7 +674,7 @@
 .footer-modal-close {
   background: transparent;
   border: none;
-  color: #9ca3af;
+  color: var(--text-gray);
   font-size: 1.3rem;
   cursor: pointer;
   padding: 6px;
@@ -703,7 +703,7 @@
 .modal-tab-btn {
   padding: 10px 16px;
   background: transparent;
-  color: #9ca3af;
+  color: var(--text-gray);
   border: none;
   border-bottom: 2px solid transparent;
   font-size: 0.85rem;
@@ -756,7 +756,7 @@
 
 .blueprint-caption {
   margin-top: 10px;
-  color: #9ca3af;
+  color: var(--text-gray);
   font-size: 0.8rem;
   text-align: center;
 }
@@ -773,7 +773,7 @@
 }
 
 .modal-note {
-  color: #9ca3af;
+  color: var(--text-gray);
   font-size: 0.82rem;
 }
 

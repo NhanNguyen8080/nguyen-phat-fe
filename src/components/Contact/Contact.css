@@ -81,7 +81,7 @@
 }
 
 .contact-input::placeholder {
-  color: #888;
+  color: rgba(212, 188, 184, 0.65);
 }
 
 .contact-input:focus {
