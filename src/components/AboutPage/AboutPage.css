@@ -334,7 +334,8 @@
 /* --- Bottom CTA Section --- */
 .about-cta-section {
   padding: 60px 32px;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  background: linear-gradient(135deg, #2b0c0c 0%, #4a1919 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: #ffffff;
   border-radius: var(--border-radius-lg);
   text-align: center;
@@ -372,7 +373,7 @@
 
   .ceo-photo-col {
     border-right: none;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding: 30px 20px;
   }
 

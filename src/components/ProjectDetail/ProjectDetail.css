@@ -104,7 +104,7 @@
   font-size: 0.92rem;
   color: var(--text-gray);
   padding-bottom: 20px;
-  border-bottom: 1px solid #eaeaea;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .meta-item {
@@ -121,8 +121,9 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background-color: #e8f5e9;
-  color: #2e7d32;
+  background-color: rgba(76, 175, 80, 0.15);
+  color: #81c784;
+  border: 1px solid rgba(76, 175, 80, 0.3);
   font-size: 0.8rem;
   font-weight: 700;
   padding: 4px 12px;
@@ -154,7 +155,7 @@
   height: 660px;
   border-radius: var(--border-radius-lg);
   overflow: hidden;
-  background-color: #f0f0f0;
+  background-color: #2b0c0c;
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.1);
 }
 
@@ -388,7 +389,7 @@
   color: var(--text-dark);
   margin-bottom: 20px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .sidebar-specs {
@@ -421,7 +422,7 @@
   border-radius: var(--border-radius-md);
   padding: 20px;
   text-align: center;
-  border: 1px dashed #d5d5d5;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
 }
 
 .sidebar-cta h4 {
@@ -449,7 +450,7 @@
 /* --- Related Projects --- */
 .related-projects-section {
   padding-top: 40px;
-  border-top: 1px solid #eaeaea;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .related-projects-grid {

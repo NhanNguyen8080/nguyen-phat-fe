@@ -39,6 +39,13 @@ html {
   scroll-behavior: smooth;
   scrollbar-gutter: stable;
   overflow-x: clip;
+  color-scheme: dark;
+  background-color: var(--primary-bg);
+}
+
+::selection {
+  background-color: var(--accent-yellow);
+  color: #1a0808;
 }
 
 body {

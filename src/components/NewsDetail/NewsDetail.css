@@ -122,7 +122,7 @@
   font-size: 0.9rem;
   color: var(--text-gray);
   padding-bottom: 18px;
-  border-bottom: 1px solid #eaeaea;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .news-article-meta span {
@@ -200,9 +200,8 @@
   margin-bottom: 16px;
   position: relative;
   padding-bottom: 8px;
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
   scroll-margin-top: 140px;
-}
 
 .news-article-html-body h2::after {
   content: '';
@@ -287,8 +286,8 @@
   gap: 10px;
   flex-wrap: wrap;
   padding: 18px 0;
-  border-top: 1px solid #eee;
-  border-bottom: 1px solid #eee;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   margin-bottom: 36px;
 }
 
@@ -300,17 +299,18 @@
 
 .news-tag-pill {
   background-color: var(--secondary-bg);
-  border: 1px solid #e0e0e0;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   padding: 4px 12px;
   border-radius: var(--border-radius-xl);
   font-size: 0.82rem;
-  color: #555;
+  color: var(--text-gray);
   font-weight: 500;
 }
 
 /* In-Article CTA Box */
 .news-cta-box {
-  background: linear-gradient(135deg, #181818 0%, #292929 100%);
+  background: linear-gradient(135deg, #2b0c0c 0%, #4a1919 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: #ffffff;
   border-radius: var(--border-radius-lg);
   padding: 32px 36px;
@@ -319,7 +319,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 28px;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
 }
 
 .news-cta-text h3 {
@@ -402,11 +402,11 @@
 }
 
 .sidebar-toc-item:hover {
-  background-color: #fff9e6;
+  background-color: rgba(255, 184, 0, 0.12);
 }
 
 .sidebar-toc-item.active {
-  background-color: #fff3d1;
+  background-color: rgba(255, 184, 0, 0.2);
 }
 
 .toc-number {
@@ -414,8 +414,8 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: #f1f5f9;
-  color: #64748b;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-dark);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -469,7 +469,7 @@
   height: 66px;
   border-radius: 8px;
   overflow: hidden;
-  background-color: #f1f5f9;
+  background-color: #2b0c0c;
 }
 
 .sidebar-news-thumb {
@@ -535,10 +535,10 @@
 
 /* Widget 3: Hộp Tư Vấn & Hotline Kỹ Thuật */
 .widget-consultation {
-  background: linear-gradient(145deg, #191919 0%, #262626 100%);
+  background: linear-gradient(145deg, #2e0e0e 0%, #441616 100%);
   color: #ffffff;
-  border: 1px solid #333333;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
 .consultation-badge {
