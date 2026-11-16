@@ -273,11 +273,19 @@ export async function getPosts(category = null) {
     console.warn('[newsService] Live API không khả dụng:', error.message);
   }
 
-  // Không dùng fallback mock, trả về rỗng nếu backend lỗi hoặc không có dữ liệu
-  const cached = Array.isArray(cachedPostsList) ? cachedPostsList : [];
+  // Fallback về dữ liệu mẫu chuẩn nếu backend lỗi hoặc bị chặn CORS
+  const fallbackSource =
+    Array.isArray(cachedPostsList) && cachedPostsList.length > 0
+      ? cachedPostsList
+      : MOCK_POSTS.map((item, idx) => normalizePost(item, idx)).filter(Boolean);
+
+  if (!cachedPostsList || cachedPostsList.length === 0) {
+    cachedPostsList = fallbackSource;
+  }
+
   const filtered = (category && category !== 'all')
-    ? cached.filter(p => p.category_name === category)
-    : cached;
+    ? fallbackSource.filter(p => p.category_name === category)
+    : fallbackSource;
 
   return { posts: filtered, isLiveApi: false };
 }

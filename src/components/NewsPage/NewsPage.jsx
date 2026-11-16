@@ -94,7 +94,7 @@ const NewsPage = ({ onNavigateHome, onSelectNews }) => {
         // Mặc định luôn cho những items được tạo mới nhất đứng đầu
         return timeB - timeA;
       });
-  }, [allPosts, selectedTimeFilter, referenceTimestamp, searchTerm, sortBy]);
+  }, [allPosts, selectedCategory, selectedTimeFilter, referenceTimestamp, searchTerm, sortBy]);
 
   // Phân trang
   const totalPages = Math.ceil(filteredPosts.length / ITEMS_PER_PAGE) || 1;

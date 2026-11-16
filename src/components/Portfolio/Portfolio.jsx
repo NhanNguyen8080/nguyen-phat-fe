@@ -104,6 +104,9 @@ const Portfolio = ({ onNavigateProjects, onSelectProject }) => {
                 alt={project.title || "Công trình Nguyên Phát"} 
                 className="portfolio-image"
                 loading="lazy"
+                decoding="async"
+                width="600"
+                height="400"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
                   e.currentTarget.src = 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=800&auto=format&fit=crop';

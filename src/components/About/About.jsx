@@ -55,6 +55,10 @@ const About = ({ onNavigateAbout }) => {
             src={aboutImage}
             alt="Kỹ sư Cơ Điện Nguyên Phát thi công lắp đặt" 
             className="about-image"
+            loading="lazy"
+            decoding="async"
+            width="420"
+            height="520"
           />
         </div>
 

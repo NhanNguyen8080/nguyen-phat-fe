@@ -207,7 +207,11 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
                   <img 
                     src={getProductThumbnail(peekLeftProduct)} 
                     alt={decodeMojibake(peekLeftProduct.name)} 
-                    className="service-image" 
+                    className="service-image"
+                    loading="lazy"
+                    decoding="async"
+                    width="280"
+                    height="360"
                     onError={(e) => {
                       e.target.onerror = null;
                       e.target.src = FALLBACK_IMAGE;
@@ -246,6 +250,10 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
                       src={getProductThumbnail(product)}
                       alt={productName}
                       className="service-image"
+                      loading="lazy"
+                      decoding="async"
+                      width="280"
+                      height="360"
                       onError={(e) => {
                         e.target.onerror = null;
                         e.target.src = FALLBACK_IMAGE;
@@ -275,7 +283,11 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
                   <img 
                     src={getProductThumbnail(peekRightProduct)} 
                     alt={decodeMojibake(peekRightProduct.name)} 
-                    className="service-image" 
+                    className="service-image"
+                    loading="lazy"
+                    decoding="async"
+                    width="280"
+                    height="360"
                     onError={(e) => {
                       e.target.onerror = null;
                       e.target.src = FALLBACK_IMAGE;

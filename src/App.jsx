@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, lazy, useEffect, useState } from 'react';
 import Header from './components/Header/Header';
 import Hero from './components/Hero/Hero';
 import About from './components/About/About';
@@ -8,14 +8,15 @@ import Portfolio from './components/Portfolio/Portfolio';
 import News from './components/News/News';
 import Contact from './components/Contact/Contact';
 import Footer from './components/Footer/Footer';
-import ProductList from './components/ProductList/ProductList';
-import ProductDetail from './components/ProductDetail/ProductDetail';
-import ProjectList from './components/ProjectList/ProjectList';
-import ProjectDetail from './components/ProjectDetail/ProjectDetail';
-import AboutPage from './components/AboutPage/AboutPage';
-import NewsPage from './components/NewsPage/NewsPage';
-import NewsDetail from './components/NewsDetail/NewsDetail';
 import './App.css';
+
+const ProductList = lazy(() => import('./components/ProductList/ProductList'));
+const ProductDetail = lazy(() => import('./components/ProductDetail/ProductDetail'));
+const ProjectList = lazy(() => import('./components/ProjectList/ProjectList'));
+const ProjectDetail = lazy(() => import('./components/ProjectDetail/ProjectDetail'));
+const AboutPage = lazy(() => import('./components/AboutPage/AboutPage'));
+const NewsPage = lazy(() => import('./components/NewsPage/NewsPage'));
+const NewsDetail = lazy(() => import('./components/NewsDetail/NewsDetail'));
 
 function parseLocation() {
   const hash = window.location.hash || '';
@@ -181,67 +182,69 @@ function App() {
         onNavigateProjects={navigateToProjects}
         onNavigateNews={navigateToNews}
       />
-      {route.page === 'about' ? (
-        <AboutPage onNavigateHome={navigateToHome} />
-      ) : route.page === 'products' ? (
-        <ProductList 
-          onNavigateHome={() => navigateToHome('#contact')} 
-          onSelectProduct={navigateToProductDetail}
-          initialCategory={productCategoryFilter}
-        />
-      ) : route.page === 'product-detail' ? (
-        <ProductDetail 
-          productIdOrSlug={route.id}
-          onNavigateBack={() => navigateToProducts('all')}
-          onNavigateCategory={navigateToProducts}
-          onNavigateHome={navigateToHome}
-          onNavigateContact={() => navigateToHome('#contact')}
-          onSelectProduct={navigateToProductDetail}
-        />
-      ) : route.page === 'projects' ? (
-        <ProjectList 
-          onNavigateHome={() => navigateToHome('#contact')} 
-          onSelectProject={navigateToProjectDetail}
-        />
-      ) : route.page === 'project-detail' ? (
-        <ProjectDetail 
-          projectIdOrSlug={route.id}
-          onNavigateBack={navigateToProjects}
-          onNavigateContact={() => navigateToHome('#contact')}
-          onSelectProject={navigateToProjectDetail}
-        />
-      ) : route.page === 'news' ? (
-        <NewsPage 
-          onNavigateHome={() => navigateToHome('#contact')} 
-          onSelectNews={navigateToNewsDetail}
-        />
-      ) : route.page === 'news-detail' ? (
-        <NewsDetail 
-          postIdOrSlug={route.id}
-          onNavigateBack={navigateToNews}
-          onNavigateContact={() => navigateToHome('#contact')}
-          onSelectNews={navigateToNewsDetail}
-        />
-      ) : (
-        <main>
-          <Hero onNavigateAbout={navigateToAbout} />
-          <About onNavigateAbout={navigateToAbout} />
-          <Services 
-            onNavigateProducts={navigateToProducts} 
+      <Suspense fallback={<div style={{ minHeight: '60vh' }} />}>
+        {route.page === 'about' ? (
+          <AboutPage onNavigateHome={navigateToHome} />
+        ) : route.page === 'products' ? (
+          <ProductList 
+            onNavigateHome={() => navigateToHome('#contact')} 
+            onSelectProduct={navigateToProductDetail}
+            initialCategory={productCategoryFilter}
+          />
+        ) : route.page === 'product-detail' ? (
+          <ProductDetail 
+            productIdOrSlug={route.id}
+            onNavigateBack={() => navigateToProducts('all')}
+            onNavigateCategory={navigateToProducts}
+            onNavigateHome={navigateToHome}
+            onNavigateContact={() => navigateToHome('#contact')}
             onSelectProduct={navigateToProductDetail}
           />
-          <WhyChooseUs />
-          <Portfolio 
-            onNavigateProjects={navigateToProjects} 
+        ) : route.page === 'projects' ? (
+          <ProjectList 
+            onNavigateHome={() => navigateToHome('#contact')} 
             onSelectProject={navigateToProjectDetail}
           />
-          <News 
-            onNavigateNews={navigateToNews} 
+        ) : route.page === 'project-detail' ? (
+          <ProjectDetail 
+            projectIdOrSlug={route.id}
+            onNavigateBack={navigateToProjects}
+            onNavigateContact={() => navigateToHome('#contact')}
+            onSelectProject={navigateToProjectDetail}
+          />
+        ) : route.page === 'news' ? (
+          <NewsPage 
+            onNavigateHome={() => navigateToHome('#contact')} 
             onSelectNews={navigateToNewsDetail}
           />
-          <Contact />
-        </main>
-      )}
+        ) : route.page === 'news-detail' ? (
+          <NewsDetail 
+            postIdOrSlug={route.id}
+            onNavigateBack={navigateToNews}
+            onNavigateContact={() => navigateToHome('#contact')}
+            onSelectNews={navigateToNewsDetail}
+          />
+        ) : (
+          <main>
+            <Hero onNavigateAbout={navigateToAbout} />
+            <About onNavigateAbout={navigateToAbout} />
+            <Services 
+              onNavigateProducts={navigateToProducts} 
+              onSelectProduct={navigateToProductDetail}
+            />
+            <WhyChooseUs />
+            <Portfolio 
+              onNavigateProjects={navigateToProjects} 
+              onSelectProject={navigateToProjectDetail}
+            />
+            <News 
+              onNavigateNews={navigateToNews} 
+              onSelectNews={navigateToNewsDetail}
+            />
+            <Contact />
+          </main>
+        )}
+      </Suspense>
       <Footer
         onNavigateHome={navigateToHome}
         onNavigateAbout={navigateToAbout}

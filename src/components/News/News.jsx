@@ -98,7 +98,10 @@ const News = ({ onNavigateNews, onSelectNews }) => {
                     src={post.thumbnail} 
                     alt={post.title} 
                     className="home-news-thumb" 
-                    loading="lazy" 
+                    loading="lazy"
+                    decoding="async"
+                    width="400"
+                    height="240"
                     onError={(e) => {
                       e.currentTarget.onerror = null;
                       e.currentTarget.src = DEFAULT_THUMBNAILS[index % DEFAULT_THUMBNAILS.length];

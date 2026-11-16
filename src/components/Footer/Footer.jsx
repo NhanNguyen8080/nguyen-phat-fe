@@ -137,6 +137,9 @@ const Footer = ({
                       src={partner.logo}
                       alt={partner.name}
                       loading="lazy"
+                      decoding="async"
+                      width="140"
+                      height="64"
                       onError={(e) => {
                         e.currentTarget.style.display = 'none';
                         const parent = e.currentTarget.parentElement;
@@ -395,6 +398,9 @@ const Footer = ({
                       alt="Bản đồ vị trí Cơ điện Nguyên Phát"
                       className="map-thumbnail"
                       loading="lazy"
+                      decoding="async"
+                      width="320"
+                      height="180"
                     />
                     <div className="map-overlay">
                       <span className="map-overlay-icon">📍</span>
@@ -587,6 +593,10 @@ const Footer = ({
             src="/images/footer/zalo-icon.png"
             alt="Zalo"
             className="floating-zalo-img"
+            loading="lazy"
+            decoding="async"
+            width="32"
+            height="32"
             onError={(e) => {
               e.currentTarget.style.display = 'none';
               const parent = e.currentTarget.parentElement;

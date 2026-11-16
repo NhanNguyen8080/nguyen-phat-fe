@@ -1,9 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Contact.css';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 
 const Contact = () => {
   const panelRef = useScrollReveal({ threshold: 0.08 });
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: '',
+  });
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (submitted) setSubmitted(false);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
+      return;
+    }
+    setSubmitted(true);
+    setFormData({ name: '', email: '', message: '' });
+  };
 
   return (
     <section className="contact" id="contact">
@@ -46,16 +67,41 @@ const Contact = () => {
               </div>
             </div>
 
-            <form className="contact-form reveal-right delay-3" onSubmit={(e) => e.preventDefault()}>
+            <form className="contact-form reveal-right delay-3" onSubmit={handleSubmit}>
               <div className="contact-form-row">
-                <input type="text" className="contact-input" placeholder="Họ và tên của bạn" />
-                <input type="email" className="contact-input" placeholder="Địa chỉ email" />
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="contact-input"
+                  placeholder="Họ và tên của bạn *"
+                  required
+                />
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="contact-input"
+                  placeholder="Địa chỉ email *"
+                  required
+                />
               </div>
               <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
                 className="contact-input contact-textarea"
-                placeholder="Mô tả nhu cầu dự án hoặc yêu cầu báo giá của bạn..."
+                placeholder="Mô tả nhu cầu dự án hoặc yêu cầu báo giá của bạn... *"
                 rows={5}
+                required
               />
+              {submitted && (
+                <div className="contact-success-msg" role="status" aria-live="polite">
+                  ✓ Cảm ơn bạn! Yêu cầu tư vấn đã được ghi nhận. Đội ngũ kỹ sư Nguyên Phát sẽ phản hồi sớm nhất hoặc bạn có thể gọi trực tiếp Hotline <strong>0903 625 628</strong>.
+                </div>
+              )}
               <button type="submit" className="btn-primary contact-submit">
                 Gửi Tin Nhắn
               </button>
