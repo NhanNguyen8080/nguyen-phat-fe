@@ -100,8 +100,8 @@
 }
 
 .fp-dot-btn:hover .fp-dot-label,
-.fp-dot-btn.active .fp-dot-label {
-  max-width: 140px;
+.fp-dot-btn:focus-visible .fp-dot-label {
+  max-width: 150px;
   opacity: 1;
 }
 
@@ -126,8 +126,7 @@
 }
 
 /* ==========================================================
-   DESKTOP FULL-PAGE (1 MỤC = 1 TRANG MÀN HÌNH 100VH)
-   & HOẠT ẢNH CHUYỂN ĐỘNG THEO TỪNG TRANG
+   DESKTOP FULL-PAGE SECTIONS & CRISP CONTRAST
    ========================================================== */
 @media (min-width: 993px) {
   .is-home-fullpage .header {
@@ -137,31 +136,19 @@
     right: 0;
     width: 100%;
     padding: 12px 0;
-    background-color: rgba(255, 255, 255, 0.86);
+    background-color: rgba(255, 255, 255, 0.94);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
   }
 
-  /* Hiệu ứng di chuyển mượt mà cho mỗi mục khi nhảy trang */
+  /* Giữ toàn bộ các mục luôn sắc nét 100% (opacity: 1), loại bỏ hiệu ứng mờ đục 0.72 */
   .fp-stage {
-    transition:
-      transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 0.65s ease;
-    will-change: transform, opacity;
-  }
-
-  .fp-stage:not(.fp-active) {
-    opacity: 0.72;
-    transform: translateY(18px) scale(0.985);
-  }
-
-  .fp-stage.fp-active {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: none;
   }
 
-  /* Mỗi mục trên trang chủ chiếm đúng 1 màn hình máy tính (100vh) */
+  /* Mỗi mục trên trang chủ có chiều cao tối thiểu 100vh nhưng tự co giãn khi nội dung dài hơn, không cắt khuất nút bấm */
   .home-fullpage-main section.hero,
   .home-fullpage-main section.about,
   .home-fullpage-main section.services,
@@ -169,15 +156,21 @@
   .home-fullpage-main section.capacity-section,
   .home-fullpage-main section.contact {
     min-height: 100vh;
-    height: 100vh;
-    padding-top: 82px;
-    padding-bottom: 24px;
+    height: auto;
+    padding-top: 96px;
+    padding-bottom: 48px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     box-sizing: border-box;
-    scroll-margin-top: 0;
-    overflow: hidden;
+    scroll-margin-top: 76px;
+  }
+
+  /* Khoảng đệm an toàn hai bên để thanh chỉ báo bên trái & cụm nút nổi bên phải không đè lên nội dung */
+  .is-home-fullpage .home-fullpage-main .container,
+  .is-home-fullpage .site-footer .container {
+    padding-left: 72px;
+    padding-right: 72px;
   }
 
   /* Tinh chỉnh kích thước con bên trong từng mục để vừa khít 100vh */

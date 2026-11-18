@@ -157,13 +157,15 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
 
   const step = metrics.width + metrics.gap;
   const peekOffset = metrics.width / 2;
-  const trackOffset = peekOffset + currentIndex * step;
-  const peekLeftProduct = products.length > 0 ? products[products.length - 1] : null;
-  const peekRightProduct = products.length > 0 ? products[0] : null;
+  const hasMultiplePages = maxIndex > 0;
+  const trackOffset = hasMultiplePages ? peekOffset + currentIndex * step : 0;
+  const peekLeftProduct = hasMultiplePages && products.length > 0 ? products[products.length - 1] : null;
+  const peekRightProduct = hasMultiplePages && products.length > 0 ? products[0] : null;
 
   return (
     <section className="services" id="product">
       <span id="services"></span>
+      <span id="products"></span>
       <div className="container">
         <div className="services-header" ref={headerRef}>
           <h2 className="section-title reveal delay-1">
@@ -176,17 +178,19 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
       </div>
 
       <div className="services-slider">
-        <button
-          type="button"
-          className="services-slider-btn services-slider-btn-prev"
-          onClick={handlePrev}
-          disabled={currentIndex === 0}
-          aria-label="Sản phẩm trước"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="15 18 9 12 15 6" />
-          </svg>
-        </button>
+        {hasMultiplePages && (
+          <button
+            type="button"
+            className="services-slider-btn services-slider-btn-prev"
+            onClick={handlePrev}
+            disabled={currentIndex === 0}
+            aria-label="Sản phẩm trước"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+        )}
 
         <div 
           className="services-slider-viewport" 
@@ -195,8 +199,8 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
           onTouchEnd={handleTouchEnd}
         >
           <div
-            className="services-slider-track"
-            style={{ transform: `translateX(-${trackOffset}px)` }}
+            className={`services-slider-track ${!hasMultiplePages ? 'services-slider-track-centered' : ''}`}
+            style={{ transform: hasMultiplePages ? `translateX(-${trackOffset}px)` : 'none' }}
           >
             {peekLeftProduct && (
               <div 
@@ -303,17 +307,19 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
           </div>
         </div>
 
-        <button
-          type="button"
-          className="services-slider-btn services-slider-btn-next"
-          onClick={handleNext}
-          disabled={currentIndex === maxIndex}
-          aria-label="Sản phẩm tiếp theo"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="9 18 15 12 9 6" />
-          </svg>
-        </button>
+        {hasMultiplePages && (
+          <button
+            type="button"
+            className="services-slider-btn services-slider-btn-next"
+            onClick={handleNext}
+            disabled={currentIndex === maxIndex}
+            aria-label="Sản phẩm tiếp theo"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+        )}
       </div>
 
       {onNavigateProducts && (

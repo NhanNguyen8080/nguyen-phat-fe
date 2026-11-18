@@ -151,21 +151,28 @@ export const MOCK_PROJECTS = [
 export function normalizeProject(raw) {
   if (!raw || typeof raw !== 'object') return null;
 
+  const toHttps = (u) =>
+    typeof u === 'string' ? u.replace(/^http:\/\/diennguyenphat\.com/i, 'https://diennguyenphat.com') : u;
+  const cleanTitle = typeof raw.title === 'string'
+    ? raw.title.replace(/^[\s\-–—]+/, '').trim()
+    : '';
+
   const client = raw.client || raw.investor || '';
   const scopeOfWork = raw.scope_of_work || raw.scope || '';
   const projectType = raw.project_type || raw.category_name || '';
   const location = raw.location && raw.location !== 'string' ? raw.location : '';
   const completionYear = raw.completion_year || (raw.created_at ? new Date(raw.created_at).getFullYear() : null);
 
-  const images = Array.isArray(raw.images) && raw.images.length > 0
+  const rawImages = Array.isArray(raw.images) && raw.images.length > 0
     ? raw.images.filter(Boolean)
     : (raw.thumbnail ? [raw.thumbnail] : []);
+  const images = rawImages.map(toHttps);
 
   return {
     id: raw.id || '',
-    title: raw.title || '',
+    title: cleanTitle,
     slug: raw.slug || raw.id || '',
-    thumbnail: raw.thumbnail || (images[0] || ''),
+    thumbnail: toHttps(raw.thumbnail || (images[0] || '')),
     content: typeof raw.content === 'string' && raw.content !== 'string' ? raw.content : '',
     client,
     investor: client, // backwards compatibility

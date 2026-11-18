@@ -11,9 +11,9 @@ const Hero = ({ onNavigateAbout }) => {
         <div className="hero-top">
           <div className="hero-location">
             <p>
-              Tọa lạc tại trung tâm <strong>TP. Hồ Chí Minh</strong>, chúng tôi là
+              Tọa lạc tại trung tâm <strong>TP. Hồ Chí Minh</strong>, chúng tôi
               <br />
-              đơn vị cơ điện tiên phong kiến tạo công trình
+              là đơn vị cơ điện tiên phong kiến tạo công trình
             </p>
           </div>
           <div className="hero-title-main hero-title-main-top">
@@ -47,12 +47,13 @@ const Hero = ({ onNavigateAbout }) => {
 
         <div className="hero-image-wrapper">
           <img 
-            src={HERO_BANNER_URL} 
+            src={bannerImageFallback} 
             alt="Cơ Điện Nguyên Phát" 
             className="hero-image"
+            fetchPriority="high"
             onError={(e) => {
               e.target.onerror = null;
-              e.target.src = bannerImageFallback;
+              e.target.src = HERO_BANNER_URL;
             }}
           />
         </div>

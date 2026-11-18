@@ -17,10 +17,12 @@ const About = ({ onNavigateAbout }) => {
             Tại Nguyên Phát, chúng tôi tự hào quy tụ đội ngũ hơn 1.500 chuyên gia, kỹ sư và kỹ thuật viên giàu kinh nghiệm, tận tâm với nghề. Mỗi thành viên đóng góp những kỹ năng và giải pháp kỹ thuật độc đáo, xây dựng môi trường làm việc hợp tác và đổi mới sáng tạo không ngừng. Cùng nhau, chúng tôi nỗ lực hướng tới mục tiêu chung: mang đến các giải pháp tủ bảng điện và hệ thống cơ điện toàn diện, tối ưu và chuẩn xác nhất cho mọi dự án của đối tác.
           </p>
           <div className="about-author">
-            <div className="author-avatar"></div>
+            <div className="author-avatar">
+              <img src="/images/logo.png" alt="Logo Cơ Điện Nguyên Phát" width="36" height="36" />
+            </div>
             <div className="author-info">
-              <strong>George Brian</strong>
-              <span>Tổng Giám Đốc / Nguyên Phát</span>
+              <strong>Ban Giám Đốc Kỹ Thuật</strong>
+              <span>Cơ Điện Nguyên Phát — Chuẩn IEC 61439 &amp; ISO 9001</span>
             </div>
           </div>
 

@@ -3,15 +3,21 @@ import './Portfolio.css';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { getProjects, MOCK_PROJECTS } from '../../services/projectService';
 
+const cleanProjectText = (str) =>
+  typeof str === 'string' ? str.replace(/^[\s\-–—]+/, '').trim() : '';
+
+const toHttpsUrl = (url) =>
+  typeof url === 'string' ? url.replace(/^http:\/\/diennguyenphat\.com/i, 'https://diennguyenphat.com') : url;
+
 const getCleanTitle = (project) => {
   if (!project) return '';
   const matched = MOCK_PROJECTS.find(
     (m) => m.id === project.id || m.slug === project.slug || (project.thumbnail && m.thumbnail === project.thumbnail)
   );
   if (matched && matched.title) {
-    return matched.title;
+    return cleanProjectText(matched.title);
   }
-  return project.title || 'Công trình Cơ Điện Nguyên Phát';
+  return cleanProjectText(project.title) || 'Công trình Cơ Điện Nguyên Phát';
 };
 
 const FALLBACK_PROJECTS = [
@@ -20,28 +26,28 @@ const FALLBACK_PROJECTS = [
     slug: 'nha-may-sx-coc-vach-nhua-upvc-kcn-hiep-phuoc-nha-be-34',
     title: 'Nhà Máy SX Cọc Vách Nhựa UPVC - KCN Hiệp Phước',
     desc: 'Sản xuất, cung cấp và lắp đặt trọn gói hệ thống Tủ điện phân phối và Thang máng cáp',
-    image: 'http://diennguyenphat.com/upload/files/image004.jpg',
+    image: 'https://diennguyenphat.com/upload/files/image004.jpg',
   },
   {
     id: 'd34e5709-db4c-4ea2-92f4-9cdbe7344eec',
     slug: 'khu-tai-dinh-cu-tan-hoa-dong-quan-6-35',
     title: 'Khu Tái Định Cư Tân Hòa Đông - Quận 6',
     desc: 'Cung cấp trọn gói tủ điện MSB, ATS 400A và thang máng cáp',
-    image: 'http://diennguyenphat.com/upload/files/image007.jpg',
+    image: 'https://diennguyenphat.com/upload/files/image007.jpg',
   },
   {
     id: 'aea46dc7-bb75-4e90-a568-53d947e0f819',
     slug: 'kcn-long-duc-dong-nai-36',
     title: 'Nhà Xưởng KCN Long Đức - Đồng Nai',
     desc: 'Tủ điện điều khiển MCC, tủ bù công suất phản kháng và máng cáp',
-    image: 'http://diennguyenphat.com/upload/files/image009.jpg',
+    image: 'https://diennguyenphat.com/upload/files/image009.jpg',
   },
   {
     id: '530c7ac4-a340-4251-a139-8a54822cdc7d',
     slug: 'toa-nha-van-phong-dai-dien-phia-nam-cty-319-invest-tan-binh-39',
     title: 'Tòa Nhà Văn Phòng Đại Diện Cty 319 Invest',
     desc: 'Cung cấp toàn bộ hệ thống tủ phân phối tầng và thang máng cáp',
-    image: 'http://diennguyenphat.com/upload/files/image014.jpg',
+    image: 'https://diennguyenphat.com/upload/files/image014.jpg',
   }
 ];
 
@@ -68,7 +74,7 @@ const Portfolio = ({ onNavigateProjects, onSelectProject }) => {
         slug: p.slug || p.id,
         title: getCleanTitle(p),
         desc: p.scope_of_work || p.project_type || 'Sản xuất và lắp đặt tủ điện, thang máng cáp',
-        image: p.thumbnail || (p.images && p.images[0]) || 'http://diennguyenphat.com/upload/files/image004.jpg',
+        image: toHttpsUrl(p.thumbnail || (p.images && p.images[0]) || 'https://diennguyenphat.com/upload/files/image004.jpg'),
       }))
     : FALLBACK_PROJECTS;
 

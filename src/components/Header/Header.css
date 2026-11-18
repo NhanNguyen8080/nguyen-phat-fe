@@ -156,6 +156,7 @@
 .hamburger-inner::after {
   width: 22px;
   height: 2px;
+  left: 0;
   background-color: var(--text-dark);
   border-radius: 2px;
   position: absolute;
