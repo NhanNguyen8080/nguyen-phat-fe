@@ -77,9 +77,17 @@ const ARC_NODES = [
   }
 ];
 
-const About = () => {
+const About = ({ onNavigateAbout }) => {
   const containerRef = useScrollReveal({ threshold: 0.08 });
   const [showVideoNotice, setShowVideoNotice] = useState(false);
+
+  const handleOpenAboutDetail = () => {
+    if (onNavigateAbout) {
+      onNavigateAbout();
+    } else {
+      window.location.hash = '#/about';
+    }
+  };
 
   return (
     <section className="about" id="about">
@@ -150,7 +158,17 @@ const About = () => {
                   <h3>SỨ MỆNH VÀ CAM KẾT</h3>
                 </div>
                 <div className="mission-red-line" />
-                <span className="mission-brand-tag">UY TÍN – CHẤT LƯỢNG – BỀN VỮNG</span>
+                <button
+                  type="button"
+                  className="about-detail-3d-btn"
+                  onClick={handleOpenAboutDetail}
+                >
+                  <span>Xem chi tiết giới thiệu</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                  </svg>
+                </button>
               </div>
 
               <div className="mission-white-card card-3d-surface">
