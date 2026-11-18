@@ -37,6 +37,18 @@ const PARTNERS = [
     origin: 'Hàn Quốc',
     desc: 'Hệ thống truyền tải, máy biến áp & động cơ công nghiệp',
     logo: '/images/footer/partner-hyosung.jpg'
+  },
+  {
+    name: 'Shihlin Electric',
+    origin: 'Đài Loan',
+    desc: 'Thiết bị đóng cắt hạ thế, khởi động từ & biến tần công nghiệp',
+    logo: '/images/footer/partner-shihlin.jpg'
+  },
+  {
+    name: 'Chint Electric',
+    origin: 'Trung Quốc',
+    desc: 'Thiết bị điện hạ thế, trung thế & giải pháp năng lượng đồng bộ',
+    logo: '/images/footer/partner-chint.jpg'
   }
 ];
 
@@ -72,7 +84,7 @@ const Footer = ({
   onNavigateAbout,
   onNavigateProducts,
   onNavigateProjects,
-  onNavigateNews
+  onNavigateCapacity
 }) => {
   const [showMapModal, setShowMapModal] = useState(false);
   const [activeMapTab, setActiveMapTab] = useState('office');
@@ -111,11 +123,20 @@ const Footer = ({
     }
   };
 
+  const handleOpenCatalog = (e) => {
+    e.preventDefault();
+    if (onNavigateCapacity) {
+      onNavigateCapacity(1);
+    } else {
+      window.location.hash = '#/capacity-profile';
+    }
+  };
+
   const currentLoc = LOCATIONS[activeMapTab] || LOCATIONS.office;
 
   return (
     <>
-      <footer className="site-footer">
+      <footer className="site-footer" id="footer">
         {/* ===================== PARTNERS STRIP ===================== */}
         <section className="footer-partners-section">
           <div className="container">
@@ -173,7 +194,13 @@ const Footer = ({
                   onClick={(e) => handleLinkClick(e, onNavigateHome, '#home')}
                   style={{ cursor: 'pointer' }}
                 >
-                  <span className="logo-symbol">⚡</span>
+                  <img
+                    src="/images/logo.png"
+                    alt="Logo Cơ Điện Nguyên Phát"
+                    className="footer-logo-img"
+                    width="38"
+                    height="38"
+                  />
                   <span className="logo-text">
                     Nguyên <span className="text-yellow">Phát</span>
                   </span>
@@ -235,7 +262,7 @@ const Footer = ({
                 </div>
               </div>
 
-              {/* Column 2: Contact & Addresses (Scraped from Old Website) */}
+              {/* Column 2: Contact & Addresses */}
               <div className="footer-col footer-col-contact">
                 <h4 className="footer-col-title">
                   Thông Tin <span className="text-yellow">Trụ Sở &amp; Xưởng</span>
@@ -356,8 +383,8 @@ const Footer = ({
                     </a>
                   </li>
                   <li>
-                    <a href="#news" onClick={(e) => handleLinkClick(e, onNavigateNews)}>
-                      <span className="nav-bullet">›</span> Tin tức &amp; Kiến thức ngành điện
+                    <a href="#capacity" onClick={(e) => handleLinkClick(e, onNavigateCapacity)}>
+                      <span className="nav-bullet">›</span> Hồ sơ năng lực (Profile &amp; Catalog)
                     </a>
                   </li>
                   <li>
@@ -374,7 +401,7 @@ const Footer = ({
                 </div>
               </div>
 
-              {/* Column 4: Map & Location Scraped from diennguyenphat.com */}
+              {/* Column 4: Map & Location */}
               <div className="footer-col footer-col-map">
                 <h4 className="footer-col-title">
                   Vị Trí <span className="text-yellow">Nhà Xưởng &amp; Bản Đồ</span>
@@ -452,7 +479,6 @@ const Footer = ({
                 © 2016 - 2026 <strong>CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI CƠ ĐIỆN NGUYÊN PHÁT</strong>. All rights reserved.
               </div>
 
-              {/* Counter Scraped from Old Site (wrap_bg_block_7) */}
               <div className="footer-stats-wrap">
                 <div className="stat-item" title="Tổng lượt truy cập hệ thống">
                   <span className="stat-label">Lượt truy cập:</span>
@@ -499,7 +525,6 @@ const Footer = ({
               </button>
             </div>
 
-            {/* Modal Tabs for Office, Factory, and Original Blueprint */}
             <div className="footer-modal-tabs">
               <button
                 type="button"
@@ -581,7 +606,68 @@ const Footer = ({
 
       {/* ===================== FLOATING QUICK CONTACT BAR ===================== */}
       <div className="floating-contact-bar">
-        {/* Zalo Button (Scraped from Old Site: .zalo-fix) */}
+        {/* 1. Bong bóng Catalog đặt trên đầu — bấm là vào luôn */}
+        <a
+          href="#/capacity-profile"
+          onClick={handleOpenCatalog}
+          className="floating-btn floating-catalog"
+          title="Xem Hồ Sơ Năng Lực & Catalog Nguyên Phát"
+          aria-label="Xem Hồ Sơ Năng Lực & Catalog"
+        >
+          <span className="catalog-pulse-ring"></span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+          <span className="floating-tooltip">Catalog / Hồ Sơ Năng Lực</span>
+        </a>
+
+        {/* 2. Bong bóng Facebook */}
+        <a
+          href="https://facebook.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="floating-btn floating-facebook"
+          title="Facebook Cơ Điện Nguyên Phát"
+          aria-label="Facebook"
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z" />
+          </svg>
+          <span className="floating-tooltip">Facebook</span>
+        </a>
+
+        {/* 3. Bong bóng YouTube */}
+        <a
+          href="https://youtube.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="floating-btn floating-youtube"
+          title="YouTube Cơ Điện Nguyên Phát"
+          aria-label="YouTube"
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21.58 7.19a2.51 2.51 0 0 0-1.77-1.77C18.25 5 12 5 12 5s-6.25 0-7.81.42a2.51 2.51 0 0 0-1.77 1.77C2 8.75 2 12 2 12s0 3.25.42 4.81a2.51 2.51 0 0 0 1.77 1.77C5.75 19 12 19 12 19s6.25 0 7.81-.42a2.51 2.51 0 0 0 1.77-1.77C22 15.25 22 12 22 12s0-3.25-.42-4.81zM10 15V9l5.2 3-5.2 3z" />
+          </svg>
+          <span className="floating-tooltip">YouTube</span>
+        </a>
+
+        {/* 4. Bong bóng TikTok */}
+        <a
+          href="https://tiktok.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="floating-btn floating-tiktok"
+          title="TikTok Cơ Điện Nguyên Phát"
+          aria-label="TikTok"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z" />
+          </svg>
+          <span className="floating-tooltip">TikTok</span>
+        </a>
+
+        {/* 5. Bong bóng Zalo */}
         <a
           href="https://zalo.me/0903625628"
           target="_blank"
@@ -611,7 +697,7 @@ const Footer = ({
           <span className="floating-tooltip">Chat Zalo</span>
         </a>
 
-        {/* Hotline Button (Scraped from Old Site: .hotlineSupport) */}
+        {/* 6. Bong bóng Hotline */}
         <a
           href="tel:0903625628"
           className="floating-btn floating-hotline"
@@ -624,7 +710,7 @@ const Footer = ({
           <span className="floating-tooltip">0903 625 628</span>
         </a>
 
-        {/* Back To Top Button */}
+        {/* 7. Nút cuộn lên đầu trang */}
         {showScrollTop && (
           <button
             type="button"

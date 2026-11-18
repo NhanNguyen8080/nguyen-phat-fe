@@ -1,0 +1,323 @@
+.capacity-section {
+  padding-bottom: var(--spacing-section);
+  position: relative;
+}
+
+.capacity-header {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto 36px;
+}
+
+.capacity-badge {
+  display: inline-block;
+  background-color: rgba(211, 47, 47, 0.08);
+  color: var(--accent-yellow);
+  border: 1px solid rgba(211, 47, 47, 0.25);
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 12px;
+}
+
+.capacity-header .section-title {
+  margin-bottom: 12px;
+}
+
+.capacity-subtitle {
+  color: var(--text-gray);
+  font-size: 0.96rem;
+  line-height: 1.6;
+}
+
+.capacity-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 36px;
+  align-items: center;
+}
+
+.capacity-info-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.capacity-highlights-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.capacity-highlight-card {
+  background-color: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.capacity-highlight-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(211, 47, 47, 0.4);
+  box-shadow: 0 10px 24px rgba(211, 47, 47, 0.08);
+}
+
+.capacity-highlight-icon {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border-radius: 10px;
+  background-color: rgba(211, 47, 47, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+}
+
+.capacity-highlight-body h4 {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.capacity-highlight-body p {
+  font-size: 0.8rem;
+  color: var(--text-gray);
+  line-height: 1.45;
+}
+
+.capacity-quick-tabs {
+  background-color: rgba(248, 250, 252, 0.9);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 14px;
+  padding: 12px 16px;
+}
+
+.quick-tabs-label {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-gray);
+  margin-bottom: 8px;
+}
+
+.quick-tabs-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.quick-tab-pill {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background-color: #ffffff;
+  color: var(--text-dark);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.quick-tab-pill:hover {
+  border-color: var(--accent-yellow);
+  color: var(--accent-yellow);
+}
+
+.quick-tab-pill.active {
+  background-color: var(--accent-yellow);
+  border-color: var(--accent-yellow);
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(211, 47, 47, 0.25);
+}
+
+.capacity-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.capacity-btn-main,
+.capacity-btn-download {
+  gap: 8px;
+  font-size: 0.92rem;
+  padding: 12px 22px;
+}
+
+/* Book Preview Stage */
+.capacity-book-stage {
+  background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid rgba(15, 23, 42, 0.09);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+}
+
+.capacity-book-spread {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 4px 1fr;
+  background-color: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
+  cursor: pointer;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+}
+
+.capacity-page {
+  position: relative;
+  aspect-ratio: 1800 / 2576;
+  max-height: 390px;
+  width: 100%;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.capacity-page img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.35s ease;
+}
+
+.capacity-book-spread:hover .capacity-page img {
+  transform: scale(1.02);
+}
+
+.capacity-book-spine {
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.18), rgba(255, 255, 255, 0.4), rgba(0, 0, 0, 0.18));
+  height: 100%;
+}
+
+.page-number-badge {
+  position: absolute;
+  bottom: 10px;
+  background-color: rgba(15, 23, 42, 0.75);
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 999px;
+  backdrop-filter: blur(4px);
+}
+
+.page-number-badge.left {
+  left: 10px;
+}
+
+.page-number-badge.right {
+  right: 10px;
+}
+
+.capacity-book-hover-hint {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+.capacity-book-hover-hint span {
+  background-color: var(--accent-yellow);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 10px 20px;
+  border-radius: 999px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.capacity-book-spread:hover .capacity-book-hover-hint {
+  opacity: 1;
+}
+
+.capacity-book-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  gap: 12px;
+}
+
+.book-ctrl-btn {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  background-color: #ffffff;
+  color: var(--text-dark);
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.book-ctrl-btn:hover:not(:disabled) {
+  background-color: var(--accent-yellow);
+  border-color: var(--accent-yellow);
+  color: #ffffff;
+}
+
+.book-ctrl-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.book-ctrl-status {
+  font-size: 0.85rem;
+  color: var(--text-gray);
+}
+
+.book-ctrl-status strong {
+  color: var(--accent-yellow);
+}
+
+@media (max-width: 992px) {
+  .capacity-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .capacity-page {
+    max-height: 360px;
+  }
+}
+
+@media (max-width: 640px) {
+  .capacity-highlights-list {
+    grid-template-columns: 1fr;
+  }
+
+  .capacity-actions {
+    flex-direction: column;
+  }
+
+  .capacity-btn-main,
+  .capacity-btn-download {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .capacity-page {
+    max-height: 260px;
+  }
+}

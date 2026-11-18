@@ -1,10 +1,32 @@
-/* App layout & sticky footer */
+/* ==========================================================
+   APP LAYOUT, ELECTRICAL LANDSCAPE BG & FULL-PAGE SCROLL
+   ========================================================== */
+
 .app {
   width: 100%;
   min-height: 100vh;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
+  position: relative;
+  isolation: isolate;
+}
+
+/* Lớp nền cảnh quan ngành điện (Cột điện cao thế, đường dây truyền tải, tòa nhà)
+   Luôn hiện diện mờ tinh tế phía sau mọi trang và mọi đề mục */
+.electric-landscape-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--primary-bg, #ffffff);
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(211, 47, 47, 0.04) 0%, transparent 42%),
+    radial-gradient(circle at 88% 82%, rgba(30, 64, 175, 0.035) 0%, transparent 45%),
+    url('/images/bg-electrical-landscape.svg');
+  background-size: cover, cover, cover;
+  background-position: center, center, center bottom;
+  background-repeat: no-repeat;
 }
 
 .app > main,
@@ -12,9 +34,236 @@
 .app > .project-page,
 .app > .news-page,
 .app > .about-page,
+.app > .cp-page,
 .app > .pd-page,
 .app > .project-detail-page,
 .app > .news-detail-page,
 .app > .page-loading-wrapper {
   flex: 1 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================================
+   THANH CHỈ BÁO ĐỀ MỤC BÊN TRÁI (DESKTOP FULL-PAGE DOTS)
+   ========================================================== */
+.fp-section-dots {
+  position: fixed;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 95;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fp-dot-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  padding: 5px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+  width: fit-content;
+}
+
+.fp-dot-index {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #64748b;
+  font-variant-numeric: tabular-nums;
+}
+
+.fp-dot-circle {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #cbd5e1;
+  transition: all 0.3s ease;
+}
+
+.fp-dot-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: max-width 0.3s ease, opacity 0.25s ease;
+}
+
+.fp-dot-btn:hover .fp-dot-label,
+.fp-dot-btn.active .fp-dot-label {
+  max-width: 140px;
+  opacity: 1;
+}
+
+.fp-dot-btn:hover {
+  border-color: rgba(211, 47, 47, 0.45);
+  transform: translateX(3px);
+}
+
+.fp-dot-btn.active {
+  background-color: #ffffff;
+  border-color: var(--accent-yellow);
+  box-shadow: 0 4px 14px rgba(211, 47, 47, 0.18);
+}
+
+.fp-dot-btn.active .fp-dot-index {
+  color: var(--accent-yellow);
+}
+
+.fp-dot-btn.active .fp-dot-circle {
+  background-color: var(--accent-yellow);
+  transform: scale(1.25);
+}
+
+/* ==========================================================
+   DESKTOP FULL-PAGE (1 MỤC = 1 TRANG MÀN HÌNH 100VH)
+   & HOẠT ẢNH CHUYỂN ĐỘNG THEO TỪNG TRANG
+   ========================================================== */
+@media (min-width: 993px) {
+  .is-home-fullpage .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 12px 0;
+    background-color: rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  }
+
+  /* Hiệu ứng di chuyển mượt mà cho mỗi mục khi nhảy trang */
+  .fp-stage {
+    transition:
+      transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.65s ease;
+    will-change: transform, opacity;
+  }
+
+  .fp-stage:not(.fp-active) {
+    opacity: 0.72;
+    transform: translateY(18px) scale(0.985);
+  }
+
+  .fp-stage.fp-active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  /* Mỗi mục trên trang chủ chiếm đúng 1 màn hình máy tính (100vh) */
+  .home-fullpage-main section.hero,
+  .home-fullpage-main section.about,
+  .home-fullpage-main section.services,
+  .home-fullpage-main section.portfolio,
+  .home-fullpage-main section.capacity-section,
+  .home-fullpage-main section.contact {
+    min-height: 100vh;
+    height: 100vh;
+    padding-top: 82px;
+    padding-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+    scroll-margin-top: 0;
+    overflow: hidden;
+  }
+
+  /* Tinh chỉnh kích thước con bên trong từng mục để vừa khít 100vh */
+  /* 1. Hero */
+  .home-fullpage-main .hero-top {
+    margin-bottom: 22px;
+  }
+
+  .home-fullpage-main .hero-image {
+    height: clamp(250px, 40vh, 380px);
+  }
+
+  /* 2. About */
+  .home-fullpage-main .about-image {
+    height: clamp(340px, 56vh, 490px);
+  }
+
+  .home-fullpage-main .mission-vision {
+    margin-bottom: 28px;
+  }
+
+  /* 3. Services (Sản phẩm tiêu biểu) */
+  .home-fullpage-main .services-header {
+    margin-bottom: 24px;
+  }
+
+  .home-fullpage-main .services-header .section-title {
+    margin-bottom: 10px;
+  }
+
+  .home-fullpage-main .services-slider-track {
+    padding: 10px 0 24px;
+  }
+
+  .home-fullpage-main .service-card {
+    height: clamp(270px, 41vh, 340px);
+  }
+
+  .home-fullpage-main .card-offset {
+    margin-top: 22px;
+  }
+
+  /* 4. Portfolio (Công trình) */
+  .home-fullpage-main .portfolio-header {
+    margin-bottom: 24px;
+  }
+
+  .home-fullpage-main .portfolio-grid {
+    margin-bottom: 24px;
+  }
+
+  .home-fullpage-main .portfolio-item {
+    height: clamp(270px, 43vh, 370px);
+  }
+
+  /* 5. CapacityProfile (Hồ sơ năng lực) */
+  .home-fullpage-main .capacity-header {
+    margin-bottom: 20px;
+  }
+
+  .home-fullpage-main .capacity-page {
+    max-height: clamp(260px, 40vh, 350px);
+  }
+
+  /* 6. Contact (Liên hệ) */
+  .home-fullpage-main .contact-panel {
+    padding: clamp(32px, 4.5vh, 52px) 52px;
+  }
+
+  .home-fullpage-main .contact-header {
+    margin-bottom: 28px;
+  }
+
+  .home-fullpage-main .contact-textarea {
+    min-height: 110px;
+  }
+}
+
+@media (max-width: 1280px) {
+  .fp-section-dots {
+    left: 10px;
+  }
+}
+
+@media (max-width: 992px) {
+  .fp-section-dots {
+    display: none;
+  }
 }

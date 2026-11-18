@@ -3,14 +3,16 @@ import { useEffect, useRef } from 'react';
 /**
  * Custom hook — triggers scroll-based reveal animations.
  * Attaches an IntersectionObserver to the returned ref.
- * When the element enters the viewport, `.is-visible` is added (once only).
+ * When the element enters the viewport, `.is-visible` is added,
+ * and re-triggers smoothly when jumping between full-page sections.
  *
- * @param {IntersectionObserverInit} options - Optional override for observer config
+ * @param {IntersectionObserverInit & { once?: boolean }} options
  */
 export const useScrollReveal = (options = {}) => {
   const ref = useRef(null);
   const threshold = options.threshold ?? 0.12;
-  const rootMargin = options.rootMargin ?? '0px 0px -40px 0px';
+  const rootMargin = options.rootMargin ?? '0px 0px -30px 0px';
+  const once = options.once ?? false;
 
   useEffect(() => {
     const el = ref.current;
@@ -20,7 +22,11 @@ export const useScrollReveal = (options = {}) => {
       ([entry]) => {
         if (entry.isIntersecting) {
           entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target); // animate once
+          if (once) {
+            observer.unobserve(entry.target);
+          }
+        } else if (!once) {
+          entry.target.classList.remove('is-visible');
         }
       },
       {
@@ -31,7 +37,7 @@ export const useScrollReveal = (options = {}) => {
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [threshold, rootMargin]);
+  }, [threshold, rootMargin, once]);
 
   return ref;
 };

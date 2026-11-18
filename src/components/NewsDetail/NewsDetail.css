@@ -11,8 +11,8 @@
 
 /* --- Top Navigation & Breadcrumbs --- */
 .news-detail-nav {
-  background-color: var(--secondary-bg);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: #ffffff;
+  border-bottom: 1px solid #ebebeb;
   padding: 14px 0;
 }
 
@@ -66,7 +66,7 @@
 }
 
 .breadcrumb-separator {
-  color: rgba(255, 255, 255, 0.25);
+  color: #cbd5e1;
 }
 
 /* --- Main Layout Container (2 Cột) --- */
@@ -122,7 +122,7 @@
   font-size: 0.9rem;
   color: var(--text-gray);
   padding-bottom: 18px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid #eaeaea;
 }
 
 .news-article-meta span {
@@ -146,8 +146,8 @@
   border-radius: var(--border-radius-lg);
   overflow: hidden;
   margin-bottom: 30px;
-  background-color: #2b0c0c;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  background-color: #f5f5f5;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 }
 
 .news-featured-image {
@@ -159,11 +159,11 @@
 
 /* Lead Summary Box */
 .news-lead-box {
-  background-color: var(--secondary-bg);
+  background-color: #fffbf0;
   border-left: 4px solid var(--accent-yellow);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid #faeec7;
+  border-right: 1px solid #faeec7;
+  border-bottom: 1px solid #faeec7;
   padding: 20px 24px;
   border-radius: 0 8px 8px 0;
   margin-bottom: 30px;
@@ -173,7 +173,7 @@
   font-size: 1.05rem;
   font-weight: 500;
   line-height: 1.75;
-  color: var(--text-dark);
+  color: #333333;
   margin: 0;
   font-style: italic;
 }
@@ -182,7 +182,7 @@
 .news-article-content {
   font-size: 1.05rem;
   line-height: 1.9;
-  color: var(--text-dark);
+  color: #2c2c2c;
   margin-bottom: 36px;
 }
 
@@ -200,8 +200,9 @@
   margin-bottom: 16px;
   position: relative;
   padding-bottom: 8px;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 2px solid #f0f0f0;
   scroll-margin-top: 140px;
+}
 
 .news-article-html-body h2::after {
   content: '';
@@ -225,7 +226,7 @@
 .news-article-html-body p {
   margin-bottom: 20px;
   line-height: 1.85;
-  color: var(--text-dark);
+  color: #2c2c2c;
   font-size: 1.05rem;
   text-align: justify;
 }
@@ -233,7 +234,7 @@
 .news-article-html-body ul, .news-article-html-body ol {
   margin: 18px 0 24px 24px;
   line-height: 1.75;
-  color: var(--text-dark);
+  color: #333;
 }
 
 .news-article-html-body li {
@@ -250,29 +251,29 @@
 
 .news-article-html-body blockquote {
   border-left: 4px solid var(--accent-yellow);
-  background: var(--secondary-bg);
+  background: #fffdf5;
   padding: 16px 20px;
   margin: 24px 0;
   border-radius: 0 8px 8px 0;
   font-style: italic;
-  color: var(--text-dark);
+  color: #444;
 }
 
 .content-highlight-block {
-  background-color: var(--secondary-bg);
+  background-color: #f8fafc;
   border-left: 4px solid var(--accent-yellow);
   border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
   padding: 20px 24px;
   margin: 26px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid #edf2f7;
+  border-right: 1px solid #edf2f7;
+  border-bottom: 1px solid #edf2f7;
 }
 
 .content-list-item {
   margin-bottom: 10px;
   line-height: 1.65;
-  color: var(--text-dark);
+  color: #444;
 }
 
 .content-list-item:last-child {
@@ -286,8 +287,8 @@
   gap: 10px;
   flex-wrap: wrap;
   padding: 18px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
   margin-bottom: 36px;
 }
 
@@ -299,18 +300,17 @@
 
 .news-tag-pill {
   background-color: var(--secondary-bg);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid #e0e0e0;
   padding: 4px 12px;
   border-radius: var(--border-radius-xl);
   font-size: 0.82rem;
-  color: var(--text-gray);
+  color: #555;
   font-weight: 500;
 }
 
 /* In-Article CTA Box */
 .news-cta-box {
-  background: linear-gradient(135deg, #2b0c0c 0%, #4a1919 100%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, #181818 0%, #292929 100%);
   color: #ffffff;
   border-radius: var(--border-radius-lg);
   padding: 32px 36px;
@@ -319,7 +319,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 28px;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
 }
 
 .news-cta-text h3 {
@@ -358,11 +358,11 @@
 }
 
 .news-sidebar-widget {
-  background: var(--card-bg, #4c1a1a);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #ffffff;
+  border: 1px solid #e8ecf1;
   border-radius: 12px;
   padding: 22px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
 .sidebar-widget-title {
@@ -374,7 +374,7 @@
   align-items: center;
   gap: 9px;
   padding-bottom: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .sidebar-widget-title svg {
@@ -402,11 +402,11 @@
 }
 
 .sidebar-toc-item:hover {
-  background-color: rgba(255, 184, 0, 0.12);
+  background-color: #fff9e6;
 }
 
 .sidebar-toc-item.active {
-  background-color: rgba(255, 184, 0, 0.2);
+  background-color: #fff3d1;
 }
 
 .toc-number {
@@ -414,8 +414,8 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--text-dark);
+  background: #f1f5f9;
+  color: #64748b;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -428,19 +428,19 @@
 .sidebar-toc-item:hover .toc-number,
 .sidebar-toc-item.active .toc-number {
   background-color: var(--accent-yellow);
-  color: #1a1a1a;
+  color: #ffffff;
 }
 
 .toc-text {
   font-size: 0.86rem;
-  color: var(--text-gray);
+  color: #334155;
   line-height: 1.45;
   transition: color 0.2s ease;
 }
 
 .sidebar-toc-item:hover .toc-text,
 .sidebar-toc-item.active .toc-text {
-  color: var(--text-dark);
+  color: #1a1a1a;
   font-weight: 600;
 }
 
@@ -469,7 +469,7 @@
   height: 66px;
   border-radius: 8px;
   overflow: hidden;
-  background-color: #2b0c0c;
+  background-color: #f1f5f9;
 }
 
 .sidebar-news-thumb {
@@ -493,7 +493,7 @@
 .sidebar-news-cat {
   font-size: 0.68rem;
   font-weight: 700;
-  color: var(--accent-yellow);
+  color: #b71c1c;
   text-transform: uppercase;
   margin-bottom: 3px;
   letter-spacing: 0.3px;
@@ -513,7 +513,7 @@
 }
 
 .sidebar-news-item:hover .sidebar-news-title {
-  color: var(--accent-yellow);
+  color: #b71c1c;
 }
 
 .sidebar-news-meta-row {
@@ -525,27 +525,27 @@
 
 .sidebar-news-date {
   font-size: 0.74rem;
-  color: var(--text-gray);
+  color: #94a3b8;
 }
 
 .sidebar-news-views {
   font-size: 0.72rem;
-  color: var(--text-gray);
+  color: #94a3b8;
 }
 
 /* Widget 3: Hộp Tư Vấn & Hotline Kỹ Thuật */
 .widget-consultation {
-  background: linear-gradient(145deg, #2e0e0e 0%, #441616 100%);
+  background: linear-gradient(145deg, #191919 0%, #262626 100%);
   color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  border: 1px solid #333333;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
 .consultation-badge {
   display: inline-block;
-  background: rgba(255, 184, 0, 0.15);
+  background: rgba(211, 47, 47, 0.15);
   color: var(--accent-yellow);
-  border: 1px solid rgba(255, 184, 0, 0.4);
+  border: 1px solid rgba(211, 47, 47, 0.4);
   font-size: 0.7rem;
   font-weight: 700;
   padding: 4px 10px;
@@ -565,7 +565,7 @@
 
 .consultation-desc {
   font-size: 0.84rem;
-  color: var(--text-gray);
+  color: #cbd5e1;
   line-height: 1.55;
   margin-bottom: 18px;
 }
@@ -578,7 +578,7 @@
   padding: 10px 14px;
   border-radius: 8px;
   margin-bottom: 18px;
-  border: 1px dashed rgba(255, 184, 0, 0.4);
+  border: 1px dashed rgba(211, 47, 47, 0.4);
 }
 
 .hotline-icon-wrap {
@@ -586,7 +586,7 @@
   height: 36px;
   border-radius: 50%;
   background: var(--accent-yellow);
-  color: #191919;
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -595,7 +595,7 @@
 
 .hotline-label {
   font-size: 0.74rem;
-  color: var(--text-gray);
+  color: #94a3b8;
   display: block;
 }
 
@@ -615,7 +615,7 @@
 .consultation-btn {
   width: 100%;
   background: var(--accent-yellow);
-  color: #191919;
+  color: #ffffff;
   font-weight: 700;
   font-size: 0.9rem;
   padding: 12px;
@@ -627,9 +627,9 @@
 }
 
 .consultation-btn:hover {
-  background: #e6a600;
+  background: #b71c1c;
   transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(255, 184, 0, 0.35);
+  box-shadow: 0 4px 14px rgba(211, 47, 47, 0.35);
 }
 
 /* --- Chân Trang: Bài Viết Liên Quan Khác --- */
@@ -675,9 +675,9 @@
 }
 
 .related-news-card {
-  background-color: var(--card-bg, #4c1a1a);
+  background-color: #ffffff;
   border-radius: var(--border-radius-md);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid #eaeaea;
   overflow: hidden;
   cursor: pointer;
   transition: all 0.25s ease;
@@ -687,14 +687,14 @@
 
 .related-news-card:hover {
   transform: translateY(-5px);
-  border-color: rgba(255, 184, 0, 0.6);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.35);
+  border-color: rgba(211, 47, 47, 0.6);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08);
 }
 
 .related-news-thumb-wrap {
   position: relative;
   height: 175px;
-  background-color: #2b0c0c;
+  background-color: #f5f5f5;
   overflow: hidden;
 }
 
@@ -759,7 +759,7 @@
 }
 
 .related-news-card:hover .related-news-link {
-  color: #ffb800;
+  color: #d32f2f;
   transform: translateX(3px);
 }
 

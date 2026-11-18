@@ -7,7 +7,7 @@ const Header = ({
   onNavigateAbout,
   onNavigateProducts,
   onNavigateProjects,
-  onNavigateNews
+  onNavigateCapacity
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
@@ -50,16 +50,16 @@ const Header = ({
       setActiveSection('product');
     } else if (currentPage === 'projects' || currentPage === 'project-detail') {
       setActiveSection('project');
-    } else if (currentPage === 'news' || currentPage === 'news-detail') {
-      setActiveSection('news');
+    } else if (currentPage === 'capacity') {
+      setActiveSection('capacity');
     }
 
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
 
       if (currentPage === 'home') {
-        const sectionIds = ['contact', 'news', 'project', 'product', 'about', 'home'];
-        const scrollPosition = window.scrollY + 140;
+        const sectionIds = ['contact', 'capacity', 'project', 'product', 'about', 'home'];
+        const scrollPosition = window.scrollY + window.innerHeight * 0.35;
 
         for (const id of sectionIds) {
           const element = document.getElementById(id);
@@ -95,8 +95,8 @@ const Header = ({
         onNavigateProjects();
         return;
       }
-      if (targetId === '#news' && onNavigateNews) {
-        onNavigateNews();
+      if (targetId === '#capacity' && onNavigateCapacity) {
+        onNavigateCapacity();
         return;
       }
       if (onNavigateHome) {
@@ -123,8 +123,8 @@ const Header = ({
         onNavigateProjects();
         return;
       }
-      if (targetId === '#news' && onNavigateNews) {
-        onNavigateNews();
+      if (targetId === '#capacity' && onNavigateCapacity) {
+        onNavigateCapacity();
         return;
       }
       if (onNavigateHome) {
@@ -151,8 +151,8 @@ const Header = ({
         onNavigateProducts();
         return;
       }
-      if (targetId === '#news' && onNavigateNews) {
-        onNavigateNews();
+      if (targetId === '#capacity' && onNavigateCapacity) {
+        onNavigateCapacity();
         return;
       }
       if (onNavigateHome) {
@@ -161,14 +161,10 @@ const Header = ({
       return;
     }
 
-    // 4. Khi đang ở trang News hoặc News Detail
-    if (currentPage === 'news' || currentPage === 'news-detail') {
-      if (targetId === '#news') {
-        if (currentPage === 'news-detail' && onNavigateNews) {
-          onNavigateNews();
-        } else {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+    // 4. Khi đang ở trang Hồ sơ năng lực (Capacity Profile)
+    if (currentPage === 'capacity') {
+      if (targetId === '#capacity') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
       }
       if (targetId === '#about' && onNavigateAbout) {
@@ -189,25 +185,17 @@ const Header = ({
       return;
     }
 
-    // 5. Khi đang ở Trang Chủ -> cuộn mượt xuống đúng section (kể cả #about, #product, #project, #news)
+    // 5. Khi đang ở Trang Chủ -> cuộn mượt xuống đúng section (kể cả #about, #product, #project, #capacity)
     const id = targetId.replace('#', '');
     const element = document.getElementById(id);
     if (element) {
-      const headerOffset = window.innerWidth <= 768 ? 62 : 85;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       setActiveSection(id);
-      // Giữ URL sạch (không lưu anchor hash) để khi reload (F5) trang chủ luôn nhảy về đầu trang
       if (window.location.hash) {
         window.history.replaceState(null, '', window.location.pathname + window.location.search);
       }
-    } else if (targetId === '#news' && onNavigateNews) {
-      onNavigateNews();
+    } else if (targetId === '#capacity' && onNavigateCapacity) {
+      onNavigateCapacity();
     }
   };
 
@@ -218,7 +206,15 @@ const Header = ({
           className="logo" 
           style={{ cursor: 'pointer' }} 
           onClick={(e) => handleNavClick(e, '#home')}
+          title="Cơ Điện Nguyên Phát - Trang chủ"
         >
+          <img
+            src="/images/logo.png"
+            alt="Logo Cơ Điện Nguyên Phát"
+            className="logo-img"
+            width="36"
+            height="36"
+          />
           <span className="logo-text">Nguyên <span className="text-yellow">Phát</span></span>
         </div>
         
@@ -263,11 +259,11 @@ const Header = ({
             </li>
             <li>
               <a 
-                href="#news" 
-                className={`nav-link ${activeSection === 'news' ? 'active' : ''}`}
-                onClick={(e) => handleNavClick(e, '#news')}
+                href="#capacity" 
+                className={`nav-link ${activeSection === 'capacity' ? 'active' : ''}`}
+                onClick={(e) => handleNavClick(e, '#capacity')}
               >
-                Tin tức
+                Hồ sơ năng lực
               </a>
             </li>
           </ul>
@@ -310,6 +306,13 @@ const Header = ({
             style={{ cursor: 'pointer' }} 
             onClick={(e) => handleNavClick(e, '#home')}
           >
+            <img
+              src="/images/logo.png"
+              alt="Logo Cơ Điện Nguyên Phát"
+              className="logo-img"
+              width="32"
+              height="32"
+            />
             <span className="logo-text">Nguyên <span className="text-yellow">Phát</span></span>
           </div>
           <button 
@@ -369,12 +372,12 @@ const Header = ({
             </li>
             <li>
               <a 
-                href="#news" 
-                className={`mobile-nav-link ${activeSection === 'news' ? 'active' : ''}`}
-                onClick={(e) => handleNavClick(e, '#news')}
+                href="#capacity" 
+                className={`mobile-nav-link ${activeSection === 'capacity' ? 'active' : ''}`}
+                onClick={(e) => handleNavClick(e, '#capacity')}
               >
-                <span className="mobile-nav-icon">📰</span>
-                <span>Tin tức</span>
+                <span className="mobile-nav-icon">📘</span>
+                <span>Hồ sơ năng lực</span>
               </a>
             </li>
           </ul>

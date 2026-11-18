@@ -122,7 +122,7 @@ const Portfolio = ({ onNavigateProjects, onSelectProject }) => {
           ))}
         </div>
 
-        <div className="portfolio-actions" style={{ display: 'flex', justifyContent: 'center', marginTop: '48px' }}>
+        <div className="portfolio-actions" style={{ display: 'flex', justifyContent: 'center', marginTop: '24px' }}>
           <button 
             type="button" 
             className="btn-primary"

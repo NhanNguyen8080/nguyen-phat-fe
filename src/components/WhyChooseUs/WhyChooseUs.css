@@ -7,7 +7,6 @@
   color: var(--text-light);
   padding: 72px 64px;
   border-radius: 48px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .wcu-header {
@@ -24,7 +23,7 @@
 }
 
 .wcu-subtitle {
-  color: var(--text-gray);
+  color: #b0b0b0;
   font-size: 0.95rem;
   line-height: 1.7;
 }
@@ -68,7 +67,7 @@
 }
 
 .wcu-feature:hover .feature-icon {
-  filter: drop-shadow(0 0 10px rgba(255, 184, 0, 0.6));
+  filter: drop-shadow(0 0 10px rgba(211, 47, 47, 0.6));
 }
 
 .feature-title {
@@ -79,7 +78,7 @@
 }
 
 .feature-desc {
-  color: var(--text-gray);
+  color: #b0b0b0;
   font-size: 0.88rem;
   line-height: 1.65;
 }
@@ -92,7 +91,7 @@
 }
 
 .wcu-footer-text {
-  color: var(--text-gray);
+  color: #b0b0b0;
   font-size: 0.88rem;
   line-height: 1.5;
 }

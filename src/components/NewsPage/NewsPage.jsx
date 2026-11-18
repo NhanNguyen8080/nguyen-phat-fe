@@ -237,7 +237,7 @@ const NewsPage = ({ onNavigateHome, onSelectNews }) => {
                   borderRadius: '9999px',
                   fontSize: '0.82rem',
                   border: '1px solid var(--border-color, #e2e8f0)',
-                  background: selectedTimeFilter === filter.id ? 'var(--primary-yellow, #ffb800)' : 'transparent',
+                  background: selectedTimeFilter === filter.id ? 'var(--primary-yellow, #d32f2f)' : 'transparent',
                   color: selectedTimeFilter === filter.id ? '#1a202c' : 'inherit',
                   fontWeight: selectedTimeFilter === filter.id ? '600' : '400',
                   cursor: 'pointer',

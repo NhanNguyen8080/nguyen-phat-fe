@@ -317,7 +317,7 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
       </div>
 
       {onNavigateProducts && (
-        <div style={{ textAlign: 'center', marginTop: '48px' }}>
+        <div className="services-cta-wrap" style={{ textAlign: 'center', marginTop: '24px' }}>
           <button
             type="button"
             className="btn-primary"
@@ -332,7 +332,7 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
               borderRadius: 'var(--border-radius-lg)',
               cursor: 'pointer',
               border: 'none',
-              boxShadow: '0 8px 20px rgba(255, 184, 0, 0.25)',
+              boxShadow: '0 8px 20px rgba(211, 47, 47, 0.25)',
               transition: 'transform 0.2s, box-shadow 0.2s'
             }}
           >
