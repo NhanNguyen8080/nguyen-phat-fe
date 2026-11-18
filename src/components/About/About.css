@@ -1,6 +1,8 @@
 /* ==========================================================
    MỤC GIỚI THIỆU TRÊN TRANG CHỦ (#about)
-   Video Demo cột trái có chiều cao (height) gấp đôi — Toàn bộ mục nằm trọn trong 1 màn hình 100vh
+   Thiết kế sát mẫu Infographic (Sơ đồ quạt tròn Lĩnh vực hoạt động +
+   Mục tiêu + Sứ mệnh và Cam kết trên sóng đỏ + Video Demo bên trái)
+   Nằm trọn trong 1 trang màn hình 100vh
    ========================================================== */
 
 .about {
@@ -8,438 +10,607 @@
   position: relative;
 }
 
-.about-infographic-container {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(10px, 1.3vh, 14px);
-}
-
-/* Thanh tiêu đề trên cùng */
-.about-top-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.about-heading-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.about-red-tag {
-  display: inline-block;
-  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
-  color: #ffffff;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.8px;
-  padding: 4px 12px;
-  border-radius: 6px;
-  transform: skewX(-10deg);
-  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.25);
-}
-
-.about-main-title {
-  font-size: clamp(1.35rem, 1.9vw, 1.75rem);
-  font-weight: 800;
-  color: var(--text-dark);
-  line-height: 1.2;
-  margin: 0;
-}
-
-.about-detail-link {
-  padding: 6px 14px;
-  font-size: 0.8rem;
-  min-height: 32px;
-  gap: 6px;
-}
-
-/* ===================== LƯỚI BENTO 2 CỘT ===================== */
-.about-bento-grid {
+.about-master-layout {
   display: grid;
-  grid-template-columns: 1fr 1.12fr;
-  gap: clamp(14px, 1.6vw, 20px);
+  grid-template-columns: 265px 1fr;
+  gap: 18px;
   align-items: stretch;
+  width: 100%;
 }
 
-.about-left-stack {
+/* ==================== CỘT TRÁI: VIDEO DEMO CAO XUYÊN SUỐT ==================== */
+.about-video-sidebar {
+  position: relative;
+  border-radius: 22px;
+  overflow: hidden;
+  background-color: #220707;
+  border: 2px solid rgba(153, 27, 27, 0.45);
+  box-shadow: 0 14px 34px rgba(139, 17, 17, 0.18);
+  cursor: pointer;
+  min-height: 540px;
   display: flex;
   flex-direction: column;
-  gap: clamp(10px, 1.2vh, 14px);
 }
 
-/* 1. Khung Video Demo Hoạt Động Công Ty — Giữ width 1 cột, TĂNG GẤP ĐÔI CHIỀU CAO (HEIGHT) */
-.about-video-box {
-  position: relative;
-  width: 100%;
-  height: clamp(275px, 34vh, 335px);
-  border-radius: 18px;
-  overflow: hidden;
-  background-color: #1e0808;
-  border: 2px solid rgba(211, 47, 47, 0.35);
-  box-shadow: 0 12px 28px rgba(183, 28, 28, 0.14);
-  cursor: pointer;
-}
-
-.about-video-thumb {
+.about-video-bg-img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 25%;
-  filter: brightness(0.75) contrast(1.08);
-  transition: transform 0.5s ease, filter 0.35s ease;
+  object-position: center;
+  filter: brightness(0.68) contrast(1.08);
+  transition: transform 0.55s ease, filter 0.35s ease;
 }
 
-.about-video-box:hover .about-video-thumb {
-  transform: scale(1.05);
-  filter: brightness(0.65) contrast(1.12);
+.about-video-sidebar:hover .about-video-bg-img {
+  transform: scale(1.06);
+  filter: brightness(0.58) contrast(1.12);
 }
 
-.about-video-overlay {
-  position: absolute;
-  inset: 0;
+.about-video-sidebar-overlay {
+  position: relative;
+  z-index: 2;
+  flex: 1;
   background: linear-gradient(
-    135deg,
-    rgba(153, 27, 27, 0.78) 0%,
-    rgba(15, 23, 42, 0.48) 55%,
-    rgba(183, 28, 28, 0.72) 100%
+    180deg,
+    rgba(139, 17, 17, 0.82) 0%,
+    rgba(15, 23, 42, 0.45) 50%,
+    rgba(127, 13, 13, 0.9) 100%
   );
-  padding: 16px 20px;
+  padding: 18px 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  text-align: center;
+  color: #ffffff;
 }
 
-.video-live-badge {
+.video-sidebar-badge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: 7px;
   background-color: rgba(255, 255, 255, 0.16);
   backdrop-filter: blur(6px);
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  color: #ffffff;
-  font-size: 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.6px;
-  padding: 4px 12px;
-  border-radius: 999px;
-  width: fit-content;
+  align-self: center;
 }
 
-.live-dot {
+.video-rec-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: #ff5252;
-  box-shadow: 0 0 8px #ff5252;
+  background-color: #ff4d4d;
+  box-shadow: 0 0 8px #ff4d4d;
 }
 
-.video-play-center {
+.video-sidebar-center {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
+  padding: 0 6px;
 }
 
-.video-play-btn {
-  width: 52px;
-  height: 52px;
-  min-width: 52px;
+.video-sidebar-play {
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #ef4444 0%, #b71c1c 100%);
+  background: linear-gradient(135deg, #ef4444 0%, #991b1b 100%);
+  border: 3px solid #ffffff;
   color: #ffffff;
-  border: 2.5px solid #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 22px rgba(211, 47, 47, 0.55);
+  box-shadow: 0 10px 26px rgba(211, 47, 47, 0.6);
   transition: transform 0.25s ease;
 }
 
-.about-video-box:hover .video-play-btn {
-  transform: scale(1.1);
+.about-video-sidebar:hover .video-sidebar-play {
+  transform: scale(1.12);
 }
 
-.video-caption-text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  color: #ffffff;
-}
-
-.video-caption-text strong {
-  font-size: 0.98rem;
+.video-sidebar-center h4 {
+  font-size: 1rem;
   font-weight: 800;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  line-height: 1.35;
+  margin: 0;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
-.video-caption-text span {
+.video-sidebar-center p {
   font-size: 0.78rem;
+  line-height: 1.45;
   color: rgba(255, 255, 255, 0.9);
+  margin: 0;
 }
 
-/* 2. Khối LĨNH VỰC HOẠT ĐỘNG (Gọn bên dưới Video Demo) */
-.about-fields-panel,
-.about-goals-panel {
-  background: linear-gradient(155deg, #ffffff 0%, #fff5f5 100%);
-  border: 1.5px solid rgba(211, 47, 47, 0.24);
-  border-radius: 18px;
-  padding: clamp(10px, 1.3vh, 14px) 14px;
-  box-shadow: 0 8px 24px rgba(183, 28, 28, 0.06);
+.video-sidebar-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.88);
+}
+
+/* ==================== CỘT PHẢI: BẢNG INFOGRAPHIC GIỐNG ẢNH MẪU ==================== */
+.np-infographic-board {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #fdf8f3 0%, #f9ece0 66%, #8b1111 100%);
+  border: 1.5px solid rgba(153, 27, 27, 0.22);
+  box-shadow: 0 16px 40px rgba(139, 17, 17, 0.14);
+  padding: 18px 22px 16px;
   display: flex;
   flex-direction: column;
-  flex: 1;
+  justify-content: space-between;
+  gap: 10px;
+  isolation: isolate;
 }
 
-.panel-diagonal-header {
+/* Sóng đỏ + vàng ở góc trên trái */
+.infographic-top-wave {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 220px;
+  height: 105px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Silhouette cột điện + tòa nhà + tua-bin gió phía trên dải sóng đáy */
+.infographic-bg-skyline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 110px;
+  width: 100%;
+  height: 220px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Dải sóng đỏ đậm uốn lượn ở đáy */
+.infographic-bottom-wave {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 195px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ==================== HÀNG TRÊN: SƠ ĐỒ QUẠT TRÒN (TRÁI) & MỤC TIÊU (PHẢI) ==================== */
+.infographic-top-row {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+/* Sơ đồ hình quạt LĨNH VỰC HOẠT ĐỘNG */
+.infographic-fan-col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fan-diagram-stage {
+  position: relative;
+  width: 420px;
+  height: 325px;
+  flex-shrink: 0;
+}
+
+.fan-arrows-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Vòng tròn trung tâm: LĨNH VỰC HOẠT ĐỘNG */
+.fan-center-hub {
+  position: absolute;
+  left: 147px;
+  top: 19px;
+  width: 126px;
+  height: 126px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #a31616 0%, #7f0d0d 100%);
+  padding: 7px;
+  box-shadow: 0 8px 22px rgba(139, 17, 17, 0.28);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fan-center-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 0%, #fdf2e9 100%);
+  border: 1.5px solid rgba(153, 27, 27, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 6px;
+}
+
+.fan-center-inner span {
+  font-size: 0.88rem;
+  font-weight: 900;
+  color: #8b1111;
+  line-height: 1.22;
+  letter-spacing: 0.3px;
+}
+
+.fan-hub-line {
+  display: block;
+  width: 30px;
+  height: 2.5px;
+  background-color: #991b1b;
+  border-radius: 2px;
+  margin-top: 5px;
+}
+
+/* 5 Vòng tròn con xếp cánh cung */
+.fan-sub-node {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 35%, #fffdfb 0%, #f8e5d6 100%);
+  border: 2px solid #991b1b;
+  box-shadow: 0 6px 14px rgba(139, 17, 17, 0.15);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 6px 5px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.fan-sub-node:hover {
+  transform: scale(1.07);
+  box-shadow: 0 10px 22px rgba(153, 27, 27, 0.28);
+  background: #ffffff;
+}
+
+.arc-node-1 {
+  left: 8px;
+  top: 122px;
+}
+
+.arc-node-2 {
+  left: 68px;
+  top: 198px;
+}
+
+.arc-node-3 {
+  left: 165px;
+  top: 224px;
+}
+
+.arc-node-4 {
+  left: 262px;
+  top: 198px;
+}
+
+.arc-node-5 {
+  left: 322px;
+  top: 122px;
+}
+
+.sub-node-icon {
+  width: 28px;
+  height: 28px;
+  color: #8b1111;
+  margin-bottom: 3px;
+  flex-shrink: 0;
+}
+
+.sub-node-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.sub-node-text {
+  font-size: 0.58rem;
+  font-weight: 800;
+  color: #1e293b;
+  line-height: 1.18;
+  white-space: pre-line;
+}
+
+/* ==================== CỘT PHẢI TRÊN: MỤC TIÊU ==================== */
+.infographic-goals-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.infographic-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 2px;
+}
+
+.infographic-pill-badge {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  background: linear-gradient(135deg, #d32f2f 0%, #991b1b 100%);
+  gap: 10px;
+  background: linear-gradient(90deg, #7f0d0d 0%, #991b1b 100%);
   color: #ffffff;
-  padding: 4px 16px 4px 12px;
-  border-radius: 6px 18px 6px 6px;
-  clip-path: polygon(0 0, 95% 0, 100% 100%, 0% 100%);
-  width: fit-content;
-  margin-bottom: 8px;
-  box-shadow: 0 3px 10px rgba(211, 47, 47, 0.22);
+  padding: 5px 22px 5px 8px;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(127, 13, 13, 0.3);
 }
 
-.panel-header-icon {
-  font-size: 0.9rem;
+.pill-badge-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.16);
+  border: 1.5px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
 }
 
-.panel-diagonal-header h3 {
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.6px;
+.infographic-pill-badge h3 {
+  font-size: 0.92rem;
+  font-weight: 900;
+  letter-spacing: 0.8px;
   margin: 0;
   color: #ffffff;
 }
 
-/* Chia 6 cột ảo để hàng 1 chứa 3 mục (mỗi mục span 2), hàng 2 chứa 2 mục (mỗi mục span 3) — tiết kiệm chiều dọc */
-.about-fields-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 7px;
+.infographic-header-line {
   flex: 1;
+  height: 1.5px;
+  background-color: #991b1b;
+  opacity: 0.55;
 }
 
-.about-field-pill {
-  grid-column: span 2;
-  background-color: #ffffff;
-  border: 1px solid rgba(211, 47, 47, 0.18);
-  border-left: 3.5px solid #d32f2f;
-  border-radius: 10px;
-  padding: 7px 9px;
+.infographic-goals-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.infographic-goal-pill {
+  background-color: rgba(255, 251, 247, 0.94);
+  border: 1px solid rgba(180, 83, 60, 0.32);
+  border-radius: 22px;
+  padding: 7px 14px 7px 9px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  gap: 11px;
+  box-shadow: 0 3px 10px rgba(139, 17, 17, 0.06);
   transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
-.about-field-pill:nth-child(4),
-.about-field-pill:nth-child(5) {
-  grid-column: span 3;
-}
-
-.about-field-pill:hover {
-  transform: translateY(-2px);
-  border-color: #d32f2f;
-}
-
-.field-pill-icon {
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
-  border-radius: 7px;
-  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.field-pill-content {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.field-pill-num {
-  font-size: 0.6rem;
-  font-weight: 800;
-  color: #d32f2f;
-  line-height: 1;
-  margin-bottom: 1px;
-}
-
-.field-pill-title {
-  font-size: 0.74rem;
-  font-weight: 700;
-  color: var(--text-dark);
-  line-height: 1.22;
-}
-
-/* 3. Khối MỤC TIÊU (Cột phải - 4 mục tiêu chiến lược khớp đúng chiều cao cột trái) */
-.about-goals-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex: 1;
-  justify-content: space-between;
-}
-
-.about-goal-card {
-  background-color: #ffffff;
-  border: 1px solid rgba(211, 47, 47, 0.2);
-  border-right: 4px solid #d32f2f;
-  border-radius: 12px;
-  padding: 9px 12px;
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.about-goal-card:hover {
+.infographic-goal-pill:hover {
   transform: translateX(-3px);
-  box-shadow: 0 6px 16px rgba(211, 47, 47, 0.12);
+  border-color: #991b1b;
+  background-color: #ffffff;
 }
 
-.goal-icon-badge {
-  width: 30px;
-  height: 30px;
-  min-width: 30px;
+.goal-pill-circle-icon {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #d32f2f 0%, #991b1b 100%);
+  background: linear-gradient(135deg, #991b1b 0%, #6e0a0a 100%);
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 1px;
-  box-shadow: 0 3px 8px rgba(211, 47, 47, 0.25);
+  box-shadow: 0 3px 8px rgba(127, 13, 13, 0.28);
 }
 
-.goal-text {
-  font-size: clamp(0.74rem, 0.82vw, 0.81rem);
-  color: #334155;
-  line-height: 1.44;
-  margin: 0;
-}
-
-.goal-text strong {
-  color: #b71c1c;
-  font-weight: 700;
-}
-
-/* ===================== DẢI ĐÁY NỀN ĐỎ: SỨ MỆNH & CAM KẾT (XẾP NGANG ĐỂ TIẾT KIỆM CHIỀU CAO) ===================== */
-.about-commitment-banner {
-  background: linear-gradient(125deg, #991b1b 0%, #d32f2f 52%, #7f1d1d 100%);
-  border-radius: 16px;
-  padding: 10px 16px;
-  color: #ffffff;
-  box-shadow: 0 10px 24px rgba(183, 28, 28, 0.22);
-  position: relative;
-  overflow: hidden;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  gap: 14px;
-}
-
-.commitment-title-pill {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  background-color: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #ffffff;
-  padding: 8px 14px;
-  border-radius: 12px;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.6px;
-  text-align: center;
-  white-space: nowrap;
-}
-
-.commitment-cards-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.commitment-item {
-  background-color: rgba(255, 255, 255, 0.96);
-  color: #1e293b;
-  border-radius: 11px;
-  padding: 8px 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
-}
-
-.commitment-icon {
-  width: 32px;
-  height: 32px;
-  min-width: 32px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #d32f2f 0%, #991b1b 100%);
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.commitment-item p {
-  font-size: clamp(0.73rem, 0.8vw, 0.79rem);
+.infographic-goal-pill p {
+  font-size: clamp(0.69rem, 0.76vw, 0.76rem);
   line-height: 1.38;
-  margin: 0;
   color: #1e293b;
+  margin: 0;
 }
 
-.commitment-item p strong {
-  color: #b71c1c;
+.infographic-goal-pill p strong {
+  color: #991b1b;
   font-weight: 800;
 }
 
-/* ===================== RESPONSIVE ===================== */
-@media (max-width: 1100px) {
-  .about-bento-grid {
+/* ==================== PHẦN DƯỚI: SỨ MỆNH VÀ CAM KẾT + QUẢ ĐỊA CẦU ==================== */
+.infographic-bottom-row {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 125px;
+  gap: 14px;
+  align-items: end;
+}
+
+.infographic-mission-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.mission-header-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 16px;
+  margin-bottom: -13px;
+  position: relative;
+  z-index: 3;
+}
+
+.mission-pill {
+  border: 1.5px solid rgba(255, 255, 255, 0.75);
+  padding: 4px 20px 4px 7px;
+}
+
+.mission-pill h3 {
+  font-size: 0.84rem;
+}
+
+.mission-white-line {
+  width: 140px;
+  height: 2px;
+  background-color: rgba(255, 255, 255, 0.85);
+}
+
+.mission-white-card {
+  background-color: #ffffff;
+  border-radius: 18px;
+  padding: 20px 18px 12px;
+  display: grid;
+  grid-template-columns: 1fr 1.5px 1fr;
+  gap: 16px;
+  align-items: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.mission-col {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.mission-circle-icon {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #991b1b 0%, #6e0a0a 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(127, 13, 13, 0.3);
+}
+
+.mission-col p {
+  font-size: clamp(0.69rem, 0.75vw, 0.75rem);
+  line-height: 1.38;
+  color: #1e293b;
+  margin: 0;
+}
+
+.mission-col p strong {
+  color: #991b1b;
+  font-weight: 800;
+}
+
+.mission-divider {
+  width: 1.5px;
+  height: 82%;
+  background-color: #991b1b;
+  opacity: 0.65;
+}
+
+/* Quả địa cầu xanh góc dưới phải */
+.infographic-eco-corner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eco-globe-circle {
+  width: 112px;
+  height: 112px;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.25));
+}
+
+.eco-globe-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 1240px) {
+  .about-master-layout {
+    grid-template-columns: 220px 1fr;
+  }
+
+  .infographic-top-row {
+    grid-template-columns: 380px 1fr;
+  }
+
+  .fan-diagram-stage {
+    transform: scale(0.9);
+    transform-origin: top left;
+  }
+}
+
+@media (max-width: 1080px) {
+  .about-master-layout {
     grid-template-columns: 1fr;
   }
 
-  .about-commitment-banner {
+  .about-video-sidebar {
+    min-height: 260px;
+  }
+
+  .infographic-top-row {
     grid-template-columns: 1fr;
   }
 
-  .commitment-title-pill {
-    flex-direction: row;
-    width: fit-content;
+  .fan-diagram-stage {
+    transform: none;
+    margin: 0 auto;
   }
 
-  .commitment-cards-row {
+  .infographic-bottom-row {
     grid-template-columns: 1fr;
+  }
+
+  .infographic-eco-corner {
+    display: none;
   }
 }
 
 @media (max-width: 640px) {
-  .about-fields-grid {
-    grid-template-columns: 1fr;
+  .fan-diagram-stage {
+    transform: scale(0.76);
+    transform-origin: top center;
+    margin-bottom: -65px;
   }
 
-  .about-field-pill,
-  .about-field-pill:nth-child(4),
-  .about-field-pill:nth-child(5) {
-    grid-column: span 1;
+  .mission-white-card {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .mission-divider {
+    width: 100%;
+    height: 1px;
   }
 }
