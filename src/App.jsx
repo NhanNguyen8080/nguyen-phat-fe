@@ -67,6 +67,52 @@ function App() {
   const [activeFpSection, setActiveFpSection] = useState('home');
   const isWheelLockedRef = useRef(false);
   const wheelLockTimerRef = useRef(null);
+  const scrollAnimFrameRef = useRef(null);
+
+  // Hàm cuộn mượt chậm rãi (Custom Smooth Scroll 1250ms với đường cong easeInOutCubic)
+  const animateSlowScrollTo = (targetY, duration = 1250) => {
+    if (scrollAnimFrameRef.current) {
+      cancelAnimationFrame(scrollAnimFrameRef.current);
+      scrollAnimFrameRef.current = null;
+    }
+
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+    if (Math.abs(distance) < 2) {
+      window.scrollTo({ top: targetY, behavior: 'instant' });
+      return;
+    }
+
+    const startTime = performance.now();
+    const htmlEl = document.documentElement;
+    const prevScrollBehavior = htmlEl.style.scrollBehavior;
+    htmlEl.style.scrollBehavior = 'auto';
+
+    // Đường cong chuyển động êm ái: bắt đầu nhẹ, lướt đều và dừng lại từ từ
+    const easeInOutCubic = (t) =>
+      t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+    const step = (now) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(1, elapsed / duration);
+      const eased = easeInOutCubic(progress);
+
+      window.scrollTo({
+        top: Math.round(startY + distance * eased),
+        behavior: 'instant'
+      });
+
+      if (progress < 1) {
+        scrollAnimFrameRef.current = requestAnimationFrame(step);
+      } else {
+        window.scrollTo({ top: targetY, behavior: 'instant' });
+        htmlEl.style.scrollBehavior = prevScrollBehavior;
+        scrollAnimFrameRef.current = null;
+      }
+    };
+
+    scrollAnimFrameRef.current = requestAnimationFrame(step);
+  };
 
   useEffect(() => {
     if ('scrollRestoration' in window.history) {
@@ -146,17 +192,18 @@ function App() {
       const target = sections[clamped];
       if (!target || !target.el) return;
 
+      const ScrollDuration = 1250;
       isWheelLockedRef.current = true;
       setActiveFpSection(target.id);
       const targetTop = getElementDocumentTop(target.el);
-      window.scrollTo({ top: targetTop, behavior: 'smooth' });
+      animateSlowScrollTo(targetTop, ScrollDuration);
 
       if (wheelLockTimerRef.current) {
         clearTimeout(wheelLockTimerRef.current);
       }
       wheelLockTimerRef.current = setTimeout(() => {
         isWheelLockedRef.current = false;
-      }, 720);
+      }, ScrollDuration + 80);
     };
 
     const handleWheel = (e) => {
@@ -227,6 +274,9 @@ function App() {
       if (wheelLockTimerRef.current) {
         clearTimeout(wheelLockTimerRef.current);
       }
+      if (scrollAnimFrameRef.current) {
+        cancelAnimationFrame(scrollAnimFrameRef.current);
+      }
     };
   }, [route.page]);
 
@@ -289,14 +339,15 @@ function App() {
         const id = targetId.replace('#', '');
         const element = document.getElementById(id);
         if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          const top = element.getBoundingClientRect().top + window.scrollY;
+          animateSlowScrollTo(top, 1250);
           setActiveFpSection(id);
         } else {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          animateSlowScrollTo(0, 1000);
         }
       }, 60);
     } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      animateSlowScrollTo(0, 1150);
       setActiveFpSection('home');
     }
   };
@@ -304,16 +355,17 @@ function App() {
   const handleDotClick = (secId) => {
     const el = document.getElementById(secId);
     if (el) {
+      const ScrollDuration = 1250;
       isWheelLockedRef.current = true;
       setActiveFpSection(secId);
       const top = el.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo({ top, behavior: 'smooth' });
+      animateSlowScrollTo(top, ScrollDuration);
       if (wheelLockTimerRef.current) {
         clearTimeout(wheelLockTimerRef.current);
       }
       wheelLockTimerRef.current = setTimeout(() => {
         isWheelLockedRef.current = false;
-      }, 720);
+      }, ScrollDuration + 80);
     }
   };
 
