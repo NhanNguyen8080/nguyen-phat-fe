@@ -45,87 +45,6 @@
 }
 
 /* ==========================================================
-   THANH CHỈ BÁO ĐỀ MỤC BÊN TRÁI (DESKTOP FULL-PAGE DOTS)
-   ========================================================== */
-.fp-section-dots {
-  position: fixed;
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 95;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.fp-dot-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(15, 23, 42, 0.1);
-  padding: 5px 10px;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
-  width: fit-content;
-}
-
-.fp-dot-index {
-  font-size: 0.68rem;
-  font-weight: 800;
-  color: #64748b;
-  font-variant-numeric: tabular-nums;
-}
-
-.fp-dot-circle {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #cbd5e1;
-  transition: all 0.3s ease;
-}
-
-.fp-dot-label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--text-dark);
-  max-width: 0;
-  opacity: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  transition: max-width 0.3s ease, opacity 0.25s ease;
-}
-
-.fp-dot-btn:hover .fp-dot-label,
-.fp-dot-btn:focus-visible .fp-dot-label {
-  max-width: 150px;
-  opacity: 1;
-}
-
-.fp-dot-btn:hover {
-  border-color: rgba(211, 47, 47, 0.45);
-  transform: translateX(3px);
-}
-
-.fp-dot-btn.active {
-  background-color: #ffffff;
-  border-color: var(--accent-yellow);
-  box-shadow: 0 4px 14px rgba(211, 47, 47, 0.18);
-}
-
-.fp-dot-btn.active .fp-dot-index {
-  color: var(--accent-yellow);
-}
-
-.fp-dot-btn.active .fp-dot-circle {
-  background-color: var(--accent-yellow);
-  transform: scale(1.25);
-}
-
-/* ==========================================================
    DESKTOP FULL-PAGE SECTIONS & CRISP CONTRAST
    ========================================================== */
 @media (min-width: 993px) {
@@ -165,13 +84,6 @@
     box-sizing: border-box;
     scroll-margin-top: 0;
     overflow: hidden;
-  }
-
-  /* Khoảng đệm an toàn hai bên để thanh chỉ báo bên trái & cụm nút nổi bên phải không đè lên nội dung */
-  .is-home-fullpage .home-fullpage-main .container,
-  .is-home-fullpage .site-footer .container {
-    padding-left: 72px;
-    padding-right: 72px;
   }
 
   /* Tinh chỉnh kích thước con bên trong từng mục để vừa khít 100vh */
@@ -272,17 +184,5 @@
 
   .home-fullpage-main .contact-textarea {
     min-height: 110px;
-  }
-}
-
-@media (max-width: 1280px) {
-  .fp-section-dots {
-    left: 10px;
-  }
-}
-
-@media (max-width: 992px) {
-  .fp-section-dots {
-    display: none;
   }
 }

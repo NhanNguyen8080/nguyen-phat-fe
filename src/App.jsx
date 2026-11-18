@@ -352,23 +352,6 @@ function App() {
     }
   };
 
-  const handleDotClick = (secId) => {
-    const el = document.getElementById(secId);
-    if (el) {
-      const ScrollDuration = 1250;
-      isWheelLockedRef.current = true;
-      setActiveFpSection(secId);
-      const top = el.getBoundingClientRect().top + window.scrollY;
-      animateSlowScrollTo(top, ScrollDuration);
-      if (wheelLockTimerRef.current) {
-        clearTimeout(wheelLockTimerRef.current);
-      }
-      wheelLockTimerRef.current = setTimeout(() => {
-        isWheelLockedRef.current = false;
-      }, ScrollDuration + 80);
-    }
-  };
-
   return (
     <div className={`app ${route.page === 'home' ? 'is-home-fullpage' : ''}`}>
       {/* Lớp nền cảnh quan điện (cột điện cao thế, đường dây & tòa nhà công nghiệp mờ phía sau) */}
@@ -382,26 +365,6 @@ function App() {
         onNavigateProjects={navigateToProjects}
         onNavigateCapacity={navigateToCapacity}
       />
-
-      {/* Thanh chỉ báo đề mục (Section Dots) khi lăn chuột từng trang trên máy tính */}
-      {route.page === 'home' && (
-        <aside className="fp-section-dots" aria-label="Điều hướng từng mục trang chủ">
-          {HOME_SECTIONS.map((sec, idx) => (
-            <button
-              key={sec.id}
-              type="button"
-              className={`fp-dot-btn ${activeFpSection === sec.id ? 'active' : ''}`}
-              onClick={() => handleDotClick(sec.id)}
-              title={`Chuyển tới: ${sec.label}`}
-              aria-label={sec.label}
-            >
-              <span className="fp-dot-index">0{idx + 1}</span>
-              <span className="fp-dot-circle" />
-              <span className="fp-dot-label">{sec.label}</span>
-            </button>
-          ))}
-        </aside>
-      )}
 
       <Suspense fallback={<div style={{ minHeight: '60vh' }} />}>
         {route.page === 'about' ? (
