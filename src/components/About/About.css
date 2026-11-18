@@ -1,6 +1,6 @@
 /* ==========================================================
    MỤC GIỚI THIỆU TRÊN TRANG CHỦ (#about)
-   Video Demo dài gấp đôi (Full 100% chiều ngang) + Lưới Ngang & Chéo Tông Đỏ
+   Video Demo cột trái có chiều cao (height) gấp đôi — Toàn bộ mục nằm trọn trong 1 màn hình 100vh
    ========================================================== */
 
 .about {
@@ -11,7 +11,7 @@
 .about-infographic-container {
   display: flex;
   flex-direction: column;
-  gap: clamp(10px, 1.4vh, 16px);
+  gap: clamp(10px, 1.3vh, 14px);
 }
 
 /* Thanh tiêu đề trên cùng */
@@ -19,14 +19,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
 .about-heading-left {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
@@ -34,7 +34,7 @@
   display: inline-block;
   background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
   color: #ffffff;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.8px;
   padding: 4px 12px;
@@ -44,7 +44,7 @@
 }
 
 .about-main-title {
-  font-size: clamp(1.35rem, 2vw, 1.85rem);
+  font-size: clamp(1.35rem, 1.9vw, 1.75rem);
   font-weight: 800;
   color: var(--text-dark);
   line-height: 1.2;
@@ -52,22 +52,36 @@
 }
 
 .about-detail-link {
-  padding: 6px 16px;
-  font-size: 0.82rem;
-  min-height: 34px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  min-height: 32px;
   gap: 6px;
 }
 
-/* ===================== 1. KHUNG VIDEO DEMO DÀI GẤP ĐÔI (FULL 100% CHIỀU NGANG & CAO GẤP ĐÔI) ===================== */
-.about-video-box.about-video-fullwidth {
+/* ===================== LƯỚI BENTO 2 CỘT ===================== */
+.about-bento-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.12fr;
+  gap: clamp(14px, 1.6vw, 20px);
+  align-items: stretch;
+}
+
+.about-left-stack {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.2vh, 14px);
+}
+
+/* 1. Khung Video Demo Hoạt Động Công Ty — Giữ width 1 cột, TĂNG GẤP ĐÔI CHIỀU CAO (HEIGHT) */
+.about-video-box {
   position: relative;
   width: 100%;
-  height: clamp(310px, 38vh, 390px);
-  border-radius: 22px;
+  height: clamp(275px, 34vh, 335px);
+  border-radius: 18px;
   overflow: hidden;
   background-color: #1e0808;
-  border: 2px solid rgba(211, 47, 47, 0.38);
-  box-shadow: 0 14px 34px rgba(183, 28, 28, 0.18);
+  border: 2px solid rgba(211, 47, 47, 0.35);
+  box-shadow: 0 12px 28px rgba(183, 28, 28, 0.14);
   cursor: pointer;
 }
 
@@ -75,37 +89,29 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 28%;
-  filter: brightness(0.72) contrast(1.08);
+  object-position: center 25%;
+  filter: brightness(0.75) contrast(1.08);
   transition: transform 0.5s ease, filter 0.35s ease;
 }
 
 .about-video-box:hover .about-video-thumb {
-  transform: scale(1.04);
-  filter: brightness(0.64) contrast(1.12);
+  transform: scale(1.05);
+  filter: brightness(0.65) contrast(1.12);
 }
 
 .about-video-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    115deg,
-    rgba(153, 27, 27, 0.82) 0%,
-    rgba(15, 23, 42, 0.52) 50%,
-    rgba(183, 28, 28, 0.76) 100%
+    135deg,
+    rgba(153, 27, 27, 0.78) 0%,
+    rgba(15, 23, 42, 0.48) 55%,
+    rgba(183, 28, 28, 0.72) 100%
   );
-  padding: 14px 24px;
+  padding: 16px 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-}
-
-.video-top-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
 }
 
 .video-live-badge {
@@ -116,22 +122,12 @@
   backdrop-filter: blur(6px);
   border: 1px solid rgba(255, 255, 255, 0.28);
   color: #ffffff;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 0.6px;
-  padding: 4px 14px;
-  border-radius: 999px;
-  width: fit-content;
-}
-
-.video-duration-pill {
-  background-color: rgba(15, 23, 42, 0.65);
-  color: #f8fafc;
-  font-size: 0.72rem;
-  font-weight: 600;
   padding: 4px 12px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  width: fit-content;
 }
 
 .live-dot {
@@ -145,7 +141,7 @@
 .video-play-center {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 }
 
 .video-play-btn {
@@ -170,153 +166,150 @@
 .video-caption-text {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
   color: #ffffff;
 }
 
 .video-caption-text strong {
-  font-size: 1.05rem;
+  font-size: 0.98rem;
   font-weight: 800;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
 }
 
 .video-caption-text span {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   color: rgba(255, 255, 255, 0.9);
 }
 
-/* ===================== 2. LƯỚI BENTO 2 CỘT: LĨNH VỰC HOẠT ĐỘNG & MỤC TIÊU ===================== */
-.about-bento-grid {
-  display: grid;
-  grid-template-columns: 0.92fr 1.28fr;
-  gap: clamp(14px, 1.6vw, 22px);
-  align-items: stretch;
-}
-
+/* 2. Khối LĨNH VỰC HOẠT ĐỘNG (Gọn bên dưới Video Demo) */
 .about-fields-panel,
 .about-goals-panel {
   background: linear-gradient(155deg, #ffffff 0%, #fff5f5 100%);
   border: 1.5px solid rgba(211, 47, 47, 0.24);
   border-radius: 18px;
-  padding: clamp(12px, 1.5vh, 16px);
-  box-shadow: 0 10px 28px rgba(183, 28, 28, 0.06);
+  padding: clamp(10px, 1.3vh, 14px) 14px;
+  box-shadow: 0 8px 24px rgba(183, 28, 28, 0.06);
   display: flex;
   flex-direction: column;
+  flex: 1;
 }
 
 .panel-diagonal-header {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   background: linear-gradient(135deg, #d32f2f 0%, #991b1b 100%);
   color: #ffffff;
-  padding: 5px 18px 5px 12px;
-  border-radius: 8px 20px 8px 8px;
+  padding: 4px 16px 4px 12px;
+  border-radius: 6px 18px 6px 6px;
   clip-path: polygon(0 0, 95% 0, 100% 100%, 0% 100%);
   width: fit-content;
-  margin-bottom: 10px;
-  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.25);
+  margin-bottom: 8px;
+  box-shadow: 0 3px 10px rgba(211, 47, 47, 0.22);
 }
 
 .panel-header-icon {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 .panel-diagonal-header h3 {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 800;
   letter-spacing: 0.6px;
   margin: 0;
   color: #ffffff;
 }
 
+/* Chia 6 cột ảo để hàng 1 chứa 3 mục (mỗi mục span 2), hàng 2 chứa 2 mục (mỗi mục span 3) — tiết kiệm chiều dọc */
 .about-fields-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 7px;
   flex: 1;
 }
 
 .about-field-pill {
+  grid-column: span 2;
   background-color: #ffffff;
   border: 1px solid rgba(211, 47, 47, 0.18);
-  border-left: 4px solid #d32f2f;
-  border-radius: 11px;
-  padding: 8px 10px;
+  border-left: 3.5px solid #d32f2f;
+  border-radius: 10px;
+  padding: 7px 9px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04);
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
-.about-field-pill:last-child {
-  grid-column: span 2;
+.about-field-pill:nth-child(4),
+.about-field-pill:nth-child(5) {
+  grid-column: span 3;
 }
 
 .about-field-pill:hover {
-  transform: translateX(4px);
+  transform: translateY(-2px);
   border-color: #d32f2f;
-  box-shadow: 0 6px 16px rgba(211, 47, 47, 0.12);
 }
 
 .field-pill-icon {
-  width: 32px;
-  height: 32px;
-  min-width: 32px;
-  border-radius: 8px;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 7px;
   background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(211, 47, 47, 0.25);
 }
 
 .field-pill-content {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .field-pill-num {
-  font-size: 0.64rem;
+  font-size: 0.6rem;
   font-weight: 800;
   color: #d32f2f;
   line-height: 1;
-  margin-bottom: 2px;
+  margin-bottom: 1px;
 }
 
 .field-pill-title {
-  font-size: 0.8rem;
+  font-size: 0.74rem;
   font-weight: 700;
   color: var(--text-dark);
-  line-height: 1.28;
+  line-height: 1.22;
 }
 
-/* Cột phải: 4 Mục tiêu chiến lược (2x2 lưới ngang để gọn trong 1 màn hình khi Video dài gấp đôi) */
+/* 3. Khối MỤC TIÊU (Cột phải - 4 mục tiêu chiến lược khớp đúng chiều cao cột trái) */
 .about-goals-list {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 8px;
   flex: 1;
+  justify-content: space-between;
 }
 
 .about-goal-card {
   background-color: #ffffff;
   border: 1px solid rgba(211, 47, 47, 0.2);
-  border-top: 3px solid #d32f2f;
+  border-right: 4px solid #d32f2f;
   border-radius: 12px;
-  padding: 9px 11px;
+  padding: 9px 12px;
   display: flex;
   align-items: flex-start;
-  gap: 9px;
+  gap: 10px;
   box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .about-goal-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(211, 47, 47, 0.12);
+  transform: translateX(-3px);
+  box-shadow: 0 6px 16px rgba(211, 47, 47, 0.12);
 }
 
 .goal-icon-badge {
@@ -334,9 +327,9 @@
 }
 
 .goal-text {
-  font-size: clamp(0.72rem, 0.78vw, 0.78rem);
+  font-size: clamp(0.74rem, 0.82vw, 0.81rem);
   color: #334155;
-  line-height: 1.42;
+  line-height: 1.44;
   margin: 0;
 }
 
@@ -345,42 +338,37 @@
   font-weight: 700;
 }
 
-/* ===================== 3. DẢI ĐÁY NỀN ĐỎ: SỨ MỆNH VÀ CAM KẾT ===================== */
+/* ===================== DẢI ĐÁY NỀN ĐỎ: SỨ MỆNH & CAM KẾT (XẾP NGANG ĐỂ TIẾT KIỆM CHIỀU CAO) ===================== */
 .about-commitment-banner {
   background: linear-gradient(125deg, #991b1b 0%, #d32f2f 52%, #7f1d1d 100%);
-  border-radius: 18px;
-  padding: clamp(11px, 1.4vh, 15px) 18px;
+  border-radius: 16px;
+  padding: 10px 16px;
   color: #ffffff;
-  box-shadow: 0 12px 28px rgba(183, 28, 28, 0.22);
+  box-shadow: 0 10px 24px rgba(183, 28, 28, 0.22);
   position: relative;
   overflow: hidden;
-}
-
-.about-commitment-banner::before {
-  content: '';
-  position: absolute;
-  top: -40%;
-  right: -5%;
-  width: 260px;
-  height: 220%;
-  background: rgba(255, 255, 255, 0.06);
-  transform: rotate(24deg);
-  pointer-events: none;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 14px;
 }
 
 .commitment-title-pill {
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  background-color: rgba(255, 255, 255, 0.16);
-  border: 1px solid rgba(255, 255, 255, 0.32);
+  justify-content: center;
+  gap: 4px;
+  background-color: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   color: #ffffff;
-  padding: 4px 14px;
-  border-radius: 999px;
-  font-size: 0.75rem;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-size: 0.72rem;
   font-weight: 800;
-  letter-spacing: 0.7px;
-  margin-bottom: 8px;
+  letter-spacing: 0.6px;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .commitment-cards-row {
@@ -392,18 +380,18 @@
 .commitment-item {
   background-color: rgba(255, 255, 255, 0.96);
   color: #1e293b;
-  border-radius: 12px;
-  padding: 9px 14px;
+  border-radius: 11px;
+  padding: 8px 12px;
   display: flex;
   align-items: center;
   gap: 10px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
 }
 
 .commitment-icon {
-  width: 36px;
-  height: 36px;
-  min-width: 36px;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
   border-radius: 50%;
   background: linear-gradient(135deg, #d32f2f 0%, #991b1b 100%);
   color: #ffffff;
@@ -413,8 +401,8 @@
 }
 
 .commitment-item p {
-  font-size: clamp(0.74rem, 0.82vw, 0.8rem);
-  line-height: 1.42;
+  font-size: clamp(0.73rem, 0.8vw, 0.79rem);
+  line-height: 1.38;
   margin: 0;
   color: #1e293b;
 }
@@ -430,8 +418,13 @@
     grid-template-columns: 1fr;
   }
 
-  .about-goals-list {
+  .about-commitment-banner {
     grid-template-columns: 1fr;
+  }
+
+  .commitment-title-pill {
+    flex-direction: row;
+    width: fit-content;
   }
 
   .commitment-cards-row {
@@ -444,11 +437,9 @@
     grid-template-columns: 1fr;
   }
 
-  .about-field-pill:last-child {
+  .about-field-pill,
+  .about-field-pill:nth-child(4),
+  .about-field-pill:nth-child(5) {
     grid-column: span 1;
-  }
-
-  .video-duration-pill {
-    display: none;
   }
 }

@@ -232,25 +232,13 @@ function App() {
 
       const currentIdx = findCurrentSectionIndex(sections);
       const currentSec = sections[currentIdx];
-      const secTop = getElementDocumentTop(currentSec.el);
-      const secHeight = currentSec.el.offsetHeight;
-      const secBottom = secTop + secHeight;
+      const footerTop = getElementDocumentTop(currentSec.el);
 
       // Nếu đang ở phần Footer dài ở cuối trang, cho phép cuộn tự nhiên bên trong Footer
       if (currentSec.id === 'footer') {
         if (delta > 0) return; // Đang cuộn xuống tiếp trong footer
-        if (delta < 0 && window.scrollY > secTop + 30) {
+        if (delta < 0 && window.scrollY > footerTop + 30) {
           return; // Cuộn lên bên trong footer cho tới đầu footer
-        }
-      }
-
-      // Nếu mục hiện tại cao hơn màn hình (ví dụ mục Giới thiệu có Video Demo lớn), cho phép cuộn hết nội dung trong mục trước khi nhảy sang mục kế tiếp
-      if (secHeight > window.innerHeight + 24) {
-        if (delta > 0 && window.scrollY + window.innerHeight < secBottom - 16) {
-          return;
-        }
-        if (delta < 0 && window.scrollY > secTop + 16) {
-          return;
         }
       }
 
