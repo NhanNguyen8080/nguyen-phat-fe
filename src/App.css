@@ -148,7 +148,7 @@
     transform: none;
   }
 
-  /* Mỗi mục trên trang chủ có chiều cao tối thiểu 100vh nhưng tự co giãn khi nội dung dài hơn, không cắt khuất nút bấm */
+  /* Mỗi mục trên trang chủ chiếm đúng 1 màn hình máy tính (100vh) để lăn 1 nấc = 1 mục */
   .home-fullpage-main section.hero,
   .home-fullpage-main section.about,
   .home-fullpage-main section.services,
@@ -156,14 +156,15 @@
   .home-fullpage-main section.capacity-section,
   .home-fullpage-main section.contact {
     min-height: 100vh;
-    height: auto;
-    padding-top: 96px;
-    padding-bottom: 48px;
+    height: 100vh;
+    padding-top: 84px;
+    padding-bottom: 24px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     box-sizing: border-box;
-    scroll-margin-top: 76px;
+    scroll-margin-top: 0;
+    overflow: hidden;
   }
 
   /* Khoảng đệm an toàn hai bên để thanh chỉ báo bên trái & cụm nút nổi bên phải không đè lên nội dung */
@@ -226,13 +227,38 @@
     height: clamp(270px, 43vh, 370px);
   }
 
-  /* 5. CapacityProfile (Hồ sơ năng lực) */
+  /* 5. CapacityProfile (Hồ sơ năng lực) — thu gọn khoảng cách để vừa khít 100vh không bị cắt nút đáy */
   .home-fullpage-main .capacity-header {
-    margin-bottom: 20px;
+    margin-bottom: 14px;
+  }
+
+  .home-fullpage-main .capacity-badge {
+    margin-bottom: 6px;
+    padding: 4px 14px;
+  }
+
+  .home-fullpage-main .capacity-header .section-title {
+    margin-bottom: 6px;
+  }
+
+  .home-fullpage-main .capacity-info-col {
+    gap: 12px;
+  }
+
+  .home-fullpage-main .capacity-highlight-card {
+    padding: 11px 14px;
+  }
+
+  .home-fullpage-main .capacity-quick-tabs {
+    padding: 9px 14px;
+  }
+
+  .home-fullpage-main .capacity-book-stage {
+    padding: 14px;
   }
 
   .home-fullpage-main .capacity-page {
-    max-height: clamp(260px, 40vh, 350px);
+    max-height: clamp(240px, 37vh, 330px);
   }
 
   /* 6. Contact (Liên hệ) */

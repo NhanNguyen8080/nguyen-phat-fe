@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useEffect, useState } from 'react';
+import React, { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import Header from './components/Header/Header';
 import Hero from './components/Hero/Hero';
 import About from './components/About/About';
@@ -65,6 +65,8 @@ function App() {
   const [productCategoryFilter, setProductCategoryFilter] = useState('all');
   const [capacityInitialPage, setCapacityInitialPage] = useState(1);
   const [activeFpSection, setActiveFpSection] = useState('home');
+  const isWheelLockedRef = useRef(false);
+  const wheelLockTimerRef = useRef(null);
 
   useEffect(() => {
     if ('scrollRestoration' in window.history) {
@@ -100,7 +102,7 @@ function App() {
     };
   }, []);
 
-  // Cơ chế đồng bộ đề mục đang xem (Scroll-Spy) chính xác trên trang chủ
+  // Cơ chế Full-page Section Scroll: Lăn chuột 1 nấc = chuyển đúng 1 đề mục trên máy tính (> 992px)
   useEffect(() => {
     if (route.page !== 'home') return;
 
@@ -128,6 +130,7 @@ function App() {
     };
 
     const syncActiveSectionOnScroll = () => {
+      if (isWheelLockedRef.current) return;
       const sections = getSectionElements();
       if (!sections.length) return;
       const idx = findCurrentSectionIndex(sections);
@@ -138,9 +141,92 @@ function App() {
     window.addEventListener('scroll', syncActiveSectionOnScroll, { passive: true });
     window.addEventListener('resize', syncActiveSectionOnScroll, { passive: true });
 
+    const jumpToSectionIndex = (targetIdx, sections) => {
+      const clamped = Math.max(0, Math.min(sections.length - 1, targetIdx));
+      const target = sections[clamped];
+      if (!target || !target.el) return;
+
+      isWheelLockedRef.current = true;
+      setActiveFpSection(target.id);
+      const targetTop = getElementDocumentTop(target.el);
+      window.scrollTo({ top: targetTop, behavior: 'smooth' });
+
+      if (wheelLockTimerRef.current) {
+        clearTimeout(wheelLockTimerRef.current);
+      }
+      wheelLockTimerRef.current = setTimeout(() => {
+        isWheelLockedRef.current = false;
+      }, 720);
+    };
+
+    const handleWheel = (e) => {
+      // Chỉ kích hoạt nhảy từng mục trên màn hình máy tính (> 992px) và không giữ phím Ctrl (zoom)
+      if (window.innerWidth <= 992 || e.ctrlKey) return;
+      if (document.body.style.overflow === 'hidden') return; // Đang mở modal/drawer
+
+      const delta = e.deltaY;
+      if (Math.abs(delta) < 12) return;
+
+      const sections = getSectionElements();
+      if (!sections.length) return;
+
+      const currentIdx = findCurrentSectionIndex(sections);
+      const currentSec = sections[currentIdx];
+      const footerTop = getElementDocumentTop(currentSec.el);
+
+      // Nếu đang ở phần Footer dài ở cuối trang, cho phép cuộn tự nhiên bên trong Footer
+      if (currentSec.id === 'footer') {
+        if (delta > 0) return; // Đang cuộn xuống tiếp trong footer
+        if (delta < 0 && window.scrollY > footerTop + 30) {
+          return; // Cuộn lên bên trong footer cho tới đầu footer
+        }
+      }
+
+      e.preventDefault();
+      if (isWheelLockedRef.current) return;
+
+      if (delta > 0 && currentIdx < sections.length - 1) {
+        jumpToSectionIndex(currentIdx + 1, sections);
+      } else if (delta < 0 && currentIdx > 0) {
+        jumpToSectionIndex(currentIdx - 1, sections);
+      }
+    };
+
+    const handleKeyDown = (e) => {
+      if (window.innerWidth <= 992) return;
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+      if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+
+      if (['ArrowDown', 'PageDown', 'ArrowUp', 'PageUp'].includes(e.key)) {
+        const sections = getSectionElements();
+        if (!sections.length) return;
+        const currentIdx = findCurrentSectionIndex(sections);
+        const isDown = e.key === 'ArrowDown' || e.key === 'PageDown';
+
+        if (sections[currentIdx]?.id === 'footer' && isDown) return;
+
+        e.preventDefault();
+        if (isWheelLockedRef.current) return;
+
+        if (isDown && currentIdx < sections.length - 1) {
+          jumpToSectionIndex(currentIdx + 1, sections);
+        } else if (!isDown && currentIdx > 0) {
+          jumpToSectionIndex(currentIdx - 1, sections);
+        }
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('keydown', handleKeyDown);
+
     return () => {
       window.removeEventListener('scroll', syncActiveSectionOnScroll);
       window.removeEventListener('resize', syncActiveSectionOnScroll);
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('keydown', handleKeyDown);
+      if (wheelLockTimerRef.current) {
+        clearTimeout(wheelLockTimerRef.current);
+      }
     };
   }, [route.page]);
 
@@ -218,8 +304,16 @@ function App() {
   const handleDotClick = (secId) => {
     const el = document.getElementById(secId);
     if (el) {
+      isWheelLockedRef.current = true;
       setActiveFpSection(secId);
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const top = el.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top, behavior: 'smooth' });
+      if (wheelLockTimerRef.current) {
+        clearTimeout(wheelLockTimerRef.current);
+      }
+      wheelLockTimerRef.current = setTimeout(() => {
+        isWheelLockedRef.current = false;
+      }, 720);
     }
   };
 
