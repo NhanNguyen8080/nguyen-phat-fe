@@ -367,6 +367,118 @@ export const MOCK_PRODUCTS = [
     warranty_months: 18,
     created_at: "2026-10-30T01:11:14.700Z",
     updated_at: "2026-10-30T01:11:14.700Z"
+  },
+  {
+    id: "d4182f57-a24f-4662-b07f-1fc0ffd85e11",
+    name: "Thang Cáp Điện Công Nghiệp Sơn Tĩnh Điện (Cable Ladder)",
+    slug: "thang-cap-dien-cong-nghiep-son-tinh-dien",
+    code: "NP-CABLE-LADDER",
+    brand: "Nguyên Phát",
+    product_type: "cable_containment",
+    category_id: "09048929-2ca1-48fb-a727-6fc6c259a0a7",
+    category_name: "Thang máng cáp",
+    description: `<h3>Thang Cáp Điện Công Nghiệp Chịu Tải Nặng</h3>
+<p><strong>Thang cáp điện (Cable Ladder)</strong> do Cơ Điện Nguyên Phát trực tiếp gia công bằng công nghệ đột dập, chấn CNC hiện đại, chuyên dùng dẫn hướng cáp động lực tiết diện lớn tại nhà máy, trạm biến áp và tầng hầm tòa nhà.</p>`,
+    thumbnail: "/images/products/thang-cap-nguyen-phat.jpg",
+    images: [
+      "/images/products/thang-cap-nguyen-phat.jpg",
+      "/images/products/thang-mang-cap-dien.png"
+    ],
+    rated_voltage: null,
+    rated_current: null,
+    frequency: null,
+    ip_rating: "NEMA VE-1",
+    standards: "TCVN 10688, IEC 61537",
+    short_circuit_current: null,
+    material: "Thép tấm cán nguội CT3 / Tôn mạ kẽm / Inox 304",
+    thickness: "1.5mm - 2.0mm - 2.5mm",
+    surface_finish: "Sơn tĩnh điện RAL 7032 / Mạ kẽm nhúng nóng",
+    dimensions: "W200xH100 mm đến W1000xH200 mm, L=2500 - 3000 mm",
+    main_components: "Thành thang cáp, bậc thang cáp đột lỗ tăng cứng, bát nối, co ngang, co lên/xuống, tê, thập",
+    specifications: {
+      "Bước bậc thang": "250mm - 300mm tiêu chuẩn",
+      "Bề mặt hoàn thiện": "Sơn tĩnh điện cao cấp hoặc mạ kẽm nhúng nóng chống ăn mòn"
+    },
+    documents: [],
+    is_featured: true,
+    warranty_months: 24,
+    created_at: "2026-10-30T01:11:14.750Z",
+    updated_at: "2026-10-30T01:11:14.750Z"
+  },
+  {
+    id: "e5293f57-a24f-4662-b07f-1fc0ffd85e12",
+    name: "Khay Cáp Đột Lỗ CNC (Tray Cáp Điện Công Nghiệp)",
+    slug: "khay-cap-dot-lo-cnc-tray-cap",
+    code: "NP-TRAY-CAP",
+    brand: "Nguyên Phát",
+    product_type: "cable_containment",
+    category_id: "09048929-2ca1-48fb-a727-6fc6c259a0a7",
+    category_name: "Thang máng cáp",
+    description: `<h3>Khay Cáp Đột Lỗ Thoát Nhiệt (Perforated Cable Tray)</h3>
+<p><strong>Khay cáp (Tray cáp)</strong> được đột lỗ thoát nhiệt đồng đều trên máy đột CNC, giúp thông gió tối ưu cho hệ thống cáp điều khiển và cáp động lực công nghiệp.</p>`,
+    thumbnail: "/images/products/tray-cap-nguyen-phat.jpg",
+    images: [
+      "/images/products/tray-cap-nguyen-phat.jpg",
+      "/images/products/mang-cap-nguyen-phat.jpg"
+    ],
+    rated_voltage: null,
+    rated_current: null,
+    frequency: null,
+    ip_rating: "IP3X",
+    standards: "TCVN 10688, IEC 61537",
+    short_circuit_current: null,
+    material: "Thép cán nguội / Tôn Zam / Inox 304",
+    thickness: "1.2mm - 1.5mm - 2.0mm",
+    surface_finish: "Sơn tĩnh điện RAL 7032 / Mạ kẽm điện phân / Mạ kẽm nhúng nóng",
+    dimensions: "W100xH50 mm đến W800xH150 mm",
+    main_components: "Thân khay cáp đột lỗ CNC, nắp khay cáp, phụ kiện nối đồng bộ",
+    specifications: {
+      "Ưu điểm": "Tản nhiệt cáp nhanh, trọng lượng tối ưu, độ cứng vững cao",
+      "Ứng dụng": "Nhà máy sản xuất, khu công nghiệp, tòa nhà thương mại"
+    },
+    documents: [],
+    is_featured: true,
+    warranty_months: 24,
+    created_at: "2026-10-30T01:11:14.800Z",
+    updated_at: "2026-10-30T01:11:14.800Z"
+  },
+  {
+    id: "f6304f57-a24f-4662-b07f-1fc0ffd85e13",
+    name: "Vỏ Tủ Điện Công Nghiệp 3 Khung Ghép & Vỏ Tủ 2 Ngăn CNC",
+    slug: "vo-tu-dien-cong-nghiep-3-khung-ghep-cnc",
+    code: "NP-ENCLOSURE-3F",
+    brand: "Nguyên Phát",
+    product_type: "enclosure",
+    category_id: "09048929-2ca1-48fb-a727-6fc6c259a0a7",
+    category_name: "Thang máng cáp",
+    description: `<h3>Vỏ Tủ Điện Công Nghiệp Sản Xuất Theo Yêu Cầu (CNC Enclosure)</h3>
+<p><strong>Vỏ tủ điện công nghiệp Nguyên Phát</strong> (vỏ tủ 3 khung ghép cửa phụ, vỏ tủ khung cửa chính, vỏ tủ 2 ngăn, vỏ tủ điều khiển ngoài trời) được chế tạo chính xác trên dây chuyền cắt Laser/đột CNC, chấn gấp tự động và sơn tĩnh điện 2 lớp bền đẹp.</p>`,
+    thumbnail: "/images/products/vo-tu-3-khung.jpg",
+    images: [
+      "/images/products/vo-tu-3-khung.jpg",
+      "/images/products/vo-tu-khung-cua-chinh.jpg",
+      "/images/products/vo-tu-2-ngan.jpg"
+    ],
+    rated_voltage: null,
+    rated_current: null,
+    frequency: null,
+    ip_rating: "IP42 - IP54 - IP65",
+    standards: "IEC 62208, IEC 61439, TCVN",
+    short_circuit_current: null,
+    material: "Thép tấm cán nguội CT3 / Inox 304",
+    thickness: "1.2mm - 1.5mm - 2.0mm - 2.5mm",
+    surface_finish: "Sơn tĩnh điện sần hoặc bóng (RAL 7032 / RAL 7035)",
+    dimensions: "Gia công theo bản vẽ thiết kế của từng dự án",
+    main_components: "Khung tủ tháo lắp module, cánh tủ chính, cánh phụ đột lỗ mặt đồng hồ/đèn báo, khóa bản lề công nghiệp, tấm lắp thiết bị (mounting plate)",
+    specifications: {
+      "Kiểu dáng": "Vỏ tủ ghép khung MSB/MCC, Vỏ tủ 2 ngăn, Vỏ tủ ngoài trời có mái che",
+      "Độ chính xác cơ khí": "Đột dập & chấn CNC sai số < 0.2mm"
+    },
+    documents: [],
+    is_featured: true,
+    warranty_months: 24,
+    created_at: "2026-10-30T01:11:14.850Z",
+    updated_at: "2026-10-30T01:11:14.850Z"
   }
 ];
 

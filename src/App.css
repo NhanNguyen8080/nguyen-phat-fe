@@ -112,25 +112,13 @@
     height: clamp(275px, 34vh, 335px);
   }
 
-  /* 3. Services (Sản phẩm tiêu biểu) */
-  .home-fullpage-main .services-header {
-    margin-bottom: 24px;
+  /* 3. Services (Sản phẩm tiêu biểu — 2 hàng ngang: Tủ điện & Thang máng cáp - Vỏ tủ) */
+  .home-fullpage-main .services-container {
+    gap: clamp(10px, 1.4vh, 16px);
   }
 
-  .home-fullpage-main .services-header .section-title {
-    margin-bottom: 10px;
-  }
-
-  .home-fullpage-main .services-slider-track {
-    padding: 10px 0 24px;
-  }
-
-  .home-fullpage-main .service-card {
-    height: clamp(270px, 41vh, 340px);
-  }
-
-  .home-fullpage-main .card-offset {
-    margin-top: 22px;
+  .home-fullpage-main .product-wide-img-box {
+    height: clamp(160px, 21vh, 205px);
   }
 
   /* 4. Portfolio (Công trình) */
