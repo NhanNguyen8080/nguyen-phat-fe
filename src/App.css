@@ -67,8 +67,10 @@
     transform: none;
   }
 
-  /* Mỗi mục trên trang chủ chiếm đúng 1 màn hình máy tính (100vh) để lăn 1 nấc = 1 mục */
-  .home-fullpage-main section.hero,
+  /* Mỗi màn hình trên trang chủ chiếm đúng 1 màn hình máy tính (100vh)
+     Trong đó Mục Trang chủ gồm 2 màn hình: .hero-screen-1 (#home) và .hero-screen-2 (#home-intro) */
+  .home-fullpage-main .hero-screen-1,
+  .home-fullpage-main .hero-screen-2,
   .home-fullpage-main section.about,
   .home-fullpage-main section.services,
   .home-fullpage-main section.portfolio,
@@ -86,18 +88,19 @@
     overflow: hidden;
   }
 
-  /* Tinh chỉnh kích thước con bên trong từng mục để vừa khít 100vh */
-  /* 1. Hero (Trang chủ gộp Banner + Khối 3 cột) */
-  .home-fullpage-main .hero-container {
-    gap: clamp(12px, 1.8vh, 20px);
+  /* Tinh chỉnh kích thước con bên trong từng màn hình để vừa khít 100vh */
+  /* 1A. Màn hình 1 của Trang chủ (Hero Banner) */
+  .home-fullpage-main .hero-top {
+    margin-bottom: 22px;
   }
 
-  .home-fullpage-main .hero-banner-img {
-    height: clamp(150px, 21vh, 210px);
+  .home-fullpage-main .hero-image {
+    height: clamp(270px, 44vh, 420px);
   }
 
-  .home-fullpage-main .hero-featured-photo-frame {
-    min-height: clamp(260px, 42vh, 390px);
+  /* 1B. Màn hình 2 của Trang chủ (Lời cảm ơn + Ảnh giữa phóng to + Lĩnh vực hoạt động) */
+  .home-fullpage-main .hero-intro-image {
+    height: clamp(380px, 64vh, 580px);
   }
 
   /* 2. About (Giới thiệu: Video Demo + Lĩnh vực + Mục tiêu + Sứ mệnh & Cam kết) */

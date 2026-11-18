@@ -16,6 +16,19 @@ const ProjectDetail = lazy(() => import('./components/ProjectDetail/ProjectDetai
 const AboutPage = lazy(() => import('./components/AboutPage/AboutPage'));
 const CapacityProfilePage = lazy(() => import('./components/CapacityProfilePage/CapacityProfilePage'));
 
+// Danh sách các màn hình 100vh khi lăn chuột trên máy tính (Mục Trang chủ gồm 2 màn hình: #home và #home-intro)
+const HOME_SCROLL_SCREENS = [
+  { id: 'home', navId: 'home', label: 'Trang chủ' },
+  { id: 'home-intro', navId: 'home', label: 'Trang chủ' },
+  { id: 'about', navId: 'about', label: 'Giới thiệu' },
+  { id: 'product', navId: 'product', label: 'Sản phẩm' },
+  { id: 'project', navId: 'project', label: 'Công trình' },
+  { id: 'capacity', navId: 'capacity', label: 'Hồ sơ năng lực' },
+  { id: 'contact', navId: 'contact', label: 'Liên hệ' },
+  { id: 'footer', navId: 'footer', label: 'Đối tác & Chân trang' }
+];
+
+// Danh sách 7 đề mục hiển thị trên thanh chỉ báo bên trái (2 màn hình đầu gộp chung vào mục 01 - Trang chủ)
 const HOME_SECTIONS = [
   { id: 'home', label: 'Trang chủ' },
   { id: 'about', label: 'Giới thiệu' },
@@ -153,7 +166,7 @@ function App() {
     if (route.page !== 'home') return;
 
     const getSectionElements = () =>
-      HOME_SECTIONS.map((s) => ({
+      HOME_SCROLL_SCREENS.map((s) => ({
         ...s,
         el: document.getElementById(s.id)
       })).filter((s) => s.el);
@@ -180,7 +193,7 @@ function App() {
       const sections = getSectionElements();
       if (!sections.length) return;
       const idx = findCurrentSectionIndex(sections);
-      setActiveFpSection(sections[idx].id);
+      setActiveFpSection(sections[idx].navId);
     };
 
     syncActiveSectionOnScroll();
@@ -194,7 +207,7 @@ function App() {
 
       const ScrollDuration = 1250;
       isWheelLockedRef.current = true;
-      setActiveFpSection(target.id);
+      setActiveFpSection(target.navId);
       const targetTop = getElementDocumentTop(target.el);
       animateSlowScrollTo(targetTop, ScrollDuration);
 
