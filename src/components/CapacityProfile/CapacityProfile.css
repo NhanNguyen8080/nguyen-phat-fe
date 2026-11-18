@@ -1,3 +1,9 @@
+/* ==========================================================
+   MỤC HỒ SƠ NĂNG LỰC NGOÀI TRANG CHỦ (#capacity)
+   - Chia đôi 50% Trái (4 tấm hình Giấy chứng nhận: 2 trên 2 dưới, bấm vào phóng to Full màn hình)
+   - 50% Phải (Cuốn Catalogue Hồ sơ năng lực Nguyên Phát, bấm vào là xem được)
+   ========================================================== */
+
 .capacity-section {
   padding-bottom: var(--spacing-section);
   position: relative;
@@ -6,163 +12,174 @@
 .capacity-header {
   text-align: center;
   max-width: 760px;
-  margin: 0 auto 36px;
-}
-
-.capacity-badge {
-  display: inline-block;
-  background-color: rgba(211, 47, 47, 0.08);
-  color: var(--accent-yellow);
-  border: 1px solid rgba(211, 47, 47, 0.25);
-  padding: 6px 16px;
-  border-radius: 999px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  margin-bottom: 12px;
+  margin: 0 auto 20px;
 }
 
 .capacity-header .section-title {
-  margin-bottom: 12px;
+  margin-bottom: 6px;
 }
 
 .capacity-subtitle {
   color: var(--text-gray);
-  font-size: 0.96rem;
-  line-height: 1.6;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
 }
 
-.capacity-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.25fr;
-  gap: 36px;
-  align-items: center;
-}
-
-.capacity-info-col {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.capacity-highlights-list {
+/* ==================== LƯỚI CHIA ĐÔI 50% TRÁI - 50% PHẢI ==================== */
+.capacity-split-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  gap: 24px;
+  align-items: stretch;
 }
 
-.capacity-highlight-card {
-  background-color: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  border-radius: 16px;
-  padding: 16px;
+.capacity-certs-col,
+.capacity-catalog-col {
   display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
-  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.capacity-highlight-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(211, 47, 47, 0.4);
-  box-shadow: 0 10px 24px rgba(211, 47, 47, 0.08);
+.capacity-col-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-.capacity-highlight-icon {
-  width: 38px;
-  height: 38px;
-  min-width: 38px;
-  border-radius: 10px;
-  background-color: rgba(211, 47, 47, 0.1);
+.col-heading-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #d32f2f;
+}
+
+.capacity-col-heading h3 {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.col-heading-note {
+  font-size: 0.76rem;
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+/* ==================== BÊN TRÁI: 4 TẤM HÌNH GIẤY CHỨNG NHẬN (2 TRÊN 2 DƯỚI) ==================== */
+.capacity-certs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  flex: 1;
+}
+
+.cert-card {
+  background-color: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: zoom-in;
+  box-shadow:
+    0 4px 0 #cbd5e1,
+    0 10px 22px rgba(15, 23, 42, 0.07);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.cert-card:hover {
+  transform: translateY(-4px);
+  border-color: #d32f2f;
+  box-shadow:
+    0 6px 0 #b91c1c,
+    0 16px 30px rgba(211, 47, 47, 0.16);
+}
+
+.cert-img-frame {
+  position: relative;
+  width: 100%;
+  height: clamp(160px, 21vh, 210px);
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  padding: 6px;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.15rem;
+  overflow: hidden;
 }
 
-.capacity-highlight-body h4 {
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: var(--text-dark);
-  margin-bottom: 4px;
-  line-height: 1.3;
-}
-
-.capacity-highlight-body p {
-  font-size: 0.8rem;
-  color: var(--text-gray);
-  line-height: 1.45;
-}
-
-.capacity-quick-tabs {
-  background-color: rgba(248, 250, 252, 0.9);
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  border-radius: 14px;
-  padding: 12px 16px;
-}
-
-.quick-tabs-label {
+.cert-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
   display: block;
+  transition: transform 0.35s ease;
+}
+
+.cert-card:hover .cert-img {
+  transform: scale(1.04);
+}
+
+.cert-zoom-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.42);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
+
+.cert-card:hover .cert-zoom-overlay {
+  opacity: 1;
+}
+
+.cert-zoom-btn {
+  background-color: #d32f2f;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 7px 14px;
+  border-radius: 999px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
+}
+
+.cert-caption {
+  background-color: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  padding: 7px 10px;
+  text-align: center;
+}
+
+.cert-title {
   font-size: 0.76rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--text-gray);
-  margin-bottom: 8px;
+  color: #1e293b;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.quick-tabs-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.quick-tab-pill {
-  padding: 6px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  background-color: #ffffff;
-  color: var(--text-dark);
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.quick-tab-pill:hover {
-  border-color: var(--accent-yellow);
-  color: var(--accent-yellow);
-}
-
-.quick-tab-pill.active {
-  background-color: var(--accent-yellow);
-  border-color: var(--accent-yellow);
-  color: #ffffff;
-  box-shadow: 0 4px 10px rgba(211, 47, 47, 0.25);
-}
-
-.capacity-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.capacity-btn-main,
-.capacity-btn-download {
-  gap: 8px;
-  font-size: 0.92rem;
-  padding: 12px 22px;
-}
-
-/* Book Preview Stage */
+/* ==================== BÊN PHẢI: CUỐN CATALOGUE (CHIẾM NỬA MÀN HÌNH) ==================== */
 .capacity-book-stage {
-  background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
-  border: 1px solid rgba(15, 23, 42, 0.09);
-  border-radius: 24px;
-  padding: 20px;
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+  border: 1.5px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow:
+    0 6px 0 #cbd5e1,
+    0 16px 34px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
 }
 
 .capacity-book-spread {
@@ -172,15 +189,15 @@
   background-color: #ffffff;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.16);
   cursor: pointer;
-  border: 1px solid rgba(15, 23, 42, 0.1);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  flex: 1;
 }
 
 .capacity-page {
   position: relative;
-  aspect-ratio: 1800 / 2576;
-  max-height: 390px;
+  height: clamp(330px, 44vh, 430px);
   width: 100%;
   background-color: #ffffff;
   display: flex;
@@ -208,11 +225,11 @@
 .page-number-badge {
   position: absolute;
   bottom: 10px;
-  background-color: rgba(15, 23, 42, 0.75);
+  background-color: rgba(15, 23, 42, 0.78);
   color: #ffffff;
   font-size: 0.7rem;
   font-weight: 600;
-  padding: 3px 8px;
+  padding: 3px 9px;
   border-radius: 999px;
   backdrop-filter: blur(4px);
 }
@@ -228,7 +245,7 @@
 .capacity-book-hover-hint {
   position: absolute;
   inset: 0;
-  background: rgba(15, 23, 42, 0.35);
+  background: rgba(15, 23, 42, 0.36);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -238,13 +255,13 @@
 }
 
 .capacity-book-hover-hint span {
-  background-color: var(--accent-yellow);
+  background-color: #d32f2f;
   color: #ffffff;
   font-weight: 700;
   font-size: 0.88rem;
-  padding: 10px 20px;
+  padding: 10px 22px;
   border-radius: 999px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28);
 }
 
 .capacity-book-spread:hover .capacity-book-hover-hint {
@@ -255,69 +272,204 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 14px;
-  gap: 12px;
+  margin-top: 12px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.book-ctrl-center-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.book-open-full-btn {
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  min-height: 34px;
+}
+
+.book-download-pdf-btn {
+  padding: 8px 14px;
+  font-size: 0.8rem;
+  min-height: 34px;
 }
 
 .book-ctrl-btn {
-  padding: 8px 16px;
+  padding: 7px 14px;
   border-radius: 999px;
   border: 1px solid rgba(15, 23, 42, 0.14);
   background-color: #ffffff;
   color: var(--text-dark);
-  font-size: 0.84rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .book-ctrl-btn:hover:not(:disabled) {
-  background-color: var(--accent-yellow);
-  border-color: var(--accent-yellow);
+  background-color: #d32f2f;
+  border-color: #d32f2f;
   color: #ffffff;
 }
 
 .book-ctrl-btn:disabled {
-  opacity: 0.4;
+  opacity: 0.38;
   cursor: not-allowed;
 }
 
-.book-ctrl-status {
-  font-size: 0.85rem;
-  color: var(--text-gray);
+/* ==================== LIGHTBOX PHÓNG TO GIẤY CHỨNG NHẬN FULL MÀN HÌNH ==================== */
+.cert-lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background-color: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
 }
 
-.book-ctrl-status strong {
-  color: var(--accent-yellow);
+.cert-lightbox-header {
+  position: absolute;
+  top: 16px;
+  left: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
 }
 
+.cert-lightbox-info {
+  color: #ffffff;
+}
+
+.cert-lightbox-count {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #ff8a80;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.cert-lightbox-info h4 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 2px 0 0;
+}
+
+.cert-lightbox-close {
+  background-color: #d32f2f;
+  color: #ffffff;
+  border: 1.5px solid #ffffff;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-size: 0.86rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.cert-lightbox-close:hover {
+  background-color: #b91c1c;
+  transform: scale(1.05);
+}
+
+.cert-lightbox-stage {
+  max-width: 90vw;
+  max-height: 86vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+}
+
+.cert-lightbox-img {
+  max-width: 88vw;
+  max-height: 84vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.cert-lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  background-color: rgba(15, 23, 42, 0.75);
+  color: #ffffff;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.cert-lightbox-nav:hover {
+  background-color: #d32f2f;
+  border-color: #ffffff;
+  transform: translateY(-50%) scale(1.08);
+}
+
+.cert-lightbox-nav.prev {
+  left: 24px;
+}
+
+.cert-lightbox-nav.next {
+  right: 24px;
+}
+
+/* ==================== RESPONSIVE ==================== */
 @media (max-width: 992px) {
-  .capacity-grid {
+  .capacity-split-grid {
     grid-template-columns: 1fr;
-    gap: 28px;
   }
 
   .capacity-page {
-    max-height: 360px;
+    height: 360px;
   }
 }
 
 @media (max-width: 640px) {
-  .capacity-highlights-list {
-    grid-template-columns: 1fr;
+  .capacity-certs-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
   }
 
-  .capacity-actions {
-    flex-direction: column;
-  }
-
-  .capacity-btn-main,
-  .capacity-btn-download {
-    width: 100%;
-    justify-content: center;
+  .cert-img-frame {
+    height: 150px;
   }
 
   .capacity-page {
-    max-height: 260px;
+    height: 250px;
+  }
+
+  .cert-lightbox-nav {
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+  }
+
+  .cert-lightbox-nav.prev {
+    left: 10px;
+  }
+
+  .cert-lightbox-nav.next {
+    right: 10px;
   }
 }

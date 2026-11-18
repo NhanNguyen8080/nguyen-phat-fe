@@ -3,53 +3,24 @@ import './Portfolio.css';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { getProjects, MOCK_PROJECTS } from '../../services/projectService';
 
-const cleanProjectText = (str) =>
-  typeof str === 'string' ? str.replace(/^[\s\-–—]+/, '').trim() : '';
-
-const toHttpsUrl = (url) =>
-  typeof url === 'string' ? url.replace(/^http:\/\/diennguyenphat\.com/i, 'https://diennguyenphat.com') : url;
-
 const getCleanTitle = (project) => {
   if (!project) return '';
   const matched = MOCK_PROJECTS.find(
     (m) => m.id === project.id || m.slug === project.slug || (project.thumbnail && m.thumbnail === project.thumbnail)
   );
   if (matched && matched.title) {
-    return cleanProjectText(matched.title);
+    return matched.title;
   }
-  return cleanProjectText(project.title) || 'Công trình Cơ Điện Nguyên Phát';
+  return project.title || 'Công trình Cơ Điện Nguyên Phát';
 };
 
-const FALLBACK_PROJECTS = [
-  {
-    id: '47792699-c75d-479e-bb27-f0540f15f1f7',
-    slug: 'nha-may-sx-coc-vach-nhua-upvc-kcn-hiep-phuoc-nha-be-34',
-    title: 'Nhà Máy SX Cọc Vách Nhựa UPVC - KCN Hiệp Phước',
-    desc: 'Sản xuất, cung cấp và lắp đặt trọn gói hệ thống Tủ điện phân phối và Thang máng cáp',
-    image: 'https://diennguyenphat.com/upload/files/image004.jpg',
-  },
-  {
-    id: 'd34e5709-db4c-4ea2-92f4-9cdbe7344eec',
-    slug: 'khu-tai-dinh-cu-tan-hoa-dong-quan-6-35',
-    title: 'Khu Tái Định Cư Tân Hòa Đông - Quận 6',
-    desc: 'Cung cấp trọn gói tủ điện MSB, ATS 400A và thang máng cáp',
-    image: 'https://diennguyenphat.com/upload/files/image007.jpg',
-  },
-  {
-    id: 'aea46dc7-bb75-4e90-a568-53d947e0f819',
-    slug: 'kcn-long-duc-dong-nai-36',
-    title: 'Nhà Xưởng KCN Long Đức - Đồng Nai',
-    desc: 'Tủ điện điều khiển MCC, tủ bù công suất phản kháng và máng cáp',
-    image: 'https://diennguyenphat.com/upload/files/image009.jpg',
-  },
-  {
-    id: '530c7ac4-a340-4251-a139-8a54822cdc7d',
-    slug: 'toa-nha-van-phong-dai-dien-phia-nam-cty-319-invest-tan-binh-39',
-    title: 'Tòa Nhà Văn Phòng Đại Diện Cty 319 Invest',
-    desc: 'Cung cấp toàn bộ hệ thống tủ phân phối tầng và thang máng cáp',
-    image: 'https://diennguyenphat.com/upload/files/image014.jpg',
-  }
-];
+const FALLBACK_5_PROJECTS = MOCK_PROJECTS.slice(0, 5).map((p) => ({
+  id: p.id,
+  slug: p.slug || p.id,
+  title: p.title,
+  desc: p.scope_of_work || p.project_type || 'Sản xuất và lắp đặt tủ điện, thang máng cáp',
+  image: p.thumbnail || (p.images && p.images[0]) || 'http://diennguyenphat.com/upload/files/image004.jpg'
+}));
 
 const Portfolio = ({ onNavigateProjects, onSelectProject }) => {
   const headerRef = useScrollReveal();
@@ -60,7 +31,7 @@ const Portfolio = ({ onNavigateProjects, onSelectProject }) => {
     let isMounted = true;
     getProjects().then((res) => {
       if (isMounted && res?.projects?.length > 0) {
-        setProjectList(res.projects.slice(0, 4));
+        setProjectList(res.projects);
       }
     });
     return () => {
@@ -68,15 +39,26 @@ const Portfolio = ({ onNavigateProjects, onSelectProject }) => {
     };
   }, []);
 
-  const displayProjects = projectList.length > 0
-    ? projectList.map((p, idx) => ({
-        id: p.id || idx,
-        slug: p.slug || p.id,
-        title: getCleanTitle(p),
-        desc: p.scope_of_work || p.project_type || 'Sản xuất và lắp đặt tủ điện, thang máng cáp',
-        image: toHttpsUrl(p.thumbnail || (p.images && p.images[0]) || 'https://diennguyenphat.com/upload/files/image004.jpg'),
-      }))
-    : FALLBACK_PROJECTS;
+  // Luôn đảm bảo hiển thị đúng 5 tấm hình công trình tiêu biểu (nếu API trả về ít hơn 5 thì bù thêm từ MOCK_PROJECTS)
+  const mergedProjects = (() => {
+    const fromApi = projectList.map((p, idx) => ({
+      id: p.id || idx,
+      slug: p.slug || p.id,
+      title: getCleanTitle(p),
+      desc: p.scope_of_work || p.project_type || 'Sản xuất và lắp đặt tủ điện, thang máng cáp',
+      image: p.thumbnail || (p.images && p.images[0]) || 'http://diennguyenphat.com/upload/files/image004.jpg'
+    }));
+
+    if (fromApi.length >= 5) {
+      return fromApi.slice(0, 5);
+    }
+
+    const combined = [
+      ...fromApi,
+      ...FALLBACK_5_PROJECTS.filter((f) => !fromApi.some((a) => a.id === f.id || a.slug === f.slug))
+    ];
+    return combined.slice(0, 5);
+  })();
 
   const handleProjectClick = (project) => {
     if (onSelectProject && (project.slug || project.id)) {
@@ -86,33 +68,62 @@ const Portfolio = ({ onNavigateProjects, onSelectProject }) => {
     }
   };
 
+  const handleOpenAllProjects = () => {
+    if (onNavigateProjects) {
+      onNavigateProjects();
+    } else {
+      window.location.hash = '#/projects';
+    }
+  };
+
   return (
     <section className="portfolio" id="project">
       <span id="cong-trinh"></span>
       <span id="projects"></span>
-      <div className="container">
+      <div className="container portfolio-container">
+        {/* Tiêu đề "Các công trình tiêu biểu" — bấm vào chuyển thẳng vào trang Công trình bên trong */}
         <div className="portfolio-header" ref={headerRef}>
-          <h2 className="section-title reveal delay-1"><span className="text-yellow">Công trình</span></h2>
-          <p className="portfolio-subtitle reveal delay-3">Hơn 500+ dự án cơ điện công nghiệp và công trình tiêu biểu trên toàn quốc.</p>
+          <h2
+            className="section-title portfolio-clickable-heading reveal delay-1"
+            onClick={handleOpenAllProjects}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleOpenAllProjects();
+              }
+            }}
+            title="Bấm để xem toàn bộ trang Công trình tiêu biểu"
+          >
+            <span className="text-yellow">Các công trình</span> tiêu biểu
+          </h2>
         </div>
 
-        <div className="portfolio-grid" ref={gridRef}>
-          {displayProjects.map((project, index) => (
+        {/* Lưới 5 tấm hình công trình sắp xếp To - Nhỏ (Mosaic / Bento Grid) */}
+        <div className="portfolio-mosaic-grid" ref={gridRef}>
+          {mergedProjects.map((project, index) => (
             <div
               key={project.id || index}
-              className="portfolio-item reveal"
-              style={{ transitionDelay: `${index * 0.1}s`, cursor: 'pointer' }}
+              className={`portfolio-item portfolio-mosaic-item mosaic-slot-${index + 1} reveal`}
+              style={{ transitionDelay: `${index * 0.08}s` }}
               onClick={() => handleProjectClick(project)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleProjectClick(project);
+                }
+              }}
               title={`Xem chi tiết: ${project.title}`}
             >
-              <img 
-                src={project.image} 
-                alt={project.title || "Công trình Nguyên Phát"} 
+              <img
+                src={project.image}
+                alt={project.title || 'Công trình Nguyên Phát'}
                 className="portfolio-image"
                 loading="lazy"
                 decoding="async"
-                width="600"
-                height="400"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
                   e.currentTarget.src = 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=800&auto=format&fit=crop';
@@ -128,22 +139,14 @@ const Portfolio = ({ onNavigateProjects, onSelectProject }) => {
           ))}
         </div>
 
-        <div className="portfolio-actions" style={{ display: 'flex', justifyContent: 'center', marginTop: '24px' }}>
-          <button 
-            type="button" 
-            className="btn-primary"
-            onClick={onNavigateProjects}
-            style={{ 
-              padding: '14px 36px', 
-              fontSize: '1rem', 
-              display: 'inline-flex', 
-              alignItems: 'center', 
-              gap: '10px',
-              borderRadius: 'var(--border-radius-lg)',
-              cursor: 'pointer'
-            }}
+        {/* Nút dưới cùng: "Xem tất cả" — bấm vào chuyển vào trang Công trình bên trong */}
+        <div className="portfolio-actions">
+          <button
+            type="button"
+            className="btn-primary portfolio-view-all-btn"
+            onClick={handleOpenAllProjects}
           >
-            <span>Xem thêm</span>
+            <span>Xem tất cả</span>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="5" y1="12" x2="19" y2="12"></line>
               <polyline points="12 5 19 12 12 19"></polyline>

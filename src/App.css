@@ -121,43 +121,30 @@
     height: clamp(160px, 21vh, 205px);
   }
 
-  /* 4. Portfolio (Công trình) */
-  .home-fullpage-main .portfolio-header {
-    margin-bottom: 24px;
+  /* 4. Portfolio (Các công trình tiêu biểu — Lưới 5 tấm hình To - Nhỏ Mosaic) */
+  .home-fullpage-main .portfolio-container {
+    gap: clamp(12px, 1.8vh, 20px);
   }
 
-  .home-fullpage-main .portfolio-grid {
-    margin-bottom: 24px;
+  .home-fullpage-main .portfolio-mosaic-grid {
+    grid-template-rows: repeat(2, clamp(185px, 24vh, 235px));
   }
 
-  .home-fullpage-main .portfolio-item {
-    height: clamp(270px, 43vh, 370px);
+  .home-fullpage-main .portfolio-mosaic-item {
+    height: 100%;
   }
 
-  /* 5. CapacityProfile (Hồ sơ năng lực) — thu gọn khoảng cách để vừa khít 100vh không bị cắt nút đáy */
+  /* 5. CapacityProfile (Hồ sơ năng lực — Trái: 4 Giấy chứng nhận 2x2 | Phải: Cuốn Catalogue) */
   .home-fullpage-main .capacity-header {
     margin-bottom: 14px;
   }
 
-  .home-fullpage-main .capacity-badge {
-    margin-bottom: 6px;
-    padding: 4px 14px;
-  }
-
   .home-fullpage-main .capacity-header .section-title {
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
 
-  .home-fullpage-main .capacity-info-col {
-    gap: 12px;
-  }
-
-  .home-fullpage-main .capacity-highlight-card {
-    padding: 11px 14px;
-  }
-
-  .home-fullpage-main .capacity-quick-tabs {
-    padding: 9px 14px;
+  .home-fullpage-main .cert-img-frame {
+    height: clamp(150px, 19.5vh, 195px);
   }
 
   .home-fullpage-main .capacity-book-stage {
@@ -165,7 +152,7 @@
   }
 
   .home-fullpage-main .capacity-page {
-    max-height: clamp(240px, 37vh, 330px);
+    height: clamp(320px, 42vh, 410px);
   }
 
   /* 6. Contact (Liên hệ) */

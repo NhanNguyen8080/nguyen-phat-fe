@@ -1,141 +1,161 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './CapacityProfile.css';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 
 const TOTAL_PAGES = 28;
 
-const PROFILE_HIGHLIGHTS = [
+const CERTIFICATES = [
   {
-    icon: '🏭',
-    title: 'Năng Lực Nhà Máy & Thiết Bị',
-    desc: 'Hệ thống máy đột dập CNC, máy chấn, cắt laser và dây chuyền sơn tĩnh điện khép kín.'
+    id: 1,
+    title: 'Giấy Chứng Nhận Đăng Ký Doanh Nghiệp (Mặt 1)',
+    code: 'MSDN: 0307380016',
+    image: '/images/certificates/cert-gpkd-1.jpg'
   },
   {
-    icon: '📜',
-    title: 'Hồ Sơ Pháp Lý & Chứng Nhận',
-    desc: 'Đạt chuẩn quản lý chất lượng ISO 9001:2015 và tiêu chuẩn tủ bảng điện quốc tế IEC 61439.'
+    id: 2,
+    title: 'Giấy Chứng Nhận Đăng Ký Doanh Nghiệp (Mặt 2)',
+    code: 'Sở KH&ĐT TP.HCM',
+    image: '/images/certificates/cert-gpkd-2.jpg'
   },
   {
-    icon: '⚡',
-    title: 'Hệ Sinh Thái Sản Phẩm Chủ Lực',
-    desc: 'Tủ điện tổng MSB, ATS, tủ bù công suất, tủ điều khiển MCC, biến tần và thang máng cáp.'
+    id: 3,
+    title: 'Hồ Sơ Pháp Lý & Định Danh Doanh Nghiệp',
+    code: 'Chuẩn TCVN & IEC',
+    image: '/images/certificates/cert-ho-so-phap-ly.jpg'
   },
   {
-    icon: '🏗️',
-    title: 'Dự Án Công Nghiệp Tiêu Biểu',
-    desc: 'Hồ sơ nghiệm thu thực tế tại các KCN, nhà máy, tòa nhà cao tầng và trạm biến áp toàn quốc.'
+    id: 4,
+    title: 'Chứng Nhận Năng Lực Sản Xuất & Cam Kết Chất Lượng',
+    code: 'ISO 9001 / IEC 61439',
+    image: '/images/certificates/cert-cam-ket-chat-luong.jpg'
   }
-];
-
-const QUICK_SPREADS = [
-  { label: 'Bìa & Giới thiệu', leftPage: 1, rightPage: 2 },
-  { label: 'Thư ngỏ & Pháp lý', leftPage: 3, rightPage: 4 },
-  { label: 'Sơ đồ tổ chức', leftPage: 5, rightPage: 6 },
-  { label: 'Năng lực sản xuất', leftPage: 9, rightPage: 10 },
-  { label: 'Sản phẩm tủ điện', leftPage: 13, rightPage: 14 },
-  { label: 'Công trình tiêu biểu', leftPage: 21, rightPage: 22 }
 ];
 
 const CapacityProfile = ({ onNavigateCapacity }) => {
   const sectionRef = useScrollReveal({ threshold: 0.08 });
-  const [spreadIndex, setSpreadIndex] = useState(0); // 0 => pages 1 & 2, 1 => pages 3 & 4, ...
-  const maxSpread = Math.ceil(TOTAL_PAGES / 2) - 1;
+  const [spreadIndex, setSpreadIndex] = useState(0); // 0 => Trang 1 & 2
+  const [activeCertIndex, setActiveCertIndex] = useState(null);
 
+  const maxSpread = Math.ceil(TOTAL_PAGES / 2) - 1;
   const leftPage = spreadIndex * 2 + 1;
   const rightPage = Math.min(TOTAL_PAGES, leftPage + 1);
 
-  const handlePrevSpread = () => {
+  // Khóa cuộn trang và hỗ trợ phím mũi tên / Escape khi đang mở ảnh Giấy chứng nhận Full màn hình
+  useEffect(() => {
+    if (activeCertIndex === null) return;
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setActiveCertIndex(null);
+      } else if (e.key === 'ArrowRight') {
+        setActiveCertIndex((prev) => (prev + 1) % CERTIFICATES.length);
+      } else if (e.key === 'ArrowLeft') {
+        setActiveCertIndex((prev) => (prev - 1 + CERTIFICATES.length) % CERTIFICATES.length);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [activeCertIndex]);
+
+  const handlePrevSpread = (e) => {
+    e.stopPropagation();
     setSpreadIndex((prev) => Math.max(0, prev - 1));
   };
 
-  const handleNextSpread = () => {
+  const handleNextSpread = (e) => {
+    e.stopPropagation();
     setSpreadIndex((prev) => Math.min(maxSpread, prev + 1));
   };
+
+  const activeCert = activeCertIndex !== null ? CERTIFICATES[activeCertIndex] : null;
 
   return (
     <section className="capacity-section" id="capacity">
       <div className="container">
         <div className="capacity-wrapper" ref={sectionRef}>
+          {/* Tiêu đề mục Hồ sơ năng lực */}
           <div className="capacity-header reveal">
-            <span className="capacity-badge">Cơ Điện Nguyên Phát — Profile &amp; Catalog</span>
             <h2 className="section-title">
               <span className="text-yellow">Hồ sơ</span> năng lực
             </h2>
             <p className="capacity-subtitle">
-              Khám phá toàn diện quy mô nhà xưởng, năng lực kỹ thuật và danh mục sản phẩm chuẩn quốc tế của Cơ Điện Nguyên Phát qua ấn phẩm Hồ sơ năng lực chính thức (28 trang).
+              Chứng nhận pháp lý, tiêu chuẩn quản lý chất lượng và ấn phẩm Catalogue Hồ Sơ Năng Lực chính thức của Cơ Điện Nguyên Phát.
             </p>
           </div>
 
-          <div className="capacity-grid">
-            {/* Cột trái: Điểm nhấn năng lực & Hành động */}
-            <div className="capacity-info-col reveal-left delay-1">
-              <div className="capacity-highlights-list">
-                {PROFILE_HIGHLIGHTS.map((item, idx) => (
-                  <div key={idx} className="capacity-highlight-card">
-                    <div className="capacity-highlight-icon">{item.icon}</div>
-                    <div className="capacity-highlight-body">
-                      <h4>{item.title}</h4>
-                      <p>{item.desc}</p>
+          {/* Lưới chia đôi 50% Trái (4 tấm hình Giấy chứng nhận: 2 trên 2 dưới) | 50% Phải (Cuốn Catalogue) */}
+          <div className="capacity-split-grid">
+            {/* ==================== BÊN TRÁI (50%): 4 TẤM HÌNH GIẤY CHỨNG NHẬN (2 TRÊN 2 DƯỚI) ==================== */}
+            <div className="capacity-certs-col reveal-left delay-1">
+              <div className="capacity-col-heading">
+                <span className="col-heading-dot" />
+                <h3>GIẤY CHỨNG NHẬN &amp; HỒ SƠ PHÁP LÝ</h3>
+                <span className="col-heading-note">(Bấm vào hình để phóng to toàn màn hình)</span>
+              </div>
+
+              <div className="capacity-certs-grid">
+                {CERTIFICATES.map((cert, index) => (
+                  <div
+                    key={cert.id}
+                    className="cert-card"
+                    onClick={() => setActiveCertIndex(index)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setActiveCertIndex(index);
+                      }
+                    }}
+                    title={`Bấm để phóng to: ${cert.title}`}
+                  >
+                    <div className="cert-img-frame">
+                      <img
+                        src={cert.image}
+                        alt={cert.title}
+                        className="cert-img"
+                        loading="lazy"
+                      />
+                      <div className="cert-zoom-overlay">
+                        <span className="cert-zoom-btn">🔍 Phóng to toàn màn hình</span>
+                      </div>
+                    </div>
+                    <div className="cert-caption">
+                      <span className="cert-title">{cert.title}</span>
                     </div>
                   </div>
                 ))}
               </div>
-
-              <div className="capacity-quick-tabs">
-                <span className="quick-tabs-label">Chuyển nhanh mục lục:</span>
-                <div className="quick-tabs-pills">
-                  {QUICK_SPREADS.map((q, idx) => {
-                    const targetSpread = Math.floor((q.leftPage - 1) / 2);
-                    const isActive = spreadIndex === targetSpread;
-                    return (
-                      <button
-                        key={idx}
-                        type="button"
-                        className={`quick-tab-pill ${isActive ? 'active' : ''}`}
-                        onClick={() => setSpreadIndex(targetSpread)}
-                      >
-                        {q.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="capacity-actions">
-                <button
-                  type="button"
-                  className="btn-primary capacity-btn-main"
-                  onClick={() => onNavigateCapacity && onNavigateCapacity(leftPage)}
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                  </svg>
-                  <span>Đọc Toàn Màn Hình (28 Trang)</span>
-                </button>
-
-                <a
-                  href="/catalog/ho-so-nang-luc-nguyen-phat.pdf"
-                  download="Ho-So-Nang-Luc-Co-Dien-Nguyen-Phat.pdf"
-                  className="btn-secondary capacity-btn-download"
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="7 10 12 15 17 10"></polyline>
-                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                  </svg>
-                  <span>Tải PDF Hồ Sơ</span>
-                </a>
-              </div>
             </div>
 
-            {/* Cột phải: Trình lật trang trực tiếp trên trang chủ */}
-            <div className="capacity-preview-col reveal-right delay-2">
+            {/* ==================== BÊN PHẢI (50%): CUỐN CATALOGUE HỒ SƠ NĂNG LỰC ==================== */}
+            <div className="capacity-catalog-col reveal-right delay-2">
+              <div className="capacity-col-heading">
+                <span className="col-heading-dot" />
+                <h3>CATALOGUE HỒ SƠ NĂNG LỰC NGUYÊN PHÁT</h3>
+                <span className="col-heading-note">(Bấm vào cuốn Catalogue để mở xem)</span>
+              </div>
+
               <div className="capacity-book-stage">
                 <div
                   className="capacity-book-spread"
                   onClick={() => onNavigateCapacity && onNavigateCapacity(leftPage)}
-                  title="Bấm để mở trình đọc Hồ sơ năng lực toàn màn hình"
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      onNavigateCapacity && onNavigateCapacity(leftPage);
+                    }
+                  }}
+                  title="Bấm để mở trình đọc Hồ sơ năng lực toàn màn hình (28 trang)"
                 >
                   <div className="capacity-page capacity-page-left">
                     <img
@@ -158,7 +178,7 @@ const CapacityProfile = ({ onNavigateCapacity }) => {
                   </div>
 
                   <div className="capacity-book-hover-hint">
-                    <span>🔍 Bấm để phóng to &amp; lật trang</span>
+                    <span>📖 Bấm để mở xem Catalogue (28 Trang)</span>
                   </div>
                 </div>
 
@@ -173,9 +193,22 @@ const CapacityProfile = ({ onNavigateCapacity }) => {
                     ‹ Trang trước
                   </button>
 
-                  <span className="book-ctrl-status">
-                    Trang <strong>{leftPage}–{rightPage}</strong> / {TOTAL_PAGES}
-                  </span>
+                  <div className="book-ctrl-center-actions">
+                    <button
+                      type="button"
+                      className="btn-primary book-open-full-btn"
+                      onClick={() => onNavigateCapacity && onNavigateCapacity(leftPage)}
+                    >
+                      📖 Xem Toàn Màn Hình ({leftPage}–{rightPage}/{TOTAL_PAGES})
+                    </button>
+                    <a
+                      href="/catalog/ho-so-nang-luc-nguyen-phat.pdf"
+                      download="Ho-So-Nang-Luc-Co-Dien-Nguyen-Phat.pdf"
+                      className="btn-secondary book-download-pdf-btn"
+                    >
+                      ⬇ Tải PDF
+                    </a>
+                  </div>
 
                   <button
                     type="button"
@@ -192,6 +225,66 @@ const CapacityProfile = ({ onNavigateCapacity }) => {
           </div>
         </div>
       </div>
+
+      {/* ==================== LIGHTBOX PHÓNG TO GIẤY CHỨNG NHẬN FULL MÀN HÌNH ==================== */}
+      {activeCert && (
+        <div
+          className="cert-lightbox-backdrop"
+          onClick={() => setActiveCertIndex(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={activeCert.title}
+        >
+          <div className="cert-lightbox-header" onClick={(e) => e.stopPropagation()}>
+            <div className="cert-lightbox-info">
+              <span className="cert-lightbox-count">
+                Giấy chứng nhận {activeCertIndex + 1} / {CERTIFICATES.length}
+              </span>
+              <h4>{activeCert.title}</h4>
+            </div>
+            <button
+              type="button"
+              className="cert-lightbox-close"
+              onClick={() => setActiveCertIndex(null)}
+              aria-label="Đóng"
+            >
+              ✕ Đóng
+            </button>
+          </div>
+
+          <button
+            type="button"
+            className="cert-lightbox-nav prev"
+            onClick={(e) => {
+              e.stopPropagation();
+              setActiveCertIndex((prev) => (prev - 1 + CERTIFICATES.length) % CERTIFICATES.length);
+            }}
+            aria-label="Giấy chứng nhận trước"
+          >
+            ‹
+          </button>
+
+          <div className="cert-lightbox-stage" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={activeCert.image}
+              alt={activeCert.title}
+              className="cert-lightbox-img"
+            />
+          </div>
+
+          <button
+            type="button"
+            className="cert-lightbox-nav next"
+            onClick={(e) => {
+              e.stopPropagation();
+              setActiveCertIndex((prev) => (prev + 1) % CERTIFICATES.length);
+            }}
+            aria-label="Giấy chứng nhận tiếp theo"
+          >
+            ›
+          </button>
+        </div>
+      )}
     </section>
   );
 };
