@@ -347,25 +347,14 @@
   border: 1px solid rgba(180, 83, 60, 0.32);
   border-left: 4px solid #991b1b;
   border-radius: 14px 24px 24px 14px;
-  padding: 7px 14px 7px 9px;
+  padding: 8px 16px 8px 12px;
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
   box-shadow: 0 3px 10px rgba(139, 17, 17, 0.06);
-  transition: transform 0.2s ease, border-color 0.2s ease;
-}
-
-/* Hiệu ứng xếp bậc chéo nhẹ đặc trưng */
-.infographic-goal-pill:nth-child(2) {
-  margin-left: 8px;
-}
-
-.infographic-goal-pill:nth-child(3) {
-  margin-left: 16px;
-}
-
-.infographic-goal-pill:nth-child(4) {
-  margin-left: 8px;
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .infographic-goal-pill:hover {
