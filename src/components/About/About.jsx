@@ -85,7 +85,7 @@ const About = () => {
     <section className="about" id="about">
       <div className="container about-outer-container" ref={containerRef}>
         <div className="about-master-layout">
-          {/* CỘT TRÁI: VIDEO DEMO HOẠT ĐỘNG CÔNG TY (Chiều cao dài xuyên suốt) */}
+          {/* CỘT TRÁI: VIDEO DEMO HOẠT ĐỘNG CÔNG TY (Khối 3D nổi trực tiếp trên nền trang) */}
           <div
             className="about-video-sidebar reveal-left"
             onClick={() => setShowVideoNotice((prev) => !prev)}
@@ -135,55 +135,9 @@ const About = () => {
             </div>
           </div>
 
-          {/* CỘT PHẢI: BẢNG INFOGRAPHIC (Giữ phong cách tròn/sóng đỏ nhưng ĐẢO BỐ CỤC KHÁC 50%:
-              - Trên cùng: Dải sóng Đỏ & Vàng chứa SỨ MỆNH VÀ CAM KẾT
-              - Dưới Trái: 4 thẻ MỤC TIÊU xếp bậc thang chéo
-              - Dưới Phải: Sơ đồ Quạt Hướng Lên (Rising Arc) LĨNH VỰC HOẠT ĐỘNG) */}
+          {/* CỘT PHẢI: CÁC KHỐI NỔI 3D TRỰC TIẾP TRÊN NỀN TRẮNG (KHÔNG ĐÓNG KHUNG NỀN) */}
           <div className="np-infographic-board reveal-right delay-1">
-            {/* Dải sóng đỏ đậm + viền vàng kim đặt ở ĐẦU BẢNG (ngược với ảnh mẫu đặt ở đáy) */}
-            <svg className="infographic-header-wave" viewBox="0 0 1000 185" preserveAspectRatio="none" aria-hidden="true">
-              <defs>
-                <linearGradient id="topCrimsonWave" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor="#6e0909" />
-                  <stop offset="50%" stopColor="#991b1b" />
-                  <stop offset="100%" stopColor="#b91c1c" />
-                </linearGradient>
-              </defs>
-              <path d="M0,0 L1000,0 L1000,145 C740,185 420,175 0,130 Z" fill="url(#topCrimsonWave)" />
-              <path d="M0,134 C420,180 740,190 1000,150" stroke="#d4a537" strokeWidth="3.5" fill="none" opacity="0.9" />
-            </svg>
-
-            {/* Sóng góc dưới bên phải + Silhouette Cột điện cao thế & Nhà máy công nghiệp ở đáy */}
-            <svg className="infographic-bg-skyline" viewBox="0 0 1000 260" preserveAspectRatio="none" aria-hidden="true">
-              {/* Cột điện cao thế góc dưới phải */}
-              <g stroke="#991b1b" strokeWidth="1.5" opacity="0.2" fill="none">
-                <line x1="910" y1="25" x2="870" y2="255" />
-                <line x1="910" y1="25" x2="950" y2="255" />
-                <line x1="855" y1="68" x2="965" y2="68" />
-                <line x1="845" y1="112" x2="975" y2="112" />
-                <line x1="892" y1="68" x2="928" y2="112" />
-                <line x1="928" y1="68" x2="892" y2="112" />
-                <line x1="885" y1="112" x2="935" y2="168" />
-                <line x1="935" y1="112" x2="885" y2="168" />
-                <path d="M520,145 Q700,195 855,68" strokeDasharray="4 4" />
-                <path d="M520,175 Q700,220 845,112" strokeDasharray="4 4" />
-              </g>
-              {/* Đường chân trời nhà máy & đô thị */}
-              <g fill="#b4533c" opacity="0.13">
-                <rect x="40" y="175" width="32" height="85" />
-                <rect x="78" y="150" width="38" height="110" />
-                <rect x="122" y="185" width="28" height="75" />
-                <rect x="156" y="160" width="42" height="100" />
-                <rect x="460" y="180" width="30" height="80" />
-                <rect x="495" y="155" width="35" height="105" />
-                <rect x="535" y="170" width="28" height="90" />
-              </g>
-              {/* Viền sóng đỏ-vàng góc dưới trái & phải */}
-              <path d="M0,232 C320,262 680,258 1000,222 L1000,260 L0,260 Z" fill="#8b1111" opacity="0.92" />
-              <path d="M0,230 C320,260 680,256 1000,220" stroke="#d4a537" strokeWidth="2.5" fill="none" opacity="0.85" />
-            </svg>
-
-            {/* ==================== TẦNG 1 (TRÊN CÙNG): SỨ MỆNH VÀ CAM KẾT TRÊN DẢI SÓNG ĐỎ ==================== */}
+            {/* ==================== TẦNG 1 (TRÊN CÙNG): SỨ MỆNH VÀ CAM KẾT (KHỐI NỔI 3D) ==================== */}
             <div className="infographic-top-mission-zone">
               <div className="mission-top-badge-row">
                 <div className="infographic-pill-badge mission-top-pill">
@@ -195,13 +149,13 @@ const About = () => {
                   </span>
                   <h3>SỨ MỆNH VÀ CAM KẾT</h3>
                 </div>
-                <div className="mission-gold-line" />
+                <div className="mission-red-line" />
                 <span className="mission-brand-tag">UY TÍN – CHẤT LƯỢNG – BỀN VỮNG</span>
               </div>
 
-              <div className="mission-white-card">
+              <div className="mission-white-card card-3d-surface">
                 <div className="mission-col">
-                  <div className="mission-circle-icon">
+                  <div className="mission-circle-icon badge-3d-red">
                     <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M2 11l5-5 5 2 5-2 5 5-5 6-5-2-5 2z" />
                       <path d="M9 14l3 3 5-5" />
@@ -215,7 +169,7 @@ const About = () => {
                 <div className="mission-divider" />
 
                 <div className="mission-col">
-                  <div className="mission-circle-icon">
+                  <div className="mission-circle-icon badge-3d-red">
                     <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <circle cx="12" cy="12" r="4" />
                       <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.2 2.2M16.2 16.2l2.2 2.2M18.4 5.6l-2.2 2.2M7.8 16.2l-2.2 2.2" />
@@ -228,9 +182,9 @@ const About = () => {
               </div>
             </div>
 
-            {/* ==================== TẦNG 2 (DƯỚI): BÊN TRÁI (MỤC TIÊU) | BÊN PHẢI (SƠ ĐỒ TỎA VÒNG CUNG LĨNH VỰC HOẠT ĐỘNG) ==================== */}
+            {/* ==================== TẦNG 2 (DƯỚI): BÊN TRÁI (MỤC TIÊU 3D) | BÊN PHẢI (SƠ ĐỒ VÒM CUNG 3D LĨNH VỰC HOẠT ĐỘNG) ==================== */}
             <div className="infographic-main-split">
-              {/* KHỐI DƯỚI TRÁI: MỤC TIÊU (Đảo sang bên trái & xếp bậc thang nhẹ) */}
+              {/* KHỐI DƯỚI TRÁI: MỤC TIÊU */}
               <div className="infographic-goals-col">
                 <div className="infographic-section-header">
                   <div className="infographic-pill-badge">
@@ -248,8 +202,8 @@ const About = () => {
                 </div>
 
                 <div className="infographic-goals-stack">
-                  <div className="infographic-goal-pill">
-                    <div className="goal-pill-circle-icon">
+                  <div className="infographic-goal-pill card-3d-pill">
+                    <div className="goal-pill-circle-icon badge-3d-red">
                       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                         <circle cx="12" cy="9" r="6" />
                         <polyline points="9.5 9 11.2 10.8 14.8 7.2" />
@@ -261,8 +215,8 @@ const About = () => {
                     </p>
                   </div>
 
-                  <div className="infographic-goal-pill">
-                    <div className="goal-pill-circle-icon">
+                  <div className="infographic-goal-pill card-3d-pill">
+                    <div className="goal-pill-circle-icon badge-3d-red">
                       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                         <path d="M6 18h8" />
                         <path d="M3 21h18" />
@@ -275,8 +229,8 @@ const About = () => {
                     </p>
                   </div>
 
-                  <div className="infographic-goal-pill">
-                    <div className="goal-pill-circle-icon">
+                  <div className="infographic-goal-pill card-3d-pill">
+                    <div className="goal-pill-circle-icon badge-3d-red">
                       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                         <path d="M11 17l-4-4 3-3 4 4" />
                         <path d="M2 11l5-5 5 2 5-2 5 5-5 6-5-2-5 2z" />
@@ -287,8 +241,8 @@ const About = () => {
                     </p>
                   </div>
 
-                  <div className="infographic-goal-pill">
-                    <div className="goal-pill-circle-icon">
+                  <div className="infographic-goal-pill card-3d-pill">
+                    <div className="goal-pill-circle-icon badge-3d-red">
                       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                         <circle cx="12" cy="12" r="9" />
                         <line x1="3" y1="12" x2="21" y2="12" />
@@ -302,36 +256,43 @@ const About = () => {
                 </div>
               </div>
 
-              {/* KHỐI DƯỚI PHẢI: SƠ ĐỒ QUẠT VÒNG CUNG HƯỚNG LÊN (RISING SUNBURST) LĨNH VỰC HOẠT ĐỘNG */}
+              {/* KHỐI DƯỚI PHẢI: SƠ ĐỒ VÒM CUNG 3D NỔI (RISING 3D HUB) LĨNH VỰC HOẠT ĐỘNG */}
               <div className="infographic-fan-col">
                 <div className="fan-diagram-stage rising-fan-stage">
-                  {/* Các mũi tên đỏ tỏa từ Trục Trung Tâm phía dưới (205, 250) hướng lên 5 vòng tròn con */}
+                  {/* Các mũi tên đỏ 3D có đổ bóng tỏa từ Trục Trung Tâm phía dưới (205, 250) hướng lên 5 vòng tròn con */}
                   <svg className="fan-arrows-svg" viewBox="0 0 410 330" fill="none" aria-hidden="true">
                     <defs>
                       <marker id="redArrowHeadUp" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
-                        <polygon points="0 0, 7 3.5, 0 7" fill="#991b1b" />
+                        <polygon points="0 0, 7 3.5, 0 7" fill="#d32f2f" />
                       </marker>
+                      <filter id="arrowShadow3D" x="-20%" y="-20%" width="140%" height="140%">
+                        <feDropShadow dx="0" dy="4" stdDeviation="3" floodColor="#991b1b" floodOpacity="0.28" />
+                      </filter>
                     </defs>
-                    {/* Vòng cung đứt nét kết nối 5 lĩnh vực */}
-                    <path d="M 52 175 A 158 158 0 0 1 358 175" stroke="#d4a537" strokeWidth="1.8" strokeDasharray="5 4" opacity="0.75" />
-                    {/* 5 mũi tên hướng từ tâm (205, 250) tỏa lên 5 vòng tròn */}
-                    <line x1="146" y1="226" x2="96" y2="196" stroke="#991b1b" strokeWidth="2.8" markerEnd="url(#redArrowHeadUp)" />
-                    <line x1="168" y1="200" x2="136" y2="138" stroke="#991b1b" strokeWidth="2.8" markerEnd="url(#redArrowHeadUp)" />
-                    <line x1="205" y1="186" x2="205" y2="114" stroke="#991b1b" strokeWidth="2.8" markerEnd="url(#redArrowHeadUp)" />
-                    <line x1="242" y1="200" x2="274" y2="138" stroke="#991b1b" strokeWidth="2.8" markerEnd="url(#redArrowHeadUp)" />
-                    <line x1="264" y1="226" x2="314" y2="196" stroke="#991b1b" strokeWidth="2.8" markerEnd="url(#redArrowHeadUp)" />
+                    {/* Đế bóng đổ 3D dưới chân trụ trung tâm */}
+                    <ellipse cx="205" cy="316" rx="74" ry="10" fill="rgba(15, 23, 42, 0.12)" />
+                    {/* Vòng cung quỹ đạo kết nối 5 lĩnh vực */}
+                    <path d="M 52 175 A 158 158 0 0 1 358 175" stroke="#ef4444" strokeWidth="2" strokeDasharray="6 5" opacity="0.45" />
+                    {/* 5 mũi tên 3D hướng từ tâm (205, 250) tỏa lên 5 vòng tròn */}
+                    <g filter="url(#arrowShadow3D)">
+                      <line x1="146" y1="226" x2="96" y2="196" stroke="#d32f2f" strokeWidth="3" markerEnd="url(#redArrowHeadUp)" />
+                      <line x1="168" y1="200" x2="136" y2="138" stroke="#d32f2f" strokeWidth="3" markerEnd="url(#redArrowHeadUp)" />
+                      <line x1="205" y1="186" x2="205" y2="114" stroke="#d32f2f" strokeWidth="3" markerEnd="url(#redArrowHeadUp)" />
+                      <line x1="242" y1="200" x2="274" y2="138" stroke="#d32f2f" strokeWidth="3" markerEnd="url(#redArrowHeadUp)" />
+                      <line x1="264" y1="226" x2="314" y2="196" stroke="#d32f2f" strokeWidth="3" markerEnd="url(#redArrowHeadUp)" />
+                    </g>
                   </svg>
 
-                  {/* 5 Vòng tròn con xếp thành vòm cung hướng lên trên */}
+                  {/* 5 Vòng tròn con 3D nổi xếp thành vòm cung hướng lên trên */}
                   {ARC_NODES.map((node) => (
-                    <div key={node.id} className={`fan-sub-node ${node.posClass}`}>
+                    <div key={node.id} className={`fan-sub-node node-3d-sphere ${node.posClass}`}>
                       <div className="sub-node-icon">{node.icon}</div>
                       <span className="sub-node-text">{node.title}</span>
                     </div>
                   ))}
 
-                  {/* Vòng tròn lớn trung tâm đặt ở chân vòm cung: LĨNH VỰC HOẠT ĐỘNG */}
-                  <div className="fan-center-hub rising-center-hub">
+                  {/* Khối Trụ Tròn 3D Trung Tâm đặt ở chân vòm cung: LĨNH VỰC HOẠT ĐỘNG */}
+                  <div className="fan-center-hub rising-center-hub hub-3d-cylinder">
                     <div className="fan-center-inner">
                       <img src="/images/logo.png" alt="" className="fan-hub-mini-logo" />
                       <span>LĨNH VỰC</span>
