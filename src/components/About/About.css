@@ -1,6 +1,6 @@
 /* ==========================================================
    MỤC GIỚI THIỆU TRÊN TRANG CHỦ (#about)
-   Bố cục Ngang & Vát Chéo Tông Đỏ Chủ Đạo — Gọn trong 1 màn hình 100vh
+   Video Demo dài gấp đôi (Full 100% chiều ngang) + Lưới Ngang & Chéo Tông Đỏ
    ========================================================== */
 
 .about {
@@ -11,7 +11,7 @@
 .about-infographic-container {
   display: flex;
   flex-direction: column;
-  gap: clamp(14px, 1.8vh, 20px);
+  gap: clamp(10px, 1.4vh, 16px);
 }
 
 /* Thanh tiêu đề trên cùng */
@@ -34,17 +34,17 @@
   display: inline-block;
   background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
   color: #ffffff;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 0.8px;
-  padding: 5px 14px;
+  padding: 4px 12px;
   border-radius: 6px;
   transform: skewX(-10deg);
   box-shadow: 0 4px 12px rgba(211, 47, 47, 0.25);
 }
 
 .about-main-title {
-  font-size: clamp(1.45rem, 2.2vw, 2rem);
+  font-size: clamp(1.35rem, 2vw, 1.85rem);
   font-weight: 800;
   color: var(--text-dark);
   line-height: 1.2;
@@ -52,36 +52,22 @@
 }
 
 .about-detail-link {
-  padding: 8px 18px;
-  font-size: 0.84rem;
-  min-height: 36px;
+  padding: 6px 16px;
+  font-size: 0.82rem;
+  min-height: 34px;
   gap: 6px;
 }
 
-/* ===================== LƯỚI BENTO NGANG & CHÉO ===================== */
-.about-bento-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.15fr;
-  gap: clamp(16px, 1.8vw, 24px);
-  align-items: stretch;
-}
-
-.about-left-stack {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(14px, 1.6vh, 18px);
-}
-
-/* 1. Khung Video Demo Hoạt Động Công Ty */
-.about-video-box {
+/* ===================== 1. KHUNG VIDEO DEMO DÀI GẤP ĐÔI (FULL 100% CHIỀU NGANG & CAO GẤP ĐÔI) ===================== */
+.about-video-box.about-video-fullwidth {
   position: relative;
   width: 100%;
-  height: clamp(165px, 21vh, 215px);
-  border-radius: 20px;
+  height: clamp(310px, 38vh, 390px);
+  border-radius: 22px;
   overflow: hidden;
   background-color: #1e0808;
-  border: 2px solid rgba(211, 47, 47, 0.35);
-  box-shadow: 0 12px 28px rgba(183, 28, 28, 0.14);
+  border: 2px solid rgba(211, 47, 47, 0.38);
+  box-shadow: 0 14px 34px rgba(183, 28, 28, 0.18);
   cursor: pointer;
 }
 
@@ -89,29 +75,37 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 25%;
-  filter: brightness(0.75) contrast(1.08);
+  object-position: center 28%;
+  filter: brightness(0.72) contrast(1.08);
   transition: transform 0.5s ease, filter 0.35s ease;
 }
 
 .about-video-box:hover .about-video-thumb {
-  transform: scale(1.05);
-  filter: brightness(0.65) contrast(1.12);
+  transform: scale(1.04);
+  filter: brightness(0.64) contrast(1.12);
 }
 
 .about-video-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    135deg,
-    rgba(153, 27, 27, 0.78) 0%,
-    rgba(15, 23, 42, 0.55) 55%,
-    rgba(183, 28, 28, 0.72) 100%
+    115deg,
+    rgba(153, 27, 27, 0.82) 0%,
+    rgba(15, 23, 42, 0.52) 50%,
+    rgba(183, 28, 28, 0.76) 100%
   );
-  padding: 14px 18px;
+  padding: 14px 24px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+.video-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .video-live-badge {
@@ -122,12 +116,22 @@
   backdrop-filter: blur(6px);
   border: 1px solid rgba(255, 255, 255, 0.28);
   color: #ffffff;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.6px;
-  padding: 4px 12px;
+  padding: 4px 14px;
   border-radius: 999px;
   width: fit-content;
+}
+
+.video-duration-pill {
+  background-color: rgba(15, 23, 42, 0.65);
+  color: #f8fafc;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .live-dot {
@@ -141,13 +145,13 @@
 .video-play-center {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 16px;
 }
 
 .video-play-btn {
-  width: 50px;
-  height: 50px;
-  min-width: 50px;
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
   border-radius: 50%;
   background: linear-gradient(135deg, #ef4444 0%, #b71c1c 100%);
   color: #ffffff;
@@ -166,32 +170,38 @@
 .video-caption-text {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
   color: #ffffff;
 }
 
 .video-caption-text strong {
-  font-size: 0.98rem;
+  font-size: 1.05rem;
   font-weight: 800;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
 }
 
 .video-caption-text span {
-  font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.9);
 }
 
-/* 2. Khối LĨNH VỰC HOẠT ĐỘNG (Thiết kế vát chéo tông Đỏ chủ đạo) */
+/* ===================== 2. LƯỚI BENTO 2 CỘT: LĨNH VỰC HOẠT ĐỘNG & MỤC TIÊU ===================== */
+.about-bento-grid {
+  display: grid;
+  grid-template-columns: 0.92fr 1.28fr;
+  gap: clamp(14px, 1.6vw, 22px);
+  align-items: stretch;
+}
+
 .about-fields-panel,
 .about-goals-panel {
   background: linear-gradient(155deg, #ffffff 0%, #fff5f5 100%);
   border: 1.5px solid rgba(211, 47, 47, 0.24);
-  border-radius: 20px;
-  padding: clamp(14px, 1.8vh, 20px);
+  border-radius: 18px;
+  padding: clamp(12px, 1.5vh, 16px);
   box-shadow: 0 10px 28px rgba(183, 28, 28, 0.06);
   display: flex;
   flex-direction: column;
-  flex: 1;
 }
 
 .panel-diagonal-header {
@@ -200,20 +210,20 @@
   gap: 8px;
   background: linear-gradient(135deg, #d32f2f 0%, #991b1b 100%);
   color: #ffffff;
-  padding: 6px 20px 6px 14px;
-  border-radius: 8px 22px 8px 8px;
+  padding: 5px 18px 5px 12px;
+  border-radius: 8px 20px 8px 8px;
   clip-path: polygon(0 0, 95% 0, 100% 100%, 0% 100%);
   width: fit-content;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   box-shadow: 0 4px 12px rgba(211, 47, 47, 0.25);
 }
 
 .panel-header-icon {
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
 .panel-diagonal-header h3 {
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 800;
   letter-spacing: 0.6px;
   margin: 0;
@@ -223,7 +233,7 @@
 .about-fields-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  gap: 8px;
   flex: 1;
 }
 
@@ -231,8 +241,8 @@
   background-color: #ffffff;
   border: 1px solid rgba(211, 47, 47, 0.18);
   border-left: 4px solid #d32f2f;
-  border-radius: 12px;
-  padding: 9px 12px;
+  border-radius: 11px;
+  padding: 8px 10px;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -240,7 +250,6 @@
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Mục thứ 5 trải ngang 2 cột cân đối */
 .about-field-pill:last-child {
   grid-column: span 2;
 }
@@ -252,10 +261,10 @@
 }
 
 .field-pill-icon {
-  width: 34px;
-  height: 34px;
-  min-width: 34px;
-  border-radius: 9px;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 8px;
   background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
   color: #ffffff;
   display: flex;
@@ -270,7 +279,7 @@
 }
 
 .field-pill-num {
-  font-size: 0.66rem;
+  font-size: 0.64rem;
   font-weight: 800;
   color: #d32f2f;
   line-height: 1;
@@ -278,57 +287,56 @@
 }
 
 .field-pill-title {
-  font-size: 0.83rem;
+  font-size: 0.8rem;
   font-weight: 700;
   color: var(--text-dark);
-  line-height: 1.3;
+  line-height: 1.28;
 }
 
-/* 3. Khối MỤC TIÊU (Cột phải - 4 mục tiêu chiến lược) */
+/* Cột phải: 4 Mục tiêu chiến lược (2x2 lưới ngang để gọn trong 1 màn hình khi Video dài gấp đôi) */
 .about-goals-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
   flex: 1;
-  justify-content: space-between;
 }
 
 .about-goal-card {
   background-color: #ffffff;
   border: 1px solid rgba(211, 47, 47, 0.2);
-  border-right: 4px solid #d32f2f;
-  border-radius: 14px;
-  padding: 10px 14px;
+  border-top: 3px solid #d32f2f;
+  border-radius: 12px;
+  padding: 9px 11px;
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+  gap: 9px;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .about-goal-card:hover {
-  transform: translateX(-4px);
+  transform: translateY(-2px);
   box-shadow: 0 8px 18px rgba(211, 47, 47, 0.12);
 }
 
 .goal-icon-badge {
-  width: 34px;
-  height: 34px;
-  min-width: 34px;
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
   border-radius: 50%;
   background: linear-gradient(135deg, #d32f2f 0%, #991b1b 100%);
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 2px;
-  box-shadow: 0 4px 10px rgba(211, 47, 47, 0.25);
+  margin-top: 1px;
+  box-shadow: 0 3px 8px rgba(211, 47, 47, 0.25);
 }
 
 .goal-text {
-  font-size: clamp(0.77rem, 0.86vw, 0.84rem);
+  font-size: clamp(0.72rem, 0.78vw, 0.78rem);
   color: #334155;
-  line-height: 1.48;
+  line-height: 1.42;
   margin: 0;
 }
 
@@ -337,18 +345,17 @@
   font-weight: 700;
 }
 
-/* ===================== DẢI ĐÁY NỀN ĐỎ: SỨ MỆNH VÀ CAM KẾT ===================== */
+/* ===================== 3. DẢI ĐÁY NỀN ĐỎ: SỨ MỆNH VÀ CAM KẾT ===================== */
 .about-commitment-banner {
   background: linear-gradient(125deg, #991b1b 0%, #d32f2f 52%, #7f1d1d 100%);
-  border-radius: 20px;
-  padding: clamp(14px, 1.8vh, 20px) 22px;
+  border-radius: 18px;
+  padding: clamp(11px, 1.4vh, 15px) 18px;
   color: #ffffff;
-  box-shadow: 0 14px 32px rgba(183, 28, 28, 0.24);
+  box-shadow: 0 12px 28px rgba(183, 28, 28, 0.22);
   position: relative;
   overflow: hidden;
 }
 
-/* Họa tiết sọc chéo trang trí trên nền đỏ */
 .about-commitment-banner::before {
   content: '';
   position: absolute;
@@ -368,35 +375,35 @@
   background-color: rgba(255, 255, 255, 0.16);
   border: 1px solid rgba(255, 255, 255, 0.32);
   color: #ffffff;
-  padding: 5px 16px;
+  padding: 4px 14px;
   border-radius: 999px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.7px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .commitment-cards-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 12px;
 }
 
 .commitment-item {
   background-color: rgba(255, 255, 255, 0.96);
   color: #1e293b;
-  border-radius: 14px;
-  padding: 12px 16px;
+  border-radius: 12px;
+  padding: 9px 14px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  gap: 10px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
 }
 
 .commitment-icon {
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
   border-radius: 50%;
   background: linear-gradient(135deg, #d32f2f 0%, #991b1b 100%);
   color: #ffffff;
@@ -406,8 +413,8 @@
 }
 
 .commitment-item p {
-  font-size: clamp(0.78rem, 0.86vw, 0.85rem);
-  line-height: 1.48;
+  font-size: clamp(0.74rem, 0.82vw, 0.8rem);
+  line-height: 1.42;
   margin: 0;
   color: #1e293b;
 }
@@ -418,8 +425,12 @@
 }
 
 /* ===================== RESPONSIVE ===================== */
-@media (max-width: 992px) {
+@media (max-width: 1100px) {
   .about-bento-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-goals-list {
     grid-template-columns: 1fr;
   }
 
@@ -435,5 +446,9 @@
 
   .about-field-pill:last-child {
     grid-column: span 1;
+  }
+
+  .video-duration-pill {
+    display: none;
   }
 }

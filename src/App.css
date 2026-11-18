@@ -71,7 +71,6 @@
      Trong đó Mục Trang chủ gồm 2 màn hình: .hero-screen-1 (#home) và .hero-screen-2 (#home-intro) */
   .home-fullpage-main .hero-screen-1,
   .home-fullpage-main .hero-screen-2,
-  .home-fullpage-main section.about,
   .home-fullpage-main section.services,
   .home-fullpage-main section.portfolio,
   .home-fullpage-main section.capacity-section,
@@ -86,6 +85,19 @@
     box-sizing: border-box;
     scroll-margin-top: 0;
     overflow: hidden;
+  }
+
+  /* Mục Giới thiệu (#about) có khung Video Demo lớn gấp đôi + Infographic nên dùng min-height: 100vh để không bị cắt nội dung */
+  .home-fullpage-main section.about {
+    min-height: 100vh;
+    height: auto;
+    padding-top: 88px;
+    padding-bottom: 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+    scroll-margin-top: 0;
   }
 
   /* Tinh chỉnh kích thước con bên trong từng màn hình để vừa khít 100vh */
@@ -103,13 +115,13 @@
     height: clamp(380px, 64vh, 580px);
   }
 
-  /* 2. About (Giới thiệu: Video Demo + Lĩnh vực + Mục tiêu + Sứ mệnh & Cam kết) */
+  /* 2. About (Giới thiệu: Video Demo dài gấp đôi + Lĩnh vực + Mục tiêu + Sứ mệnh & Cam kết) */
   .home-fullpage-main .about-infographic-container {
-    gap: clamp(10px, 1.4vh, 16px);
+    gap: clamp(14px, 1.8vh, 20px);
   }
 
-  .home-fullpage-main .about-video-box {
-    height: clamp(145px, 19vh, 195px);
+  .home-fullpage-main .about-video-box.about-video-fullwidth {
+    height: clamp(310px, 38vh, 390px);
   }
 
   /* 3. Services (Sản phẩm tiêu biểu) */

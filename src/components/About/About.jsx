@@ -88,71 +88,75 @@ const About = ({ onNavigateAbout }) => {
           )}
         </div>
 
-        {/* Lưới chính: Bên trái (Video Demo + 5 Lĩnh vực hoạt động) | Bên phải (4 Mục tiêu chiến lược) */}
-        <div className="about-bento-grid">
-          {/* CỘT TRÁI */}
-          <div className="about-left-stack reveal-left delay-1">
-            {/* 1. Khung Video Demo Hoạt Động Công Ty */}
-            <div
-              className="about-video-box"
-              onClick={() => setShowVideoNotice((prev) => !prev)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  setShowVideoNotice((prev) => !prev);
-                }
-              }}
-              title="Video demo hoạt động sản xuất và thi công của Cơ Điện Nguyên Phát"
-            >
-              <img
-                src="/catalog/pages/2.jpg"
-                alt="Video demo hoạt động nhà máy Cơ Điện Nguyên Phát"
-                className="about-video-thumb"
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.src = bannerImageFallback;
-                }}
-              />
-              <div className="about-video-overlay">
-                <div className="video-live-badge">
-                  <span className="live-dot" />
-                  <span>VIDEO HOẠT ĐỘNG NHÀ MÁY &amp; THI CÔNG</span>
-                </div>
-
-                <div className="video-play-center">
-                  <div className="video-play-btn">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                      <polygon points="6 4 20 12 6 20 6 4" />
-                    </svg>
-                  </div>
-                  <div className="video-caption-text">
-                    <strong>Video Demo Hoạt Động Công Ty Đang Làm Việc</strong>
-                    <span>{showVideoNotice ? 'Đang cập nhật file video thực tế từ xưởng sản xuất Nguyên Phát' : 'Quy trình sản xuất tủ bảng điện CNC, lắp ráp & kiểm định xuất xưởng'}</span>
-                  </div>
-                </div>
+        {/* 1. KHUNG VIDEO DEMO HOẠT ĐỘNG CÔNG TY — KÉO DÀI GẤP ĐÔI (FULL 100% CHIỀU NGANG CONTAINER) */}
+        <div
+          className="about-video-box about-video-fullwidth reveal delay-1"
+          onClick={() => setShowVideoNotice((prev) => !prev)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setShowVideoNotice((prev) => !prev);
+            }
+          }}
+          title="Video demo hoạt động sản xuất và thi công của Cơ Điện Nguyên Phát"
+        >
+          <img
+            src="/catalog/pages/2.jpg"
+            alt="Video demo hoạt động nhà máy Cơ Điện Nguyên Phát"
+            className="about-video-thumb"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = bannerImageFallback;
+            }}
+          />
+          <div className="about-video-overlay">
+            <div className="video-top-row">
+              <div className="video-live-badge">
+                <span className="live-dot" />
+                <span>VIDEO DEMO HOẠT ĐỘNG NHÀ MÁY &amp; THI CÔNG CÔNG TRÌNH</span>
               </div>
+              <span className="video-duration-pill">Full HD • Xưởng Sản Xuất Nguyên Phát</span>
             </div>
 
-            {/* 2. Khối LĨNH VỰC HOẠT ĐỘNG (Thiết kế vát chéo tông Đỏ chủ đạo) */}
-            <div className="about-fields-panel">
-              <div className="panel-diagonal-header">
-                <span className="panel-header-icon">⚡</span>
-                <h3>LĨNH VỰC HOẠT ĐỘNG</h3>
+            <div className="video-play-center">
+              <div className="video-play-btn">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="6 4 20 12 6 20 6 4" />
+                </svg>
               </div>
+              <div className="video-caption-text">
+                <strong>Video Demo Hoạt Động Công Ty Đang Làm Việc</strong>
+                <span>
+                  {showVideoNotice
+                    ? 'Đang cập nhật file video thực tế từ xưởng sản xuất Cơ Điện Nguyên Phát'
+                    : 'Toàn cảnh quy trình gia công cơ khí CNC, sơn tĩnh điện, lắp ráp tủ bảng điện MSB/ATS/MCC & kiểm định chất lượng xuất xưởng'}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
 
-              <div className="about-fields-grid">
-                {FIELDS_OF_ACTIVITY.map((field) => (
-                  <div key={field.id} className="about-field-pill">
-                    <div className="field-pill-icon">{field.icon}</div>
-                    <div className="field-pill-content">
-                      <span className="field-pill-num">{field.id}</span>
-                      <span className="field-pill-title">{field.title}</span>
-                    </div>
+        {/* 2. LƯỚI 2 CỘT BÊN DƯỚI VIDEO: BÊN TRÁI (5 LĨNH VỰC HOẠT ĐỘNG) | BÊN PHẢI (4 MỤC TIÊU) */}
+        <div className="about-bento-grid">
+          {/* CỘT TRÁI: Khối LĨNH VỰC HOẠT ĐỘNG */}
+          <div className="about-fields-panel reveal-left delay-2">
+            <div className="panel-diagonal-header">
+              <span className="panel-header-icon">⚡</span>
+              <h3>LĨNH VỰC HOẠT ĐỘNG</h3>
+            </div>
+
+            <div className="about-fields-grid">
+              {FIELDS_OF_ACTIVITY.map((field) => (
+                <div key={field.id} className="about-field-pill">
+                  <div className="field-pill-icon">{field.icon}</div>
+                  <div className="field-pill-content">
+                    <span className="field-pill-num">{field.id}</span>
+                    <span className="field-pill-title">{field.title}</span>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -166,7 +170,7 @@ const About = ({ onNavigateAbout }) => {
             <div className="about-goals-list">
               <div className="about-goal-card">
                 <div className="goal-icon-badge">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                     <circle cx="12" cy="8" r="6" />
                     <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
                   </svg>
@@ -178,7 +182,7 @@ const About = ({ onNavigateAbout }) => {
 
               <div className="about-goal-card">
                 <div className="goal-icon-badge">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                     <path d="M6 18h8" />
                     <path d="M3 22h18" />
                     <path d="M14 22a7 7 0 1 0 0-14h-1" />
@@ -193,7 +197,7 @@ const About = ({ onNavigateAbout }) => {
 
               <div className="about-goal-card">
                 <div className="goal-icon-badge">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                     <path d="M11 17a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2Z" />
                     <path d="m2 12 5 3" />
                     <path d="m22 12-5 3" />
@@ -207,7 +211,7 @@ const About = ({ onNavigateAbout }) => {
 
               <div className="about-goal-card">
                 <div className="goal-icon-badge">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                     <circle cx="12" cy="12" r="10" />
                     <line x1="2" y1="12" x2="22" y2="12" />
                     <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
@@ -221,10 +225,10 @@ const About = ({ onNavigateAbout }) => {
           </div>
         </div>
 
-        {/* DẢI ĐÁY NỀN ĐỎ CHỦ ĐẠO: SỨ MỆNH VÀ CAM KẾT */}
+        {/* 3. DẢI ĐÁY NỀN ĐỎ CHỦ ĐẠO: SỨ MỆNH VÀ CAM KẾT */}
         <div className="about-commitment-banner reveal delay-3">
           <div className="commitment-title-pill">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
               <polyline points="9 12 11 14 15 10" />
             </svg>
@@ -234,7 +238,7 @@ const About = ({ onNavigateAbout }) => {
           <div className="commitment-cards-row">
             <div className="commitment-item">
               <div className="commitment-icon">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                   <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                   <circle cx="9" cy="7" r="4" />
                   <polyline points="16 11 18 13 22 9" />
@@ -247,7 +251,7 @@ const About = ({ onNavigateAbout }) => {
 
             <div className="commitment-item">
               <div className="commitment-icon">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
                   <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                 </svg>
               </div>
