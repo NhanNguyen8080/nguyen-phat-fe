@@ -1,7 +1,11 @@
 /* ==========================================================
    MỤC GIỚI THIỆU TRÊN TRANG CHỦ (#about)
-   Thiết kế sát mẫu Infographic (Sơ đồ quạt tròn Lĩnh vực hoạt động +
-   Mục tiêu + Sứ mệnh và Cam kết trên sóng đỏ + Video Demo bên trái)
+   Thiết kế giữ 50% tinh thần Infographic mẫu (tông Đỏ - Kem - Vàng kim,
+   vòng tròn + mũi tên, thẻ pill icon đỏ) và ĐẢO BỐ CỤC KHÁC 50%:
+   - Tầng trên: Dải sóng Đỏ & Vàng chứa SỨ MỆNH VÀ CAM KẾT
+   - Dưới trái: 4 thẻ MỤC TIÊU xếp bậc thang
+   - Dưới phải: Sơ đồ Vòm Cung Hướng Lên (Rising Sunburst) LĨNH VỰC HOẠT ĐỘNG
+   - Cột trái: Video Demo chiều cao xuyên suốt
    Nằm trọn trong 1 trang màn hình 100vh
    ========================================================== */
 
@@ -142,210 +146,176 @@
   color: rgba(255, 255, 255, 0.88);
 }
 
-/* ==================== CỘT PHẢI: BẢNG INFOGRAPHIC GIỐNG ẢNH MẪU ==================== */
+/* ==================== CỘT PHẢI: BẢNG INFOGRAPHIC (ĐẢO BỐ CỤC 50%) ==================== */
 .np-infographic-board {
   position: relative;
   border-radius: 24px;
   overflow: hidden;
-  background: linear-gradient(180deg, #fdf8f3 0%, #f9ece0 66%, #8b1111 100%);
-  border: 1.5px solid rgba(153, 27, 27, 0.22);
+  background: linear-gradient(180deg, #8b1111 0%, #fdf8f3 28%, #faece0 92%, #8b1111 100%);
+  border: 1.5px solid rgba(153, 27, 27, 0.24);
   box-shadow: 0 16px 40px rgba(139, 17, 17, 0.14);
-  padding: 18px 22px 16px;
+  padding: 14px 22px 18px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
   isolation: isolate;
 }
 
-/* Sóng đỏ + vàng ở góc trên trái */
-.infographic-top-wave {
+/* Dải sóng đỏ đậm + viền vàng kim ở ĐẦU BẢNG */
+.infographic-header-wave {
   position: absolute;
   top: 0;
   left: 0;
-  width: 220px;
-  height: 105px;
+  right: 0;
+  width: 100%;
+  height: 175px;
   z-index: 0;
   pointer-events: none;
 }
 
-/* Silhouette cột điện + tòa nhà + tua-bin gió phía trên dải sóng đáy */
+/* Silhouette cột điện + nhà máy ở đáy bảng */
 .infographic-bg-skyline {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 110px;
+  bottom: 0;
   width: 100%;
   height: 220px;
   z-index: 0;
   pointer-events: none;
 }
 
-/* Dải sóng đỏ đậm uốn lượn ở đáy */
-.infographic-bottom-wave {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 195px;
-  z-index: 0;
-  pointer-events: none;
+/* ==================== TẦNG 1 (TRÊN CÙNG): SỨ MỆNH VÀ CAM KẾT ==================== */
+.infographic-top-mission-zone {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
 }
 
-/* ==================== HÀNG TRÊN: SƠ ĐỒ QUẠT TRÒN (TRÁI) & MỤC TIÊU (PHẢI) ==================== */
-.infographic-top-row {
+.mission-top-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 14px;
+  margin-bottom: -12px;
+  position: relative;
+  z-index: 3;
+}
+
+.infographic-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: linear-gradient(90deg, #7f0d0d 0%, #991b1b 100%);
+  color: #ffffff;
+  padding: 5px 20px 5px 8px;
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(127, 13, 13, 0.3);
+}
+
+.mission-top-pill {
+  border: 1.5px solid #facc15;
+  background: linear-gradient(90deg, #5c0606 0%, #8b1111 100%);
+  padding: 4px 18px 4px 7px;
+}
+
+.pill-badge-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.16);
+  border: 1.5px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+.infographic-pill-badge h3 {
+  font-size: 0.86rem;
+  font-weight: 900;
+  letter-spacing: 0.7px;
+  margin: 0;
+  color: #ffffff;
+}
+
+.mission-gold-line {
+  flex: 1;
+  height: 1.5px;
+  background: linear-gradient(90deg, #facc15 0%, rgba(255, 255, 255, 0.2) 100%);
+}
+
+.mission-brand-tag {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #fef08a;
+  letter-spacing: 0.8px;
+  padding-right: 8px;
+}
+
+.mission-white-card {
+  background-color: #ffffff;
+  border-radius: 18px;
+  border: 1px solid rgba(212, 165, 55, 0.45);
+  padding: 18px 18px 11px;
+  display: grid;
+  grid-template-columns: 1fr 1.5px 1fr;
+  gap: 16px;
+  align-items: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+}
+
+.mission-col {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.mission-circle-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #991b1b 0%, #6e0a0a 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(127, 13, 13, 0.28);
+}
+
+.mission-col p {
+  font-size: clamp(0.69rem, 0.75vw, 0.75rem);
+  line-height: 1.38;
+  color: #1e293b;
+  margin: 0;
+}
+
+.mission-col p strong {
+  color: #991b1b;
+  font-weight: 800;
+}
+
+.mission-divider {
+  width: 1.5px;
+  height: 82%;
+  background-color: #991b1b;
+  opacity: 0.55;
+}
+
+/* ==================== TẦNG 2 (DƯỚI): TRÁI (MỤC TIÊU) | PHẢI (SƠ ĐỒ VÒM CUNG HƯỚNG LÊN) ==================== */
+.infographic-main-split {
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: 420px 1fr;
-  gap: 16px;
-  align-items: start;
-}
-
-/* Sơ đồ hình quạt LĨNH VỰC HOẠT ĐỘNG */
-.infographic-fan-col {
-  display: flex;
-  justify-content: center;
+  grid-template-columns: 1fr 410px;
+  gap: 18px;
   align-items: center;
 }
 
-.fan-diagram-stage {
-  position: relative;
-  width: 420px;
-  height: 325px;
-  flex-shrink: 0;
-}
-
-.fan-arrows-svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* Vòng tròn trung tâm: LĨNH VỰC HOẠT ĐỘNG */
-.fan-center-hub {
-  position: absolute;
-  left: 147px;
-  top: 19px;
-  width: 126px;
-  height: 126px;
-  border-radius: 50%;
-  background: linear-gradient(145deg, #a31616 0%, #7f0d0d 100%);
-  padding: 7px;
-  box-shadow: 0 8px 22px rgba(139, 17, 17, 0.28);
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.fan-center-inner {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  background: radial-gradient(circle, #ffffff 0%, #fdf2e9 100%);
-  border: 1.5px solid rgba(153, 27, 27, 0.25);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 6px;
-}
-
-.fan-center-inner span {
-  font-size: 0.88rem;
-  font-weight: 900;
-  color: #8b1111;
-  line-height: 1.22;
-  letter-spacing: 0.3px;
-}
-
-.fan-hub-line {
-  display: block;
-  width: 30px;
-  height: 2.5px;
-  background-color: #991b1b;
-  border-radius: 2px;
-  margin-top: 5px;
-}
-
-/* 5 Vòng tròn con xếp cánh cung */
-.fan-sub-node {
-  position: absolute;
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 50% 35%, #fffdfb 0%, #f8e5d6 100%);
-  border: 2px solid #991b1b;
-  box-shadow: 0 6px 14px rgba(139, 17, 17, 0.15);
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 6px 5px;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.fan-sub-node:hover {
-  transform: scale(1.07);
-  box-shadow: 0 10px 22px rgba(153, 27, 27, 0.28);
-  background: #ffffff;
-}
-
-.arc-node-1 {
-  left: 8px;
-  top: 122px;
-}
-
-.arc-node-2 {
-  left: 68px;
-  top: 198px;
-}
-
-.arc-node-3 {
-  left: 165px;
-  top: 224px;
-}
-
-.arc-node-4 {
-  left: 262px;
-  top: 198px;
-}
-
-.arc-node-5 {
-  left: 322px;
-  top: 122px;
-}
-
-.sub-node-icon {
-  width: 28px;
-  height: 28px;
-  color: #8b1111;
-  margin-bottom: 3px;
-  flex-shrink: 0;
-}
-
-.sub-node-icon svg {
-  width: 100%;
-  height: 100%;
-}
-
-.sub-node-text {
-  font-size: 0.58rem;
-  font-weight: 800;
-  color: #1e293b;
-  line-height: 1.18;
-  white-space: pre-line;
-}
-
-/* ==================== CỘT PHẢI TRÊN: MỤC TIÊU ==================== */
+/* KHỐI DƯỚI TRÁI: MỤC TIÊU (Xếp bậc thang chéo nhẹ) */
 .infographic-goals-col {
   display: flex;
   flex-direction: column;
@@ -359,42 +329,11 @@
   margin-bottom: 2px;
 }
 
-.infographic-pill-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background: linear-gradient(90deg, #7f0d0d 0%, #991b1b 100%);
-  color: #ffffff;
-  padding: 5px 22px 5px 8px;
-  border-radius: 999px;
-  box-shadow: 0 4px 12px rgba(127, 13, 13, 0.3);
-}
-
-.pill-badge-icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.16);
-  border: 1.5px solid #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-}
-
-.infographic-pill-badge h3 {
-  font-size: 0.92rem;
-  font-weight: 900;
-  letter-spacing: 0.8px;
-  margin: 0;
-  color: #ffffff;
-}
-
 .infographic-header-line {
   flex: 1;
   height: 1.5px;
   background-color: #991b1b;
-  opacity: 0.55;
+  opacity: 0.5;
 }
 
 .infographic-goals-stack {
@@ -404,9 +343,10 @@
 }
 
 .infographic-goal-pill {
-  background-color: rgba(255, 251, 247, 0.94);
+  background-color: rgba(255, 252, 249, 0.95);
   border: 1px solid rgba(180, 83, 60, 0.32);
-  border-radius: 22px;
+  border-left: 4px solid #991b1b;
+  border-radius: 14px 24px 24px 14px;
   padding: 7px 14px 7px 9px;
   display: flex;
   align-items: center;
@@ -415,8 +355,21 @@
   transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
+/* Hiệu ứng xếp bậc chéo nhẹ đặc trưng */
+.infographic-goal-pill:nth-child(2) {
+  margin-left: 8px;
+}
+
+.infographic-goal-pill:nth-child(3) {
+  margin-left: 16px;
+}
+
+.infographic-goal-pill:nth-child(4) {
+  margin-left: 8px;
+}
+
 .infographic-goal-pill:hover {
-  transform: translateX(-3px);
+  transform: translateX(4px);
   border-color: #991b1b;
   background-color: #ffffff;
 }
@@ -446,112 +399,154 @@
   font-weight: 800;
 }
 
-/* ==================== PHẦN DƯỚI: SỨ MỆNH VÀ CAM KẾT + QUẢ ĐỊA CẦU ==================== */
-.infographic-bottom-row {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  grid-template-columns: 1fr 125px;
-  gap: 14px;
-  align-items: end;
-}
-
-.infographic-mission-wrap {
+/* ==================== KHỐI DƯỚI PHẢI: SƠ ĐỒ VÒM CUNG HƯỚNG LÊN (RISING SUNBURST) ==================== */
+.infographic-fan-col {
   display: flex;
-  flex-direction: column;
-}
-
-.mission-header-bar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-left: 16px;
-  margin-bottom: -13px;
-  position: relative;
-  z-index: 3;
-}
-
-.mission-pill {
-  border: 1.5px solid rgba(255, 255, 255, 0.75);
-  padding: 4px 20px 4px 7px;
-}
-
-.mission-pill h3 {
-  font-size: 0.84rem;
-}
-
-.mission-white-line {
-  width: 140px;
-  height: 2px;
-  background-color: rgba(255, 255, 255, 0.85);
-}
-
-.mission-white-card {
-  background-color: #ffffff;
-  border-radius: 18px;
-  padding: 20px 18px 12px;
-  display: grid;
-  grid-template-columns: 1fr 1.5px 1fr;
-  gap: 16px;
-  align-items: center;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
-}
-
-.mission-col {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-}
-
-.mission-circle-icon {
-  width: 42px;
-  height: 42px;
-  min-width: 42px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #991b1b 0%, #6e0a0a 100%);
-  color: #ffffff;
-  display: flex;
-  align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(127, 13, 13, 0.3);
-}
-
-.mission-col p {
-  font-size: clamp(0.69rem, 0.75vw, 0.75rem);
-  line-height: 1.38;
-  color: #1e293b;
-  margin: 0;
-}
-
-.mission-col p strong {
-  color: #991b1b;
-  font-weight: 800;
-}
-
-.mission-divider {
-  width: 1.5px;
-  height: 82%;
-  background-color: #991b1b;
-  opacity: 0.65;
-}
-
-/* Quả địa cầu xanh góc dưới phải */
-.infographic-eco-corner {
-  display: flex;
   align-items: center;
-  justify-content: center;
 }
 
-.eco-globe-circle {
-  width: 112px;
-  height: 112px;
-  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.25));
+.rising-fan-stage {
+  position: relative;
+  width: 410px;
+  height: 325px;
+  flex-shrink: 0;
 }
 
-.eco-globe-svg {
+.fan-arrows-svg {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Vòng tròn trung tâm đặt ở chân vòm cung (205, 250) */
+.rising-center-hub {
+  position: absolute;
+  left: 142px;
+  top: 187px;
+  width: 126px;
+  height: 126px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #a31616 0%, #6e0909 100%);
+  padding: 6px;
+  box-shadow: 0 10px 24px rgba(139, 17, 17, 0.32);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #d4a537;
+}
+
+.fan-center-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 0%, #fdf2e9 100%);
+  border: 1.5px solid rgba(153, 27, 27, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4px;
+}
+
+.fan-hub-mini-logo {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  margin-bottom: 2px;
+}
+
+.fan-center-inner span {
+  font-size: 0.82rem;
+  font-weight: 900;
+  color: #8b1111;
+  line-height: 1.18;
+  letter-spacing: 0.3px;
+}
+
+.fan-hub-line {
   display: block;
+  width: 28px;
+  height: 2.5px;
+  background-color: #d4a537;
+  border-radius: 2px;
+  margin-top: 3px;
+}
+
+/* 5 Vòng tròn con xếp thành vòm cung hướng lên trên */
+.fan-sub-node {
+  position: absolute;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 35%, #fffdfb 0%, #f8e5d6 100%);
+  border: 2px solid #991b1b;
+  box-shadow: 0 6px 14px rgba(139, 17, 17, 0.16);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 5px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.fan-sub-node:hover {
+  transform: scale(1.08);
+  box-shadow: 0 10px 22px rgba(153, 27, 27, 0.28);
+  background: #ffffff;
+}
+
+.rising-node-1 {
+  left: 8px;
+  top: 131px;
+}
+
+.rising-node-2 {
+  left: 65px;
+  top: 52px;
+}
+
+.rising-node-3 {
+  left: 161px;
+  top: 22px;
+}
+
+.rising-node-4 {
+  left: 257px;
+  top: 52px;
+}
+
+.rising-node-5 {
+  left: 314px;
+  top: 131px;
+}
+
+.sub-node-icon {
+  width: 26px;
+  height: 26px;
+  color: #8b1111;
+  margin-bottom: 2px;
+  flex-shrink: 0;
+}
+
+.sub-node-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.sub-node-text {
+  font-size: 0.57rem;
+  font-weight: 800;
+  color: #1e293b;
+  line-height: 1.16;
+  white-space: pre-line;
 }
 
 /* ==================== RESPONSIVE ==================== */
@@ -560,13 +555,13 @@
     grid-template-columns: 220px 1fr;
   }
 
-  .infographic-top-row {
-    grid-template-columns: 380px 1fr;
+  .infographic-main-split {
+    grid-template-columns: 1fr 370px;
   }
 
-  .fan-diagram-stage {
+  .rising-fan-stage {
     transform: scale(0.9);
-    transform-origin: top left;
+    transform-origin: center right;
   }
 }
 
@@ -579,26 +574,18 @@
     min-height: 260px;
   }
 
-  .infographic-top-row {
+  .infographic-main-split {
     grid-template-columns: 1fr;
   }
 
-  .fan-diagram-stage {
+  .rising-fan-stage {
     transform: none;
     margin: 0 auto;
-  }
-
-  .infographic-bottom-row {
-    grid-template-columns: 1fr;
-  }
-
-  .infographic-eco-corner {
-    display: none;
   }
 }
 
 @media (max-width: 640px) {
-  .fan-diagram-stage {
+  .rising-fan-stage {
     transform: scale(0.76);
     transform-origin: top center;
     margin-bottom: -65px;
@@ -612,5 +599,9 @@
   .mission-divider {
     width: 100%;
     height: 1px;
+  }
+
+  .mission-brand-tag {
+    display: none;
   }
 }
