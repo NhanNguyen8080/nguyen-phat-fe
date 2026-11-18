@@ -87,22 +87,26 @@
   }
 
   /* Tinh chỉnh kích thước con bên trong từng mục để vừa khít 100vh */
-  /* 1. Hero */
-  .home-fullpage-main .hero-top {
-    margin-bottom: 22px;
+  /* 1. Hero (Trang chủ gộp Banner + Khối 3 cột) */
+  .home-fullpage-main .hero-container {
+    gap: clamp(12px, 1.8vh, 20px);
   }
 
-  .home-fullpage-main .hero-image {
-    height: clamp(250px, 40vh, 380px);
+  .home-fullpage-main .hero-banner-img {
+    height: clamp(150px, 21vh, 210px);
   }
 
-  /* 2. About */
-  .home-fullpage-main .about-image {
-    height: clamp(340px, 56vh, 490px);
+  .home-fullpage-main .hero-featured-photo-frame {
+    min-height: clamp(260px, 42vh, 390px);
   }
 
-  .home-fullpage-main .mission-vision {
-    margin-bottom: 28px;
+  /* 2. About (Giới thiệu: Video Demo + Lĩnh vực + Mục tiêu + Sứ mệnh & Cam kết) */
+  .home-fullpage-main .about-infographic-container {
+    gap: clamp(10px, 1.4vh, 16px);
+  }
+
+  .home-fullpage-main .about-video-box {
+    height: clamp(145px, 19vh, 195px);
   }
 
   /* 3. Services (Sản phẩm tiêu biểu) */

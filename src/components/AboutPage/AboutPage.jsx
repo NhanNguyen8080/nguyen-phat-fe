@@ -9,8 +9,8 @@ const coreValues = [
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
       </svg>
     ),
-    title: 'Chất Lượng Vượt Trội',
-    desc: '100% cấu kiện thép gia công kiểm định siêu âm, mối hàn đạt chuẩn ASTM/TCVN, bề mặt xử lý phun bi và sơn epoxy kháng ăn mòn cao.'
+    title: 'Chất Lượng Chuẩn TCVN & IEC',
+    desc: '100% sản phẩm tủ bảng điện và thang máng cáp được chế tạo theo tiêu chuẩn TCVN và IEC 61439, kiểm tra nghiêm ngặt trước khi xuất xưởng.'
   },
   {
     icon: (
@@ -19,8 +19,8 @@ const coreValues = [
         <polyline points="12 6 12 12 16 14"/>
       </svg>
     ),
-    title: 'Tiến Độ Cam Kết',
-    desc: 'Quy trình sản xuất tự động hóa kết hợp lắp dựng cơ giới hóa hiện đại, cam kết bàn giao đúng hoặc vượt tiến độ thi công đã thỏa thuận.'
+    title: 'Đúng Tiến Độ Cam Kết',
+    desc: 'Dây chuyền gia công cơ khí CNC, chấn, đột dập và sơn tĩnh điện đồng bộ giúp đáp ứng hoàn hảo tiến độ của mọi dự án công nghiệp.'
   },
   {
     icon: (
@@ -32,8 +32,8 @@ const coreValues = [
         <polyline points="10 9 9 9 8 9"/>
       </svg>
     ),
-    title: 'Giải Pháp Tối Ưu',
-    desc: 'Thiết kế tối ưu tải trọng và khẩu độ nhịp, tiết kiệm từ 15% - 25% tổng chi phí đầu tư xây dựng nhà xưởng cho chủ doanh nghiệp.'
+    title: 'Giải Pháp Kinh Tế Tối Ưu',
+    desc: 'Cam kết tư vấn và cung cấp cho khách hàng những giải pháp có hiệu quả kinh tế cao, giá cả cạnh tranh dựa trên các tiêu chí kỹ thuật tối ưu.'
   },
   {
     icon: (
@@ -44,77 +44,74 @@ const coreValues = [
         <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
       </svg>
     ),
-    title: 'An Toàn Tuyệt Đối',
-    desc: 'Tuân thủ nghiêm ngặt tiêu chuẩn an toàn lao động quốc tế ISO 45001, trang thiết bị bảo hộ chuẩn chỉnh và quy trình kiểm soát rủi ro 24/7.'
+    title: 'Bảo Hành & Đồng Hành Bền Vững',
+    desc: 'Đội ngũ kỹ sư cơ điện trực tiếp hỗ trợ kỹ thuật, lắp đặt, lập trình PLC và bảo hành bảo trì tận nơi 24/7 trên toàn quốc.'
   }
 ];
 
 const processSteps = [
   {
     num: '01',
-    title: 'Khảo Sát & Tư Vấn',
-    desc: 'Tiếp nhận yêu cầu, khảo sát địa chất thực địa và đề xuất phương án kết cấu tối ưu ngân sách.'
+    title: 'Khảo Sát & Tư Vấn Kỹ Thuật',
+    desc: 'Tiếp nhận yêu cầu phụ tải, khảo sát thực tế công trình và tư vấn giải pháp hệ thống điện tối ưu.'
   },
   {
     num: '02',
-    title: 'Thiết Kế 3D BIM',
-    desc: 'Mô hình hóa chi tiết kiến trúc và tải trọng kết cấu thép 3D, bóc tách khối lượng chính xác 100%.'
+    title: 'Thiết Kế Bản Vẽ & Bóc Tách',
+    desc: 'Thiết kế sơ đồ nguyên lý, bản vẽ bố trí tủ bảng điện (MSB, ATS, DB, MCC...) và hệ thống thang máng cáp.'
   },
   {
     num: '03',
-    title: 'Gia Công Tại Nhà Máy',
-    desc: 'Cắt plasma CNC, gá đính tự động, hàn cổng tự động và phun bi làm sạch đạt độ nhám tiêu chuẩn Sa 2.5.'
+    title: 'Sản Xuất Cơ Khí & Lắp Ráp',
+    desc: 'Gia công vỏ tủ CNC, sơn tĩnh điện, lắp ráp khí cụ điện chính hãng (Schneider, Mitsubishi, LS, ABB, Shihlin, Chint...).'
   },
   {
     num: '04',
-    title: 'Lắp Dựng Công Trường',
-    desc: 'Vận chuyển cấu kiện, sử dụng cẩu chuyên dụng lắp ráp chính xác từng bu lông liên kết theo bản vẽ.'
+    title: 'Kiểm Định & Thi Công Lắp Đặt',
+    desc: 'Test vận hành, đo kiểm cách điện theo chuẩn TCVN/IEC trước khi xuất xưởng và thi công lắp đặt tại dự án.'
   },
   {
     num: '05',
-    title: 'Nghiệm Thu & Bảo Hành',
-    desc: 'Bàn giao hồ sơ hoàn công, nghiệm thu PCCC và kích hoạt chính sách bảo hành kết cấu dài hạn 10 - 20 năm.'
+    title: 'Nghiệm Thu & Bảo Trì 24/7',
+    desc: 'Bàn giao hồ sơ kỹ thuật hoàn công, hướng dẫn vận hành và thực hiện chế độ bảo hành, bảo trì định kỳ.'
   }
 ];
 
 const AboutPage = ({ onNavigateHome }) => {
   return (
     <div className="about-page">
-      {/* Tiêu đề trang sạch sẽ */}
       <div className="about-page-title-wrap">
         <div className="container">
-          <h1 className="section-title">Về <span className="text-yellow">Chúng Tôi</span></h1>
+          <h1 className="section-title">Về <span className="text-yellow">Cơ Điện Nguyên Phát</span></h1>
           <p className="about-page-subtitle">
-            Hơn 15 năm kiến tạo giải pháp nhà thép tiền chế và xây dựng công nghiệp bền vững, đồng hành cùng sự thịnh vượng của hàng trăm doanh nghiệp.
+            Thành lập từ năm 2009 — Hơn 15 năm xây dựng và phát triển trong lĩnh vực sản xuất, thiết kế và thi công hệ thống điện công nghiệp với phương châm Uy tín – Chất lượng – Bền vững.
           </p>
         </div>
       </div>
 
       <main className="container">
-        {/* Câu chuyện & Giới thiệu chung */}
         <section className="about-intro-section">
           <div className="about-intro-grid">
             <div className="about-intro-text">
-              <h2>Đối Tác Tổng Thầu Tin Cậy Của Mọi Công Trình</h2>
+              <h2>Cảm Ơn Quý Khách Hàng Đã Đồng Hành</h2>
               <p>
-                Được thành lập với sứ mệnh tiên phong trong lĩnh vực kết cấu thép tiền chế và tổng thầu xây dựng công nghiệp, Nguyên Phát (C&amp;A) tự hào quy tụ đội ngũ hơn 1.500 kỹ sư, kiến trúc sư và thợ lành nghề giàu kinh nghiệm.
+                Thành lập từ năm 2009, <strong>CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI CƠ ĐIỆN NGUYÊN PHÁT</strong> đã trải qua hơn 15 năm xây dựng và phát triển trong lĩnh vực sản xuất, thiết kế và thi công hệ thống điện công nghiệp. Mỗi thành quả hôm nay đều có sự tin tưởng và đồng hành của Quý khách hàng, Quý đối tác.
               </p>
               <p>
-                Chúng tôi sở hữu nhà máy gia công cơ khí hiện đại với hệ thống máy cắt Plasma CNC, máy hàn tự động dầm H và dây chuyền cán tôn panel cách nhiệt công nghệ cao, đáp ứng mọi yêu cầu kỹ thuật khắt khe nhất từ các chủ đầu tư trong và ngoài nước.
+                <strong>Nguyên Phát</strong> chuyên thiết kế, sản xuất tủ bảng điện (MSB, DB, ATS, VCB, tủ điều khiển, tủ tụ bù…) và thang máng cáp cho mọi quy mô dự án, đồng thời nhận lắp đặt hệ thống điện, tư vấn thiết kế đường dây trạm biến áp, thi công và lập trình PLC trọn gói. Sản phẩm được chế tạo theo tiêu chuẩn <strong>TCVN và IEC</strong>, đảm bảo <strong>Chất lượng cao – Đúng tiến độ – Giá hợp lý</strong>.
               </p>
             </div>
 
             <div className="about-intro-image-wrap">
-              <img src={aboutImage} alt="Đội ngũ Nguyên Phát thi công trên công trường" className="about-intro-image" />
+              <img src={aboutImage} alt="Đội ngũ kỹ sư Cơ Điện Nguyên Phát" className="about-intro-image" />
             </div>
           </div>
         </section>
 
-        {/* Giá trị cốt lõi */}
         <section className="about-values-section">
           <div className="about-values-header">
             <h3>Giá Trị <span className="text-yellow">Cốt Lõi</span></h3>
-            <p style={{ color: 'var(--text-gray)', fontSize: '0.95rem' }}>Những nguyên tắc định hướng chất lượng trong từng mối hàn và bản vẽ</p>
+            <p style={{ color: 'var(--text-gray)', fontSize: '0.95rem' }}>Những chuẩn mực kỹ thuật và cam kết chất lượng trong từng sản phẩm xuất xưởng</p>
           </div>
 
           <div className="values-grid">
@@ -128,11 +125,10 @@ const AboutPage = ({ onNavigateHome }) => {
           </div>
         </section>
 
-        {/* Quy trình làm việc 5 bước */}
         <section className="about-process-section">
           <div className="about-process-header">
-            <h3>Quy Trình <span className="text-yellow">Triển Khai Chuyên Nghiệp</span></h3>
-            <p style={{ color: 'var(--text-gray)', fontSize: '0.95rem', marginTop: '6px' }}>Đồng bộ từ khâu ý tưởng, tính toán kết cấu đến bàn giao hoàn thiện</p>
+            <h3>Quy Trình <span className="text-yellow">Sản Xuất &amp; Thi Công</span></h3>
+            <p style={{ color: 'var(--text-gray)', fontSize: '0.95rem', marginTop: '6px' }}>Khép kín từ khâu tư vấn thiết kế, chế tạo tại xưởng đến lắp đặt và bảo trì trọn gói</p>
           </div>
 
           <div className="process-steps">
@@ -146,32 +142,30 @@ const AboutPage = ({ onNavigateHome }) => {
           </div>
         </section>
 
-        {/* Thông tin CEO & Lãnh đạo */}
         <section className="about-ceo-section">
           <div className="about-ceo-header">
-            <h3>Thông Điệp Từ <span className="text-yellow">Tổng Giám Đốc &amp; Nhà Sáng Lập</span></h3>
-            <p style={{ color: 'var(--text-gray)', fontSize: '0.95rem', marginTop: '6px' }}>Tầm nhìn chiến lược và cam kết đồng hành bền vững cùng khách hàng</p>
+            <h3>Thông Điệp Từ <span className="text-yellow">Ban Giám Đốc</span></h3>
+            <p style={{ color: 'var(--text-gray)', fontSize: '0.95rem', marginTop: '6px' }}>Tầm nhìn chiến lược và cam kết đồng hành bền vững cùng Quý khách hàng, Quý đối tác</p>
           </div>
 
           <div className="ceo-profile-card">
-            {/* Cột hình ảnh & chức danh */}
             <div className="ceo-photo-col">
-              <div className="ceo-avatar-wrap">
+              <div className="ceo-avatar-wrap" style={{ backgroundColor: '#fff5f5', padding: '18px' }}>
                 <img 
-                  src="https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=800&auto=format&fit=crop" 
-                  alt="George Brian - Tổng Giám Đốc Nguyên Phát" 
+                  src="/images/logo.png" 
+                  alt="Giám đốc Mai Hưng HÀ - Cơ Điện Nguyên Phát" 
                   className="ceo-avatar-img"
+                  style={{ objectFit: 'contain' }}
                 />
               </div>
-              <span className="ceo-badge">Tổng Giám Đốc &amp; Nhà Sáng Lập</span>
-              <h4 className="ceo-name">George Brian</h4>
-              <p className="ceo-title">Tổng Giám Đốc / Nhà Sáng Lập Nguyên Phát</p>
+              <span className="ceo-badge">Ban Giám Đốc</span>
+              <h4 className="ceo-name">Giám đốc Mai Hưng HÀ</h4>
+              <p className="ceo-title">CÔNG TY TNHH SX - TM CƠ ĐIỆN NGUYÊN PHÁT</p>
             </div>
 
-            {/* Cột thông điệp & profile */}
             <div className="ceo-content-col">
               <blockquote className="ceo-quote-box">
-                "Tại Nguyên Phát, mỗi công trình thép được dựng lên không đơn thuần là một dự án xây dựng, mà là hiện thân của sự an toàn tuyệt đối, độ chính xác kỹ thuật cao và cam kết gắn bó lâu dài cùng sự thịnh vượng của mỗi đối tác."
+                "Mỗi thành quả hôm nay của Cơ Điện Nguyên Phát đều có sự tin tưởng và đồng hành của Quý khách hàng, Quý đối tác. Chúng tôi cam kết tiếp tục làm việc với phương châm Uy tín – Chất lượng – Bền vững, cung cấp những giải pháp kỹ thuật tối ưu và hiệu quả kinh tế cao nhất."
               </blockquote>
 
               <div className="ceo-points-list">
@@ -182,8 +176,8 @@ const AboutPage = ({ onNavigateHome }) => {
                     </svg>
                   </div>
                   <div className="ceo-point-text">
-                    <strong>Hơn 20 Năm Kinh Nghiệm Lãnh Đạo</strong>
-                    <p>Trực tiếp chỉ huy và cố vấn kỹ thuật cho hơn 500+ dự án nhà xưởng công nghiệp, kho bãi logistics và trung tâm thương mại quy mô lớn.</p>
+                    <strong>Hơn 15 Năm Phát Triển Vững Mạnh (Từ 2009)</strong>
+                    <p>Trực tiếp thiết kế, sản xuất và thi công hàng trăm dự án tủ bảng điện, thang máng cáp và hệ thống điện công nghiệp trên toàn quốc.</p>
                   </div>
                 </div>
 
@@ -195,8 +189,8 @@ const AboutPage = ({ onNavigateHome }) => {
                     </svg>
                   </div>
                   <div className="ceo-point-text">
-                    <strong>Nền Tảng Kỹ Thuật Chuyên Sâu</strong>
-                    <p>Thạc sĩ Kỹ thuật Xây dựng &amp; Quản lý Dự án, thành viên Hiệp hội Kết cấu Thép Quốc tế (AISC), tiên phong ứng dụng công nghệ 3D BIM và tự động hóa CNC.</p>
+                    <strong>Đổi Mới Công Nghệ &amp; Chuẩn Hóa Quốc Tế</strong>
+                    <p>Không ngừng đẩy mạnh nghiên cứu công nghệ, nâng cao năng suất và kiểm soát chất lượng nghiêm ngặt theo tiêu chuẩn TCVN và IEC.</p>
                   </div>
                 </div>
 
@@ -207,8 +201,8 @@ const AboutPage = ({ onNavigateHome }) => {
                     </svg>
                   </div>
                   <div className="ceo-point-text">
-                    <strong>Triết Lý Kinh Doanh Bền Vững</strong>
-                    <p>Lấy con người làm trọng tâm, chất lượng làm danh dự và an toàn là ưu tiên số một trong mọi quyết định phát triển công trình.</p>
+                    <strong>Hợp Tác Bền Vững &amp; Chuyên Nghiệp</strong>
+                    <p>Hợp tác chặt chẽ và lâu dài với các doanh nghiệp trong và ngoài nước tại Việt Nam, phát huy sự chuyên nghiệp ngay từ những công việc đơn giản nhất.</p>
                   </div>
                 </div>
               </div>
@@ -216,11 +210,10 @@ const AboutPage = ({ onNavigateHome }) => {
           </div>
         </section>
 
-        {/* Bottom CTA */}
         <section className="about-cta-section">
-          <h3 className="about-cta-title">Sẵn Sàng Khởi Động Dự Án Của Bạn?</h3>
+          <h3 className="about-cta-title">Sẵn Sàng Khởi Động Dự Án Cơ Điện Của Bạn?</h3>
           <p className="about-cta-desc">
-            Hãy liên hệ ngay với đội ngũ kỹ sư của Nguyên Phát để được tư vấn giải pháp kết cấu thép và nhận dự toán kinh phí chi tiết, chính xác nhất.
+            Hãy liên hệ ngay với đội ngũ kỹ sư Cơ Điện Nguyên Phát để được tư vấn phương án kỹ thuật tối ưu và nhận báo giá tốt nhất.
           </p>
           <button 
             type="button" 
