@@ -149,6 +149,72 @@ const ProductDetail = ({
     };
   }, [product, allProducts]);
 
+  // Lọc và hợp nhất danh sách thông tin / thông số sản phẩm (chỉ hiển thị những mục có dữ liệu thực tế)
+  const productSpecs = useMemo(() => {
+    if (!product) return [];
+
+    const isValidValue = (v) => {
+      if (v === null || v === undefined) return false;
+      const s = String(v).trim();
+      return s !== '' && s !== '-' && s !== 'N/A' && s !== 'null' && s !== 'undefined';
+    };
+
+    const list = [];
+    const seenLabels = new Set();
+
+    const addSpec = (label, rawVal, formattedVal) => {
+      if (!isValidValue(rawVal)) return;
+      const cleanLabel = String(label).trim();
+      const normalizedKey = cleanLabel.toLowerCase();
+      if (seenLabels.has(normalizedKey)) return;
+      seenLabels.add(normalizedKey);
+      list.push({
+        key: cleanLabel,
+        label: cleanLabel,
+        value: formattedVal !== undefined ? formattedVal : String(rawVal).trim()
+      });
+    };
+
+    if (isCableTray) {
+      addSpec('Kích thước tiêu chuẩn', product.dimensions);
+      addSpec('Vật liệu chế tạo', product.material);
+      addSpec('Độ dày tôn', product.thickness);
+      addSpec('Xử lý bề mặt & Sơn', product.surface_finish);
+      addSpec('Cấp bảo vệ (IP Rating)', product.ip_rating);
+      addSpec('Tiêu chuẩn sản xuất', product.standards);
+      addSpec('Chi tiết phụ kiện', product.main_components);
+      addSpec('Thương hiệu / Phân phối', product.brand);
+      if (product.warranty_months) {
+        addSpec('Chế độ bảo hành', product.warranty_months, `Chính hãng ${product.warranty_months} tháng`);
+      }
+    } else {
+      addSpec('Điện áp định mức', product.rated_voltage);
+      addSpec('Dòng điện định mức (In)', product.rated_current);
+      addSpec('Tần số làm việc', product.frequency);
+      addSpec('Dòng cắt ngắn mạch (Icu / Icw)', product.short_circuit_current);
+      addSpec('Cấp bảo vệ (IP Rating)', product.ip_rating);
+      addSpec('Tiêu chuẩn sản xuất', product.standards);
+      addSpec('Kích thước tiêu chuẩn', product.dimensions);
+      addSpec('Vật liệu chế tạo', product.material);
+      addSpec('Độ dày tôn', product.thickness);
+      addSpec('Xử lý bề mặt & Sơn', product.surface_finish);
+      addSpec('Thiết bị chính tích hợp', product.main_components);
+      addSpec('Thương hiệu / Phân phối', product.brand);
+      if (product.warranty_months) {
+        addSpec('Chế độ bảo hành', product.warranty_months, `Chính hãng ${product.warranty_months} tháng`);
+      }
+    }
+
+    // Dynamic specs dictionary entered in admin (specifications)
+    if (product.specifications && typeof product.specifications === 'object') {
+      Object.entries(product.specifications).forEach(([key, val]) => {
+        addSpec(key, val);
+      });
+    }
+
+    return list;
+  }, [product, isCableTray]);
+
   // Lock scroll when lightbox is active
   useEffect(() => {
     if (isLightboxOpen) {
@@ -404,40 +470,53 @@ const ProductDetail = ({
               </div>
             ) : null}
 
-            {/* Vùng nhận xét/mô tả sản phẩm (cmt sản phẩm) theo yêu cầu file doc:
-                Bỏ hết 6 ô cứng, thay bằng khối mô tả thoáng đãng, danh sách đặc điểm và liên hệ nhanh */}
-            <div className="pd-summary-desc-box">
-              {product.description && stripHtml(product.description) ? (
-                <div
-                  className="pd-summary-desc-text"
-                  dangerouslySetInnerHTML={{ __html: formatHtmlContent(product.description) }}
-                />
-              ) : (
-                <p className="pd-summary-desc-text">
-                  Sản phẩm được gia công và lắp ráp tại xưởng Cơ Điện Nguyên Phát theo quy trình quản lý chất lượng nghiêm ngặt, đảm bảo độ an toàn vận hành, độ bền cơ học cao và tính thẩm mỹ tối ưu cho mọi công trình.
-                </p>
-              )}
+            {/* Mục 1: Mô tả sản phẩm */}
+            <div className="pd-stacked-block pd-block-desc">
+              <div className="pd-block-header">
+                <h2 className="pd-block-title">Mô Tả Sản Phẩm</h2>
+              </div>
+              <div className="pd-block-desc-card">
+                {product.description && stripHtml(product.description) ? (
+                  <div
+                    className="pd-html-description"
+                    dangerouslySetInnerHTML={{ __html: formatHtmlContent(product.description) }}
+                  />
+                ) : (
+                  <p className="pd-desc-fallback">
+                    Sản phẩm được gia công và phân phối chính hãng bởi Cơ Điện Nguyên Phát, đáp ứng các tiêu chuẩn kỹ thuật nghiêm ngặt, đảm bảo an toàn vận hành và độ bền tối ưu cho công trình.
+                  </p>
+                )}
+              </div>
             </div>
 
-            {/* Đặc điểm kỹ thuật then chốt dạng gạch đầu dòng gọn đẹp (mẫu tham khảo Đạt Vĩnh Tiến) */}
-            <ul className="pd-highlights-list" aria-label="Đặc điểm nổi bật">
-              <li className="pd-highlight-item">
-                <span className="pd-highlight-bullet">-</span>
-                <span>Tuân thủ tiêu chuẩn chất lượng &amp; an toàn điện IEC 61439-1/2, IEC 60529 &amp; TCVN.</span>
-              </li>
-              <li className="pd-highlight-item">
-                <span className="pd-highlight-bullet">-</span>
-                <span>Thanh cái đồng mạ thiếc 99.9%, tôn chấn CNC sắc nét, bề mặt sơn tĩnh điện chống ăn mòn.</span>
-              </li>
-              <li className="pd-highlight-item">
-                <span className="pd-highlight-bullet">-</span>
-                <span>Tích hợp thiết bị đóng cắt chính hãng (Schneider, LS, ABB, Mitsubishi) đầy đủ chứng chỉ CO/CQ.</span>
-              </li>
-              <li className="pd-highlight-item">
-                <span className="pd-highlight-bullet">-</span>
-                <span>Hỗ trợ khảo sát bản vẽ, tư vấn thiết kế kỹ thuật và nghiệm thu đóng điện tận nơi công trình.</span>
-              </li>
-            </ul>
+            {/* Mục 2: Thông tin sản phẩm */}
+            <div className="pd-stacked-block pd-block-info">
+              <div className="pd-block-header">
+                <h2 className="pd-block-title">Thông Tin Sản Phẩm</h2>
+                {productSpecs.length > 0 && (
+                  <span className="pd-block-badge">{productSpecs.length} thông số</span>
+                )}
+              </div>
+
+              {productSpecs.length > 0 ? (
+                <div className="pd-info-table-wrapper">
+                  <table className="pd-info-specs-table">
+                    <tbody>
+                      {productSpecs.map((item, index) => (
+                        <tr key={item.key || index} className="pd-info-spec-row">
+                          <th className="pd-info-spec-th">{item.label}</th>
+                          <td className="pd-info-spec-td">{item.value}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="pd-info-empty-notice">
+                  <p>Thông tin kỹ thuật chi tiết của sản phẩm đang được kỹ sư Cơ Điện Nguyên Phát cập nhật theo từng mã thiết bị hoặc yêu cầu bản vẽ công trình.</p>
+                </div>
+              )}
+            </div>
 
           </div>
         </section>

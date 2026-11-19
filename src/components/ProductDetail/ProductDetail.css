@@ -420,178 +420,127 @@
   letter-spacing: 0.8px;
 }
 
-/* --- Product Commentary / Description Box (cmt sản phẩm per doc) --- */
-.pd-summary-desc-box {
-  margin-bottom: 20px;
-  padding: 16px 20px;
+/* --- 2 Stacked Blocks: Mô tả sản phẩm & Thông tin sản phẩm --- */
+.pd-stacked-block {
+  margin-bottom: 28px;
+}
+
+.pd-stacked-block:last-child {
+  margin-bottom: 0;
+}
+
+.pd-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.pd-block-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+.pd-block-title::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 18px;
+  background: var(--accent-yellow);
+  border-radius: 2px;
+}
+
+.pd-block-badge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #b71c1c;
+  background: rgba(211, 47, 47, 0.1);
+  padding: 3px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(211, 47, 47, 0.25);
+}
+
+/* Card Mô tả sản phẩm */
+.pd-block-desc-card {
+  padding: 18px 22px;
   background: #ffffff;
   border: 1px solid rgba(226, 232, 240, 0.95);
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
 }
 
-.pd-summary-desc-text {
-  font-size: 0.95rem;
+.pd-desc-fallback {
+  font-size: 0.94rem;
   line-height: 1.7;
+  color: #475569;
+  margin: 0;
+}
+
+/* Bảng Thông tin sản phẩm (Đầu mục & Nội dung gọn đẹp, thu dòng không tạo khung trống) */
+.pd-info-table-wrapper {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+}
+
+.pd-info-specs-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.pd-info-spec-row {
+  border-bottom: 1px solid #f1f5f9;
+  transition: background-color 0.15s ease;
+}
+
+.pd-info-spec-row:last-child {
+  border-bottom: none;
+}
+
+.pd-info-spec-row:hover {
+  background-color: #f8fafc;
+}
+
+.pd-info-spec-th {
+  width: 35%;
+  min-width: 160px;
+  padding: 13px 20px;
+  font-size: 0.9rem;
+  font-weight: 700;
   color: #334155;
+  background-color: #f8fafc;
+  border-right: 1px solid #f1f5f9;
+  text-align: left;
+  vertical-align: top;
+}
+
+.pd-info-spec-td {
+  padding: 13px 20px;
+  font-size: 0.92rem;
+  color: #0f172a;
+  line-height: 1.6;
+  vertical-align: top;
+  white-space: pre-line;
   word-break: break-word;
 }
 
-.pd-summary-desc-text p {
-  margin-bottom: 10px;
-}
-
-.pd-summary-desc-text p:last-child {
-  margin-bottom: 0;
-}
-
-.pd-summary-desc-text h3,
-.pd-summary-desc-text h4 {
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: var(--text-dark);
-  margin-top: 14px;
-  margin-bottom: 8px;
-}
-
-.pd-summary-desc-text ul {
-  padding-left: 20px;
-  margin-bottom: 10px;
-  list-style-type: disc;
-}
-
-.pd-summary-desc-text li {
-  margin-bottom: 4px;
-}
-
-/* --- Key Highlights List (mẫu tham khảo Đạt Vĩnh Tiến) --- */
-.pd-highlights-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 22px 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.pd-highlight-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  font-size: 0.92rem;
-  line-height: 1.55;
-  color: #475569;
-}
-
-.pd-highlight-bullet {
-  color: var(--accent-yellow);
-  font-weight: 800;
-  font-size: 1.2rem;
-  line-height: 1.2;
-  flex-shrink: 0;
-}
-
-/* --- Quick Contact & Quote Box (mẫu Đạt Vĩnh Tiến) --- */
-.pd-quick-contact-box {
-  padding: 18px 22px;
-  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
-  border: 1px solid rgba(226, 232, 240, 0.95);
-  border-radius: 12px;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.pd-quick-contact-info {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-}
-
-.pd-contact-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 8px;
-  font-size: 0.88rem;
-}
-
-.pd-contact-label {
+.pd-info-empty-notice {
+  padding: 24px;
+  text-align: center;
   color: #64748b;
-  font-weight: 500;
-}
-
-.pd-contact-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 700;
-  color: #1e293b;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.pd-contact-link:hover {
-  color: var(--accent-yellow);
-}
-
-.pd-contact-hotline {
-  color: #dc2626;
-  font-size: 1.1rem;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-}
-
-.pd-quick-contact-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.pd-contact-action-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 11px 20px;
-  font-size: 0.88rem;
-  font-weight: 700;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  white-space: nowrap;
-}
-
-.pd-btn-quote {
-  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
-  color: #ffffff;
-  border: none;
-  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.25);
-}
-
-.pd-btn-quote:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(211, 47, 47, 0.35);
-  color: #ffffff;
-}
-
-.pd-btn-email {
+  font-size: 0.92rem;
   background: #ffffff;
-  color: #1e293b;
-  border: 1.5px solid #cbd5e1;
-}
-
-.pd-btn-email:hover {
-  background: #f8fafc;
-  border-color: #94a3b8;
-  color: #0f172a;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
 }
 
 /* =============================================
@@ -1479,53 +1428,20 @@
     font-size: clamp(1.5rem, 5vw, 1.85rem);
   }
 
-  .pd-quick-contact-actions {
-    flex-direction: column;
-  }
-
-  .pd-contact-action-btn {
-    width: 100%;
-  }
-
-  .pd-compact-specs-header {
-    padding: 12px 16px;
-  }
-
-  .pd-compact-specs-title {
-    font-size: 0.95rem;
-  }
-
-  .pd-spec-th {
-    width: 42%;
-    min-width: 130px;
-    padding: 11px 14px;
+  .pd-info-spec-th {
+    width: 40%;
+    min-width: 120px;
+    padding: 10px 14px;
     font-size: 0.85rem;
   }
 
-  .pd-spec-td {
-    padding: 11px 14px;
+  .pd-info-spec-td {
+    padding: 10px 14px;
     font-size: 0.86rem;
   }
 
-  .pd-cta-group {
-    flex-direction: column;
-  }
-
-  .pd-cta-group .btn-primary,
-  .pd-cta-group .btn-secondary {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .pd-tabs-nav {
-    justify-content: flex-start;
-    overflow-x: auto;
-    white-space: nowrap;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .pd-tabs-content {
-    padding: 20px 14px;
+  .pd-block-desc-card {
+    padding: 14px 16px;
   }
 
   .pd-related-grid {
