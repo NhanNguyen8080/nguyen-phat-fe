@@ -1,45 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './Services.css';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
-import { getProducts, MOCK_PRODUCTS } from '../../services/productService';
+import { getProducts } from '../../services/productService';
 
 const FALLBACK_IMAGE = '/images/products/tu-msb-3200a.png';
-
-// Danh sách sản phẩm chuẩn cho Hàng 2: THANG MÁNG CÁP VÀ VỎ TỦ (đảm bảo luôn hiển thị đủ 3 khung ngang to đẹp)
-const DEFAULT_CABLE_AND_ENCLOSURE_PRODUCTS = [
-  {
-    id: 'd4182f57-a24f-4662-b07f-1fc0ffd85e11',
-    name: 'Thang Cáp Điện Công Nghiệp Sơn Tĩnh Điện',
-    slug: 'thang-cap-dien-cong-nghiep-son-tinh-dien',
-    category_name: 'Thang máng cáp',
-    thumbnail: '/images/products/thang-cap-nguyen-phat.jpg',
-    images: ['/images/products/thang-cap-nguyen-phat.jpg']
-  },
-  {
-    id: 'e5293f57-a24f-4662-b07f-1fc0ffd85e12',
-    name: 'Khay Cáp Đột Lỗ CNC (Tray Cáp Điện)',
-    slug: 'khay-cap-dot-lo-cnc-tray-cap',
-    category_name: 'Thang máng cáp',
-    thumbnail: '/images/products/tray-cap-nguyen-phat.jpg',
-    images: ['/images/products/tray-cap-nguyen-phat.jpg']
-  },
-  {
-    id: 'f6304f57-a24f-4662-b07f-1fc0ffd85e13',
-    name: 'Vỏ Tủ Điện Công Nghiệp 3 Khung Ghép & Vỏ Tủ 2 Ngăn',
-    slug: 'vo-tu-dien-cong-nghiep-3-khung-ghep-cnc',
-    category_name: 'Vỏ tủ điện',
-    thumbnail: '/images/products/vo-tu-3-khung.jpg',
-    images: ['/images/products/vo-tu-3-khung.jpg']
-  },
-  {
-    id: 'bc283f57-a24f-4662-b07f-1fc0ffd85e09',
-    name: 'Máng Cáp Điện Sơn Tĩnh Điện (Cable Trunking)',
-    slug: 'mang-cap-son-tinh-dien-nguyen-phat',
-    category_name: 'Thang máng cáp',
-    thumbnail: '/images/products/mang-cap-nguyen-phat.jpg',
-    images: ['/images/products/mang-cap-nguyen-phat.jpg']
-  }
-];
 
 const getProductThumbnail = (product) => {
   if (!product) return FALLBACK_IMAGE;
@@ -93,7 +57,7 @@ const isCableOrEnclosureProduct = (product) => {
 };
 
 const Services = ({ onNavigateProducts, onSelectProduct }) => {
-  const [allProducts, setAllProducts] = useState(() => MOCK_PRODUCTS);
+  const [allProducts, setAllProducts] = useState([]);
   const [row1Page, setRow1Page] = useState(0);
   const [row2Page, setRow2Page] = useState(0);
   const sectionRef = useScrollReveal({ threshold: 0.08 });
@@ -103,7 +67,7 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
 
     getProducts({ limit: 50 })
       .then((res) => {
-        if (isMounted && res?.products && res.products.length > 0) {
+        if (isMounted && res?.products) {
           setAllProducts(res.products);
         }
       })
@@ -116,28 +80,12 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
     };
   }, []);
 
-  // Phân tách sản phẩm thành 2 hàng:
+  // Phân tách sản phẩm trực tiếp từ API thành 2 hàng (không tự chèn thêm sản phẩm mẫu):
   // Hàng 1: TỦ ĐIỆN & THIẾT BỊ
-  const switchboardProducts = allProducts.filter((p) => !isCableOrEnclosureProduct(p));
-  const row1List = switchboardProducts.length >= 3
-    ? switchboardProducts
-    : [
-        ...switchboardProducts,
-        ...MOCK_PRODUCTS.filter(
-          (m) => !isCableOrEnclosureProduct(m) && !switchboardProducts.some((s) => s.id === m.id)
-        )
-      ].slice(0, 6);
+  const row1List = allProducts.filter((p) => !isCableOrEnclosureProduct(p));
 
   // Hàng 2: THANG MÁNG CÁP VÀ VỎ TỦ
-  const apiCableAndEnclosure = allProducts.filter((p) => isCableOrEnclosureProduct(p));
-  const row2List = apiCableAndEnclosure.length >= 3
-    ? apiCableAndEnclosure
-    : [
-        ...apiCableAndEnclosure,
-        ...DEFAULT_CABLE_AND_ENCLOSURE_PRODUCTS.filter(
-          (d) => !apiCableAndEnclosure.some((a) => a.id === d.id || a.slug === d.slug)
-        )
-      ];
+  const row2List = allProducts.filter((p) => isCableOrEnclosureProduct(p));
 
   const ITEMS_PER_ROW = 3;
   const maxRow1Page = Math.max(0, Math.ceil(row1List.length / ITEMS_PER_ROW) - 1);
