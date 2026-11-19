@@ -25,7 +25,7 @@ const HOME_SCROLL_SCREENS = [
   { id: 'project', navId: 'project', label: 'Công trình' },
   { id: 'capacity', navId: 'capacity', label: 'Hồ sơ năng lực' },
   { id: 'contact', navId: 'contact', label: 'Liên hệ' },
-  { id: 'footer', navId: 'footer', label: 'Đối tác & Chân trang' }
+  { id: 'footer', navId: 'footer', label: 'Chân trang' }
 ];
 
 // Danh sách 7 đề mục hiển thị trên thanh chỉ báo bên trái (2 màn hình đầu gộp chung vào mục 01 - Trang chủ)
@@ -36,7 +36,7 @@ const HOME_SECTIONS = [
   { id: 'project', label: 'Công trình' },
   { id: 'capacity', label: 'Hồ sơ năng lực' },
   { id: 'contact', label: 'Liên hệ' },
-  { id: 'footer', label: 'Đối tác & Chân trang' }
+  { id: 'footer', label: 'Chân trang' }
 ];
 
 function parseLocation() {

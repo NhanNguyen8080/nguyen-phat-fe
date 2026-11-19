@@ -1,56 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Footer.css';
 
-const PARTNERS = [
-  {
-    name: 'Socomec',
-    origin: 'Pháp',
-    desc: 'Thiết bị đóng cắt & chuyển nguồn ATS chuyên dụng',
-    logo: '/images/footer/partner-socomec.jpg'
-  },
-  {
-    name: 'Schneider Electric',
-    origin: 'Pháp',
-    desc: 'Giải pháp quản lý năng lượng & tự động hóa công nghiệp',
-    logo: '/images/footer/partner-schneider.jpg'
-  },
-  {
-    name: 'LS Electric',
-    origin: 'Hàn Quốc',
-    desc: 'Thiết bị điện hạ thế ACB, MCCB, MCB, Khởi động từ',
-    logo: '/images/footer/partner-ls.jpg'
-  },
-  {
-    name: 'Mitsubishi Electric',
-    origin: 'Nhật Bản',
-    desc: 'Khí cụ điện đóng cắt & Biến tần công nghiệp cao cấp',
-    logo: '/images/footer/partner-mitsubishi.jpg'
-  },
-  {
-    name: 'ABB',
-    origin: 'Thụy Sĩ',
-    desc: 'Thiết bị phân phối điện & công nghệ tự động hóa',
-    logo: '/images/footer/partner-abb.jpg'
-  },
-  {
-    name: 'Hyosung',
-    origin: 'Hàn Quốc',
-    desc: 'Hệ thống truyền tải, máy biến áp & động cơ công nghiệp',
-    logo: '/images/footer/partner-hyosung.jpg'
-  },
-  {
-    name: 'Shihlin Electric',
-    origin: 'Đài Loan',
-    desc: 'Thiết bị đóng cắt hạ thế, khởi động từ & biến tần công nghiệp',
-    logo: '/images/footer/partner-shihlin.jpg'
-  },
-  {
-    name: 'Chint Electric',
-    origin: 'Trung Quốc',
-    desc: 'Thiết bị điện hạ thế, trung thế & giải pháp năng lượng đồng bộ',
-    logo: '/images/footer/partner-chint.jpg'
-  }
-];
+
 
 const LOCATIONS = {
   office: {
@@ -137,52 +88,6 @@ const Footer = ({
   return (
     <>
       <footer className="site-footer" id="footer">
-        {/* ===================== PARTNERS STRIP ===================== */}
-        <section className="footer-partners-section">
-          <div className="container">
-            <div className="partners-header">
-              <span className="partners-badge">Hệ Sinh Thái Uy Tín</span>
-              <h3 className="partners-title">
-                Đối Tác Công Nghệ &amp; Thiết Bị <span className="text-yellow">Hàng Đầu</span>
-              </h3>
-              <p className="partners-subtitle">
-                Nguyên Phát hợp tác trực tiếp cùng các tập đoàn sản xuất thiết bị đóng cắt và tự động hóa hàng đầu thế giới, đảm bảo nguồn linh kiện chính hãng 100%.
-              </p>
-            </div>
-
-            <div className="partners-grid">
-              {PARTNERS.map((partner, index) => (
-                <div key={index} className="partner-card" title={`${partner.name} (${partner.origin}) - ${partner.desc}`}>
-                  <div className="partner-logo-box">
-                    <img
-                      src={partner.logo}
-                      alt={partner.name}
-                      loading="lazy"
-                      decoding="async"
-                      width="140"
-                      height="64"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        const parent = e.currentTarget.parentElement;
-                        if (parent && !parent.querySelector('.partner-fallback')) {
-                          const span = document.createElement('span');
-                          span.className = 'partner-fallback';
-                          span.textContent = partner.name;
-                          parent.appendChild(span);
-                        }
-                      }}
-                    />
-                  </div>
-                  <div className="partner-info">
-                    <span className="partner-name">{partner.name}</span>
-                    <span className="partner-origin">{partner.origin}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* ===================== MAIN FOOTER ===================== */}
         <div className="footer-main">
           <div className="container">
