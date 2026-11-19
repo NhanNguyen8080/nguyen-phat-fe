@@ -817,7 +817,7 @@
 }
 
 /* ==========================================================================
-   MỤC 5: SƠ ĐỒ TỔ CHỨC CÔNG TY (Design Chuyên Nghiệp - Bản Chuẩn)
+   MỤC 5: SƠ ĐỒ TỔ CHỨC CÔNG TY (Design Chuyên Nghiệp - Bản Gọn Tinh Tế)
    ========================================================================== */
 .orgchart-section {
   background-color: rgba(255, 255, 255, 0.65);
@@ -836,7 +836,7 @@
   background-size: 22px 22px;
   border: 1px solid #e2e8f0;
   border-radius: 20px;
-  padding: 34px 38px 30px;
+  padding: 34px 38px 36px;
   box-shadow: 0 16px 40px -12px rgba(15, 23, 42, 0.08), 0 2px 6px rgba(0, 0, 0, 0.02);
   position: relative;
 }
@@ -930,7 +930,7 @@
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 10px 4px 20px;
+  padding: 10px 4px 16px;
 }
 
 /* Khung cây sơ đồ bên trong */
@@ -971,10 +971,10 @@
 
 /* ================= CẤP 1 & CẤP 2: BAN GIÁM ĐỐC & GIÁM ĐỐC ================= */
 .org-card-director {
-  min-width: 320px;
-  max-width: 360px;
-  padding: 16px 20px 14px;
-  border-top: 3px solid #d32f2f;
+  min-width: 250px;
+  max-width: 290px;
+  padding: 14px 24px;
+  border-top: 3.5px solid #d32f2f;
   border-color: #fecaca;
   box-shadow: 0 6px 18px rgba(211, 47, 47, 0.08);
 }
@@ -984,32 +984,16 @@
   box-shadow: 0 12px 30px rgba(211, 47, 47, 0.16);
 }
 
-.org-card-badge-tag {
-  display: inline-block;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 4px;
-  margin-bottom: 8px;
-}
-
-.tag-crimson {
-  color: #d32f2f;
-  background-color: #fff1f2;
-  border: 1px solid #ffe4e6;
-}
-
 .org-card-body-row {
   display: flex;
   align-items: center;
-  gap: 14px;
+  justify-content: center;
+  gap: 12px;
 }
 
 .org-card-icon-box {
-  width: 42px;
-  height: 42px;
+  width: 38px;
+  height: 38px;
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -1023,23 +1007,13 @@
   border: 1px solid #fecaca;
 }
 
-.org-card-main-info {
-  text-align: left;
-}
-
 .org-card-director .org-card-title {
   color: #0f172a;
   font-size: 1.05rem;
   font-weight: 800;
-  margin: 0 0 3px;
-  letter-spacing: 0.5px;
-}
-
-.org-card-desc {
-  color: #64748b;
-  font-size: 0.78rem;
   margin: 0;
-  line-height: 1.35;
+  letter-spacing: 0.5px;
+  line-height: 1.25;
 }
 
 /* ================= CẤP 3: 5 KHỐI PHÒNG BAN CHỨC NĂNG ================= */
@@ -1052,44 +1026,13 @@
 }
 
 .org-card-dept {
-  padding: 14px 10px 12px;
+  padding: 18px 8px 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
-  min-height: 148px;
-}
-
-.org-dept-category-pill {
-  font-size: 0.65rem;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  padding: 2px 7px;
-  border-radius: 4px;
-  margin-bottom: 8px;
-  color: #475569;
-  background-color: #f1f5f9;
-}
-
-.pill-blue {
-  color: #0284c7;
-  background-color: #f0f9ff;
-}
-
-.pill-red {
-  color: #d32f2f;
-  background-color: #fff1f2;
-  border: 1px solid #ffe4e6;
-}
-
-.pill-emerald {
-  color: #059669;
-  background-color: #ecfdf5;
-}
-
-.pill-purple {
-  color: #7c3aed;
-  background-color: #f5f3ff;
+  min-height: 106px;
 }
 
 .org-dept-icon-circle {
@@ -1099,7 +1042,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   flex-shrink: 0;
 }
 
@@ -1111,22 +1054,15 @@
 
 .org-card-dept .org-card-title {
   color: #0f172a;
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   font-weight: 800;
-  margin: 0 0 6px;
+  margin: 0;
   line-height: 1.35;
   letter-spacing: 0.3px;
 }
 
 .highlight-red-text {
   color: #d32f2f !important;
-}
-
-.org-dept-sub-note {
-  color: #64748b;
-  font-size: 0.72rem;
-  margin: 0;
-  line-height: 1.35;
 }
 
 /* Đường viền trên theo chức năng */
@@ -1151,40 +1087,23 @@
 
 /* ================= CẤP 4: 5 BỘ PHẬN KỸ THUẬT & VẬN HÀNH ================= */
 .org-card-subdept {
-  padding: 14px 10px 12px;
+  padding: 18px 8px 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
-  min-height: 144px;
-}
-
-.org-subdept-badge {
-  font-size: 0.64rem;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  padding: 2px 7px;
-  border-radius: 4px;
-  margin-bottom: 8px;
-  color: #475569;
-  background-color: #f8fafc;
-  border: 1px solid #e2e8f0;
-}
-
-.badge-orange-glow {
-  color: #ea580c;
-  background-color: #fff7ed;
-  border-color: #fed7aa;
+  min-height: 106px;
 }
 
 .org-subdept-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   flex-shrink: 0;
 }
 
@@ -1216,15 +1135,8 @@
 
 .org-card-subdept .org-card-title {
   color: #0f172a;
-  font-size: 0.83rem;
+  font-size: 0.86rem;
   font-weight: 800;
-  margin: 0 0 6px;
-  line-height: 1.35;
-}
-
-.org-subdept-desc {
-  color: #64748b;
-  font-size: 0.72rem;
   margin: 0;
   line-height: 1.35;
 }
@@ -1234,10 +1146,10 @@
   background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
   border: 1px solid #334155;
   border-radius: 14px;
-  padding: 18px 28px;
-  width: 65%;
-  min-width: 520px;
-  max-width: 660px;
+  padding: 16px 32px;
+  width: 60%;
+  min-width: 500px;
+  max-width: 640px;
   box-shadow: 0 12px 32px rgba(15, 23, 42, 0.22), inset 0 1px 1px rgba(255, 255, 255, 0.1);
   color: #ffffff;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -1248,34 +1160,16 @@
   box-shadow: 0 18px 40px rgba(15, 23, 42, 0.32);
 }
 
-.workers-card-badge-row {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 12px;
-}
-
-.workers-elite-pill {
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  color: #fbbf24;
-  background-color: rgba(245, 158, 11, 0.15);
-  border: 1px solid rgba(245, 158, 11, 0.3);
-  padding: 3px 12px;
-  border-radius: 999px;
-}
-
 .workers-content-wrap {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 16px;
-  margin-bottom: 12px;
 }
 
 .workers-icon-circle {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 12px;
   background-color: rgba(245, 158, 11, 0.15);
   border: 1px solid rgba(245, 158, 11, 0.3);
@@ -1291,30 +1185,20 @@
 
 .workers-title {
   color: #ffffff;
-  font-size: 1.05rem;
+  font-size: 1.02rem;
   font-weight: 800;
-  margin: 0 0 4px;
+  margin: 0 0 6px;
   letter-spacing: 0.5px;
-}
-
-.workers-desc {
-  color: #94a3b8;
-  font-size: 0.78rem;
-  margin: 0;
-  line-height: 1.4;
 }
 
 .workers-sub-tags-row {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding-top: 10px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 8px;
 }
 
 .worker-tag-item {
-  font-size: 0.75rem;
+  font-size: 0.74rem;
   font-weight: 600;
   color: #cbd5e1;
 }
@@ -1429,46 +1313,6 @@
   width: 2.5px;
   background: #d32f2f;
   box-shadow: 0 0 6px rgba(211, 47, 47, 0.35);
-}
-
-/* ================= BẢNG CHÚ GIẢI (LEGEND BAR) ================= */
-.orgchart-board-legend {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 20px 32px;
-  margin-top: 32px;
-  padding-top: 24px;
-  border-top: 1px dashed #e2e8f0;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.legend-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 999px;
-  flex-shrink: 0;
-}
-
-.dot-red { background-color: #d32f2f; box-shadow: 0 0 6px rgba(211, 47, 47, 0.4); }
-.dot-blue { background-color: #0284c7; box-shadow: 0 0 6px rgba(2, 132, 199, 0.4); }
-.dot-amber { background-color: #d97706; box-shadow: 0 0 6px rgba(217, 119, 6, 0.4); }
-.dot-dark { background-color: #0f172a; box-shadow: 0 0 6px rgba(15, 23, 42, 0.4); }
-
-.legend-label {
-  color: #64748b;
-  font-size: 0.78rem;
-  line-height: 1.4;
-}
-
-.legend-label strong {
-  color: #334155;
 }
 
 /* Chỉ dẫn vuốt chạm trên thiết bị di động */
