@@ -215,25 +215,17 @@ const ProductDetail = ({
     return list;
   }, [product, isCableTray]);
 
-  // Trạng thái thu gọn / mở rộng (Xem thêm) cho Thông tin sản phẩm & Mô tả sản phẩm
-  const [isInfoExpanded, setIsInfoExpanded] = useState(false);
-  const [showInfoToggle, setShowInfoToggle] = useState(false);
-  const infoContentRef = useRef(null);
-
+  // Trạng thái thu gọn / mở rộng (Xem thêm) cho Mô tả sản phẩm
   const [isDescExpanded, setIsDescExpanded] = useState(false);
   const [showDescToggle, setShowDescToggle] = useState(false);
   const descContentRef = useRef(null);
 
   useEffect(() => {
-    setIsInfoExpanded(false);
     setIsDescExpanded(false);
   }, [productIdOrSlug]);
 
   useEffect(() => {
     const checkHeights = () => {
-      if (infoContentRef.current) {
-        setShowInfoToggle(infoContentRef.current.scrollHeight > 180);
-      }
       if (descContentRef.current) {
         setShowDescToggle(descContentRef.current.scrollHeight > 180);
       }
@@ -245,7 +237,7 @@ const ProductDetail = ({
       clearTimeout(timer);
       window.removeEventListener('resize', checkHeights);
     };
-  }, [product, productSpecs]);
+  }, [product]);
 
   // Lock scroll when lightbox is active
   useEffect(() => {
@@ -538,17 +530,14 @@ const ProductDetail = ({
               </div>
             </div>
 
-            {/* Mục 2: Thông tin sản phẩm (Dạng đoạn văn giống mô tả sản phẩm + nút Xem thêm) */}
+            {/* Mục 2: Thông tin sản phẩm (Cho phép cuộn scroll khi danh sách dài thay vì nút Xem thêm) */}
             <div className="pd-stacked-block pd-block-info">
               <div className="pd-block-header">
                 <h2 className="pd-block-title">Thông Tin Sản Phẩm</h2>
               </div>
 
               <div className="pd-block-desc-card">
-                <div
-                  ref={infoContentRef}
-                  className={`pd-expandable-content ${!isInfoExpanded && showInfoToggle ? 'is-collapsed' : 'is-expanded'}`}
-                >
+                <div className="pd-info-scroll-container">
                   {typeof product.specifications === 'string' && stripHtml(product.specifications) ? (
                     <div
                       className="pd-html-description"
@@ -569,31 +558,6 @@ const ProductDetail = ({
                     </p>
                   )}
                 </div>
-
-                {showInfoToggle && (
-                  <button
-                    type="button"
-                    className="pd-expand-toggle-btn"
-                    onClick={() => setIsInfoExpanded(!isInfoExpanded)}
-                    aria-expanded={isInfoExpanded}
-                  >
-                    <span>{isInfoExpanded ? 'Thu gọn' : 'Xem thêm'}</span>
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className={`pd-toggle-arrow ${isInfoExpanded ? 'rotate' : ''}`}
-                      aria-hidden="true"
-                    >
-                      <polyline points="6 9 12 15 18 9"></polyline>
-                    </svg>
-                  </button>
-                )}
               </div>
             </div>
 

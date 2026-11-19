@@ -541,7 +541,36 @@
   transform: rotate(180deg);
 }
 
-/* Danh sách Thông tin sản phẩm dạng đoạn văn */
+/* Danh sách Thông tin sản phẩm dạng cuộn (Scrollable specifications card) */
+.pd-info-scroll-container {
+  max-height: 240px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.pd-info-scroll-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.pd-info-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 999px;
+}
+
+.pd-info-scroll-container::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 999px;
+  transition: background-color 0.2s ease;
+}
+
+.pd-info-scroll-container::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8;
+}
+
 .pd-info-paragraphs {
   display: flex;
   flex-direction: column;
