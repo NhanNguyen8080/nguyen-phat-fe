@@ -321,15 +321,7 @@ const AboutPage = ({ onNavigateHome }) => {
             <div className="director-card-column">
               <div className="director-executive-card">
                 <div className="director-card-header-accent" />
-                <div className="director-avatar-wrapper">
-                  <div className="director-avatar-ring">
-                    <img 
-                      src="/images/logo.png" 
-                      alt="Giám đốc Mai Hưng HÀ - Cơ Điện Nguyên Phát" 
-                      className="director-avatar-img"
-                    />
-                  </div>
-                </div>
+
 
                 <div className="director-info-box">
                   <span className="director-badge-pill">Ban Giám Đốc</span>
