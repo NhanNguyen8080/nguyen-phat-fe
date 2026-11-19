@@ -61,12 +61,12 @@ const PAGE_IMAGES = Array.from(
 // Danh mục các không gian / hình nền phía sau sách (Background Presets)
 const BACKGROUND_PRESETS = [
   {
-    id: 'studio-dark',
-    name: 'Studio Đêm',
+    id: 'marble-stone',
+    name: 'Đá Showroom',
     theme: 'dark',
-    icon: '🌙',
-    swatch: 'radial-gradient(circle, #24324a 0%, #0a0e17 100%)',
-    desc: 'Triển lãm đêm sang trọng với đèn rọi trung tâm'
+    icon: '🏛️',
+    swatch: 'linear-gradient(135deg, #24324a 0%, #0f1724 100%)',
+    desc: 'Mặt đá phiến cẩm thạch sang trọng (Mặc định)'
   },
   {
     id: 'warm-wood',
@@ -77,20 +77,20 @@ const BACKGROUND_PRESETS = [
     desc: 'Mặt bàn gỗ óc chó cao cấp ấm cúng'
   },
   {
-    id: 'marble-stone',
-    name: 'Đá Showroom',
-    theme: 'dark',
-    icon: '🏛️',
-    swatch: 'linear-gradient(135deg, #24324a 0%, #0f1724 100%)',
-    desc: 'Mặt đá phiến cẩm thạch sang trọng'
-  },
-  {
     id: 'industrial-tech',
     name: 'Kỹ Thuật MEP',
     theme: 'dark',
     icon: '⚡',
     swatch: 'linear-gradient(135deg, #0e7490 0%, #091424 100%)',
     desc: 'Lưới bản vẽ kỹ thuật cơ điện MEP'
+  },
+  {
+    id: 'studio-dark',
+    name: 'Studio Đêm',
+    theme: 'dark',
+    icon: '🌙',
+    swatch: 'radial-gradient(circle, #24324a 0%, #0a0e17 100%)',
+    desc: 'Triển lãm đêm sang trọng với đèn rọi trung tâm'
   },
   {
     id: 'minimal-light',
@@ -114,20 +114,24 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
     typeof window !== 'undefined' && window.innerWidth > 860 ? 'landscape' : 'portrait'
   );
 
-  // Preset hình nền phía sau quyển sách
+  // Preset hình nền phía sau quyển sách (Mặc định: 'marble-stone' - Đá Showroom)
   const [bgPreset, setBgPreset] = useState(() => {
     try {
-      return localStorage.getItem('np_catalog_bg') || 'studio-dark';
+      const saved = localStorage.getItem('np_catalog_bg_v2');
+      if (saved) return saved;
+      const legacy = localStorage.getItem('np_catalog_bg');
+      if (legacy && legacy !== 'studio-dark') return legacy;
+      return 'marble-stone';
     } catch {
-      return 'studio-dark';
+      return 'marble-stone';
     }
   });
 
-  // Giao diện: 'dark' (Studio đêm cao cấp) hoặc 'light' (Studio sáng)
+  // Giao diện: 'dark' (Showroom) hoặc 'light' (Studio sáng)
   const [theme, setTheme] = useState(() => {
     try {
-      const savedBg = localStorage.getItem('np_catalog_bg');
-      if (savedBg === 'minimal-light') return 'light';
+      const saved = localStorage.getItem('np_catalog_bg_v2') || localStorage.getItem('np_catalog_bg');
+      if (saved === 'minimal-light') return 'light';
     } catch {
       // fallback
     }
@@ -664,7 +668,7 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
                           setBgPreset(p.id);
                           setTheme(p.theme);
                           try {
-                            localStorage.setItem('np_catalog_bg', p.id);
+                            localStorage.setItem('np_catalog_bg_v2', p.id);
                           } catch {
                             // ignore
                           }
@@ -702,11 +706,11 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
               if (theme === 'dark') {
                 setTheme('light');
                 setBgPreset('minimal-light');
-                try { localStorage.setItem('np_catalog_bg', 'minimal-light'); } catch {}
+                try { localStorage.setItem('np_catalog_bg_v2', 'minimal-light'); } catch {}
               } else {
                 setTheme('dark');
-                setBgPreset('studio-dark');
-                try { localStorage.setItem('np_catalog_bg', 'studio-dark'); } catch {}
+                setBgPreset('marble-stone');
+                try { localStorage.setItem('np_catalog_bg_v2', 'marble-stone'); } catch {}
               }
             }}
             title={theme === 'dark' ? 'Chuyển sang nền sáng' : 'Chuyển sang nền tối showroom'}
