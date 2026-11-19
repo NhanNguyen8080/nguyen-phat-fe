@@ -5,7 +5,7 @@
 
 .project-detail-page {
   min-height: 100vh;
-  background-color: var(--primary-bg);
+  background: transparent;
   color: var(--text-dark);
   padding-bottom: 50px;
 }
