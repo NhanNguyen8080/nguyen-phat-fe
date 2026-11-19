@@ -538,7 +538,12 @@ const ProductDetail = ({
 
               <div className="pd-block-desc-card">
                 <div className="pd-info-scroll-container">
-                  {typeof product.specifications === 'string' && stripHtml(product.specifications) ? (
+                  {typeof product.content === 'string' && stripHtml(product.content) ? (
+                    <div
+                      className="pd-html-description"
+                      dangerouslySetInnerHTML={{ __html: formatHtmlContent(product.content) }}
+                    />
+                  ) : typeof product.specifications === 'string' && stripHtml(product.specifications) ? (
                     <div
                       className="pd-html-description"
                       dangerouslySetInnerHTML={{ __html: formatHtmlContent(product.specifications) }}

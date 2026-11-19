@@ -678,6 +678,7 @@ export function normalizeProduct(raw) {
     raw_category_name: rawCatName || '',
     is_facility_equipment: Boolean(parentCat.isFacility),
     description: typeof raw.description === 'string' && raw.description !== 'string' ? raw.description : '',
+    content: typeof raw.content === 'string' && raw.content !== 'string' ? raw.content : '',
     thumbnail: cleanUrl(raw.thumbnail),
     images: cleanArrayOfStrings(raw.images),
     rated_voltage: cleanString(raw.rated_voltage) || '',

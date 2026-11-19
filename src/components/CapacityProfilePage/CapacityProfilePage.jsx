@@ -14,25 +14,28 @@ const CHAPTERS = [
   { id: 8, title: 'Khách Hàng & Đối Tác Chiến Lược', page: 27, desc: 'Đối tác thiết bị Schneider, LS, ABB & Liên hệ' }
 ];
 
-// Trình phát âm thanh lật giấy siêu nhẹ bằng Web Audio API (Zero latency, không cần tải file âm thanh ngoài)
+// Trình phát âm thanh lật giấy siêu nhẹ bằng Web Audio API (mô phỏng tiếng xột xoạt giấy khi người lật chậm rãi)
 const playPaperFlipSound = () => {
   try {
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
     if (!AudioContextClass) return;
     const ctx = new AudioContextClass();
-    const duration = 0.16;
-    const bufferSize = ctx.sampleRate * duration;
+    const duration = 0.42;
+    const bufferSize = Math.floor(ctx.sampleRate * duration);
     const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
     const data = buffer.getChannelData(0);
     for (let i = 0; i < bufferSize; i++) {
-      data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.28));
+      const t = i / bufferSize;
+      const env = Math.sin(t * Math.PI) * Math.exp(-t * 2.0);
+      data[i] = (Math.random() * 2 - 1) * env;
     }
     const noise = ctx.createBufferSource();
     noise.buffer = buffer;
     const filter = ctx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(1100, ctx.currentTime);
-    filter.frequency.exponentialRampToValueAtTime(260, ctx.currentTime + duration);
+    filter.type = 'bandpass';
+    filter.frequency.setValueAtTime(820, ctx.currentTime);
+    filter.frequency.exponentialRampToValueAtTime(320, ctx.currentTime + duration);
+    filter.Q.setValueAtTime(1.1, ctx.currentTime);
 
     const gain = ctx.createGain();
     gain.gain.setValueAtTime(0.08, ctx.currentTime);
@@ -119,11 +122,11 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
     }
 
     if (viewMode === 'single') {
-      setFlipState({ direction, targetPage });
+      setFlipState({ direction, targetPage, fromPage: currentPage });
       setTimeout(() => {
         setCurrentPage(targetPage);
         setFlipState(null);
-      }, 480);
+      }, 920);
       return;
     }
 
@@ -146,8 +149,8 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
     setTimeout(() => {
       setCurrentPage(newLeft);
       setFlipState(null);
-    }, 560);
-  }, [flipState, soundEnabled, viewMode, leftPage, rightPage]);
+    }, 960);
+  }, [flipState, soundEnabled, viewMode, leftPage, rightPage, currentPage]);
 
   const handleNext = useCallback(() => {
     if (viewMode === 'spread') {
@@ -475,6 +478,8 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
                   />
                   <div className="cp-gutter-shadow left" />
                   <div className="cp-page-edge left" />
+                  {/* Bóng đổ quét qua khi lá lật tiếp đất êm ái */}
+                  {flipState?.direction === 'next' && <div className="cp-page-landing-shadow left" />}
                   <span className="cp-page-badge left">
                     Trang {flipState?.direction === 'prev' ? flipState.newLeft : leftPage}
                   </span>
@@ -500,6 +505,8 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
                   />
                   <div className="cp-gutter-shadow right" />
                   <div className="cp-page-edge right" />
+                  {/* Bóng đổ quét qua khi lật ngược về */}
+                  {flipState?.direction === 'prev' && <div className="cp-page-landing-shadow right" />}
                   <span className="cp-page-badge right">
                     Trang {flipState?.direction === 'next' ? flipState.newRight : rightPage}
                   </span>
@@ -518,7 +525,7 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
                       alt="Lật trang"
                       className="cp-page-image"
                     />
-                    <div className="cp-leaf-shading" />
+                    <div className="cp-leaf-sheen front" />
                   </div>
                   {/* Mặt sau của trang lật */}
                   <div className="cp-leaf-face face-back">
@@ -527,7 +534,7 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
                       alt="Lật trang"
                       className="cp-page-image"
                     />
-                    <div className="cp-leaf-shading" />
+                    <div className="cp-leaf-sheen back" />
                   </div>
                 </div>
               )}
@@ -536,15 +543,35 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
 
           {/* TH2: CHẾ ĐỘ 1 TRANG ĐƠN (SINGLE PAGE MODE) */}
           {viewMode === 'single' && (
-            <div className={`cp-single-book ${flipState ? `flipping-${flipState.direction}` : ''}`}>
-              <div className="cp-single-page-card" onClick={handleNext}>
+            <div className="cp-single-book-stage">
+              {/* Trang đệm nằm dưới lộ ra khi lật */}
+              {flipState && (
+                <div className="cp-single-page-card under-card">
+                  <img
+                    src={`/catalog/pages/${flipState.direction === 'next' ? flipState.targetPage : currentPage}.jpg`}
+                    alt="Trang nền"
+                    className="cp-page-image"
+                  />
+                  <span className="cp-page-badge center">
+                    Trang {flipState.direction === 'next' ? flipState.targetPage : currentPage} / {TOTAL_PAGES}
+                  </span>
+                </div>
+              )}
+
+              {/* Trang cử động theo thao tác lật */}
+              <div
+                className={`cp-single-page-card top-card ${flipState ? `flipping-${flipState.direction}` : ''}`}
+                onClick={handleNext}
+                title="Bấm để lật sang trang sau"
+              >
                 <img
-                  src={`/catalog/pages/${currentPage}.jpg`}
+                  src={`/catalog/pages/${flipState?.direction === 'prev' ? flipState.targetPage : currentPage}.jpg`}
                   alt={`Trang ${currentPage}`}
                   className="cp-page-image"
                 />
+                {flipState && <div className="cp-single-curl-shading" />}
                 <span className="cp-page-badge center">
-                  Trang {currentPage} / {TOTAL_PAGES}
+                  Trang {flipState?.direction === 'prev' ? flipState.targetPage : currentPage} / {TOTAL_PAGES}
                 </span>
               </div>
             </div>
