@@ -400,21 +400,72 @@
    3. SÂN KHẤU FLIPBOOK HTML5 CANVAS CHUẨN FLIPBUILDER
    ============================================================== */
 .cp-book-stage-inner {
+  --spread-w: min(calc((100vh - 120px) * 1.401), calc(100vw - 160px), 1180px);
+  --page-w: calc(var(--spread-w) / 2);
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  /* Tự động tính toán chiều rộng theo chiều cao khả dụng để toàn bộ sách LUÔN VỪA KHÍT MÀN HÌNH */
-  max-width: min(calc((100vh - 120px) * 1.401), calc(100vw - 160px), 1180px);
   margin: 0 auto;
-  transition: max-width 0.2s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
+  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Khi sách ở chế độ 1 trang đơn (Portrait) */
+/* Chế độ 2 trang đôi mở rộng (Spread) */
+.cp-book-stage-inner.is-open-spread {
+  width: var(--spread-w);
+  max-width: var(--spread-w);
+  overflow: visible;
+}
+
+.cp-book-stage-inner.is-open-spread .cp-flipbook-mount {
+  width: var(--spread-w);
+  transform: translateX(0);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Khi ở bìa trước (Trang 1 chưa lật): chỉ hiện 1 trang duy nhất, căn giữa như 1 cuốn sách đóng */
+.cp-book-stage-inner.is-closed-front {
+  width: var(--page-w);
+  max-width: var(--page-w);
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45), 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+.cp-book-stage-inner.is-closed-front .cp-flipbook-mount {
+  width: var(--spread-w);
+  flex-shrink: 0;
+  transform: translateX(-25%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Khi ở bìa sau (Trang 28 chưa lật): chỉ hiện 1 trang bìa sau căn giữa */
+.cp-book-stage-inner.is-closed-back {
+  width: var(--page-w);
+  max-width: var(--page-w);
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45), 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+.cp-book-stage-inner.is-closed-back .cp-flipbook-mount {
+  width: var(--spread-w);
+  flex-shrink: 0;
+  transform: translateX(25%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Chế độ màn hình di động (Portrait) */
 .cp-book-stage-inner.is-portrait {
+  width: 100%;
   max-width: min(calc((100vh - 120px) * 0.701), calc(100vw - 120px), 580px);
+  overflow: visible;
+}
+
+.cp-book-stage-inner.is-portrait .cp-flipbook-mount {
+  width: 100%;
+  transform: none;
 }
 
 .cp-flipbook-mount {
@@ -434,17 +485,9 @@
   background: transparent;
 }
 
-/* Bóng đổ môi trường 3D dưới đáy cuốn sách */
-.cp-book-ambient-shadow {
-  position: absolute;
-  bottom: -22px;
-  left: 8%;
-  right: 8%;
-  height: 36px;
-  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.2) 50%, transparent 80%);
-  filter: blur(14px);
-  pointer-events: none;
-  z-index: 1;
+.cp-book-stage-inner.is-closed-front .cp-flipbook-root,
+.cp-book-stage-inner.is-closed-back .cp-flipbook-root {
+  box-shadow: none;
 }
 
 /* --- STPAGEFLIP CANVAS CORE STYLES --- */

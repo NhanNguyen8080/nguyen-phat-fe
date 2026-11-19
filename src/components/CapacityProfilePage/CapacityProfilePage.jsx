@@ -85,6 +85,9 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
   // Toàn màn hình
   const [isFullscreen, setIsFullscreen] = useState(false);
 
+  // Trạng thái đang lật trang (flip animation in progress)
+  const [isFlipping, setIsFlipping] = useState(false);
+
   // Mở Drawer Mục lục (TOC)
   const [showToc, setShowToc] = useState(false);
 
@@ -131,6 +134,12 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
         if (soundEnabled) {
           playPaperFlipSound();
         }
+      });
+
+      // Lắng nghe trạng thái lật trang để tự động chuyển giữa 1 trang (bìa đóng) và 2 trang (mở rộng)
+      pageFlipInstance.on('changeState', (e) => {
+        const st = String(e.data || '');
+        setIsFlipping(st === 'flipping' || st === 'user_fold');
       });
 
       // Khi hướng trang thay đổi
@@ -252,6 +261,22 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
     const left = currentPage % 2 === 0 ? currentPage : currentPage - 1;
     const right = Math.min(TOTAL_PAGES, left + 1);
     return `${left} - ${right} / ${TOTAL_PAGES}`;
+  };
+
+  // Phân loại chế độ hiển thị khung sách:
+  // - Khi chưa lật ở trang bìa (trang 1 hoặc 28): chỉ hiển thị 1 trang duy nhất, căn giữa như 1 cuốn sách thật
+  // - Khi đang lật hoặc ở các trang ruột (2 đến 27): hiển thị 2 trang đôi trải rộng (Spread)
+  const getStageClass = () => {
+    if (orientation === 'portrait') {
+      return 'is-portrait';
+    }
+    if (!isFlipping && currentPage === 1) {
+      return 'is-landscape is-closed-front';
+    }
+    if (!isFlipping && currentPage === TOTAL_PAGES) {
+      return 'is-landscape is-closed-back';
+    }
+    return 'is-landscape is-open-spread';
   };
 
   return (
@@ -524,11 +549,10 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
 
         {/* Khung sách PageFlip HTML5 Canvas với bóng đổ và góc gấp trang 3D */}
         <div
-          className={`cp-book-stage-inner is-${orientation}`}
+          className={`cp-book-stage-inner ${getStageClass()}`}
           style={{ transform: `scale(${zoom})`, transformOrigin: 'center center' }}
         >
           <div ref={bookMountRef} className="cp-flipbook-mount" />
-          <div className="cp-book-ambient-shadow" />
         </div>
 
         {/* Nút Lật Trang Tiếp Theo (Mũi tên phải) */}
