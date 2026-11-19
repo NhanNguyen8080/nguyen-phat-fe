@@ -816,15 +816,20 @@ const AboutPage = ({ onNavigateHome }) => {
           </div>
 
           {/* Khối Đoạn Văn Mở Đầu Văn Hóa (Trích chính xác từ doc feedback) */}
-          <div className="culture-intro-card">
-            <div className="culture-intro-accent-bar" />
-            <div className="culture-intro-text-body">
-              <p>
-                Tại <strong>Cơ Điện Nguyên Phát</strong>, con người là yếu tố cốt lõi tạo nên chất lượng và sự phát triển bền vững. Chúng tôi không ngừng xây dựng đội ngũ kỹ sư, kỹ thuật viên có chuyên môn cao, giàu kinh nghiệm và luôn sẵn sàng đáp ứng những yêu cầu kỹ thuật khắt khe của khách hàng.
-              </p>
-              <p>
-                Với tinh thần học hỏi, sáng tạo và trách nhiệm, mỗi thành viên tại Nguyên Phát đều góp phần tạo nên những sản phẩm chất lượng, mang đến giá trị bền vững cho khách hàng và đối tác.
-              </p>
+          {/* Banner Văn Hóa - Đội Ngũ Có Ảnh Nền Bên Dưới (Theo mẫu tham khảo) */}
+          <div className="culture-team-hero-banner">
+            <div className="culture-team-banner-overlay" />
+            <div className="culture-team-banner-content">
+              <div className="culture-team-accent-line" />
+              <h3 className="culture-team-banner-title">ĐỘI NGŨ</h3>
+              <div className="culture-team-banner-text">
+                <p>
+                  Trong một văn hóa doanh nghiệp mà mọi nhân viên đều có cơ hội được phát triển, <strong className="brand-orange">Cơ Điện</strong> <strong className="brand-blue">Nguyên Phát</strong> mang đến cho nhân viên của mình những vị trí phù hợp với tiềm năng, tính cách, chuyên môn từ đó củng cố sức mạnh nhân sự.
+                </p>
+                <p>
+                  Hiện nay chúng tôi đã xây dựng nguồn nhân sự với những cá nhân xuất sắc trong một tập thể <strong className="brand-orange">Nguyên</strong> <strong className="brand-blue">Phát</strong> đoàn kết luôn sẵn sàng phục vụ và mang lại giá trị bền vững cho Quý khách hàng &amp; đối tác.
+                </p>
+              </div>
             </div>
           </div>
 
