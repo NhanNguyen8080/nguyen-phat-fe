@@ -1,389 +1,1111 @@
-.cp-page {
-  padding: 28px 0 80px;
-  min-height: 85vh;
+/* ==========================================================================
+   HỒ SƠ NĂNG LỰC (CAPACITY PROFILE FLIPBOOK 3D VIEWER)
+   - Thiết kế chuẩn Studio / Triển lãm số cao cấp
+   - Hoạt họa lật trang 3D chân thực (Realistic 3D Page Turn Animation)
+   - Nền Dark Showroom sang trọng (hỗ trợ Light Studio)
+   - Thanh Dock thông minh, Dải Thumbnails & Mục lục phân chương
+   ========================================================================== */
+
+/* --- Container Toàn Trang Trình Chiếu --- */
+.cp-viewer-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+  user-select: none;
+  font-family: inherit;
+  transition: background 0.35s ease, color 0.35s ease;
 }
 
-.cp-topbar {
+/* --- THEME 1: DARK LUXURY STUDIO (Mặc định) --- */
+.cp-theme-dark {
+  background: radial-gradient(circle at 50% 38%, #1e293b 0%, #0f172a 55%, #070a12 100%);
+  color: #f1f5f9;
+}
+
+.cp-theme-dark .cp-header-bar {
+  background: rgba(15, 23, 42, 0.88);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.cp-theme-dark .cp-tool-btn,
+.cp-theme-dark .cp-mode-switcher,
+.cp-theme-dark .cp-dock-btn,
+.cp-theme-dark .cp-dock-page-box {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f1f5f9;
+}
+
+.cp-theme-dark .cp-tool-btn:hover,
+.cp-theme-dark .cp-dock-btn:hover:not(:disabled) {
+  background: rgba(220, 38, 38, 0.9);
+  border-color: #ef4444;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.4);
+}
+
+.cp-theme-dark .cp-bottom-dock {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.cp-theme-dark .cp-thumbs-drawer {
+  background: rgba(11, 15, 25, 0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* --- THEME 2: LIGHT MINIMALIST STUDIO --- */
+.cp-theme-light {
+  background: radial-gradient(circle at 50% 35%, #f8fafc 0%, #e2e8f0 70%, #cbd5e1 100%);
+  color: #0f172a;
+}
+
+.cp-theme-light .cp-header-bar {
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(14px);
+}
+
+.cp-theme-light .cp-tool-btn,
+.cp-theme-light .cp-mode-switcher,
+.cp-theme-light .cp-dock-btn,
+.cp-theme-light .cp-dock-page-box {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.04);
+}
+
+.cp-theme-light .cp-tool-btn:hover,
+.cp-theme-light .cp-dock-btn:hover:not(:disabled) {
+  background: #dc2626;
+  border-color: #b91c1c;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.cp-theme-light .cp-bottom-dock {
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(203, 213, 225, 0.9);
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.15);
+  backdrop-filter: blur(16px);
+}
+
+.cp-theme-light .cp-thumbs-drawer {
+  background: rgba(248, 250, 252, 0.96);
+  border-top: 1px solid #cbd5e1;
+}
+
+/* --- TRẠNG THÁI TOÀN MÀN HÌNH --- */
+.cp-viewer-app.is-fullscreen {
+  height: 100vh;
+  max-height: 100vh;
+}
+
+/* ==============================================================
+   1. HEADER BAR STYLING
+   ============================================================== */
+.cp-header-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
+  padding: 10px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 40;
   gap: 16px;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
-}
-
-.cp-breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 0.9rem;
-}
-
-.cp-back-link {
-  background: none;
-  border: none;
-  color: var(--accent-yellow);
-  font-weight: 700;
-  cursor: pointer;
-  font-size: 0.9rem;
-  padding: 0;
-}
-
-.cp-back-link:hover {
-  text-decoration: underline;
-}
-
-.cp-sep {
-  color: #94a3b8;
-}
-
-.cp-current {
-  color: var(--text-gray);
-  font-weight: 500;
-}
-
-.cp-top-actions {
-  display: flex;
-  align-items: center;
   flex-wrap: wrap;
+}
+
+.cp-header-left {
+  display: flex;
+  align-items: center;
   gap: 12px;
 }
 
-.cp-view-toggle {
-  display: inline-flex;
-  background-color: #f1f5f9;
-  border-radius: 999px;
-  padding: 4px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-}
-
-.cp-toggle-btn {
-  border: none;
-  background: transparent;
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--text-gray);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.cp-toggle-btn.active {
-  background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
-  color: var(--accent-yellow);
-  box-shadow: 0 2px 0 #cbd5e1, 0 4px 10px rgba(15, 23, 42, 0.08);
-}
-
-.cp-zoom-controls {
+.cp-home-back-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
-  padding: 4px 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  border-bottom: 2px solid #cbd5e1;
-}
-
-.cp-icon-btn {
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  border: 1px solid rgba(203, 213, 225, 0.9);
-  border-bottom: 2px solid #94a3b8;
-  background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 60%, #e2e8f0 100%);
-  color: var(--text-dark);
+  background: transparent;
+  border: none;
+  color: #dc2626;
+  font-size: 0.88rem;
   font-weight: 700;
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 1.5px 0 #cbd5e1;
+  padding: 6px 10px;
+  border-radius: 8px;
   transition: all 0.2s ease;
 }
 
-.cp-icon-btn:hover {
-  background: linear-gradient(180deg, #ef4444 0%, #d32f2f 100%);
-  border-color: #b91c1c;
-  border-bottom: 2px solid #7f1d1d;
-  color: #ffffff;
-  box-shadow: 0 2px 0 #7f1d1d;
+.cp-home-back-btn:hover {
+  background: rgba(220, 38, 38, 0.12);
+  transform: translateX(-2px);
 }
 
-.cp-zoom-val {
-  font-size: 0.8rem;
-  font-weight: 700;
-  min-width: 44px;
-  text-align: center;
+.cp-header-sep {
+  color: rgba(148, 163, 184, 0.5);
+  font-weight: 300;
 }
 
-.cp-download-btn {
-  padding: 9px 18px;
-  font-size: 0.85rem;
-}
-
-.cp-title-banner {
-  text-align: center;
-  max-width: 760px;
-  margin: 0 auto 24px;
-}
-
-.cp-title-banner h1 {
-  font-size: clamp(1.75rem, 3.2vw, 2.35rem);
-  font-weight: 800;
-  margin-bottom: 8px;
-  color: var(--text-dark);
-}
-
-.cp-title-banner p {
-  color: var(--text-gray);
-  font-size: 0.95rem;
-}
-
-.cp-chapters-bar {
+.cp-doc-heading {
   display: flex;
+  align-items: center;
+  gap: 10px;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 24px;
 }
 
-.cp-chapter-pill {
-  padding: 7px 16px;
+.cp-doc-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.3px;
+}
+
+.cp-doc-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
   border-radius: 999px;
-  border: 1px solid rgba(203, 213, 225, 0.9);
-  border-bottom: 2.5px solid #94a3b8;
-  background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 60%, #e2e8f0 100%);
-  color: var(--text-dark);
+  background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+  color: #ffffff;
+  letter-spacing: 0.2px;
+}
+
+.cp-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.cp-tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
   font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 2px 0 #cbd5e1;
-  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.4, 1);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.cp-chapter-pill:hover {
-  background: linear-gradient(180deg, #ffffff 0%, #e2e8f0 100%);
-  color: var(--accent-yellow);
-  transform: translateY(-1.5px);
-  box-shadow: 0 3.5px 0 #94a3b8;
+.cp-tool-btn.active {
+  background: #dc2626 !important;
+  border-color: #ef4444 !important;
+  color: #ffffff !important;
 }
 
-.cp-chapter-pill.active {
-  background: linear-gradient(180deg, #ef4444 0%, #d32f2f 60%, #b91c1c 100%);
-  border-color: rgba(255, 255, 255, 0.25);
-  border-bottom: 2.5px solid #881337;
+.cp-mode-switcher {
+  display: inline-flex;
+  border-radius: 8px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.cp-mode-btn {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cp-mode-btn.active {
+  background: #dc2626;
   color: #ffffff;
-  box-shadow: 0 3px 0 #881337, 0 6px 14px rgba(211, 47, 47, 0.35);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
-/* Main Reader Stage */
-.cp-reader-stage {
+.cp-download-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.35);
+  transition: all 0.2s ease;
+}
+
+.cp-download-action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.5);
+}
+
+/* ==============================================================
+   2. QUICK CHAPTER NAVIGATION BAR
+   ============================================================== */
+.cp-chapters-nav {
   position: relative;
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  padding: 20px 64px;
+  z-index: 30;
+  padding: 8px 24px;
+}
+
+.cp-chapters-scroll {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 580px;
-  overflow: auto;
-  box-shadow: none;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
 }
 
-.cp-book-canvas {
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  background: transparent;
-  border: none;
-  border-radius: 12px;
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.24);
-  overflow: hidden;
-  transition: transform 0.25s ease;
+.cp-chap-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.cp-book-canvas.is-spread {
-  max-width: 980px;
-  width: 100%;
+.cp-theme-light .cp-chap-tab {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  color: #475569;
 }
 
-.cp-book-canvas.is-single {
-  max-width: 520px;
-  width: 100%;
+.cp-chap-tab:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
 }
 
-.cp-sheet {
-  position: relative;
+.cp-theme-light .cp-chap-tab:hover {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.cp-chap-tab.active {
+  background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  box-shadow: 0 3px 10px rgba(220, 38, 38, 0.35);
+  transform: translateY(-1px);
+}
+
+.cp-chap-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  opacity: 0.85;
+}
+
+/* ==============================================================
+   3. SÂN KHẤU TRÌNH CHIẾU 3D FLIPBOOK (Main Stage)
+   ============================================================== */
+.cp-main-stage {
   flex: 1;
-  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  padding: 12px 76px 90px;
+  min-height: 580px;
+  overflow: visible;
 }
 
-.cp-sheet-img {
+/* Mũi tên lật sách 2 bên mép (To, nổi bật, dễ bấm) */
+.cp-side-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(15, 23, 42, 0.7);
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 25;
+}
+
+.cp-theme-light .cp-side-arrow {
+  background: rgba(255, 255, 255, 0.9);
+  color: #0f172a;
+  border-color: #cbd5e1;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+}
+
+.cp-side-arrow:hover:not(:disabled) {
+  background: #dc2626;
+  border-color: #ef4444;
+  color: #ffffff;
+  transform: translateY(-50%) scale(1.08);
+  box-shadow: 0 10px 28px rgba(220, 38, 38, 0.45);
+}
+
+.cp-side-arrow:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.cp-side-arrow.prev {
+  left: 20px;
+}
+
+.cp-side-arrow.next {
+  right: 20px;
+}
+
+/* Khung nhìn 3D Viewport */
+.cp-book-viewport {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.25s ease;
+  perspective: 2600px;
+  transform-style: preserve-3d;
+}
+
+.cp-book-viewport.mode-spread {
+  width: min(96vw, 1080px);
+}
+
+.cp-book-viewport.mode-single {
+  width: min(92vw, 540px);
+}
+
+/* Bóng đổ thực tế dưới đáy cuốn sách */
+.cp-book-ambient-shadow {
+  position: absolute;
+  bottom: -24px;
+  left: 5%;
+  right: 5%;
+  height: 38px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.25) 50%, transparent 80%);
+  filter: blur(12px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* --- CUỐN SÁCH TRANG ĐÔI 3D (SPREAD BOOK) --- */
+.cp-spread-book {
+  display: flex;
+  width: 100%;
+  position: relative;
+  perspective: 2800px;
+  transform-style: preserve-3d;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+  border-radius: 8px;
+  overflow: visible;
+}
+
+/* Từng trang tĩnh trong cuốn sách */
+.cp-book-page {
+  flex: 1;
+  position: relative;
+  background: #ffffff;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.cp-book-page.page-left {
+  border-radius: 8px 0 0 8px;
+  box-shadow: inset -10px 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.cp-book-page.page-right {
+  border-radius: 0 8px 8px 0;
+  box-shadow: inset 10px 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.cp-page-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.cp-page-image {
   width: 100%;
   height: auto;
   max-height: 72vh;
   object-fit: contain;
   display: block;
+  user-select: none;
+  pointer-events: none;
 }
 
-.cp-center-fold {
-  width: 6px;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.5), rgba(0, 0, 0, 0.2));
+/* Đổ bóng rãnh gáy sách */
+.cp-gutter-shadow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 32px;
+  pointer-events: none;
+  z-index: 3;
 }
 
-.cp-sheet-num {
+.cp-gutter-shadow.left {
+  right: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(0, 0, 0, 0.22) 100%);
+}
+
+.cp-gutter-shadow.right {
+  left: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.22) 0%, transparent 100%);
+}
+
+/* Đường viền mép giấy phân tầng 3D */
+.cp-page-edge {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.cp-page-edge.left {
+  left: 0;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.1), transparent);
+}
+
+.cp-page-edge.right {
+  right: 0;
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.1));
+}
+
+/* Badge số trang nổi */
+.cp-page-badge {
   position: absolute;
   bottom: 12px;
-  background-color: rgba(15, 23, 42, 0.78);
+  background: rgba(15, 23, 42, 0.85);
   color: #ffffff;
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 9px;
   border-radius: 999px;
+  pointer-events: none;
+  z-index: 4;
 }
 
-.cp-sheet-num.left {
+.cp-page-badge.left {
   left: 14px;
 }
 
-.cp-sheet-num.right {
+.cp-page-badge.right {
   right: 14px;
 }
 
-.cp-nav-arrow {
+.cp-page-badge.center {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Gáy sách trung tâm 3D */
+.cp-book-spine-3d {
+  width: 8px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.35) 0%, rgba(255, 255, 255, 0.3) 48%, rgba(0, 0, 0, 0.35) 100%);
+  position: relative;
+  z-index: 5;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.cp-spine-highlight {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: 1px solid rgba(203, 213, 225, 0.9);
-  border-bottom: 3px solid #94a3b8;
-  background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 60%, #e2e8f0 100%);
-  color: var(--text-dark);
-  font-size: 1.8rem;
-  line-height: 1;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, transparent 50%, rgba(0, 0, 0, 0.4) 100%);
+}
+
+/* ==============================================================
+   4. HOẠT HỌA LẬT TRANG 3D THỰC TẾ (3D Realistic Flipping Leaf)
+   ============================================================== */
+.cp-flip-leaf {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  z-index: 20;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+/* Lật từ phải sang trái (Next) */
+.cp-flip-leaf.flip-to-left {
+  left: 50%;
+  transform-origin: left center;
+  animation: leafFlipNext 0.54s cubic-bezier(0.25, 1, 0.45, 1) forwards;
+}
+
+@keyframes leafFlipNext {
+  0% {
+    transform: rotateY(0deg);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    transform: rotateY(-90deg) scale(1.02);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  }
+  100% {
+    transform: rotateY(-180deg);
+    box-shadow: -10px 10px 25px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Lật từ trái sang phải (Prev) */
+.cp-flip-leaf.flip-to-right {
+  left: 0;
+  transform-origin: right center;
+  animation: leafFlipPrev 0.54s cubic-bezier(0.25, 1, 0.45, 1) forwards;
+}
+
+@keyframes leafFlipPrev {
+  0% {
+    transform: rotateY(-180deg);
+    box-shadow: -10px 10px 25px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    transform: rotateY(-90deg) scale(1.02);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  }
+  100% {
+    transform: rotateY(0deg);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.cp-leaf-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.cp-leaf-face.face-front {
+  border-radius: 0 8px 8px 0;
+}
+
+.cp-leaf-face.face-back {
+  transform: rotateY(180deg);
+  border-radius: 8px 0 0 8px;
+}
+
+.cp-leaf-shading {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.12), transparent 40%, rgba(0, 0, 0, 0.18));
+}
+
+/* --- CHẾ ĐỘ 1 TRANG ĐƠN (SINGLE PAGE) --- */
+.cp-single-book {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  background: #ffffff;
   cursor: pointer;
+  transition: transform 0.25s ease;
+}
+
+.cp-single-book.flipping-next {
+  animation: singlePageFlipNext 0.48s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.cp-single-book.flipping-prev {
+  animation: singlePageFlipPrev 0.48s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@keyframes singlePageFlipNext {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: translateX(-15px) scale(0.97) rotateY(-8deg); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes singlePageFlipPrev {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: translateX(15px) scale(0.97) rotateY(8deg); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.cp-single-page-card {
+  position: relative;
+  width: 100%;
+}
+
+/* ==============================================================
+   5. THANH DOCK ĐÁY THÔNG MINH (Floating Dock Toolbar)
+   ============================================================== */
+.cp-bottom-dock {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  z-index: 50;
+  max-width: 95vw;
+}
+
+.cp-dock-btn {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 3px 0 #cbd5e1, 0 8px 20px rgba(15, 23, 42, 0.12), inset 0 1px 1px #ffffff;
-  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.4, 1);
-  z-index: 5;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.cp-nav-arrow:hover:not(:disabled) {
-  background: linear-gradient(180deg, #ef4444 0%, #d32f2f 100%);
-  border-color: #b91c1c;
-  border-bottom: 3px solid #7f1d1d;
-  color: #ffffff;
-  transform: translateY(-50%) translateY(-2px) scale(1.06);
-  box-shadow: 0 4px 0 #7f1d1d, 0 12px 24px rgba(211, 47, 47, 0.35);
-}
-
-.cp-nav-arrow:disabled {
-  opacity: 0.35;
+.cp-dock-btn:disabled {
+  opacity: 0.25;
   cursor: not-allowed;
+  pointer-events: none;
 }
 
-.cp-nav-arrow.prev {
-  left: 14px;
+.cp-dock-page-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
 }
 
-.cp-nav-arrow.next {
-  right: 14px;
-}
-
-/* Thumbnails Strip */
-.cp-thumbs-section {
-  margin-top: 28px;
+.cp-dock-page-box input {
+  width: 38px;
   background: transparent;
   border: none;
-  box-shadow: none;
-  border-radius: 0;
-  padding: 10px 0;
+  border-bottom: 1.5px solid #dc2626;
+  color: inherit;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-align: center;
+  outline: none;
 }
 
-.cp-thumbs-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  font-size: 0.85rem;
-  color: var(--text-gray);
-  margin-bottom: 12px;
+.cp-dock-spread-to {
+  color: #dc2626;
+  font-weight: 800;
 }
 
-.cp-thumbs-header strong {
-  color: var(--accent-yellow);
+.cp-dock-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(148, 163, 184, 0.3);
+  margin: 0 4px;
+}
+
+.cp-dock-autoplay-btn {
+  width: auto !important;
+  border-radius: 999px !important;
+  padding: 0 12px;
+  gap: 5px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.cp-dock-autoplay-btn.active {
+  background: #dc2626 !important;
+  color: #ffffff !important;
+  border-color: #ef4444 !important;
+}
+
+.cp-dock-zoom-indicator {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  min-width: 42px;
+  text-align: center;
+}
+
+.cp-dock-zoom-indicator:hover {
+  color: #dc2626;
+}
+
+/* ==============================================================
+   6. DẢI ẢNH THU NHỎ (Interactive Thumbnails Drawer)
+   ============================================================== */
+.cp-thumbs-drawer {
+  position: fixed;
+  bottom: 80px;
+  left: 0;
+  right: 0;
+  padding: 12px 24px;
+  z-index: 45;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.35);
+  animation: slideUpDrawer 0.25s ease-out;
+}
+
+@keyframes slideUpDrawer {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 .cp-thumbs-strip {
   display: flex;
   gap: 10px;
   overflow-x: auto;
-  padding-bottom: 8px;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
 }
 
 .cp-thumb-item {
   position: relative;
-  flex: 0 0 72px;
-  height: 102px;
-  border-radius: 8px;
+  flex: 0 0 68px;
+  height: 96px;
+  border-radius: 6px;
   overflow: hidden;
-  border: 1.5px solid #cbd5e1;
-  border-bottom: 2.5px solid #94a3b8;
-  background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+  border: 2px solid transparent;
+  background: #ffffff;
   padding: 0;
   cursor: pointer;
-  box-shadow: 0 2px 0 #cbd5e1;
-  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .cp-thumb-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 .cp-thumb-item:hover {
-  transform: translateY(-3px);
-  border-color: var(--accent-yellow);
+  transform: translateY(-4px);
+  border-color: rgba(220, 38, 38, 0.5);
 }
 
 .cp-thumb-item.active {
-  border-color: var(--accent-yellow);
-  box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.22);
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.4), 0 8px 18px rgba(0, 0, 0, 0.35);
+  transform: translateY(-4px) scale(1.04);
 }
 
-.cp-thumb-num {
+.cp-thumb-badge {
   position: absolute;
-  bottom: 4px;
-  right: 4px;
-  background-color: rgba(15, 23, 42, 0.82);
+  bottom: 3px;
+  right: 3px;
+  background: rgba(15, 23, 42, 0.85);
   color: #ffffff;
-  font-size: 0.68rem;
+  font-size: 0.65rem;
   font-weight: 700;
   padding: 1px 6px;
   border-radius: 999px;
 }
 
+/* ==============================================================
+   7. MODAL MỤC LỤC CHƯƠNG (TOC Sidebar Modal)
+   ============================================================== */
+.cp-toc-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  z-index: 100;
+  display: flex;
+  justify-content: flex-end;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.cp-toc-drawer {
+  width: min(90vw, 440px);
+  height: 100%;
+  background: #0f172a;
+  color: #f1f5f9;
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.6);
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  animation: slideLeftToc 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cp-theme-light .cp-toc-drawer {
+  background: #ffffff;
+  color: #0f172a;
+}
+
+@keyframes slideLeftToc {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.cp-toc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.cp-toc-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cp-toc-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #dc2626;
+}
+
+.cp-toc-title-wrap h2 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.cp-toc-close-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: inherit;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+
+.cp-toc-close-btn:hover {
+  background: #dc2626;
+  color: #ffffff;
+}
+
+.cp-toc-desc {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #94a3b8;
+  margin-bottom: 20px;
+}
+
+.cp-toc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cp-toc-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cp-theme-light .cp-toc-item {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+.cp-toc-item:hover {
+  background: rgba(220, 38, 38, 0.12);
+  border-color: #dc2626;
+  transform: translateX(4px);
+}
+
+.cp-toc-item.active {
+  border-color: #dc2626;
+  background: rgba(220, 38, 38, 0.16);
+}
+
+.cp-toc-thumb-preview {
+  position: relative;
+  width: 58px;
+  height: 76px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.cp-toc-thumb-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cp-toc-page-tag {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 999px;
+}
+
+.cp-toc-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.cp-toc-item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.cp-toc-item-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: #dc2626;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.cp-toc-active-label {
+  font-size: 0.68rem;
+  background: #dc2626;
+  color: #ffffff;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.cp-toc-item-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  margin: 0 0 4px;
+  color: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cp-toc-item-desc {
+  font-size: 0.76rem;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ==============================================================
+   8. RESPONSIVE OPTIMIZATION CHO MOBILE & TABLET
+   ============================================================== */
 @media (max-width: 900px) {
-  .cp-reader-stage {
-    padding: 16px 44px;
-    min-height: 420px;
+  .cp-header-bar {
+    padding: 8px 14px;
   }
 
-  .cp-view-toggle {
+  .cp-doc-title {
+    font-size: 0.92rem;
+  }
+
+  .cp-doc-badge {
     display: none;
+  }
+
+  .cp-main-stage {
+    padding: 10px 48px 84px;
+    min-height: 440px;
+  }
+
+  .cp-side-arrow {
+    width: 40px;
+    height: 40px;
+  }
+
+  .cp-side-arrow.prev {
+    left: 8px;
+  }
+
+  .cp-side-arrow.next {
+    right: 8px;
+  }
+
+  .cp-bottom-dock {
+    gap: 4px;
+    padding: 6px 10px;
+  }
+
+  .cp-dock-autoplay-btn span {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .cp-chapters-nav {
+    display: none;
+  }
+
+  .cp-main-stage {
+    padding: 8px 36px 80px;
+  }
+
+  .cp-bottom-dock {
+    bottom: 12px;
+  }
+
+  .cp-dock-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .cp-dock-page-box {
+    padding: 3px 8px;
+    font-size: 0.75rem;
+  }
+
+  .cp-dock-page-box input {
+    width: 28px;
+    font-size: 0.78rem;
   }
 }

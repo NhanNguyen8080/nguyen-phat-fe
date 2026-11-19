@@ -1,225 +1,826 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './CapacityProfilePage.css';
 
 const TOTAL_PAGES = 28;
 
 const CHAPTERS = [
-  { label: 'Bìa & Giới thiệu', page: 1 },
-  { label: 'Thư ngỏ & Pháp lý', page: 3 },
-  { label: 'Sơ đồ tổ chức', page: 5 },
-  { label: 'Năng lực máy móc', page: 9 },
-  { label: 'Sản phẩm Tủ điện', page: 13 },
-  { label: 'Thang máng cáp', page: 17 },
-  { label: 'Dự án tiêu biểu', page: 21 },
-  { label: 'Đối tác & Liên hệ', page: 27 }
+  { id: 1, title: 'Bìa & Giới Thiệu Chung', page: 1, desc: 'Ấn phẩm Hồ sơ năng lực & Thư ngỏ Ban Giám Đốc' },
+  { id: 2, title: 'Hồ Sơ Pháp Lý & Giấy ĐKKD', page: 3, desc: 'Giấy chứng nhận ĐKKD, MSDN: 0307380016' },
+  { id: 3, title: 'Sơ Đồ Cơ Cấu & Nhân Sự', page: 5, desc: 'Sơ đồ tổ chức phòng ban & Năng lực kỹ sư MEP' },
+  { id: 4, title: 'Cơ Sở Vật Chất & Máy CNC', page: 9, desc: 'Hệ thống xưởng gia công, máy cắt đột chấn CNC' },
+  { id: 5, title: 'Sản Phẩm Tủ Điện Công Nghiệp', page: 13, desc: 'Tủ MSB, ATS, DB, VCB, Tụ bù đạt chuẩn IEC 61439' },
+  { id: 6, title: 'Thang Máng Cáp & Phụ Kiện', page: 17, desc: 'Thang máng cáp sơn tĩnh điện, mạ kẽm nhúng nóng' },
+  { id: 7, title: 'Dự Án Công Trình Tiêu Biểu', page: 21, desc: 'Hệ thống dự án công nghiệp, nhà máy & cao ốc' },
+  { id: 8, title: 'Khách Hàng & Đối Tác Chiến Lược', page: 27, desc: 'Đối tác thiết bị Schneider, LS, ABB & Liên hệ' }
 ];
 
+// Trình phát âm thanh lật giấy siêu nhẹ bằng Web Audio API (Zero latency, không cần tải file âm thanh ngoài)
+const playPaperFlipSound = () => {
+  try {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+    const ctx = new AudioContextClass();
+    const duration = 0.16;
+    const bufferSize = ctx.sampleRate * duration;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.28));
+    }
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(1100, ctx.currentTime);
+    filter.frequency.exponentialRampToValueAtTime(260, ctx.currentTime + duration);
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+
+    noise.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    noise.start();
+  } catch {
+    // Trình duyệt chặn audio tự động
+  }
+};
+
 const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
+  // Trang hiện tại
   const [currentPage, setCurrentPage] = useState(() => {
     const p = Number(initialPage) || 1;
     return Math.min(TOTAL_PAGES, Math.max(1, p));
   });
-  const [viewMode, setViewMode] = useState(() => (typeof window !== 'undefined' && window.innerWidth > 900 ? 'spread' : 'single'));
+
+  // Chế độ xem: 'spread' (trang đôi 2 bên) hoặc 'single' (1 trang đơn)
+  const [viewMode, setViewMode] = useState(() =>
+    typeof window !== 'undefined' && window.innerWidth > 860 ? 'spread' : 'single'
+  );
+
+  // Giao diện: 'dark' (Phòng đọc Studio đêm cao cấp) hoặc 'light' (Phòng đọc sáng)
+  const [theme, setTheme] = useState('dark');
+
+  // Mức phóng to
   const [zoom, setZoom] = useState(1);
 
-  useEffect(() => {
-    const p = Number(initialPage) || 1;
-    setCurrentPage(Math.min(TOTAL_PAGES, Math.max(1, p)));
-  }, [initialPage]);
+  // Âm thanh lật sách
+  const [soundEnabled, setSoundEnabled] = useState(true);
 
+  // Tự động lật sách (Auto-play slideshow)
+  const [isAutoPlay, setIsAutoPlay] = useState(false);
+
+  // Toàn màn hình
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // Hiển thị dải Thumbnails
+  const [showThumbs, setShowThumbs] = useState(true);
+
+  // Mở Drawer Mục lục (TOC)
+  const [showToc, setShowToc] = useState(false);
+
+  // Trạng thái đang lật trang 3D
+  const [flipState, setFlipState] = useState(null);
+
+  const containerRef = useRef(null);
+  const touchStartXRef = useRef(null);
+  const thumbsStripRef = useRef(null);
+
+  // Tính trang bên trái & phải ở trạng thái tĩnh
+  const leftPage = viewMode === 'spread' ? (currentPage % 2 === 0 ? currentPage - 1 : currentPage) : currentPage;
+  const rightPage = viewMode === 'spread' ? Math.min(TOTAL_PAGES, leftPage + 1) : currentPage;
+
+  // Lắng nghe sự kiện Fullscreen thay đổi
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
+  // Tự động cuộn Thumbnail tới trang hiện tại
+  useEffect(() => {
+    if (thumbsStripRef.current) {
+      const activeThumb = thumbsStripRef.current.querySelector(`.cp-thumb-item[data-page="${leftPage}"]`);
+      if (activeThumb) {
+        activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+  }, [leftPage]);
+
+  // Điều hướng trang với hiệu ứng lật trang 3D
+  const triggerFlip = useCallback((direction, targetPage) => {
+    if (flipState) return;
+
+    if (soundEnabled) {
+      playPaperFlipSound();
+    }
+
+    if (viewMode === 'single') {
+      setFlipState({ direction, targetPage });
+      setTimeout(() => {
+        setCurrentPage(targetPage);
+        setFlipState(null);
+      }, 480);
+      return;
+    }
+
+    // Spread mode
+    const fromLeft = leftPage;
+    const fromRight = rightPage;
+    const newLeft = targetPage % 2 === 0 ? targetPage - 1 : targetPage;
+    const newRight = Math.min(TOTAL_PAGES, newLeft + 1);
+
+    if (fromLeft === newLeft && fromRight === newRight) return;
+
+    setFlipState({
+      direction,
+      fromLeft,
+      fromRight,
+      newLeft,
+      newRight
+    });
+
+    setTimeout(() => {
+      setCurrentPage(newLeft);
+      setFlipState(null);
+    }, 560);
+  }, [flipState, soundEnabled, viewMode, leftPage, rightPage]);
+
+  const handleNext = useCallback(() => {
+    if (viewMode === 'spread') {
+      if (rightPage >= TOTAL_PAGES) {
+        setIsAutoPlay(false);
+        return;
+      }
+      const target = Math.min(TOTAL_PAGES, rightPage + 1);
+      triggerFlip('next', target);
+    } else {
+      if (currentPage >= TOTAL_PAGES) {
+        setIsAutoPlay(false);
+        return;
+      }
+      triggerFlip('next', currentPage + 1);
+    }
+  }, [viewMode, rightPage, currentPage, triggerFlip]);
+
+  const handlePrev = useCallback(() => {
+    if (viewMode === 'spread') {
+      if (leftPage <= 1) return;
+      const target = Math.max(1, leftPage - 2);
+      triggerFlip('prev', target);
+    } else {
+      if (currentPage <= 1) return;
+      triggerFlip('prev', currentPage - 1);
+    }
+  }, [viewMode, leftPage, currentPage, triggerFlip]);
+
+  const handleGoToPage = (pageNumber) => {
+    const valid = Math.min(TOTAL_PAGES, Math.max(1, Number(pageNumber) || 1));
+    const target = viewMode === 'spread' ? (valid % 2 === 0 ? valid - 1 : valid) : valid;
+    if (target === (viewMode === 'spread' ? leftPage : currentPage)) return;
+    const dir = target > (viewMode === 'spread' ? leftPage : currentPage) ? 'next' : 'prev';
+    triggerFlip(dir, target);
+  };
+
+  // Tự động lật (Auto-play slideshow)
+  useEffect(() => {
+    if (!isAutoPlay) return;
+    const timer = setInterval(() => {
+      if (viewMode === 'spread') {
+        if (rightPage >= TOTAL_PAGES) {
+          setIsAutoPlay(false);
+        } else {
+          handleNext();
+        }
+      } else {
+        if (currentPage >= TOTAL_PAGES) {
+          setIsAutoPlay(false);
+        } else {
+          handleNext();
+        }
+      }
+    }, 4500);
+    return () => clearInterval(timer);
+  }, [isAutoPlay, viewMode, rightPage, currentPage, handleNext]);
+
+  // Phím tắt bàn phím
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'ArrowRight') {
+      if (e.target.tagName === 'INPUT') return;
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') {
+        e.preventDefault();
         handleNext();
-      } else if (e.key === 'ArrowLeft') {
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
         handlePrev();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        handleGoToPage(1);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        handleGoToPage(TOTAL_PAGES);
+      } else if (e.key === 'Escape') {
+        if (showToc) setShowToc(false);
+      } else if (e.key.toLowerCase() === 'f') {
+        toggleFullscreen();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   });
 
-  const leftPage = viewMode === 'spread' ? (currentPage % 2 === 0 ? currentPage - 1 : currentPage) : currentPage;
-  const rightPage = viewMode === 'spread' ? Math.min(TOTAL_PAGES, leftPage + 1) : currentPage;
-
-  const handlePrev = () => {
-    const step = viewMode === 'spread' ? 2 : 1;
-    setCurrentPage((prev) => Math.max(1, prev - step));
+  // Touch Swipe trên Mobile
+  const handleTouchStart = (e) => {
+    if (e.touches && e.touches[0]) {
+      touchStartXRef.current = e.touches[0].clientX;
+    }
   };
 
-  const handleNext = () => {
-    const step = viewMode === 'spread' ? 2 : 1;
-    setCurrentPage((prev) => Math.min(TOTAL_PAGES, prev + step));
+  const handleTouchEnd = (e) => {
+    if (touchStartXRef.current === null) return;
+    if (e.changedTouches && e.changedTouches[0]) {
+      const deltaX = e.changedTouches[0].clientX - touchStartXRef.current;
+      if (deltaX < -50) {
+        handleNext();
+      } else if (deltaX > 50) {
+        handlePrev();
+      }
+    }
+    touchStartXRef.current = null;
+  };
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      if (containerRef.current?.requestFullscreen) {
+        containerRef.current.requestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
   };
 
   return (
-    <div className="cp-page">
-      <div className="container">
-        {/* Breadcrumb & Header */}
-        <div className="cp-topbar">
-          <div className="cp-breadcrumb">
-            <button type="button" className="cp-back-link" onClick={() => onNavigateHome && onNavigateHome('#home')}>
-              ← Trang chủ
-            </button>
-            <span className="cp-sep">/</span>
-            <span className="cp-current">Hồ sơ năng lực (Nguyen Phat Profile)</span>
+    <div
+      ref={containerRef}
+      className={`cp-viewer-app cp-theme-${theme} ${isFullscreen ? 'is-fullscreen' : ''}`}
+    >
+      {/* ==============================================================
+          1. HEADER BAR: Breadcrumb, Tên tài liệu & Nút điều khiển nhanh
+          ============================================================== */}
+      <header className="cp-header-bar">
+        <div className="cp-header-left">
+          <button
+            type="button"
+            className="cp-home-back-btn"
+            onClick={() => onNavigateHome && onNavigateHome('#home')}
+            title="Quay lại Trang Chủ"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Trang chủ</span>
+          </button>
+          <span className="cp-header-sep">/</span>
+          <div className="cp-doc-heading">
+            <h1 className="cp-doc-title">Hồ Sơ Năng Lực Cơ Điện Nguyên Phát</h1>
+            <span className="cp-doc-badge">Catalogue Chính Thức (28 Trang)</span>
           </div>
+        </div>
 
-          <div className="cp-top-actions">
-            <div className="cp-view-toggle">
-              <button
-                type="button"
-                className={`cp-toggle-btn ${viewMode === 'spread' ? 'active' : ''}`}
-                onClick={() => setViewMode('spread')}
-              >
-                📖 2 Trang đôi
-              </button>
-              <button
-                type="button"
-                className={`cp-toggle-btn ${viewMode === 'single' ? 'active' : ''}`}
-                onClick={() => setViewMode('single')}
-              >
-                📄 1 Trang đơn
-              </button>
-            </div>
+        <div className="cp-header-right">
+          {/* Nút Mục Lục (TOC) */}
+          <button
+            type="button"
+            className={`cp-tool-btn ${showToc ? 'active' : ''}`}
+            onClick={() => setShowToc(!showToc)}
+            title="Mục lục các chương"
+          >
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="8" y1="6" x2="21" y2="6"></line>
+              <line x1="8" y1="12" x2="21" y2="12"></line>
+              <line x1="8" y1="18" x2="21" y2="18"></line>
+              <line x1="3" y1="6" x2="3.01" y2="6"></line>
+              <line x1="3" y1="12" x2="3.01" y2="12"></line>
+              <line x1="3" y1="18" x2="3.01" y2="18"></line>
+            </svg>
+            <span>Mục lục</span>
+          </button>
 
-            <div className="cp-zoom-controls">
-              <button
-                type="button"
-                className="cp-icon-btn"
-                onClick={() => setZoom((z) => Math.max(0.8, Number((z - 0.15).toFixed(2))))}
-                title="Thu nhỏ"
-              >
-                −
-              </button>
-              <span className="cp-zoom-val">{Math.round(zoom * 100)}%</span>
-              <button
-                type="button"
-                className="cp-icon-btn"
-                onClick={() => setZoom((z) => Math.min(1.6, Number((z + 0.15).toFixed(2))))}
-                title="Phóng to"
-              >
-                +
-              </button>
-            </div>
-
-            <a
-              href="/catalog/ho-so-nang-luc-nguyen-phat.pdf"
-              download="Ho-So-Nang-Luc-Co-Dien-Nguyen-Phat.pdf"
-              className="btn-primary cp-download-btn"
+          {/* Toggle Chế độ xem: 2 trang / 1 trang */}
+          <div className="cp-mode-switcher">
+            <button
+              type="button"
+              className={`cp-mode-btn ${viewMode === 'spread' ? 'active' : ''}`}
+              onClick={() => setViewMode('spread')}
+              title="Chế độ 2 Trang Đôi (Sách mở)"
             >
-              ⬇ Tải PDF (28 Trang)
-            </a>
+              📖 Đôi
+            </button>
+            <button
+              type="button"
+              className={`cp-mode-btn ${viewMode === 'single' ? 'active' : ''}`}
+              onClick={() => setViewMode('single')}
+              title="Chế độ 1 Trang Đơn"
+            >
+              📄 Đơn
+            </button>
           </div>
-        </div>
 
-        <div className="cp-title-banner">
-          <h1>
-            Hồ Sơ Năng Lực <span className="text-yellow">Cơ Điện Nguyên Phát</span>
-          </h1>
-          <p>
-            Ấn phẩm giới thiệu năng lực sản xuất tủ bảng điện, thang máng cáp, trang thiết bị cơ khí và các dự án công trình trọng điểm.
-          </p>
-        </div>
+          {/* Bật / Tắt Âm thanh lật sách */}
+          <button
+            type="button"
+            className={`cp-tool-btn ${soundEnabled ? 'active' : ''}`}
+            onClick={() => setSoundEnabled(!soundEnabled)}
+            title={soundEnabled ? 'Tắt âm thanh lật sách' : 'Bật âm thanh lật sách'}
+          >
+            {soundEnabled ? (
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+              </svg>
+            ) : (
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <line x1="23" y1="9" x2="17" y2="15"></line>
+                <line x1="17" y1="9" x2="23" y2="15"></line>
+              </svg>
+            )}
+          </button>
 
-        {/* Quick Chapter Pills */}
-        <div className="cp-chapters-bar">
+          {/* Đổi Theme: Đêm (Studio tối) / Ngày (Studio sáng) */}
+          <button
+            type="button"
+            className="cp-tool-btn"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            title={theme === 'dark' ? 'Chuyển sang nền sáng' : 'Chuyển sang nền tối showroom'}
+          >
+            {theme === 'dark' ? '☀️ Sáng' : '🌙 Tối'}
+          </button>
+
+          {/* Nút Toàn màn hình */}
+          <button
+            type="button"
+            className="cp-tool-btn"
+            onClick={toggleFullscreen}
+            title={isFullscreen ? 'Thu nhỏ cửa sổ' : 'Phóng toàn màn hình'}
+          >
+            {isFullscreen ? (
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polyline points="4 14 10 14 10 20"></polyline>
+                <polyline points="20 10 14 10 14 4"></polyline>
+                <line x1="14" y1="10" x2="21" y2="3"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            ) : (
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            )}
+          </button>
+
+          {/* Tải PDF gốc 28 trang */}
+          <a
+            href="/catalog/ho-so-nang-luc-nguyen-phat.pdf"
+            download="Ho-So-Nang-Luc-Co-Dien-Nguyen-Phat.pdf"
+            className="cp-download-action-btn"
+            title="Tải tệp PDF chất lượng cao"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Tải PDF</span>
+          </a>
+        </div>
+      </header>
+
+      {/* ==============================================================
+          2. DẢI PHÂN ĐOẠN CHƯƠNG MỤC (Quick Chapter Tabs)
+          ============================================================== */}
+      <nav className="cp-chapters-nav" aria-label="Mục lục chương nhanh">
+        <div className="cp-chapters-scroll">
           {CHAPTERS.map((ch, idx) => {
-            const isActive = currentPage >= ch.page && (idx === CHAPTERS.length - 1 || currentPage < CHAPTERS[idx + 1].page);
+            const isActive =
+              leftPage >= ch.page &&
+              (idx === CHAPTERS.length - 1 || leftPage < CHAPTERS[idx + 1].page);
             return (
               <button
-                key={idx}
+                key={ch.id}
                 type="button"
-                className={`cp-chapter-pill ${isActive ? 'active' : ''}`}
-                onClick={() => setCurrentPage(ch.page)}
+                className={`cp-chap-tab ${isActive ? 'active' : ''}`}
+                onClick={() => handleGoToPage(ch.page)}
               >
-                {ch.label}
+                <span className="cp-chap-num">0{ch.id}</span>
+                <span className="cp-chap-name">{ch.title}</span>
               </button>
             );
           })}
         </div>
+      </nav>
 
-        {/* Main Flipbook Stage */}
-        <div className="cp-reader-stage">
-          <button
-            type="button"
-            className="cp-nav-arrow prev"
-            onClick={handlePrev}
-            disabled={leftPage <= 1}
-            aria-label="Trang trước"
-          >
-            ‹
-          </button>
+      {/* ==============================================================
+          3. SÂN KHẤU LẬT SÁCH 3D (3D Realistic Flipbook Stage)
+          ============================================================== */}
+      <main
+        className="cp-main-stage"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        {/* Nút Lật Trang Trước (Mũi tên trái lớn) */}
+        <button
+          type="button"
+          className="cp-side-arrow prev"
+          onClick={handlePrev}
+          disabled={leftPage <= 1}
+          aria-label="Lật trang trước"
+          title="Lật trang trước (Phím Mũi tên Trái)"
+        >
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
 
-          <div
-            className={`cp-book-canvas ${viewMode === 'spread' ? 'is-spread' : 'is-single'}`}
-            style={{ transform: `scale(${zoom})`, transformOrigin: 'top center' }}
-          >
-            <div className="cp-sheet">
-              <img
-                src={`/catalog/pages/${leftPage}.jpg`}
-                alt={`Trang ${leftPage}`}
-                className="cp-sheet-img"
-              />
-              <span className="cp-sheet-num left">Trang {leftPage} / {TOTAL_PAGES}</span>
-            </div>
+        {/* Khung sách 3D với bóng đổ và hiệu ứng lật trang */}
+        <div
+          className={`cp-book-viewport ${viewMode === 'spread' ? 'mode-spread' : 'mode-single'}`}
+          style={{ transform: `scale(${zoom})`, transformOrigin: 'center center' }}
+        >
+          {/* Bóng đổ môi trường 3D dưới đáy cuốn sách */}
+          <div className="cp-book-ambient-shadow" />
 
-            {viewMode === 'spread' && rightPage !== leftPage && (
-              <>
-                <div className="cp-center-fold" />
-                <div className="cp-sheet">
+          {/* TH1: CHẾ ĐỘ 2 TRANG ĐÔI (SPREAD MODE) */}
+          {viewMode === 'spread' && (
+            <div className="cp-spread-book">
+              {/* Trang Trái Nền */}
+              <div
+                className="cp-book-page page-left"
+                onClick={handlePrev}
+                title="Bấm mép trái để lật về trang trước"
+              >
+                <div className="cp-page-inner">
                   <img
-                    src={`/catalog/pages/${rightPage}.jpg`}
-                    alt={`Trang ${rightPage}`}
-                    className="cp-sheet-img"
+                    src={`/catalog/pages/${flipState?.direction === 'next' ? flipState.fromLeft : flipState?.direction === 'prev' ? flipState.newLeft : leftPage}.jpg`}
+                    alt={`Trang ${leftPage}`}
+                    className="cp-page-image"
                   />
-                  <span className="cp-sheet-num right">Trang {rightPage} / {TOTAL_PAGES}</span>
+                  <div className="cp-gutter-shadow left" />
+                  <div className="cp-page-edge left" />
+                  <span className="cp-page-badge left">
+                    Trang {flipState?.direction === 'prev' ? flipState.newLeft : leftPage}
+                  </span>
                 </div>
-              </>
-            )}
-          </div>
+              </div>
 
-          <button
-            type="button"
-            className="cp-nav-arrow next"
-            onClick={handleNext}
-            disabled={rightPage >= TOTAL_PAGES}
-            aria-label="Trang tiếp theo"
-          >
-            ›
-          </button>
+              {/* Sống Gáy Sách 3D */}
+              <div className="cp-book-spine-3d">
+                <div className="cp-spine-highlight" />
+              </div>
+
+              {/* Trang Phải Nền */}
+              <div
+                className="cp-book-page page-right"
+                onClick={handleNext}
+                title="Bấm mép phải để lật sang trang sau"
+              >
+                <div className="cp-page-inner">
+                  <img
+                    src={`/catalog/pages/${flipState?.direction === 'next' ? flipState.newRight : flipState?.direction === 'prev' ? flipState.fromRight : rightPage}.jpg`}
+                    alt={`Trang ${rightPage}`}
+                    className="cp-page-image"
+                  />
+                  <div className="cp-gutter-shadow right" />
+                  <div className="cp-page-edge right" />
+                  <span className="cp-page-badge right">
+                    Trang {flipState?.direction === 'next' ? flipState.newRight : rightPage}
+                  </span>
+                </div>
+              </div>
+
+              {/* LÁ LẬT TRANG 3D DYNAMIC LEAF */}
+              {flipState && (
+                <div
+                  className={`cp-flip-leaf ${flipState.direction === 'next' ? 'flip-to-left' : 'flip-to-right'}`}
+                >
+                  {/* Mặt trước của trang lật */}
+                  <div className="cp-leaf-face face-front">
+                    <img
+                      src={`/catalog/pages/${flipState.direction === 'next' ? flipState.fromRight : flipState.newRight}.jpg`}
+                      alt="Lật trang"
+                      className="cp-page-image"
+                    />
+                    <div className="cp-leaf-shading" />
+                  </div>
+                  {/* Mặt sau của trang lật */}
+                  <div className="cp-leaf-face face-back">
+                    <img
+                      src={`/catalog/pages/${flipState.direction === 'next' ? flipState.newLeft : flipState.fromLeft}.jpg`}
+                      alt="Lật trang"
+                      className="cp-page-image"
+                    />
+                    <div className="cp-leaf-shading" />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TH2: CHẾ ĐỘ 1 TRANG ĐƠN (SINGLE PAGE MODE) */}
+          {viewMode === 'single' && (
+            <div className={`cp-single-book ${flipState ? `flipping-${flipState.direction}` : ''}`}>
+              <div className="cp-single-page-card" onClick={handleNext}>
+                <img
+                  src={`/catalog/pages/${currentPage}.jpg`}
+                  alt={`Trang ${currentPage}`}
+                  className="cp-page-image"
+                />
+                <span className="cp-page-badge center">
+                  Trang {currentPage} / {TOTAL_PAGES}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Page Thumbnails Strip */}
-        <div className="cp-thumbs-section">
-          <div className="cp-thumbs-header">
-            <span>Danh sách toàn bộ 28 trang (Bấm vào trang bất kỳ để chuyển nhanh):</span>
-            <strong>
-              Đang xem: Trang {viewMode === 'spread' ? `${leftPage}–${rightPage}` : leftPage} / {TOTAL_PAGES}
-            </strong>
-          </div>
-          <div className="cp-thumbs-strip">
+        {/* Nút Lật Trang Tiếp Theo (Mũi tên phải lớn) */}
+        <button
+          type="button"
+          className="cp-side-arrow next"
+          onClick={handleNext}
+          disabled={rightPage >= TOTAL_PAGES}
+          aria-label="Lật trang tiếp theo"
+          title="Lật trang sau (Phím Mũi tên Phải)"
+        >
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </main>
+
+      {/* ==============================================================
+          4. THANH CÔNG CỤ ĐÁY THÔNG MINH (Floating Dock Toolbar)
+          ============================================================== */}
+      <footer className="cp-bottom-dock">
+        {/* Nút Trang Đầu */}
+        <button
+          type="button"
+          className="cp-dock-btn"
+          onClick={() => handleGoToPage(1)}
+          disabled={leftPage <= 1}
+          title="Về trang bìa đầu tiên (Home)"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+            <polyline points="11 17 6 12 11 7"></polyline>
+            <polyline points="18 17 13 12 18 7"></polyline>
+          </svg>
+        </button>
+
+        {/* Nút Lùi 1 lượt */}
+        <button
+          type="button"
+          className="cp-dock-btn"
+          onClick={handlePrev}
+          disabled={leftPage <= 1}
+          title="Trang trước"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+
+        {/* Ô Điều Khiển & Nhập Trang Trực Tiếp */}
+        <div className="cp-dock-page-box">
+          <span>Trang</span>
+          <input
+            type="number"
+            min="1"
+            max={TOTAL_PAGES}
+            value={viewMode === 'spread' ? `${leftPage}` : currentPage}
+            onChange={(e) => {
+              const val = parseInt(e.target.value, 10);
+              if (!isNaN(val) && val >= 1 && val <= TOTAL_PAGES) {
+                handleGoToPage(val);
+              }
+            }}
+            aria-label="Nhập số trang để nhảy đến"
+          />
+          {viewMode === 'spread' && rightPage !== leftPage && (
+            <span className="cp-dock-spread-to">-{rightPage}</span>
+          )}
+          <span>/ {TOTAL_PAGES}</span>
+        </div>
+
+        {/* Nút Tiến 1 lượt */}
+        <button
+          type="button"
+          className="cp-dock-btn"
+          onClick={handleNext}
+          disabled={rightPage >= TOTAL_PAGES}
+          title="Trang sau"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+
+        {/* Nút Trang Cuối */}
+        <button
+          type="button"
+          className="cp-dock-btn"
+          onClick={() => handleGoToPage(TOTAL_PAGES)}
+          disabled={rightPage >= TOTAL_PAGES}
+          title="Đến trang bìa cuối cùng (End)"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+            <polyline points="13 17 18 12 13 7"></polyline>
+            <polyline points="6 17 11 12 6 7"></polyline>
+          </svg>
+        </button>
+
+        <span className="cp-dock-divider" />
+
+        {/* Tự động lật (Slideshow Auto Play) */}
+        <button
+          type="button"
+          className={`cp-dock-btn cp-dock-autoplay-btn ${isAutoPlay ? 'active' : ''}`}
+          onClick={() => setIsAutoPlay(!isAutoPlay)}
+          title={isAutoPlay ? 'Dừng tự động lật trang' : 'Tự động lật trang (Trình chiếu)'}
+        >
+          {isAutoPlay ? (
+            <>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="6" y="4" width="4" height="16"></rect>
+                <rect x="14" y="4" width="4" height="16"></rect>
+              </svg>
+              <span>Dừng</span>
+            </>
+          ) : (
+            <>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              <span>Tự lật</span>
+            </>
+          )}
+        </button>
+
+        <span className="cp-dock-divider" />
+
+        {/* Zoom Out */}
+        <button
+          type="button"
+          className="cp-dock-btn"
+          onClick={() => setZoom((z) => Math.max(0.8, Number((z - 0.15).toFixed(2))))}
+          title="Thu nhỏ"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+
+        {/* Zoom Reset */}
+        <button
+          type="button"
+          className="cp-dock-zoom-indicator"
+          onClick={() => setZoom(1)}
+          title="Đặt lại kích thước gốc 100%"
+        >
+          {Math.round(zoom * 100)}%
+        </button>
+
+        {/* Zoom In */}
+        <button
+          type="button"
+          className="cp-dock-btn"
+          onClick={() => setZoom((z) => Math.min(1.5, Number((z + 0.15).toFixed(2))))}
+          title="Phóng to"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+
+        <span className="cp-dock-divider" />
+
+        {/* Ẩn / Hiện Dải Ảnh Thu Nhỏ (Thumbnails) */}
+        <button
+          type="button"
+          className={`cp-dock-btn ${showThumbs ? 'active' : ''}`}
+          onClick={() => setShowThumbs(!showThumbs)}
+          title={showThumbs ? 'Ẩn thanh ảnh thu nhỏ' : 'Hiện thanh ảnh thu nhỏ'}
+        >
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+        </button>
+      </footer>
+
+      {/* ==============================================================
+          5. DẢI ẢNH THU NHỎ (Interactive Thumbnails Strip)
+          ============================================================== */}
+      {showThumbs && (
+        <section className="cp-thumbs-drawer" aria-label="Toàn bộ 28 trang thu nhỏ">
+          <div className="cp-thumbs-strip" ref={thumbsStripRef}>
             {Array.from({ length: TOTAL_PAGES }, (_, i) => i + 1).map((pageNum) => {
-              const isSelected = pageNum === leftPage || (viewMode === 'spread' && pageNum === rightPage);
+              const isSelected =
+                viewMode === 'spread'
+                  ? pageNum === leftPage || pageNum === rightPage
+                  : pageNum === currentPage;
               return (
                 <button
                   key={pageNum}
+                  data-page={pageNum}
                   type="button"
                   className={`cp-thumb-item ${isSelected ? 'active' : ''}`}
-                  onClick={() => setCurrentPage(pageNum)}
+                  onClick={() => handleGoToPage(pageNum)}
+                  title={`Xem Trang ${pageNum}`}
                 >
                   <img
                     src={`/catalog/pages/${pageNum}.jpg`}
-                    alt={`Thumb trang ${pageNum}`}
+                    alt={`Thu nhỏ trang ${pageNum}`}
                     loading="lazy"
                   />
-                  <span className="cp-thumb-num">{pageNum}</span>
+                  <span className="cp-thumb-badge">{pageNum}</span>
                 </button>
               );
             })}
           </div>
+        </section>
+      )}
+
+      {/* ==============================================================
+          6. MODAL / DRAWER MỤC LỤC CHI TIẾT (TOC Sidebar Modal)
+          ============================================================== */}
+      {showToc && (
+        <div className="cp-toc-backdrop" onClick={() => setShowToc(false)}>
+          <aside className="cp-toc-drawer" onClick={(e) => e.stopPropagation()}>
+            <div className="cp-toc-header">
+              <div className="cp-toc-title-wrap">
+                <span className="cp-toc-dot" />
+                <h2>Mục Lục Hồ Sơ Năng Lực</h2>
+              </div>
+              <button
+                type="button"
+                className="cp-toc-close-btn"
+                onClick={() => setShowToc(false)}
+                aria-label="Đóng mục lục"
+              >
+                ✕
+              </button>
+            </div>
+
+            <p className="cp-toc-desc">
+              Ấn bản tổng hợp 28 trang giới thiệu năng lực sản xuất, quy mô nhà xưởng máy móc CNC và các dự án cơ điện trọng điểm của Cơ Điện Nguyên Phát.
+            </p>
+
+            <div className="cp-toc-list">
+              {CHAPTERS.map((ch) => {
+                const isActive =
+                  leftPage >= ch.page &&
+                  (ch.id === CHAPTERS.length || leftPage < CHAPTERS[ch.id]?.page);
+                return (
+                  <div
+                    key={ch.id}
+                    className={`cp-toc-item ${isActive ? 'active' : ''}`}
+                    onClick={() => {
+                      handleGoToPage(ch.page);
+                      setShowToc(false);
+                    }}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    <div className="cp-toc-thumb-preview">
+                      <img src={`/catalog/pages/${ch.page}.jpg`} alt={ch.title} />
+                      <span className="cp-toc-page-tag">Trang {ch.page}</span>
+                    </div>
+                    <div className="cp-toc-info">
+                      <div className="cp-toc-item-top">
+                        <span className="cp-toc-item-num">Chương 0{ch.id}</span>
+                        {isActive && <span className="cp-toc-active-label">Đang xem</span>}
+                      </div>
+                      <h3 className="cp-toc-item-title">{ch.title}</h3>
+                      <p className="cp-toc-item-desc">{ch.desc}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </aside>
         </div>
-      </div>
+      )}
     </div>
   );
 };
