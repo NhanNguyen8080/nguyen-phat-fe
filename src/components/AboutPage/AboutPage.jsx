@@ -113,84 +113,45 @@ const processSteps = [
   }
 ];
 
-// Dữ liệu Hình ảnh hoạt động thực tế của anh em trong công ty
+// Dữ liệu Hình ảnh hoạt động thực tế của anh em trong công ty (3 giai đoạn làm việc chăm chỉ: Văn phòng -> Nhà xưởng -> Lắp đặt thiết bị)
 const workMoments = [
   {
     id: 1,
-    title: 'Khảo Sát & Giám Sát Công Trường',
-    desc: 'Kỹ sư Cơ Điện Nguyên Phát trực tiếp khảo sát thực địa công trình, kiểm tra mặt bằng, không gian và phụ tải thực tế trước khi lên phương án bố trí hệ thống điện.',
-    badge: 'Kỹ Sư Hiện Trường',
-    imgUrl: '/catalog/pages/13.jpg',
-    tag: 'Hiện Trường',
+    title: 'Nghiên Cứu & Thiết Kế Kỹ Thuật Tại Văn Phòng',
+    desc: 'Tại văn phòng, các kỹ sư và chuyên viên kỹ thuật Nguyên Phát luôn làm việc chăm chỉ, tập trung cao độ trong từng phép tính phụ tải, tối ưu hóa sơ đồ nguyên lý 2D/3D và lập trình tự động hóa PLC chính xác trước khi chuyển giao xuống xưởng.',
+    badge: 'Khối Văn Phòng & R&D',
+    imgUrl: '/catalog/pages/14.jpg',
+    tag: 'Văn Phòng Thiết Kế',
     highlights: [
-      'Khảo sát chi tiết mặt bằng bệ móng và tuyến đường cáp dẫn',
-      'Tư vấn phương án bố trí tủ điện và thang máng cáp tối ưu không gian',
-      'Giám sát chặt chẽ quy chuẩn an toàn lao động và kỹ thuật thi công'
+      'Nghiên cứu bản vẽ tỉ mỉ, bóc tách khối lượng và tối ưu hóa giải pháp theo yêu cầu dự án',
+      'Tính toán cân bằng phụ tải, lựa chọn khí cụ đóng cắt chính xác nhằm tiết kiệm chi phí cho chủ đầu tư',
+      'Lập trình điều khiển PLC, Scada và thiết kế giao diện tự động hóa thông minh, đồng bộ'
     ]
   },
   {
     id: 2,
-    title: 'Thiết Kế Sơ Đồ Nguyên Lý 3D & Bóc Tách Bản Vẽ',
-    desc: 'Đội ngũ kỹ sư R&D thiết kế chi tiết sơ đồ nguyên lý điện một sợi (Single Line), phối cảnh 3D tủ bảng điện và hệ thống phân phối cáp.',
-    badge: 'Phòng Kỹ Thuật',
-    imgUrl: '/catalog/pages/14.jpg',
-    tag: 'Bản Vẽ 3D',
+    title: 'Gia Công Cơ Khí & Lắp Ráp Thiết Bị Tại Nhà Xưởng',
+    desc: 'Tại phân xưởng sản xuất, đội ngũ thợ lành nghề miệt mài bên hệ thống máy cắt, chấn, đột CNC; cần mẫn uốn ép từng thanh cái đồng Busbar và tỉ mỉ đấu nối từng đầu dây nhị thứ, kiểm soát chặt chẽ từng chi tiết nhỏ nhất.',
+    badge: 'Nhà Máy Sản Xuất',
+    imgUrl: '/catalog/pages/15.jpg',
+    tag: 'Nhà Xưởng Chế Tạo',
     highlights: [
-      'Ứng dụng phần mềm chuyên dụng AutoCAD Electrical & 3D SolidWorks',
-      'Bóc tách vật tư chính xác, tối ưu hóa kích thước vỏ tủ và thanh cái đồng',
-      'Đồng bộ giải pháp kỹ thuật theo yêu cầu thiết kế của chủ đầu tư'
+      'Gia công cơ khí vỏ tủ và thang máng cáp CNC chuẩn xác, buồng sơn tĩnh điện công nghệ cao',
+      'Đấu nối thanh cái đồng đỏ 99.99% mạ thiếc và lắp ráp khí cụ điện chính hãng Schneider, Mitsubishi, ABB...',
+      'Đo kiểm cách điện, kiểm định an toàn nghiêm ngặt từng khâu trước khi xuất xưởng theo chuẩn TCVN/IEC'
     ]
   },
   {
     id: 3,
-    title: 'Gia Công Cơ Khí Vỏ Tủ & Thang Máng Cáp CNC',
-    desc: 'Dây chuyền máy chấn, đột dập CNC tự động và buồng sơn tĩnh điện công nghệ cao đảm bảo độ chính xác cơ khí tuyệt đối.',
-    badge: 'Nhà Máy Sản Xuất',
-    imgUrl: '/catalog/pages/15.jpg',
-    tag: 'Cơ Khí CNC',
+    title: 'Trực Tiếp Thi Công & Lắp Đặt Thiết Bị Tại Công Trường',
+    desc: 'Trên công trường thực tế, các kỹ sư và đội ngũ thi công Cơ Điện Nguyên Phát không ngại khó khăn, trực tiếp cẩu lắp đặt tủ vào vị trí, kéo rải thang máng cáp, đấu nối an toàn và đóng điện vận hành trọn vẹn cho công trình.',
+    badge: 'Hiện Trường & Dự Án',
+    imgUrl: '/catalog/pages/13.jpg',
+    tag: 'Lắp Đặt Hiện Trường',
     highlights: [
-      'Gia công cơ khí CNC đạt cấp bảo vệ IP43, IP54 chống bụi nước',
-      'Sơn tĩnh điện chống ăn mòn bề mặt, độ bền cao trong mọi môi trường',
-      'Thép tấm tiêu chuẩn chất lượng cao độ dày từ 1.2mm đến 2.5mm'
-    ]
-  },
-  {
-    id: 4,
-    title: 'Lắp Ráp Khí Cụ & Đấu Nối Thanh Cái Đồng Busbar',
-    desc: 'Kỹ thuật viên lành nghề trực tiếp lắp ráp các thiết bị đóng cắt và gia công uốn ép thanh cái đồng nguyên chất chuẩn xác.',
-    badge: 'Đấu Nối Tủ Điện',
-    imgUrl: '/catalog/pages/16.jpg',
-    tag: 'Lắp Ráp Tủ',
-    highlights: [
-      '100% thanh cái đồng đỏ nguyên chất mạ thiếc, bọc co nhiệt tiêu chuẩn',
-      'Tích hợp khí cụ điện chính hãng Schneider, Mitsubishi, ABB, LS, Shihlin, Chint',
-      'Đấu nối hệ thống nhị thứ, rơ-le điều khiển và đánh số thứ tự dây thẩm mỹ'
-    ]
-  },
-  {
-    id: 5,
-    title: 'Đo Kiểm Cách Điện & Thử Nghiệm Vận Hành Xuất Xưởng',
-    desc: 'Quy trình kiểm định chất lượng nghiêm ngặt của phòng QA/QC theo chuẩn TCVN và IEC 61439 trước khi xuất xưởng.',
-    badge: 'Phòng QA/QC',
-    imgUrl: '/catalog/pages/17.jpg',
-    tag: 'Kiểm Định',
-    highlights: [
-      'Đo điện trở cách điện Megohmmeter và thử nghiệm phóng điện cao áp',
-      'Kiểm tra liên động cơ khí khóa an toàn (Interlock ATS/MTS)',
-      'Lập biên bản thử nghiệm nghiệm thu xuất xưởng (FAT) cho từng sản phẩm'
-    ]
-  },
-  {
-    id: 6,
-    title: 'Vận Chuyển, Cẩu Lắp & Bàn Giao Dự Án',
-    desc: 'Đội ngũ kỹ thuật hỗ trợ cẩu lắp đặt vào vị trí, hướng dẫn đấu nối, chạy thử liên động và bàn giao hồ sơ hoàn công.',
-    badge: 'Hợp Tác Bền Vững',
-    imgUrl: '/catalog/pages/18.jpg',
-    tag: 'Bàn Giao',
-    highlights: [
-      'Phương tiện vận chuyển chuyên dụng bọc bảo vệ chống trầy xước',
-      'Hỗ trợ đóng điện chạy thử và hướng dẫn vận hành trực tiếp tại công trình',
-      'Bàn giao đầy đủ catalog, sơ đồ nguyên lý và chính sách bảo hành 24/7'
+      'Trực tiếp bám sát hiện trường, khảo sát mặt bằng, căn chỉnh bệ móng và định vị tủ điện vững chắc',
+      'Lắp đặt hệ thống thang máng cáp, đấu nối cáp động lực và thử nghiệm liên động cơ điện an toàn tuyệt đối',
+      'Tinh thần trách nhiệm cao, đóng điện vận hành thông suốt và đồng hành hỗ trợ kỹ thuật bảo hành 24/7'
     ]
   }
 ];
@@ -476,7 +437,7 @@ const AboutPage = ({ onNavigateHome }) => {
               Hình Ảnh <span className="highlight-red">Thực Tế</span>
             </h2>
             <p className="section-sub-heading">
-              Hình ảnh thực tế anh em kỹ sư, kỹ thuật viên Cơ Điện Nguyên Phát trực tiếp làm việc, sản xuất và giám sát tại nhà máy &amp; công trường
+              Hình ảnh làm việc chăm chỉ, tận tâm của đội ngũ Cơ Điện Nguyên Phát từ nghiên cứu thiết kế tại văn phòng đến chế tạo tại nhà xưởng và trực tiếp lắp đặt thiết bị tại công trường
             </p>
           </div>
 
