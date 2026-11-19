@@ -122,7 +122,7 @@
   }
 
   .home-fullpage-main .product-wide-img-box {
-    height: clamp(130px, 16.5vh, 175px);
+    height: clamp(160px, 21vh, 205px);
   }
 
   /* 4. Portfolio (Các công trình tiêu biểu — Lưới 5 tấm hình To - Nhỏ Mosaic) */

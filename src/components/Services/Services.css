@@ -92,21 +92,20 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  margin-top: 4px;
+  margin-top: 3px;
 }
 
 .ornament-line {
-  width: 48px;
+  width: 44px;
   height: 2px;
-  background-color: #d32f2f;
+  background: linear-gradient(90deg, transparent, #d32f2f, transparent);
 }
 
-.ornament-square {
-  width: 7px;
-  height: 7px;
-  border: 1.5px solid #d32f2f;
-  background-color: #ffffff;
-  box-sizing: border-box;
+.ornament-diamond {
+  width: 6px;
+  height: 6px;
+  background-color: #d32f2f;
+  transform: rotate(45deg);
 }
 
 /* Nút điều hướng & chấm chỉ báo slide */
@@ -226,20 +225,18 @@
 .product-wide-card {
   flex: 0 0 calc((100% - (var(--visible-cols) - 1) * var(--slide-gap)) / var(--visible-cols));
   max-width: calc((100% - (var(--visible-cols) - 1) * var(--slide-gap)) / var(--visible-cols));
-  background: #ffffff;
-  border: 1.5px solid #cbd5e1;
-  border-radius: 6px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+  background: transparent;
+  border: none;
+  box-shadow: none;
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.3s ease, opacity 0.45s ease;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease;
 }
 
 .product-wide-card.is-out-of-view {
   opacity: 0.45;
-  transform: scale(0.97);
+  transform: scale(0.95);
 }
 
 .product-wide-card.is-in-view {
@@ -248,23 +245,21 @@
 
 .product-wide-card:hover {
   transform: translateY(-4px);
-  border-color: #d32f2f;
-  box-shadow: 0 10px 24px rgba(211, 47, 47, 0.16);
 }
 
-/* Khung chứa ảnh NGANG & TO — nền trắng sạch sẽ, hiển thị 100% trọn vẹn sản phẩm không bị cắt góc */
+/* Khung chứa ảnh NGANG & TO — hoàn toàn trong suốt, ảnh nổi 3D tự thân */
 .product-wide-img-box {
   position: relative;
   width: 100%;
-  height: clamp(135px, 17vh, 180px);
-  background: #ffffff;
+  height: clamp(165px, 21.5vh, 210px);
+  background: transparent;
   border: none;
-  padding: 12px 16px;
+  padding: 6px;
   box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: none;
 }
 
@@ -276,64 +271,65 @@
   object-fit: contain;
   object-position: center;
   display: block;
-  filter: drop-shadow(0 4px 10px rgba(15, 23, 42, 0.08));
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  filter: drop-shadow(0 14px 22px rgba(15, 23, 42, 0.2));
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), filter 0.45s ease;
 }
 
 .product-slider-track.is-sliding .product-wide-img {
-  transform: scale(1.02);
+  transform: scale(1.03);
 }
 
 .product-wide-card:hover .product-wide-img {
-  transform: scale(1.05);
-  filter: drop-shadow(0 8px 18px rgba(211, 47, 47, 0.2));
+  transform: translateY(-8px) scale(1.06);
+  filter: drop-shadow(0 22px 34px rgba(211, 47, 47, 0.32));
 }
 
 .product-wide-badge {
   position: absolute;
   top: 8px;
-  left: 8px;
+  left: 10px;
   z-index: 2;
-  background: rgba(255, 255, 255, 0.94);
-  border: 1px solid rgba(211, 47, 47, 0.28);
+  background: linear-gradient(180deg, #ffffff 0%, #fee2e2 100%);
+  border: 1px solid rgba(211, 47, 47, 0.3);
+  border-bottom: 2px solid #ef4444;
   color: #b91c1c;
-  font-size: 0.65rem;
-  font-weight: 700;
+  font-size: 0.66rem;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.4px;
-  padding: 2px 8px;
-  border-radius: 4px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  padding: 3px 9px;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(211, 47, 47, 0.15), inset 0 1px 1px #ffffff;
 }
 
-/* Thanh tiêu đề liền khối ở đáy thẻ chiếm 100% chiều ngang như mẫu tham khảo trong doc */
+/* Thanh tiêu đề dưới đáy dạng capsule 3D độc lập */
 .product-wide-title-bar {
-  background: #b91c1c;
-  background: linear-gradient(90deg, #991b1b 0%, #b91c1c 50%, #991b1b 100%);
-  border-radius: 0;
-  padding: 10px 14px;
-  min-height: 42px;
+  background: linear-gradient(90deg, #991b1b 0%, #d32f2f 50%, #991b1b 100%);
+  border-radius: 999px;
+  padding: 8px 18px;
+  min-height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  margin: 0;
-  width: 100%;
+  box-shadow: 0 4px 14px rgba(211, 47, 47, 0.28);
+  margin: 10px auto 4px;
+  width: 92%;
   box-sizing: border-box;
-  transition: background 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .product-wide-card:hover .product-wide-title-bar {
-  background: linear-gradient(90deg, #b91c1c 0%, #d32f2f 50%, #b91c1c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(211, 47, 47, 0.42);
 }
 
 .product-wide-title {
-  font-size: 0.9rem;
+  font-size: 0.86rem;
   font-weight: 700;
   color: #ffffff;
-  line-height: 1.35;
+  line-height: 1.3;
   margin: 0;
-  text-align: center;
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;

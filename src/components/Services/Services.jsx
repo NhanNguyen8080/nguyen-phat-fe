@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Services.css';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
-import { getProducts, MOCK_PRODUCTS } from '../../services/productService';
+import { getProducts } from '../../services/productService';
 
 const FALLBACK_IMAGE = '/images/products/tu-msb-3200a.png';
 
@@ -100,42 +100,12 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Phân tách sản phẩm thành 2 hàng chuẩn theo yêu cầu trong file doc:
+  // Phân tách sản phẩm trực tiếp từ API thành 2 hàng (không tự chèn thêm sản phẩm mẫu):
   // Hàng 1: TỦ ĐIỆN & THIẾT BỊ
-  const row1List = useMemo(() => {
-    const list = allProducts.filter((p) => !isCableOrEnclosureProduct(p));
-    // Đảm bảo hàng 1 luôn có tối thiểu 3 sản phẩm tủ điện sắc nét
-    if (list.length < 3) {
-      const existingIds = new Set(list.map((p) => p.id || p.slug));
-      const mockCabinets = (MOCK_PRODUCTS || []).filter((p) => !isCableOrEnclosureProduct(p));
-      for (const m of mockCabinets) {
-        if (!existingIds.has(m.id) && !existingIds.has(m.slug)) {
-          list.push(m);
-          existingIds.add(m.id);
-        }
-        if (list.length >= 6) break;
-      }
-    }
-    return list;
-  }, [allProducts]);
+  const row1List = allProducts.filter((p) => !isCableOrEnclosureProduct(p));
 
   // Hàng 2: THANG MÁNG CÁP VÀ VỎ TỦ
-  const row2List = useMemo(() => {
-    const list = allProducts.filter((p) => isCableOrEnclosureProduct(p));
-    // Đảm bảo hàng 2 luôn có tối thiểu 3 sản phẩm thang máng cáp & vỏ tủ đúng mẫu ảnh tham khảo
-    if (list.length < 3) {
-      const existingIds = new Set(list.map((p) => p.id || p.slug));
-      const mockCables = (MOCK_PRODUCTS || []).filter((p) => isCableOrEnclosureProduct(p));
-      for (const m of mockCables) {
-        if (!existingIds.has(m.id) && !existingIds.has(m.slug)) {
-          list.push(m);
-          existingIds.add(m.id);
-        }
-        if (list.length >= 6) break;
-      }
-    }
-    return list;
-  }, [allProducts]);
+  const row2List = allProducts.filter((p) => isCableOrEnclosureProduct(p));
 
   const maxRow1Index = Math.max(0, row1List.length - visibleCols);
   const maxRow2Index = Math.max(0, row2List.length - visibleCols);
@@ -196,8 +166,7 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
           </h3>
           <div className="product-row-ornament">
             <span className="ornament-line" />
-            <span className="ornament-square" />
-            <span className="ornament-square" />
+            <span className="ornament-diamond" />
             <span className="ornament-line" />
           </div>
         </div>
@@ -336,9 +305,9 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
           )}
         </div>
 
-        {/* ==================== HÀNG 1: TỦ ĐIỆN ==================== */}
+        {/* ==================== HÀNG 1: TỦ ĐIỆN & THIẾT BỊ ==================== */}
         {renderProductRow({
-          title: 'TỦ ĐIỆN',
+          title: 'TỦ ĐIỆN & THIẾT BỊ',
           categoryId: 'e03442e0-789d-46f9-a334-5a5f1cc02642',
           products: row1List,
           currentIndex: safeRow1Index,
