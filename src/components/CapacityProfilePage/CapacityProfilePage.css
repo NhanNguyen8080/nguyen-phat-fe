@@ -21,10 +21,52 @@
   transition: background 0.35s ease, color 0.35s ease;
 }
 
-/* --- THEME 1: DARK LUXURY STUDIO (Mặc định) --- */
-.cp-theme-dark {
-  background: radial-gradient(circle at 50% 38%, #1e293b 0%, #0f172a 55%, #070a12 100%);
+/* ==============================================================
+   BACKGROUND PRESETS (CÁC KHÔNG GIAN HÌNH NỀN PHÍA SAU QUYỂN SÁCH)
+   ============================================================== */
+
+/* --- PRESET 1: STUDIO ĐÊM CAO CẤP (Mặc định) --- */
+.cp-viewer-app.cp-bg-studio-dark {
+  background: radial-gradient(ellipse at 50% 42%, #1e293b 0%, #0f172a 55%, #050811 100%);
   color: #f1f5f9;
+}
+
+/* --- PRESET 2: BÀN GỖ SANG TRỌNG (Warm Executive Walnut Wood) --- */
+.cp-viewer-app.cp-bg-warm-wood {
+  background-color: #120a06;
+  background-image: 
+    radial-gradient(ellipse at 50% 40%, rgba(245, 158, 11, 0.14) 0%, rgba(18, 10, 6, 0.6) 55%, rgba(6, 3, 2, 0.95) 100%),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.015) 0px, rgba(255, 255, 255, 0.015) 2px, transparent 2px, transparent 9px),
+    linear-gradient(180deg, #2b170c 0%, #1e0f07 50%, #110803 100%);
+  color: #fef3c7;
+}
+
+/* --- PRESET 3: ĐÁ SHOWROOM MARBLE (Luxury Slate Stone) --- */
+.cp-viewer-app.cp-bg-marble-stone {
+  background-color: #070b13;
+  background-image: 
+    radial-gradient(ellipse at 50% 42%, rgba(56, 189, 248, 0.1) 0%, rgba(11, 18, 32, 0.65) 55%, #04060b 100%),
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.02) 0%, transparent 40%),
+    linear-gradient(135deg, #131c2e 0%, #0c1322 50%, #060912 100%);
+  color: #f1f5f9;
+}
+
+/* --- PRESET 4: KỸ THUẬT MEP (Industrial Engineering Grid) --- */
+.cp-viewer-app.cp-bg-industrial-tech {
+  background-color: #050912;
+  background-image: 
+    radial-gradient(ellipse at 50% 42%, rgba(220, 38, 38, 0.13) 0%, rgba(7, 12, 24, 0.7) 60%, #020408 100%),
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(180deg, #0d152a 0%, #070c17 100%);
+  background-size: 100% 100%, 42px 42px, 42px 42px, 100% 100%;
+  color: #f1f5f9;
+}
+
+/* --- PRESET 5: STUDIO SÁNG TỐI GIẢN --- */
+.cp-viewer-app.cp-bg-minimal-light {
+  background: radial-gradient(circle at 50% 38%, #ffffff 0%, #f1f5f9 55%, #cbd5e1 100%);
+  color: #0f172a;
 }
 
 .cp-theme-dark .cp-header-bar {
@@ -330,6 +372,153 @@
   box-shadow: 0 4px 14px rgba(220, 38, 38, 0.5);
 }
 
+/* --- MENU POPOVER CHỌN NỀN (BACKGROUND PRESETS PICKER) --- */
+.cp-bg-picker-wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.cp-bg-tool-btn {
+  gap: 5px;
+}
+
+.cp-bg-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 290px;
+  border-radius: 14px;
+  padding: 10px;
+  z-index: 60;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  animation: popoverFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cp-theme-dark .cp-bg-popover {
+  background: rgba(15, 23, 42, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f1f5f9;
+}
+
+.cp-theme-light .cp-bg-popover {
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+
+@keyframes popoverFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.cp-bg-popover-header {
+  padding: 4px 8px 10px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cp-theme-light .cp-bg-popover-header {
+  border-bottom-color: rgba(15, 23, 42, 0.08);
+}
+
+.cp-bg-popover-title {
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+}
+
+.cp-bg-popover-sub {
+  font-size: 0.72rem;
+  opacity: 0.65;
+}
+
+.cp-bg-preset-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cp-bg-preset-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.18s ease;
+}
+
+.cp-theme-dark .cp-bg-preset-item:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.cp-theme-light .cp-bg-preset-item:hover {
+  background: rgba(15, 23, 42, 0.05);
+}
+
+.cp-bg-preset-item.is-selected {
+  background: rgba(220, 38, 38, 0.12) !important;
+  border-color: rgba(220, 38, 38, 0.35);
+}
+
+.cp-bg-preset-swatch {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18), 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.cp-bg-preset-icon {
+  font-size: 1rem;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
+}
+
+.cp-bg-preset-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.cp-bg-preset-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.cp-bg-preset-desc {
+  font-size: 0.7rem;
+  opacity: 0.65;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cp-bg-preset-check {
+  color: #dc2626;
+  flex-shrink: 0;
+}
+
 /* ==============================================================
    2. SÂN KHẤU TRÌNH CHIẾU 3D FLIPBOOK (Main Stage)
    ============================================================== */
@@ -343,6 +532,42 @@
   min-height: 0;
   overflow: hidden;
   box-sizing: border-box;
+}
+
+/* --- ĐÈN RỌI AMBIENT GLOW HẮT SÁNG PHÍA SAU QUYỂN SÁCH --- */
+.cp-stage-ambient-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(calc((100vh - 120px) * 1.55), calc(100vw - 120px), 1350px);
+  height: min(calc(100vh - 80px), 920px);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  filter: blur(75px);
+  opacity: 0.65;
+  transition: background 0.5s ease, opacity 0.5s ease;
+}
+
+.cp-viewer-app.cp-bg-studio-dark .cp-stage-ambient-glow {
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.09) 0%, rgba(30, 41, 59, 0.04) 50%, transparent 70%);
+}
+
+.cp-viewer-app.cp-bg-warm-wood .cp-stage-ambient-glow {
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.18) 0%, rgba(180, 83, 9, 0.08) 50%, transparent 70%);
+}
+
+.cp-viewer-app.cp-bg-marble-stone .cp-stage-ambient-glow {
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.13) 0%, rgba(30, 41, 59, 0.05) 50%, transparent 70%);
+}
+
+.cp-viewer-app.cp-bg-industrial-tech .cp-stage-ambient-glow {
+  background: radial-gradient(circle, rgba(220, 38, 38, 0.15) 0%, rgba(37, 99, 235, 0.07) 50%, transparent 70%);
+}
+
+.cp-viewer-app.cp-bg-minimal-light .cp-stage-ambient-glow {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(226, 232, 240, 0.5) 50%, transparent 70%);
 }
 
 /* Mũi tên lật sách 2 bên mép (To, nổi bật, dễ bấm) */
@@ -403,6 +628,7 @@
   --spread-w: min(calc((100vh - 120px) * 1.401), calc(100vw - 160px), 1180px);
   --page-w: calc(var(--spread-w) / 2);
   position: relative;
+  z-index: 5;
   display: flex;
   align-items: center;
   justify-content: center;

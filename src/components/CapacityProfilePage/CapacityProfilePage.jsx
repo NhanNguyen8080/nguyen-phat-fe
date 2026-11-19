@@ -58,6 +58,50 @@ const PAGE_IMAGES = Array.from(
   (_, i) => `/catalog/pages/${i + 1}.jpg`
 );
 
+// Danh mục các không gian / hình nền phía sau sách (Background Presets)
+const BACKGROUND_PRESETS = [
+  {
+    id: 'studio-dark',
+    name: 'Studio Đêm',
+    theme: 'dark',
+    icon: '🌙',
+    swatch: 'radial-gradient(circle, #1e293b 0%, #070a12 100%)',
+    desc: 'Triển lãm đêm sang trọng với đèn rọi trung tâm'
+  },
+  {
+    id: 'warm-wood',
+    name: 'Bàn Gỗ Sang',
+    theme: 'dark',
+    icon: '🪵',
+    swatch: 'linear-gradient(135deg, #3d2417 0%, #170d07 100%)',
+    desc: 'Mặt bàn gỗ óc chó cao cấp ấm cúng'
+  },
+  {
+    id: 'marble-stone',
+    name: 'Đá Showroom',
+    theme: 'dark',
+    icon: '🏛️',
+    swatch: 'linear-gradient(135deg, #1e293b 0%, #080d18 100%)',
+    desc: 'Mặt đá phiến cẩm thạch sang trọng'
+  },
+  {
+    id: 'industrial-tech',
+    name: 'Kỹ Thuật MEP',
+    theme: 'dark',
+    icon: '⚡',
+    swatch: 'linear-gradient(135deg, #1e233d 0%, #070b16 100%)',
+    desc: 'Lưới kỹ thuật cơ điện Nguyên Phát'
+  },
+  {
+    id: 'minimal-light',
+    name: 'Studio Sáng',
+    theme: 'light',
+    icon: '☀️',
+    swatch: 'radial-gradient(circle, #ffffff 0%, #cbd5e1 100%)',
+    desc: 'Phòng đọc ban ngày sáng sủa, tinh tế'
+  }
+];
+
 const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
   // Trang hiện tại (1-indexed: 1 đến 28)
   const [currentPage, setCurrentPage] = useState(() => {
@@ -70,8 +114,29 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
     typeof window !== 'undefined' && window.innerWidth > 860 ? 'landscape' : 'portrait'
   );
 
-  // Giao diện: 'dark' (Phòng đọc Studio đêm cao cấp) hoặc 'light' (Phòng đọc sáng)
-  const [theme, setTheme] = useState('dark');
+  // Preset hình nền phía sau quyển sách
+  const [bgPreset, setBgPreset] = useState(() => {
+    try {
+      return localStorage.getItem('np_catalog_bg') || 'studio-dark';
+    } catch {
+      return 'studio-dark';
+    }
+  });
+
+  // Giao diện: 'dark' (Studio đêm cao cấp) hoặc 'light' (Studio sáng)
+  const [theme, setTheme] = useState(() => {
+    try {
+      const savedBg = localStorage.getItem('np_catalog_bg');
+      if (savedBg === 'minimal-light') return 'light';
+    } catch {
+      // fallback
+    }
+    return 'dark';
+  });
+
+  // Popover chọn hình nền
+  const [showBgPicker, setShowBgPicker] = useState(false);
+  const bgPickerRef = useRef(null);
 
   // Mức phóng to
   const [zoom, setZoom] = useState(1);
@@ -97,6 +162,22 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
   const containerRef = useRef(null);
   const bookMountRef = useRef(null);
   const pageFlipRef = useRef(null);
+
+  // Đóng popover chọn nền khi click ra ngoài
+  useEffect(() => {
+    if (!showBgPicker) return;
+    const handleClickOutside = (e) => {
+      if (bgPickerRef.current && !bgPickerRef.current.contains(e.target)) {
+        setShowBgPicker(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [showBgPicker]);
 
   // Khởi tạo FlipBuilder-style HTML5 Canvas PageFlip engine
   useEffect(() => {
@@ -263,13 +344,14 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
         handleGoToPage(TOTAL_PAGES);
       } else if (e.key === 'Escape') {
         if (showToc) setShowToc(false);
+        if (showBgPicker) setShowBgPicker(false);
       } else if (e.key.toLowerCase() === 'f') {
         toggleFullscreen();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleNext, handlePrev, handleGoToPage, showToc]);
+  }, [handleNext, handlePrev, handleGoToPage, showToc, showBgPicker]);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -346,7 +428,7 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
   return (
     <div
       ref={containerRef}
-      className={`cp-viewer-app cp-theme-${theme} ${isFullscreen ? 'is-fullscreen' : ''}`}
+      className={`cp-viewer-app cp-theme-${theme} cp-bg-${bgPreset} ${isFullscreen ? 'is-fullscreen' : ''}`}
     >
       {/* ==============================================================
           1. HEADER BAR: Breadcrumb, Tên tài liệu & Nút điều khiển nhanh
@@ -542,11 +624,86 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
             )}
           </button>
 
+          {/* Menu Chọn Không Gian / Hình Nền Phía Sau Sách */}
+          <div className="cp-bg-picker-wrapper" ref={bgPickerRef}>
+            <button
+              type="button"
+              className={`cp-tool-btn cp-bg-tool-btn ${showBgPicker ? 'active' : ''}`}
+              onClick={() => setShowBgPicker(!showBgPicker)}
+              title="Thay đổi không gian / hình nền phía sau sách"
+              aria-expanded={showBgPicker}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+              <span>Nền</span>
+            </button>
+
+            {showBgPicker && (
+              <div className="cp-bg-popover">
+                <div className="cp-bg-popover-header">
+                  <span className="cp-bg-popover-title">Không gian đọc</span>
+                  <span className="cp-bg-popover-sub">Tùy biến hình nền sau sách</span>
+                </div>
+                <div className="cp-bg-preset-list">
+                  {BACKGROUND_PRESETS.map((p) => {
+                    const isSelected = bgPreset === p.id;
+                    return (
+                      <button
+                        key={p.id}
+                        type="button"
+                        className={`cp-bg-preset-item ${isSelected ? 'is-selected' : ''}`}
+                        onClick={() => {
+                          setBgPreset(p.id);
+                          setTheme(p.theme);
+                          try {
+                            localStorage.setItem('np_catalog_bg', p.id);
+                          } catch {
+                            // ignore
+                          }
+                          setShowBgPicker(false);
+                        }}
+                      >
+                        <span
+                          className="cp-bg-preset-swatch"
+                          style={{ background: p.swatch }}
+                        >
+                          <span className="cp-bg-preset-icon">{p.icon}</span>
+                        </span>
+                        <div className="cp-bg-preset-info">
+                          <span className="cp-bg-preset-name">{p.name}</span>
+                          <span className="cp-bg-preset-desc">{p.desc}</span>
+                        </div>
+                        {isSelected && (
+                          <svg className="cp-bg-preset-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                          </svg>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+
           {/* Đổi Theme: Đêm / Ngày */}
           <button
             type="button"
             className="cp-tool-btn cp-theme-toggle-btn"
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            onClick={() => {
+              if (theme === 'dark') {
+                setTheme('light');
+                setBgPreset('minimal-light');
+                try { localStorage.setItem('np_catalog_bg', 'minimal-light'); } catch {}
+              } else {
+                setTheme('dark');
+                setBgPreset('studio-dark');
+                try { localStorage.setItem('np_catalog_bg', 'studio-dark'); } catch {}
+              }
+            }}
             title={theme === 'dark' ? 'Chuyển sang nền sáng' : 'Chuyển sang nền tối showroom'}
           >
             {theme === 'dark' ? '☀️' : '🌙'}
@@ -597,6 +754,9 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
           2. SÂN KHẤU LẬT SÁCH TOÀN MÀN HÌNH (HTML5 Canvas PageFlip Stage)
           ============================================================== */}
       <main className="cp-main-stage">
+        {/* Đèn rọi Ambient Glow hắt sáng phía sau sách theo Preset hình nền */}
+        <div className="cp-stage-ambient-glow" aria-hidden="true" />
+
         {/* Nút Lật Trang Trước (Mũi tên trái) */}
         <button
           type="button"
