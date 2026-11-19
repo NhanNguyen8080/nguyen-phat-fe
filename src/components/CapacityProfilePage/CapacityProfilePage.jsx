@@ -130,6 +130,26 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
       pageFlipInstance.loadFromImages(PAGE_IMAGES);
       pageFlipRef.current = pageFlipInstance;
 
+      // Vá CanvasRender của PageFlip để canvas có nền trong suốt (loại bỏ hoàn toàn hiện tượng nháy vệt trắng khi mở bìa)
+      // và chỉ vẽ bóng gáy sách khi cả 2 trang trái & phải đều đang hiển thị (chế độ 2 trang mở)
+      try {
+        const render = pageFlipInstance.getRender();
+        if (render) {
+          render.clear = function () {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+          };
+          const origDrawBookShadow = render.drawBookShadow ? render.drawBookShadow.bind(render) : null;
+          if (origDrawBookShadow) {
+            render.drawBookShadow = function () {
+              if (this.leftPage == null || this.rightPage == null) return;
+              origDrawBookShadow();
+            };
+          }
+        }
+      } catch (err) {
+        console.warn('Không thể patch canvas render:', err);
+      }
+
       // Khi trang lật hoàn tất
       pageFlipInstance.on('flip', (e) => {
         const pageIndex = Number(e.data);
@@ -146,8 +166,12 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
         setIsFlipping(isTurning);
         if (isTurning) {
           try {
-            const dir = pageFlipInstance.getFlipController()?.getCalculation()?.getDirection();
-            setFlipDirection(dir === 1 ? 'prev' : 'next');
+            const calcDir = pageFlipInstance.getFlipController()?.getCalculation()?.getDirection();
+            const renderDir = pageFlipInstance.getRender()?.getDirection();
+            const d = calcDir !== undefined ? calcDir : renderDir;
+            if (d !== undefined && d !== null) {
+              setFlipDirection(d === 1 ? 'prev' : 'next');
+            }
           } catch {
             // fallback
           }
@@ -189,12 +213,14 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
   // Điều hướng trang
   const handleNext = useCallback(() => {
     if (pageFlipRef.current) {
+      setFlipDirection('next');
       pageFlipRef.current.flipNext('bottom');
     }
   }, []);
 
   const handlePrev = useCallback(() => {
     if (pageFlipRef.current) {
+      setFlipDirection('prev');
       pageFlipRef.current.flipPrev('bottom');
     }
   }, []);
@@ -202,9 +228,10 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
   const handleGoToPage = useCallback((pageNumber) => {
     const page = Math.max(1, Math.min(TOTAL_PAGES, Number(pageNumber) || 1));
     if (pageFlipRef.current) {
+      setFlipDirection(page > currentPage ? 'next' : 'prev');
       pageFlipRef.current.flip(page - 1, 'bottom');
     }
-  }, []);
+  }, [currentPage]);
 
   // Tự động lật (Auto-play slideshow)
   useEffect(() => {
@@ -275,24 +302,46 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
     return `${left} - ${right} / ${TOTAL_PAGES}`;
   };
 
-  // Các trạng thái mở / đóng bìa sách:
+  // Các trạng thái mở / đóng bìa sách (Landscape Mode):
+  // 1. Đang đóng tĩnh ở trang bìa trước (Trang 1):
   const isClosedFront = orientation === 'landscape' && !isFlipping && currentPage === 1;
+  // 2. Đang mở từ trang bìa trước 1 ra 2 trang ruột (Flip Forward):
+  const isOpeningFromFront = orientation === 'landscape' && isFlipping && flipDirection === 'next' && currentPage === 1;
+  // 3. Đang đóng từ 2 trang ruột gập về trang bìa trước 1 (Flip Backward):
+  const isClosingToFront = orientation === 'landscape' && isFlipping && flipDirection === 'prev' && currentPage <= 3;
+
+  // 4. Đang đóng tĩnh ở trang bìa sau (Trang 28):
   const isClosedBack = orientation === 'landscape' && !isFlipping && currentPage === TOTAL_PAGES;
-  const isClosingToFront = orientation === 'landscape' && isFlipping && flipDirection === 'prev' && currentPage <= 2;
-  const isClosingToBack = orientation === 'landscape' && isFlipping && flipDirection === 'next' && currentPage >= TOTAL_PAGES - 1;
+  // 5. Đang mở từ trang bìa sau 28 lật ngược vào các trang ruột (Flip Backward):
+  const isOpeningFromBack = orientation === 'landscape' && isFlipping && flipDirection === 'prev' && currentPage === TOTAL_PAGES;
+  // 6. Đang đóng từ các trang ruột gập vào trang bìa sau 28 (Flip Forward):
+  const isClosingToBack = orientation === 'landscape' && isFlipping && flipDirection === 'next' && currentPage >= TOTAL_PAGES - 2;
 
   // Phân loại chế độ hiển thị khung sách:
-  // - Khi chưa lật ở trang bìa: chỉ hiển thị 1 trang duy nhất, căn giữa như 1 cuốn sách thật kèm gáy sách 3D
-  // - Khi lật hoặc các trang ruột: mở rộng thành 2 trang đôi trải rộng (Spread)
+  // - Khi chưa lật ở trang bìa (trang 1 hoặc 28): chỉ hiển thị 1 trang duy nhất, căn giữa như 1 cuốn sách thật kèm gáy sách 3D và cạnh xếp lớp giấy
+  // - Khi đang mở hoặc đóng bìa: kích hoạt chuyển động mở/đóng 3D mượt mà đồng bộ với tốc độ lật trang của engine, giữ overflow hidden để không lộ vệt canvas
+  // - Khi lật hoặc các trang ruột: mở rộng thành 2 trang đôi trải rộng (Spread) với bóng rãnh gáy sách giữa
   const getStageClass = () => {
     if (orientation === 'portrait') {
       return 'is-portrait';
     }
-    if (isClosedFront || isClosingToFront) {
-      return `is-landscape is-closed-front ${isClosingToFront ? 'is-animating-close' : ''}`;
+    if (isClosedFront) {
+      return 'is-landscape is-closed-front';
     }
-    if (isClosedBack || isClosingToBack) {
-      return `is-landscape is-closed-back ${isClosingToBack ? 'is-animating-close' : ''}`;
+    if (isOpeningFromFront) {
+      return 'is-landscape is-opening-front';
+    }
+    if (isClosingToFront) {
+      return 'is-landscape is-closing-front';
+    }
+    if (isClosedBack) {
+      return 'is-landscape is-closed-back';
+    }
+    if (isOpeningFromBack) {
+      return 'is-landscape is-opening-back';
+    }
+    if (isClosingToBack) {
+      return 'is-landscape is-closing-back';
     }
     return 'is-landscape is-open-spread';
   };
@@ -571,8 +620,9 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
           style={{ transform: `scale(${zoom})`, transformOrigin: 'center center' }}
           onClick={() => {
             if (isClosedFront) handleNext();
+            else if (isClosedBack) handlePrev();
           }}
-          title={isClosedFront ? 'Nhấp để mở sách' : undefined}
+          title={isClosedFront ? 'Nhấp để mở sách' : isClosedBack ? 'Nhấp để mở lại sách' : undefined}
         >
           <div ref={bookMountRef} className="cp-flipbook-mount" />
 

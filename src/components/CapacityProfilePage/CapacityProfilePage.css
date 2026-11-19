@@ -416,11 +416,15 @@
     transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Chế độ 2 trang đôi mở rộng (Spread) */
+/* ==============================================================
+   CHẾ ĐỘ MỞ 2 TRANG ĐÔI TRẢI RỘNG (Open Spread - Static Reading)
+   ============================================================== */
 .cp-book-stage-inner.is-open-spread {
   width: var(--spread-w);
   max-width: var(--spread-w);
   overflow: visible;
+  border-radius: 4px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
 }
 
 .cp-book-stage-inner.is-open-spread .cp-flipbook-mount {
@@ -451,7 +455,7 @@
 }
 
 /* ==============================================================
-   HIỆU ỨNG ĐÓNG BÌA TRƯỚC (Closed Front Cover - Single Page)
+   1. BÌA TRƯỚC ĐANG ĐÓNG (Closed Front Cover - Static Single Page)
    ============================================================== */
 .cp-book-stage-inner.is-closed-front {
   width: var(--page-w);
@@ -471,7 +475,7 @@
     0 7px 0 #cbd5e1;
 }
 
-.cp-book-stage-inner.is-closed-front:hover:not(.is-animating-close) {
+.cp-book-stage-inner.is-closed-front:hover {
   transform: translateY(-5px) scale(1.012);
   box-shadow: 
     0 28px 65px rgba(0, 0, 0, 0.6),
@@ -504,6 +508,8 @@
   box-shadow: inset 2px 0 4px rgba(0, 0, 0, 0.4);
   pointer-events: none;
   z-index: 12;
+  opacity: 1;
+  transition: opacity 0.4s ease;
 }
 
 .cp-book-stage-inner.is-closed-front .cp-flipbook-mount {
@@ -514,7 +520,122 @@
 }
 
 /* ==============================================================
-   HIỆU ỨNG ĐÓNG BÌA SAU (Closed Back Cover - Single Page)
+   2. HOẠT HỌA MỞ BÌA TRƯỚC (Opening From Front Cover - Transition)
+   - Mở rộng êm ái từ 1 trang sang 2 trang đôi
+   - overflow: hidden ngăn lộ mép canvas trong suốt 0.65s chuyển cảnh
+   ============================================================== */
+.cp-book-stage-inner.is-opening-front {
+  width: var(--spread-w);
+  max-width: var(--spread-w);
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+
+.cp-book-stage-inner.is-opening-front .cp-flipbook-mount {
+  width: var(--spread-w);
+  flex-shrink: 0;
+  transform: translateX(0);
+  transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.cp-book-stage-inner.is-opening-front::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 26px;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(255, 255, 255, 0.28) 22%,
+    rgba(0, 0, 0, 0.18) 55%,
+    rgba(0, 0, 0, 0.04) 80%,
+    transparent 100%
+  );
+  border-radius: 4px 0 0 4px;
+  box-shadow: inset 2px 0 4px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  z-index: 12;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cp-book-stage-inner.is-opening-front::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.12) 0%,
+    rgba(0, 0, 0, 0.32) 46%,
+    rgba(0, 0, 0, 0.32) 54%,
+    rgba(0, 0, 0, 0.12) 100%
+  );
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0.6;
+  transition: opacity 0.4s ease 0.25s;
+}
+
+/* ==============================================================
+   3. HOẠT HỌA ĐÓNG BÌA TRƯỚC (Closing To Front Cover - Transition)
+   - Thu hẹp êm ái từ 2 trang đôi về 1 trang bìa
+   - overflow: hidden giữ khuôn bìa sách 3D không bị xô lệch
+   ============================================================== */
+.cp-book-stage-inner.is-closing-front {
+  width: var(--page-w);
+  max-width: var(--page-w);
+  overflow: hidden;
+  border-radius: 4px 8px 8px 4px;
+  box-shadow: 
+    0 22px 55px rgba(0, 0, 0, 0.52),
+    3px 0 0 #f8fafc,
+    5px 0 0 #e2e8f0,
+    7px 0 0 #cbd5e1,
+    9px 0 0 #94a3b8,
+    12px 6px 22px rgba(0, 0, 0, 0.35),
+    0 4px 0 #f1f5f9,
+    0 7px 0 #cbd5e1;
+}
+
+.cp-book-stage-inner.is-closing-front .cp-flipbook-mount {
+  width: var(--spread-w);
+  flex-shrink: 0;
+  transform: translateX(-25%);
+  transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.cp-book-stage-inner.is-closing-front::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 26px;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(255, 255, 255, 0.28) 22%,
+    rgba(0, 0, 0, 0.18) 55%,
+    rgba(0, 0, 0, 0.04) 80%,
+    transparent 100%
+  );
+  border-radius: 4px 0 0 4px;
+  box-shadow: inset 2px 0 4px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  z-index: 12;
+  opacity: 1;
+  transition: opacity 0.45s ease 0.2s;
+}
+
+/* ==============================================================
+   4. BÌA SAU ĐANG ĐÓNG (Closed Back Cover - Static Single Page)
    ============================================================== */
 .cp-book-stage-inner.is-closed-back {
   width: var(--page-w);
@@ -529,6 +650,19 @@
     -7px 0 0 #cbd5e1,
     -9px 0 0 #94a3b8,
     -12px 6px 22px rgba(0, 0, 0, 0.35),
+    0 4px 0 #f1f5f9,
+    0 7px 0 #cbd5e1;
+}
+
+.cp-book-stage-inner.is-closed-back:hover {
+  transform: translateY(-5px) scale(1.012);
+  box-shadow: 
+    0 28px 65px rgba(0, 0, 0, 0.6),
+    -3px 0 0 #f8fafc,
+    -5px 0 0 #e2e8f0,
+    -7px 0 0 #cbd5e1,
+    -9px 0 0 #94a3b8,
+    -14px 8px 28px rgba(220, 38, 38, 0.3),
     0 4px 0 #f1f5f9,
     0 7px 0 #cbd5e1;
 }
@@ -552,6 +686,8 @@
   box-shadow: inset -2px 0 4px rgba(0, 0, 0, 0.4);
   pointer-events: none;
   z-index: 12;
+  opacity: 1;
+  transition: opacity 0.4s ease;
 }
 
 .cp-book-stage-inner.is-closed-back .cp-flipbook-mount {
@@ -559,6 +695,73 @@
   flex-shrink: 0;
   transform: translateX(25%);
   transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* ==============================================================
+   5. HOẠT HỌA MỞ BÌA SAU (Opening From Back Cover - Transition)
+   ============================================================== */
+.cp-book-stage-inner.is-opening-back {
+  width: var(--spread-w);
+  max-width: var(--spread-w);
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+
+.cp-book-stage-inner.is-opening-back .cp-flipbook-mount {
+  width: var(--spread-w);
+  flex-shrink: 0;
+  transform: translateX(0);
+  transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* ==============================================================
+   6. HOẠT HỌA ĐÓNG BÌA SAU (Closing To Back Cover - Transition)
+   ============================================================== */
+.cp-book-stage-inner.is-closing-back {
+  width: var(--page-w);
+  max-width: var(--page-w);
+  overflow: hidden;
+  border-radius: 8px 4px 4px 8px;
+  box-shadow: 
+    0 22px 55px rgba(0, 0, 0, 0.52),
+    -3px 0 0 #f8fafc,
+    -5px 0 0 #e2e8f0,
+    -7px 0 0 #cbd5e1,
+    -9px 0 0 #94a3b8,
+    -12px 6px 22px rgba(0, 0, 0, 0.35),
+    0 4px 0 #f1f5f9,
+    0 7px 0 #cbd5e1;
+}
+
+.cp-book-stage-inner.is-closing-back .cp-flipbook-mount {
+  width: var(--spread-w);
+  flex-shrink: 0;
+  transform: translateX(25%);
+  transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.cp-book-stage-inner.is-closing-back::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 26px;
+  background: linear-gradient(
+    to left,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(255, 255, 255, 0.28) 22%,
+    rgba(0, 0, 0, 0.18) 55%,
+    rgba(0, 0, 0, 0.04) 80%,
+    transparent 100%
+  );
+  border-radius: 0 4px 4px 0;
+  box-shadow: inset -2px 0 4px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  z-index: 12;
+  opacity: 1;
+  transition: opacity 0.45s ease 0.2s;
 }
 
 /* Chế độ màn hình di động (Portrait) */
@@ -591,7 +794,12 @@
 }
 
 .cp-book-stage-inner.is-closed-front .cp-flipbook-root,
-.cp-book-stage-inner.is-closed-back .cp-flipbook-root {
+.cp-book-stage-inner.is-opening-front .cp-flipbook-root,
+.cp-book-stage-inner.is-closing-front .cp-flipbook-root,
+.cp-book-stage-inner.is-closed-back .cp-flipbook-root,
+.cp-book-stage-inner.is-opening-back .cp-flipbook-root,
+.cp-book-stage-inner.is-closing-back .cp-flipbook-root,
+.cp-book-stage-inner.is-open-spread .cp-flipbook-root {
   box-shadow: none;
 }
 
