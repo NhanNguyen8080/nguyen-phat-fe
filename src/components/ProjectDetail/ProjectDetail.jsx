@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import './ProjectDetail.css';
 import { getProjectById, getProjects } from '../../services/projectService';
-import { stripHtml } from '../../utils/textUtils';
 
 const ProjectDetail = ({ projectIdOrSlug, onNavigateBack, onNavigateContact, onSelectProject }) => {
   const [project, setProject] = useState(null);
@@ -87,9 +86,6 @@ const ProjectDetail = ({ projectIdOrSlug, onNavigateBack, onNavigateContact, onS
       </div>
     );
   }
-
-  const hasHtmlContent = project.content && /<[a-z][\s\S]*>/i.test(project.content);
-  const cleanSnippet = project.content ? stripHtml(project.content) : '';
 
   return (
     <div className="project-detail-page">
@@ -200,20 +196,6 @@ const ProjectDetail = ({ projectIdOrSlug, onNavigateBack, onNavigateContact, onS
                 <span className="key-spec-value">{project.completion_year ? `Năm ${project.completion_year}` : 'Đã hoàn thành bàn giao'}</span>
               </div>
             </div>
-
-            {/* Nội dung mô tả / Tổng quan dự án */}
-            {cleanSnippet && (
-              <div className="project-description-card">
-                <h3 className="project-desc-heading">Tổng Quan Công Trình</h3>
-                <div className="project-desc-body">
-                  {hasHtmlContent ? (
-                    <div dangerouslySetInnerHTML={{ __html: project.content }} />
-                  ) : (
-                    <p>{project.content}</p>
-                  )}
-                </div>
-              </div>
-            )}
 
             {/* Nút hành động tư vấn */}
             <div className="project-actions-row">
