@@ -729,20 +729,19 @@
 }
 
 .pd-commitment-card {
-  padding: 24px 20px;
-  background: linear-gradient(160deg, #ffffff 0%, #f8fafc 60%, #edf2f7 100%);
-  border: 1.5px solid rgba(226, 232, 240, 0.95);
-  border-bottom: 4px solid #cbd5e1;
+  padding: 18px 16px;
+  background: transparent;
+  border: 1px solid rgba(226, 232, 240, 0.85);
   border-top: 3.5px solid var(--accent-yellow);
   border-radius: 12px;
-  box-shadow: 0 5px 0 #cbd5e1, 0 14px 28px rgba(15, 23, 42, 0.07), inset 0 1px 1.5px #ffffff;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .pd-commitment-card:hover {
   transform: translateY(-4px);
-  border-bottom-color: #d32f2f;
-  box-shadow: 0 7px 0 #b91c1c, 0 20px 34px rgba(211, 47, 47, 0.14), inset 0 1px 1.5px #ffffff;
+  border-top-color: #d32f2f;
+  box-shadow: 0 8px 18px rgba(211, 47, 47, 0.12);
 }
 
 .pd-commitment-card h4 {
@@ -808,25 +807,23 @@
 
 .pd-bento-item {
   position: relative;
-  border-radius: 14px;
-  overflow: hidden;
-  background: linear-gradient(160deg, #ffffff 0%, #f8fafc 60%, #edf2f7 100%);
-  border: 1.5px solid rgba(226, 232, 240, 0.95);
-  border-bottom: 4px solid #cbd5e1;
-  box-shadow: 0 5px 0 #cbd5e1, 0 14px 28px rgba(15, 23, 42, 0.07), inset 0 1px 1.5px #ffffff;
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+  border: none;
+  box-shadow: none;
   cursor: zoom-in;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 14px;
+  padding: 8px;
   box-sizing: border-box;
-  transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+  transition: transform 0.28s ease;
 }
 
 .pd-bento-item:hover {
   transform: translateY(-4px);
-  border-bottom-color: #d32f2f;
-  box-shadow: 0 7px 0 #b91c1c, 0 20px 34px rgba(211, 47, 47, 0.14), inset 0 1px 1.5px #ffffff;
+  box-shadow: none;
 }
 
 .pd-bento-item img {
@@ -836,11 +833,13 @@
   max-height: 100%;
   object-fit: contain;
   object-position: center;
-  transition: transform 0.3s ease;
+  filter: drop-shadow(0 12px 22px rgba(15, 23, 42, 0.18));
+  transition: transform 0.35s ease, filter 0.35s ease;
 }
 
 .pd-bento-item:hover img {
-  transform: none;
+  transform: scale(1.04);
+  filter: drop-shadow(0 18px 30px rgba(211, 47, 47, 0.3));
 }
 
 .pd-bento-featured {
@@ -920,26 +919,24 @@
 .pd-single-hero-card {
   width: 100%;
   aspect-ratio: 16 / 9;
-  border-radius: 14px;
-  overflow: hidden;
+  border-radius: 0;
+  overflow: visible;
   position: relative;
   cursor: zoom-in;
-  background: linear-gradient(160deg, #ffffff 0%, #f8fafc 60%, #edf2f7 100%);
-  border: 1.5px solid rgba(226, 232, 240, 0.95);
-  border-bottom: 4px solid #cbd5e1;
-  box-shadow: 0 6px 0 #cbd5e1, 0 16px 32px rgba(15, 23, 42, 0.08), inset 0 1px 1.5px #ffffff;
+  background: transparent;
+  border: none;
+  box-shadow: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 8px;
   box-sizing: border-box;
-  transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+  transition: transform 0.28s ease;
 }
 
 .pd-single-hero-card:hover {
   transform: translateY(-4px);
-  border-bottom-color: #d32f2f;
-  box-shadow: 0 8px 0 #b91c1c, 0 22px 38px rgba(211, 47, 47, 0.15), inset 0 1px 1.5px #ffffff;
+  box-shadow: none;
 }
 
 .pd-single-hero-card img {
@@ -949,6 +946,13 @@
   max-height: 100%;
   object-fit: contain;
   object-position: center;
+  filter: drop-shadow(0 14px 24px rgba(15, 23, 42, 0.2));
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+
+.pd-single-hero-card:hover img {
+  transform: scale(1.04);
+  filter: drop-shadow(0 20px 34px rgba(211, 47, 47, 0.32));
 }
 
 .pd-single-overlay {

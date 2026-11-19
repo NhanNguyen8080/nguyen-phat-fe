@@ -346,11 +346,10 @@
 
 /* Skeleton Loading Animation */
 .product-card-skeleton {
-  background: linear-gradient(160deg, #ffffff 0%, #f8fafc 60%, #eef2f7 100%);
-  border-radius: var(--border-radius-md);
-  border: 1.5px solid rgba(226, 232, 240, 0.95);
-  border-bottom: 4px solid #cbd5e1;
-  overflow: hidden;
+  background: transparent;
+  border-radius: 0;
+  border: none;
+  overflow: visible;
   display: flex;
   flex-direction: column;
 }

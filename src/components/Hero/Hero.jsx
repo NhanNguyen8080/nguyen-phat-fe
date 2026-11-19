@@ -69,9 +69,6 @@ const Hero = ({ onNavigateAbout }) => {
             </p>
 
             <div className="hero-intro-author">
-              <div className="hero-author-avatar">
-                <img src="/images/logo.png" alt="Giám đốc Mai Hưng HÀ" />
-              </div>
               <div className="hero-author-info">
                 <strong>Giám đốc Mai Hưng HÀ</strong>
                 <span>CÔNG TY TNHH SX - TM CƠ ĐIỆN NGUYÊN PHÁT</span>
