@@ -5,17 +5,18 @@ import { stripHtml } from '../../utils/textUtils';
 
 const ITEMS_PER_PAGE = 6;
 
-const TIME_FILTERS = [
-  { id: 'all', label: 'Tất cả thời gian' },
-  { id: '7days', label: '7 ngày gần đây', days: 7 },
-  { id: '15days', label: '15 ngày gần đây', days: 15 },
-  { id: '30days', label: '30 ngày gần đây', days: 30 },
+const PROJECT_CATEGORIES = [
+  { id: 'all', label: 'Tất cả' },
+  { id: 'industrial', label: 'Công trình công nghiệp và Nhà máy', keywords: ['công nghiệp', 'nhà máy', 'kcn', 'sản xuất', 'xưởng', 'khu công nghiệp'] },
+  { id: 'building_civil', label: 'Tòa nhà & Dân dụng', keywords: ['tòa nhà', 'dân dụng', 'chung cư', 'đô thị', 'dân cư', 'văn phòng', 'khu dân cư'] },
+  { id: 'commercial_hotel', label: 'Thương mại & Khách sạn', keywords: ['thương mại', 'khách sạn', 'resort', 'hotel', 'trung tâm thương mại'] },
+  { id: 'infrastructure_energy', label: 'Hạ tầng, Giao thông & Năng lượng', keywords: ['hạ tầng', 'giao thông', 'năng lượng', 'điện mặt trời', 'trạm biến áp', 'cảng', 'đường', 'cầu'] },
 ];
 
 const ProjectList = ({ onNavigateHome, onSelectProject }) => {
   const [allProjects, setAllProjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedTimeFilter, setSelectedTimeFilter] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const [currentPageNum, setCurrentPageNum] = useState(1);
@@ -38,36 +39,35 @@ const ProjectList = ({ onNavigateHome, onSelectProject }) => {
     };
   }, []);
 
-  // Mốc thời gian tham chiếu để lọc theo khoảng thời gian
-  const referenceTimestamp = useMemo(() => {
-    if (!allProjects.length) return Date.now();
-    const maxItemTime = Math.max(
-      ...allProjects.map((p) => new Date(p.created_at || 0).getTime() || 0)
-    );
-    return maxItemTime > 0 ? maxItemTime : Date.now();
-  }, [allProjects]);
-
-  // Lọc và sắp xếp công trình theo thời gian (luôn ưu tiên mới tạo nhất đứng đầu)
+  // Lọc và sắp xếp công trình theo danh mục và tìm kiếm
   const filteredProjects = useMemo(() => {
     const term = searchTerm.toLowerCase().trim();
-    const activeFilter = TIME_FILTERS.find((f) => f.id === selectedTimeFilter);
+    const activeCat = PROJECT_CATEGORIES.find((c) => c.id === selectedCategory);
 
     return allProjects
       .filter((p) => {
-        let matchesTime = true;
-        if (activeFilter && activeFilter.days) {
-          const itemTime = new Date(p.created_at || 0).getTime();
-          const diffMs = referenceTimestamp - itemTime;
-          matchesTime = diffMs <= activeFilter.days * 24 * 60 * 60 * 1000;
+        let matchesCategory = true;
+        if (activeCat && activeCat.id !== 'all') {
+          const typeStr = (p.project_type || '').toLowerCase();
+          const catStr = (p.category_name || '').toLowerCase();
+          const titleStr = (p.title || '').toLowerCase();
+          const contentStr = (p.content || '').toLowerCase();
+          const scopeStr = (p.scope_of_work || '').toLowerCase();
+          const combined = `${typeStr} ${catStr} ${titleStr} ${contentStr} ${scopeStr}`;
+
+          matchesCategory = activeCat.keywords.some((kw) => combined.includes(kw));
         }
 
         const matchesSearch =
           !term ||
           (p.title && p.title.toLowerCase().includes(term)) ||
           (p.content && p.content.toLowerCase().includes(term)) ||
-          (p.category_name && p.category_name.toLowerCase().includes(term));
+          (p.category_name && p.category_name.toLowerCase().includes(term)) ||
+          (p.project_type && p.project_type.toLowerCase().includes(term)) ||
+          (p.client && p.client.toLowerCase().includes(term)) ||
+          (p.location && p.location.toLowerCase().includes(term));
 
-        return matchesTime && matchesSearch;
+        return matchesCategory && matchesSearch;
       })
       .sort((a, b) => {
         const timeA = new Date(a.created_at || 0).getTime();
@@ -75,10 +75,9 @@ const ProjectList = ({ onNavigateHome, onSelectProject }) => {
         if (sortBy === 'oldest') {
           return timeA - timeB;
         }
-        // Mặc định luôn cho những items được tạo mới nhất đứng đầu
         return timeB - timeA;
       });
-  }, [allProjects, selectedTimeFilter, referenceTimestamp, searchTerm, sortBy]);
+  }, [allProjects, selectedCategory, searchTerm, sortBy]);
 
   // Phân trang
   const totalPages = Math.ceil(filteredProjects.length / ITEMS_PER_PAGE) || 1;
@@ -88,9 +87,9 @@ const ProjectList = ({ onNavigateHome, onSelectProject }) => {
     return filteredProjects.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredProjects, currentPageNum]);
 
-  // Chọn bộ lọc thời gian: lọc tức thì, không reload, reset về trang 1
-  const handleSelectTimeFilter = (filterId) => {
-    setSelectedTimeFilter(filterId);
+  // Chọn bộ lọc danh mục: lọc tức thì, không reload, reset về trang 1
+  const handleSelectCategory = (categoryId) => {
+    setSelectedCategory(categoryId);
     setCurrentPageNum(1);
   };
 
@@ -187,16 +186,18 @@ const ProjectList = ({ onNavigateHome, onSelectProject }) => {
             </div>
           </div>
 
-          {/* Time Filter Pills - lọc theo thời gian tạo */}
-          <div className="category-pills">
-            {TIME_FILTERS.map((filter) => (
+          {/* Category Filter Pills - theo 5 phân loại công trình */}
+          <div className="category-pills" role="tablist" aria-label="Lọc theo loại công trình">
+            {PROJECT_CATEGORIES.map((cat) => (
               <button
-                key={filter.id}
+                key={cat.id}
                 type="button"
-                className={`category-pill ${selectedTimeFilter === filter.id ? 'active' : ''}`}
-                onClick={() => handleSelectTimeFilter(filter.id)}
+                className={`category-pill ${selectedCategory === cat.id ? 'active' : ''}`}
+                onClick={() => handleSelectCategory(cat.id)}
+                role="tab"
+                aria-selected={selectedCategory === cat.id}
               >
-                {filter.label}
+                {cat.label}
               </button>
             ))}
           </div>
@@ -228,11 +229,6 @@ const ProjectList = ({ onNavigateHome, onSelectProject }) => {
                   onClick={() => handleProjectClick(project)}
                 >
                   <div className="project-card-thumb-wrap">
-                    {(project.project_type || project.category_name) && (
-                      <span className="project-card-badge">
-                        {project.project_type || project.category_name}
-                      </span>
-                    )}
                     <img 
                       src={project.thumbnail || 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=800&auto=format&fit=crop'} 
                       alt={project.title} 
@@ -242,17 +238,6 @@ const ProjectList = ({ onNavigateHome, onSelectProject }) => {
                   </div>
 
                   <div className="project-card-body">
-                    {project.created_at && (
-                      <div className="project-card-meta">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                          <line x1="16" y1="2" x2="16" y2="6"></line>
-                          <line x1="8" y1="2" x2="8" y2="6"></line>
-                          <line x1="3" y1="10" x2="21" y2="10"></line>
-                        </svg>
-                        <span>{formatDate(project.created_at)}</span>
-                      </div>
-                    )}
                     <h3 
                       className="project-card-title"
                       title={project.title}
