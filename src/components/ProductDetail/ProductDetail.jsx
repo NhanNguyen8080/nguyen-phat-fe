@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import './ProductDetail.css';
 import { getProductDetailData } from '../../services/productService';
 import { stripHtml, formatHtmlContent } from '../../utils/textUtils';
@@ -214,6 +214,38 @@ const ProductDetail = ({
 
     return list;
   }, [product, isCableTray]);
+
+  // Trạng thái thu gọn / mở rộng (Xem thêm) cho Thông tin sản phẩm & Mô tả sản phẩm
+  const [isInfoExpanded, setIsInfoExpanded] = useState(false);
+  const [showInfoToggle, setShowInfoToggle] = useState(false);
+  const infoContentRef = useRef(null);
+
+  const [isDescExpanded, setIsDescExpanded] = useState(false);
+  const [showDescToggle, setShowDescToggle] = useState(false);
+  const descContentRef = useRef(null);
+
+  useEffect(() => {
+    setIsInfoExpanded(false);
+    setIsDescExpanded(false);
+  }, [productIdOrSlug]);
+
+  useEffect(() => {
+    const checkHeights = () => {
+      if (infoContentRef.current) {
+        setShowInfoToggle(infoContentRef.current.scrollHeight > 180);
+      }
+      if (descContentRef.current) {
+        setShowDescToggle(descContentRef.current.scrollHeight > 180);
+      }
+    };
+
+    const timer = setTimeout(checkHeights, 100);
+    window.addEventListener('resize', checkHeights);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', checkHeights);
+    };
+  }, [product, productSpecs]);
 
   // Lock scroll when lightbox is active
   useEffect(() => {
@@ -476,20 +508,50 @@ const ProductDetail = ({
                 <h2 className="pd-block-title">Mô Tả Sản Phẩm</h2>
               </div>
               <div className="pd-block-desc-card">
-                {product.description && stripHtml(product.description) ? (
-                  <div
-                    className="pd-html-description"
-                    dangerouslySetInnerHTML={{ __html: formatHtmlContent(product.description) }}
-                  />
-                ) : (
-                  <p className="pd-desc-fallback">
-                    Sản phẩm được gia công và phân phối chính hãng bởi Cơ Điện Nguyên Phát, đáp ứng các tiêu chuẩn kỹ thuật nghiêm ngặt, đảm bảo an toàn vận hành và độ bền tối ưu cho công trình.
-                  </p>
+                <div
+                  ref={descContentRef}
+                  className={`pd-expandable-content ${!isDescExpanded && showDescToggle ? 'is-collapsed' : 'is-expanded'}`}
+                >
+                  {product.description && stripHtml(product.description) ? (
+                    <div
+                      className="pd-html-description"
+                      dangerouslySetInnerHTML={{ __html: formatHtmlContent(product.description) }}
+                    />
+                  ) : (
+                    <p className="pd-desc-fallback">
+                      Sản phẩm được gia công và phân phối chính hãng bởi Cơ Điện Nguyên Phát, đáp ứng các tiêu chuẩn kỹ thuật nghiêm ngặt, đảm bảo an toàn vận hành và độ bền tối ưu cho công trình.
+                    </p>
+                  )}
+                </div>
+
+                {showDescToggle && (
+                  <button
+                    type="button"
+                    className="pd-expand-toggle-btn"
+                    onClick={() => setIsDescExpanded(!isDescExpanded)}
+                    aria-expanded={isDescExpanded}
+                  >
+                    <span>{isDescExpanded ? 'Thu gọn' : 'Xem thêm'}</span>
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className={`pd-toggle-arrow ${isDescExpanded ? 'rotate' : ''}`}
+                      aria-hidden="true"
+                    >
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </button>
                 )}
               </div>
             </div>
 
-            {/* Mục 2: Thông tin sản phẩm */}
+            {/* Mục 2: Thông tin sản phẩm (Dạng đoạn văn giống mô tả sản phẩm + nút Xem thêm) */}
             <div className="pd-stacked-block pd-block-info">
               <div className="pd-block-header">
                 <h2 className="pd-block-title">Thông Tin Sản Phẩm</h2>
@@ -498,24 +560,57 @@ const ProductDetail = ({
                 )}
               </div>
 
-              {productSpecs.length > 0 ? (
-                <div className="pd-info-table-wrapper">
-                  <table className="pd-info-specs-table">
-                    <tbody>
+              <div className="pd-block-desc-card">
+                <div
+                  ref={infoContentRef}
+                  className={`pd-expandable-content ${!isInfoExpanded && showInfoToggle ? 'is-collapsed' : 'is-expanded'}`}
+                >
+                  {typeof product.specifications === 'string' && stripHtml(product.specifications) ? (
+                    <div
+                      className="pd-html-description"
+                      dangerouslySetInnerHTML={{ __html: formatHtmlContent(product.specifications) }}
+                    />
+                  ) : productSpecs.length > 0 ? (
+                    <div className="pd-info-paragraphs">
                       {productSpecs.map((item, index) => (
-                        <tr key={item.key || index} className="pd-info-spec-row">
-                          <th className="pd-info-spec-th">{item.label}</th>
-                          <td className="pd-info-spec-td">{item.value}</td>
-                        </tr>
+                        <p key={item.key || index} className="pd-info-spec-item">
+                          <strong className="pd-info-spec-label">{item.label}:</strong>{' '}
+                          <span className="pd-info-spec-val">{item.value}</span>
+                        </p>
                       ))}
-                    </tbody>
-                  </table>
+                    </div>
+                  ) : (
+                    <p className="pd-desc-fallback">
+                      Thông tin kỹ thuật chi tiết của sản phẩm đang được kỹ sư Cơ Điện Nguyên Phát cập nhật theo từng mã thiết bị hoặc yêu cầu bản vẽ công trình.
+                    </p>
+                  )}
                 </div>
-              ) : (
-                <div className="pd-info-empty-notice">
-                  <p>Thông tin kỹ thuật chi tiết của sản phẩm đang được kỹ sư Cơ Điện Nguyên Phát cập nhật theo từng mã thiết bị hoặc yêu cầu bản vẽ công trình.</p>
-                </div>
-              )}
+
+                {showInfoToggle && (
+                  <button
+                    type="button"
+                    className="pd-expand-toggle-btn"
+                    onClick={() => setIsInfoExpanded(!isInfoExpanded)}
+                    aria-expanded={isInfoExpanded}
+                  >
+                    <span>{isInfoExpanded ? 'Thu gọn' : 'Xem thêm'}</span>
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className={`pd-toggle-arrow ${isInfoExpanded ? 'rotate' : ''}`}
+                      aria-hidden="true"
+                    >
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </button>
+                )}
+              </div>
             </div>
 
           </div>
