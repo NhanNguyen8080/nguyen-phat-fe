@@ -331,7 +331,7 @@
 
 .related-compact-thumb-wrap {
   width: 100%;
-  height: 110px;
+  height: 165px;
   background-color: #f1f5f9;
   overflow: hidden;
 }
@@ -340,34 +340,39 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  transition: transform 0.35s ease;
 }
 
 .related-compact-card:hover .related-compact-thumb {
-  transform: scale(1.05);
+  transform: scale(1.06);
 }
 
 .related-compact-body {
-  padding: 10px 12px;
+  padding: 13px 14px 14px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
 
 .related-compact-name {
-  font-size: 0.85rem;
+  font-size: 0.92rem;
   font-weight: 700;
   color: #0f172a;
-  line-height: 1.35;
+  line-height: 1.38;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  margin-bottom: 4px;
+  min-height: calc(0.92rem * 1.38 * 2);
+  margin-bottom: 8px;
+}
+
+.related-compact-card:hover .related-compact-name {
+  color: #dc2626;
 }
 
 .related-compact-loc {
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   color: #64748b;
   margin-top: auto;
   white-space: nowrap;
