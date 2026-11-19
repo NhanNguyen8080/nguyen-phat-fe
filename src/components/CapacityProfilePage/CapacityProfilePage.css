@@ -408,7 +408,12 @@
   justify-content: center;
   margin: 0 auto;
   user-select: none;
-  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  perspective: 2000px;
+  transition: 
+    width 0.65s cubic-bezier(0.25, 1, 0.5, 1), 
+    max-width 0.65s cubic-bezier(0.25, 1, 0.5, 1), 
+    box-shadow 0.65s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Chế độ 2 trang đôi mở rộng (Spread) */
@@ -421,39 +426,139 @@
 .cp-book-stage-inner.is-open-spread .cp-flipbook-mount {
   width: var(--spread-w);
   transform: translateX(0);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* Khi ở bìa trước (Trang 1 chưa lật): chỉ hiện 1 trang duy nhất, căn giữa như 1 cuốn sách đóng */
+/* Rãnh gáy sách gập ở giữa khi mở 2 trang */
+.cp-book-stage-inner.is-open-spread::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.12) 0%,
+    rgba(0, 0, 0, 0.32) 46%,
+    rgba(0, 0, 0, 0.32) 54%,
+    rgba(0, 0, 0, 0.12) 100%
+  );
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0.6;
+}
+
+/* ==============================================================
+   HIỆU ỨNG ĐÓNG BÌA TRƯỚC (Closed Front Cover - Single Page)
+   ============================================================== */
 .cp-book-stage-inner.is-closed-front {
   width: var(--page-w);
   max-width: var(--page-w);
   overflow: hidden;
-  border-radius: 4px;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45), 0 2px 10px rgba(0, 0, 0, 0.25);
+  border-radius: 4px 8px 8px 4px;
+  cursor: pointer;
+  /* Hiệu ứng xếp lớp cạnh trang giấy thật 3D (3D Page stack edge effect) */
+  box-shadow: 
+    0 22px 55px rgba(0, 0, 0, 0.52),
+    3px 0 0 #f8fafc,
+    5px 0 0 #e2e8f0,
+    7px 0 0 #cbd5e1,
+    9px 0 0 #94a3b8,
+    12px 6px 22px rgba(0, 0, 0, 0.35),
+    0 4px 0 #f1f5f9,
+    0 7px 0 #cbd5e1;
+}
+
+.cp-book-stage-inner.is-closed-front:hover:not(.is-animating-close) {
+  transform: translateY(-5px) scale(1.012);
+  box-shadow: 
+    0 28px 65px rgba(0, 0, 0, 0.6),
+    3px 0 0 #f8fafc,
+    5px 0 0 #e2e8f0,
+    7px 0 0 #cbd5e1,
+    9px 0 0 #94a3b8,
+    14px 8px 28px rgba(220, 38, 38, 0.3),
+    0 4px 0 #f1f5f9,
+    0 7px 0 #cbd5e1;
+}
+
+/* Gáy sách cứng bên trái khi bìa đóng */
+.cp-book-stage-inner.is-closed-front::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 26px;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(255, 255, 255, 0.28) 22%,
+    rgba(0, 0, 0, 0.18) 55%,
+    rgba(0, 0, 0, 0.04) 80%,
+    transparent 100%
+  );
+  border-radius: 4px 0 0 4px;
+  box-shadow: inset 2px 0 4px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  z-index: 12;
 }
 
 .cp-book-stage-inner.is-closed-front .cp-flipbook-mount {
   width: var(--spread-w);
   flex-shrink: 0;
   transform: translateX(-25%);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* Khi ở bìa sau (Trang 28 chưa lật): chỉ hiện 1 trang bìa sau căn giữa */
+/* ==============================================================
+   HIỆU ỨNG ĐÓNG BÌA SAU (Closed Back Cover - Single Page)
+   ============================================================== */
 .cp-book-stage-inner.is-closed-back {
   width: var(--page-w);
   max-width: var(--page-w);
   overflow: hidden;
-  border-radius: 4px;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45), 0 2px 10px rgba(0, 0, 0, 0.25);
+  border-radius: 8px 4px 4px 8px;
+  cursor: pointer;
+  box-shadow: 
+    0 22px 55px rgba(0, 0, 0, 0.52),
+    -3px 0 0 #f8fafc,
+    -5px 0 0 #e2e8f0,
+    -7px 0 0 #cbd5e1,
+    -9px 0 0 #94a3b8,
+    -12px 6px 22px rgba(0, 0, 0, 0.35),
+    0 4px 0 #f1f5f9,
+    0 7px 0 #cbd5e1;
+}
+
+.cp-book-stage-inner.is-closed-back::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 26px;
+  background: linear-gradient(
+    to left,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(255, 255, 255, 0.28) 22%,
+    rgba(0, 0, 0, 0.18) 55%,
+    rgba(0, 0, 0, 0.04) 80%,
+    transparent 100%
+  );
+  border-radius: 0 4px 4px 0;
+  box-shadow: inset -2px 0 4px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  z-index: 12;
 }
 
 .cp-book-stage-inner.is-closed-back .cp-flipbook-mount {
   width: var(--spread-w);
   flex-shrink: 0;
   transform: translateX(25%);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* Chế độ màn hình di động (Portrait) */
@@ -488,6 +593,66 @@
 .cp-book-stage-inner.is-closed-front .cp-flipbook-root,
 .cp-book-stage-inner.is-closed-back .cp-flipbook-root {
   box-shadow: none;
+}
+
+/* Badge chỉ dẫn mở sách trên bìa */
+.cp-cover-action-badge {
+  position: absolute;
+  bottom: 22px;
+  right: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 20;
+  transition: all 0.25s ease;
+  animation: pulseCoverHint 2.4s infinite ease-in-out;
+}
+
+.cp-cover-action-badge:hover {
+  background: #dc2626;
+  border-color: #ef4444;
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 10px 28px rgba(220, 38, 38, 0.5);
+}
+
+.cp-badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+}
+
+@keyframes pulseCoverHint {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes bookCloseSettle {
+  0% {
+    transform: scale(1.02);
+  }
+  50% {
+    transform: scale(0.995);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* --- STPAGEFLIP CANVAS CORE STYLES --- */

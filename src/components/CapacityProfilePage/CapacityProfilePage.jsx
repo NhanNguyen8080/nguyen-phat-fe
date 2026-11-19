@@ -88,6 +88,9 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
   // Trạng thái đang lật trang (flip animation in progress)
   const [isFlipping, setIsFlipping] = useState(false);
 
+  // Hướng lật: 'next' (tiến) hoặc 'prev' (lùi) để đồng bộ hiệu ứng mở/đóng sách
+  const [flipDirection, setFlipDirection] = useState('next');
+
   // Mở Drawer Mục lục (TOC)
   const [showToc, setShowToc] = useState(false);
 
@@ -136,10 +139,19 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
         }
       });
 
-      // Lắng nghe trạng thái lật trang để tự động chuyển giữa 1 trang (bìa đóng) và 2 trang (mở rộng)
+      // Lắng nghe trạng thái lật trang để tự động đồng bộ hiệu ứng mở/đóng sách 3D
       pageFlipInstance.on('changeState', (e) => {
         const st = String(e.data || '');
-        setIsFlipping(st === 'flipping' || st === 'user_fold');
+        const isTurning = st === 'flipping' || st === 'user_fold';
+        setIsFlipping(isTurning);
+        if (isTurning) {
+          try {
+            const dir = pageFlipInstance.getFlipController()?.getCalculation()?.getDirection();
+            setFlipDirection(dir === 1 ? 'prev' : 'next');
+          } catch {
+            // fallback
+          }
+        }
       });
 
       // Khi hướng trang thay đổi
@@ -263,18 +275,24 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
     return `${left} - ${right} / ${TOTAL_PAGES}`;
   };
 
+  // Các trạng thái mở / đóng bìa sách:
+  const isClosedFront = orientation === 'landscape' && !isFlipping && currentPage === 1;
+  const isClosedBack = orientation === 'landscape' && !isFlipping && currentPage === TOTAL_PAGES;
+  const isClosingToFront = orientation === 'landscape' && isFlipping && flipDirection === 'prev' && currentPage <= 2;
+  const isClosingToBack = orientation === 'landscape' && isFlipping && flipDirection === 'next' && currentPage >= TOTAL_PAGES - 1;
+
   // Phân loại chế độ hiển thị khung sách:
-  // - Khi chưa lật ở trang bìa (trang 1 hoặc 28): chỉ hiển thị 1 trang duy nhất, căn giữa như 1 cuốn sách thật
-  // - Khi đang lật hoặc ở các trang ruột (2 đến 27): hiển thị 2 trang đôi trải rộng (Spread)
+  // - Khi chưa lật ở trang bìa: chỉ hiển thị 1 trang duy nhất, căn giữa như 1 cuốn sách thật kèm gáy sách 3D
+  // - Khi lật hoặc các trang ruột: mở rộng thành 2 trang đôi trải rộng (Spread)
   const getStageClass = () => {
     if (orientation === 'portrait') {
       return 'is-portrait';
     }
-    if (!isFlipping && currentPage === 1) {
-      return 'is-landscape is-closed-front';
+    if (isClosedFront || isClosingToFront) {
+      return `is-landscape is-closed-front ${isClosingToFront ? 'is-animating-close' : ''}`;
     }
-    if (!isFlipping && currentPage === TOTAL_PAGES) {
-      return 'is-landscape is-closed-back';
+    if (isClosedBack || isClosingToBack) {
+      return `is-landscape is-closed-back ${isClosingToBack ? 'is-animating-close' : ''}`;
     }
     return 'is-landscape is-open-spread';
   };
@@ -551,8 +569,30 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
         <div
           className={`cp-book-stage-inner ${getStageClass()}`}
           style={{ transform: `scale(${zoom})`, transformOrigin: 'center center' }}
+          onClick={() => {
+            if (isClosedFront) handleNext();
+          }}
+          title={isClosedFront ? 'Nhấp để mở sách' : undefined}
         >
           <div ref={bookMountRef} className="cp-flipbook-mount" />
+
+          {/* Badge chỉ dẫn mở sách khi sách đang đóng bìa trước */}
+          {isClosedFront && (
+            <div
+              className="cp-cover-action-badge"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleNext();
+              }}
+              title="Nhấp để mở sách"
+            >
+              <span className="cp-badge-dot" />
+              <span>Nhấp để mở sách</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+          )}
         </div>
 
         {/* Nút Lật Trang Tiếp Theo (Mũi tên phải) */}
