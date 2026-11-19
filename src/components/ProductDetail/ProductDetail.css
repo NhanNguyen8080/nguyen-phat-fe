@@ -420,85 +420,178 @@
   letter-spacing: 0.8px;
 }
 
-/* 6 Hero Highlights Grid */
-.pd-hero-specs-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  margin-bottom: 24px;
+/* --- Product Commentary / Description Box (cmt sản phẩm per doc) --- */
+.pd-summary-desc-box {
+  margin-bottom: 20px;
+  padding: 16px 20px;
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
 }
 
-.pd-hero-spec-card {
+.pd-summary-desc-text {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #334155;
+  word-break: break-word;
+}
+
+.pd-summary-desc-text p {
+  margin-bottom: 10px;
+}
+
+.pd-summary-desc-text p:last-child {
+  margin-bottom: 0;
+}
+
+.pd-summary-desc-text h3,
+.pd-summary-desc-text h4 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  margin-top: 14px;
+  margin-bottom: 8px;
+}
+
+.pd-summary-desc-text ul {
+  padding-left: 20px;
+  margin-bottom: 10px;
+  list-style-type: disc;
+}
+
+.pd-summary-desc-text li {
+  margin-bottom: 4px;
+}
+
+/* --- Key Highlights List (mẫu tham khảo Đạt Vĩnh Tiến) --- */
+.pd-highlights-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 22px 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding: 14px 16px;
-  background: transparent;
-  border: 1px solid rgba(226, 232, 240, 0.85);
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
-  transition: all 0.2s ease;
-  min-height: 84px;
+  gap: 8px;
 }
 
-.pd-hero-spec-card:hover {
-  border-color: rgba(211, 47, 47, 0.4);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 18px rgba(211, 47, 47, 0.12);
-}
-
-.pd-hero-spec-card.highlight {
-  background-color: #fffdf5;
-  border-color: rgba(211, 47, 47, 0.6);
-}
-
-.pd-spec-name {
-  font-size: 0.76rem;
-  color: var(--text-gray);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  margin-bottom: 6px;
-}
-
-.pd-spec-val {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-dark);
-  line-height: 1.35;
-  min-height: 1.35em;
-}
-
-/* Lead Desc Preview */
-.pd-lead-wrap {
-  margin-bottom: 24px;
-  padding: 14px 18px;
-  background-color: #f8fafc;
-  border-left: 3px solid var(--accent-yellow);
-  border-radius: 0 8px 8px 0;
-}
-
-.pd-lead-desc {
+.pd-highlight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
   font-size: 0.92rem;
-  line-height: 1.6;
-  color: #4b5563;
-  margin-bottom: 6px;
+  line-height: 1.55;
+  color: #475569;
 }
 
-.pd-jump-desc-btn {
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: 0.85rem;
+.pd-highlight-bullet {
+  color: var(--accent-yellow);
+  font-weight: 800;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+
+/* --- Quick Contact & Quote Box (mẫu Đạt Vĩnh Tiến) --- */
+.pd-quick-contact-box {
+  padding: 18px 22px;
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.pd-quick-contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.pd-contact-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.88rem;
+}
+
+.pd-contact-label {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.pd-contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-weight: 700;
-  color: #b37a00;
-  cursor: pointer;
-  transition: color 0.2s ease;
+  color: #1e293b;
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
 
-.pd-jump-desc-btn:hover {
-  color: #8c5f00;
-  text-decoration: underline;
+.pd-contact-link:hover {
+  color: var(--accent-yellow);
+}
+
+.pd-contact-hotline {
+  color: #dc2626;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.pd-quick-contact-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pd-contact-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 20px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.pd-btn-quote {
+  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.25);
+}
+
+.pd-btn-quote:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(211, 47, 47, 0.35);
+  color: #ffffff;
+}
+
+.pd-btn-specs {
+  background: #ffffff;
+  color: #1e293b;
+  border: 1.5px solid #cbd5e1;
+}
+
+.pd-btn-specs:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
 }
 
 /* =============================================
@@ -560,66 +653,90 @@
   padding: 36px 36px 44px;
 }
 
-/* --- Tab 1: Specs Pane --- */
-.pd-specs-groups {
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-}
-
-.pd-specs-group-card {
-  border: 1px solid #e8eaed;
+/* --- Tab 1: Compact Specs Table (Thu gọn, không tạo khung trống per doc) --- */
+.pd-compact-specs-wrapper {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
 }
 
-.pd-specs-group-head {
-  padding: 14px 20px;
-  background-color: #f9fafb;
-  border-bottom: 1px solid #e8eaed;
+.pd-compact-specs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color: #ffffff;
 }
 
-.pd-specs-group-head h3 {
+.pd-compact-specs-title {
   font-size: 1.05rem;
   font-weight: 800;
-  color: var(--text-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #ffffff;
   margin: 0;
 }
 
-.pd-specs-table {
+.pd-compact-specs-badge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.15);
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+.pd-compact-specs-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.pd-specs-table tr {
-  border-bottom: 1px solid #f1f3f5;
+.pd-compact-spec-row {
+  border-bottom: 1px solid #f1f5f9;
   transition: background-color 0.15s ease;
 }
 
-.pd-specs-table tr:last-child {
+.pd-compact-spec-row:last-child {
   border-bottom: none;
 }
 
-.pd-specs-table tr:hover {
-  background-color: #fafbfc;
+.pd-compact-spec-row:hover {
+  background-color: #f8fafc;
 }
 
-.pd-specs-table th {
-  width: 38%;
-  padding: 14px 20px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #4b5563;
-  text-align: left;
-  background-color: #fafbfc;
-  border-right: 1px solid #f1f3f5;
-}
-
-.pd-specs-table td {
-  padding: 14px 20px;
+.pd-spec-th {
+  width: 32%;
+  min-width: 170px;
+  padding: 15px 24px;
   font-size: 0.92rem;
-  color: var(--text-dark);
-  line-height: 1.5;
+  font-weight: 700;
+  color: #334155;
+  background-color: #f8fafc;
+  border-right: 1px solid #f1f5f9;
+  text-align: left;
+  vertical-align: top;
+}
+
+.pd-spec-td {
+  padding: 15px 24px;
+  font-size: 0.94rem;
+  color: #0f172a;
+  line-height: 1.6;
+  vertical-align: top;
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+.pd-specs-empty-notice {
+  padding: 40px 24px;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 /* --- Tab 2: Desc Pane --- */
@@ -1334,10 +1451,6 @@
     position: static;
   }
 
-  .pd-hero-specs-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .pd-related-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1366,8 +1479,32 @@
     font-size: clamp(1.5rem, 5vw, 1.85rem);
   }
 
-  .pd-hero-specs-grid {
-    grid-template-columns: 1fr;
+  .pd-quick-contact-actions {
+    flex-direction: column;
+  }
+
+  .pd-contact-action-btn {
+    width: 100%;
+  }
+
+  .pd-compact-specs-header {
+    padding: 12px 16px;
+  }
+
+  .pd-compact-specs-title {
+    font-size: 0.95rem;
+  }
+
+  .pd-spec-th {
+    width: 42%;
+    min-width: 130px;
+    padding: 11px 14px;
+    font-size: 0.85rem;
+  }
+
+  .pd-spec-td {
+    padding: 11px 14px;
+    font-size: 0.86rem;
   }
 
   .pd-cta-group {
@@ -1389,17 +1526,6 @@
 
   .pd-tabs-content {
     padding: 20px 14px;
-  }
-
-  .pd-specs-table th {
-    width: 45%;
-    padding: 10px 12px;
-    font-size: 0.85rem;
-  }
-
-  .pd-specs-table td {
-    padding: 10px 12px;
-    font-size: 0.85rem;
   }
 
   .pd-related-grid {

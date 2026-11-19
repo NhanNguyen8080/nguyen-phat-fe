@@ -156,6 +156,73 @@ const ProductDetail = ({
     };
   }, [product, allProducts]);
 
+  // Lọc và hợp nhất danh sách thông số kỹ thuật thực tế (chỉ hiển thị những mục có dữ liệu)
+  // Thu dòng lên khi không có giá trị, không tạo nhóm hay khung cố định trống
+  const effectiveSpecs = useMemo(() => {
+    if (!product) return [];
+
+    const isValidValue = (v) => {
+      if (v === null || v === undefined) return false;
+      const s = String(v).trim();
+      return s !== '' && s !== '-' && s !== 'N/A' && s !== 'null' && s !== 'undefined';
+    };
+
+    const list = [];
+    const seenLabels = new Set();
+
+    const addSpec = (label, rawVal, formattedVal) => {
+      if (!isValidValue(rawVal)) return;
+      const cleanLabel = String(label).trim();
+      const normalizedKey = cleanLabel.toLowerCase();
+      if (seenLabels.has(normalizedKey)) return;
+      seenLabels.add(normalizedKey);
+      list.push({
+        key: cleanLabel,
+        label: cleanLabel,
+        value: formattedVal !== undefined ? formattedVal : String(rawVal).trim()
+      });
+    };
+
+    if (isCableTray) {
+      addSpec('Kích thước tiêu chuẩn', product.dimensions);
+      addSpec('Vật liệu chế tạo', product.material);
+      addSpec('Độ dày tôn', product.thickness);
+      addSpec('Xử lý bề mặt & Sơn', product.surface_finish);
+      addSpec('Cấp bảo vệ (IP Rating)', product.ip_rating);
+      addSpec('Tiêu chuẩn sản xuất', product.standards);
+      addSpec('Chi tiết phụ kiện cấu thành', product.main_components);
+      addSpec('Thương hiệu / Phân phối', product.brand);
+      if (product.warranty_months) {
+        addSpec('Chế độ bảo hành', product.warranty_months, `Chính hãng ${product.warranty_months} tháng tận nơi công trình`);
+      }
+    } else {
+      addSpec('Điện áp định mức', product.rated_voltage);
+      addSpec('Dòng điện định mức (In)', product.rated_current);
+      addSpec('Tần số làm việc', product.frequency);
+      addSpec('Dòng cắt ngắn mạch (Icu / Icw)', product.short_circuit_current);
+      addSpec('Cấp bảo vệ (IP Rating)', product.ip_rating);
+      addSpec('Tiêu chuẩn sản xuất', product.standards);
+      addSpec('Kích thước tiêu chuẩn', product.dimensions);
+      addSpec('Vật liệu chế tạo', product.material);
+      addSpec('Độ dày tôn', product.thickness);
+      addSpec('Xử lý bề mặt & Sơn', product.surface_finish);
+      addSpec('Thiết bị chính tích hợp', product.main_components);
+      addSpec('Thương hiệu / Phân phối', product.brand);
+      if (product.warranty_months) {
+        addSpec('Chế độ bảo hành', product.warranty_months, `Chính hãng ${product.warranty_months} tháng tận nơi công trình`);
+      }
+    }
+
+    // Dynamic specs dictionary entered in admin (specifications)
+    if (product.specifications && typeof product.specifications === 'object') {
+      Object.entries(product.specifications).forEach(([key, val]) => {
+        addSpec(key, val);
+      });
+    }
+
+    return list;
+  }, [product, isCableTray]);
+
   // Lock scroll when lightbox is active
   useEffect(() => {
     if (isLightboxOpen) {
@@ -419,90 +486,84 @@ const ProductDetail = ({
               </div>
             ) : null}
 
-            {/* 6 Hero Highlights: Thẻ thông số điện - cơ then chốt (giao diện kỹ thuật sạch sẽ) */}
-            <div className="pd-hero-specs-grid">
-              {isCableTray ? (
-                <>
-                  <div className="pd-hero-spec-card">
-                    <span className="pd-spec-name">Vật liệu chế tạo</span>
-                    <span className="pd-spec-val">{product.material || ''}</span>
-                  </div>
-
-                  <div className="pd-hero-spec-card highlight">
-                    <span className="pd-spec-name">Độ dày tôn</span>
-                    <span className="pd-spec-val">{product.thickness || ''}</span>
-                  </div>
-
-                  <div className="pd-hero-spec-card">
-                    <span className="pd-spec-name">Xử lý bề mặt</span>
-                    <span className="pd-spec-val">{product.surface_finish || ''}</span>
-                  </div>
-
-                  <div className="pd-hero-spec-card">
-                    <span className="pd-spec-name">Kích thước tiêu chuẩn</span>
-                    <span className="pd-spec-val">{product.dimensions || ''}</span>
-                  </div>
-
-                  <div className="pd-hero-spec-card">
-                    <span className="pd-spec-name">Tiêu chuẩn sản xuất</span>
-                    <span className="pd-spec-val">{product.standards || ''}</span>
-                  </div>
-
-                  <div className="pd-hero-spec-card">
-                    <span className="pd-spec-name">Bảo hành chính hãng</span>
-                    <span className="pd-spec-val">{product.warranty_months ? `${product.warranty_months} tháng` : ''}</span>
-                  </div>
-                </>
+            {/* Vùng nhận xét/mô tả sản phẩm (cmt sản phẩm) theo yêu cầu file doc:
+                Bỏ hết 6 ô cứng, thay bằng khối mô tả thoáng đãng, danh sách đặc điểm và liên hệ nhanh */}
+            <div className="pd-summary-desc-box">
+              {product.description && stripHtml(product.description) ? (
+                <div
+                  className="pd-summary-desc-text"
+                  dangerouslySetInnerHTML={{ __html: formatHtmlContent(product.description) }}
+                />
               ) : (
-                <>
-                  <div className="pd-hero-spec-card">
-                    <span className="pd-spec-name">Điện áp định mức</span>
-                    <span className="pd-spec-val">{product.rated_voltage || ''}</span>
-                  </div>
-
-                  <div className="pd-hero-spec-card highlight">
-                    <span className="pd-spec-name">Dòng điện định mức</span>
-                    <span className="pd-spec-val">{product.rated_current || ''}</span>
-                  </div>
-
-                  <div className="pd-hero-spec-card">
-                    <span className="pd-spec-name">Cấp bảo vệ vỏ tủ</span>
-                    <span className="pd-spec-val">{product.ip_rating || ''}</span>
-                  </div>
-
-                  <div className="pd-hero-spec-card">
-                    <span className="pd-spec-name">Dòng cắt ngắn mạch</span>
-                    <span className="pd-spec-val">{product.short_circuit_current || ''}</span>
-                  </div>
-
-                  <div className="pd-hero-spec-card">
-                    <span className="pd-spec-name">Tiêu chuẩn sản xuất</span>
-                    <span className="pd-spec-val">{product.standards || ''}</span>
-                  </div>
-
-                  <div className="pd-hero-spec-card">
-                    <span className="pd-spec-name">Tần số làm việc</span>
-                    <span className="pd-spec-val">{product.frequency || ''}</span>
-                  </div>
-                </>
+                <p className="pd-summary-desc-text">
+                  Sản phẩm được gia công và lắp ráp tại xưởng Cơ Điện Nguyên Phát theo quy trình quản lý chất lượng nghiêm ngặt, đảm bảo độ an toàn vận hành, độ bền cơ học cao và tính thẩm mỹ tối ưu cho mọi công trình.
+                </p>
               )}
             </div>
 
-            {/* Lead Description Preview */}
-            {Boolean(product.description && stripHtml(product.description)) && (
-              <div className="pd-lead-wrap">
-                <p className="pd-lead-desc">
-                  {getExcerpt(product.description, 220, '')}
-                </p>
+            {/* Đặc điểm kỹ thuật then chốt dạng gạch đầu dòng gọn đẹp (mẫu tham khảo Đạt Vĩnh Tiến) */}
+            <ul className="pd-highlights-list" aria-label="Đặc điểm nổi bật">
+              <li className="pd-highlight-item">
+                <span className="pd-highlight-bullet">-</span>
+                <span>Tuân thủ tiêu chuẩn chất lượng &amp; an toàn điện IEC 61439-1/2, IEC 60529 &amp; TCVN.</span>
+              </li>
+              <li className="pd-highlight-item">
+                <span className="pd-highlight-bullet">-</span>
+                <span>Thanh cái đồng mạ thiếc 99.9%, tôn chấn CNC sắc nét, bề mặt sơn tĩnh điện chống ăn mòn.</span>
+              </li>
+              <li className="pd-highlight-item">
+                <span className="pd-highlight-bullet">-</span>
+                <span>Tích hợp thiết bị đóng cắt chính hãng (Schneider, LS, ABB, Mitsubishi) đầy đủ chứng chỉ CO/CQ.</span>
+              </li>
+              <li className="pd-highlight-item">
+                <span className="pd-highlight-bullet">-</span>
+                <span>Hỗ trợ khảo sát bản vẽ, tư vấn thiết kế kỹ thuật và nghiệm thu đóng điện tận nơi công trình.</span>
+              </li>
+            </ul>
+
+            {/* Khối liên hệ & Báo giá nhanh (mẫu Đạt Vĩnh Tiến) */}
+            <div className="pd-quick-contact-box">
+              <div className="pd-quick-contact-info">
+                <div className="pd-contact-row">
+                  <span className="pd-contact-label">Hotline tư vấn kỹ thuật:</span>
+                  <a href="tel:0909238679" className="pd-contact-link pd-contact-hotline">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                    0909 238 679
+                  </a>
+                </div>
+                <div className="pd-contact-row">
+                  <span className="pd-contact-label">Email tiếp nhận dự án:</span>
+                  <a href="mailto:codiennguyenphat2018@gmail.com" className="pd-contact-link">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                    </svg>
+                    codiennguyenphat2018@gmail.com
+                  </a>
+                </div>
+              </div>
+
+              <div className="pd-quick-contact-actions">
+                <a
+                  href="tel:0909238679"
+                  className="pd-contact-action-btn pd-btn-quote"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                  </svg>
+                  Yêu Cầu Báo Giá Dự Án
+                </a>
                 <button
                   type="button"
-                  className="pd-jump-desc-btn"
-                  onClick={() => scrollToTabs('desc')}
+                  className="pd-contact-action-btn pd-btn-specs"
+                  onClick={() => scrollToTabs('specs')}
                 >
-                  Xem chi tiết mô tả kỹ thuật ↓
+                  Xem Thông Số Kỹ Thuật ↓
                 </button>
               </div>
-            )}
+            </div>
           </div>
         </section>
 
@@ -547,126 +608,37 @@ const ProductDetail = ({
           {/* Tab Panels */}
           <div className="pd-tabs-content">
             {/* =============================================
-                TAB 1: THÔNG SỐ KỸ THUẬT TOÀN DIỆN (4 NHÓM)
+                TAB 1: THÔNG SỐ KỸ THUẬT (THU GỌN, CHỈ HIỂN THỊ DÒNG CÓ DỮ LIỆU)
                 ============================================= */}
             {activeTab === 'specs' && (
               <div className="pd-tab-pane pd-specs-pane">
-                <div className="pd-specs-groups">
-                  {/* Nhóm 1: Hệ thống Điện Khí & Vận Hành (Chỉ hiển thị cho thiết bị điện) */}
-                  {!isCableTray && (
-                    <div className="pd-specs-group-card">
-                      <div className="pd-specs-group-head">
-                        <h3>1. Thông Số Điện Khí &amp; Vận Hành</h3>
-                      </div>
-                      <table className="pd-specs-table">
-                        <tbody>
-                          <tr>
-                            <th>Điện áp định mức (Rated Voltage)</th>
-                            <td>{product.rated_voltage || ''}</td>
-                          </tr>
-                          <tr>
-                            <th>Dòng điện định mức (Rated Current)</th>
-                            <td>{product.rated_current ? <strong>{product.rated_current}</strong> : ''}</td>
-                          </tr>
-                          <tr>
-                            <th>Tần số làm việc (Frequency)</th>
-                            <td>{product.frequency || ''}</td>
-                          </tr>
-                          <tr>
-                            <th>Dòng cắt ngắn mạch (Icu / Icw)</th>
-                            <td>{product.short_circuit_current || ''}</td>
-                          </tr>
-                          <tr>
-                            <th>Tiêu chuẩn áp dụng (Standards)</th>
-                            <td>{product.standards || ''}</td>
-                          </tr>
-                          {(product.specifications?.['Điện áp cách điện'] || product.specifications?.['Cấp cách điện']) && (
-                            <tr>
-                              <th>Điện áp / Cấp cách điện</th>
-                              <td>{product.specifications['Điện áp cách điện'] || product.specifications['Cấp cách điện']}</td>
-                            </tr>
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-
-                  {/* Nhóm 2: Cơ Khí & Quy Cách Vỏ / Thân Máng */}
-                  <div className="pd-specs-group-card">
-                    <div className="pd-specs-group-head">
-                      <h3>{isCableTray ? '1. Quy Cách Cơ Khí & Vật Liệu' : '2. Quy Cách Cơ Khí & Vỏ Tủ'}</h3>
-                    </div>
-                    <table className="pd-specs-table">
-                      <tbody>
-                        <tr>
-                          <th>Kích thước tiêu chuẩn (H x W x D)</th>
-                          <td>{product.dimensions || ''}</td>
-                        </tr>
-                        <tr>
-                          <th>Vật liệu chế tạo (Material)</th>
-                          <td>{product.material || ''}</td>
-                        </tr>
-                        <tr>
-                          <th>Độ dày tôn (Thickness)</th>
-                          <td>{product.thickness || ''}</td>
-                        </tr>
-                        <tr>
-                          <th>Xử lý bề mặt &amp; Sơn (Surface Finish)</th>
-                          <td>{product.surface_finish || ''}</td>
-                        </tr>
-                        <tr>
-                          <th>Cấp bảo vệ vỏ (IP Rating)</th>
-                          <td>{product.ip_rating ? <strong>{product.ip_rating}</strong> : ''}</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                <div className="pd-compact-specs-wrapper">
+                  <div className="pd-compact-specs-header">
+                    <h3 className="pd-compact-specs-title">Bảng Thông Số Kỹ Thuật</h3>
+                    {effectiveSpecs.length > 0 && (
+                      <span className="pd-compact-specs-badge">
+                        {effectiveSpecs.length} thông số ghi nhận
+                      </span>
+                    )}
                   </div>
 
-                  {/* Nhóm 3: Thiết Bị Chính & Cấu Hình Đóng Cắt / Phụ Kiện */}
-                  <div className="pd-specs-group-card">
-                    <div className="pd-specs-group-head">
-                      <h3>{isCableTray ? '2. Phụ Kiện & Cấu Thành' : '3. Cấu Hình Thiết Bị Đóng Cắt & Linh Kiện'}</h3>
-                    </div>
-                    <table className="pd-specs-table">
+                  {effectiveSpecs.length > 0 ? (
+                    <table className="pd-compact-specs-table">
                       <tbody>
-                        <tr>
-                          <th>{isCableTray ? 'Chi tiết phụ kiện cấu thành' : 'Thiết bị chính tích hợp'}</th>
-                          <td>{product.main_components || ''}</td>
-                        </tr>
-                        <tr>
-                          <th>Thương hiệu / Phân phối</th>
-                          <td>{product.brand || ''}</td>
-                        </tr>
-                        {product.specifications?.['Vật liệu thanh cái'] && (
-                          <tr>
-                            <th>Vật liệu thanh cái (Busbar)</th>
-                            <td>{product.specifications['Vật liệu thanh cái']}</td>
+                        {effectiveSpecs.map((item, index) => (
+                          <tr key={item.key || index} className="pd-compact-spec-row">
+                            <th className="pd-spec-th">{item.label}</th>
+                            <td className="pd-spec-td">{item.value}</td>
                           </tr>
-                        )}
-                        <tr>
-                          <th>Chế độ bảo hành</th>
-                          <td>{product.warranty_months ? <>Chính hãng <strong>{product.warranty_months} tháng</strong> tận nơi công trình</> : ''}</td>
-                        </tr>
+                        ))}
                       </tbody>
                     </table>
-                  </div>
-
-                  {/* Nhóm 4: Thông Số Mở Rộng (Specifications Dynamic Dictionary) */}
-                  {product.specifications && Object.keys(product.specifications).length > 0 && (
-                    <div className="pd-specs-group-card">
-                      <div className="pd-specs-group-head">
-                        <h3>{isCableTray ? '3. Thông Số Bổ Sung & Tiêu Chuẩn Dự Án' : '4. Thông Số Bổ Sung & Tiêu Chuẩn Dự Án'}</h3>
-                      </div>
-                      <table className="pd-specs-table">
-                        <tbody>
-                          {Object.entries(product.specifications).map(([key, val]) => (
-                            <tr key={key}>
-                              <th>{key}</th>
-                              <td>{String(val)}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                  ) : (
+                    <div className="pd-specs-empty-notice">
+                      <p>Thông số kỹ thuật chi tiết của sản phẩm đang được ban kỹ sư Cơ Điện Nguyên Phát cập nhật theo từng mã thiết bị hoặc yêu cầu bản vẽ công trình.</p>
+                      <a href="tel:0909238679" className="pd-contact-action-btn pd-btn-quote" style={{ display: 'inline-flex', marginTop: '12px' }}>
+                        Liên hệ tư vấn kỹ thuật: 0909 238 679
+                      </a>
                     </div>
                   )}
                 </div>
