@@ -6,7 +6,6 @@ import { stripHtml } from '../../utils/textUtils';
 const ITEMS_PER_PAGE = 6;
 
 const PROJECT_CATEGORIES = [
-  { id: 'all', label: 'Tất cả' },
   { id: 'industrial', label: 'Công trình công nghiệp và Nhà máy', keywords: ['công nghiệp', 'nhà máy', 'kcn', 'sản xuất', 'xưởng', 'khu công nghiệp'] },
   { id: 'building_civil', label: 'Tòa nhà & Dân dụng', keywords: ['tòa nhà', 'dân dụng', 'chung cư', 'đô thị', 'dân cư', 'văn phòng', 'khu dân cư'] },
   { id: 'commercial_hotel', label: 'Thương mại & Khách sạn', keywords: ['thương mại', 'khách sạn', 'resort', 'hotel', 'trung tâm thương mại'] },
@@ -16,7 +15,7 @@ const PROJECT_CATEGORIES = [
 const ProjectList = ({ onNavigateHome, onSelectProject }) => {
   const [allProjects, setAllProjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const [currentPageNum, setCurrentPageNum] = useState(1);
@@ -39,15 +38,15 @@ const ProjectList = ({ onNavigateHome, onSelectProject }) => {
     };
   }, []);
 
-  // Lọc và sắp xếp công trình theo danh mục và tìm kiếm
+  // Lọc và sắp xếp công trình theo danh mục (toggle chọn/bỏ chọn) và tìm kiếm
   const filteredProjects = useMemo(() => {
     const term = searchTerm.toLowerCase().trim();
-    const activeCat = PROJECT_CATEGORIES.find((c) => c.id === selectedCategory);
+    const activeCat = selectedCategory ? PROJECT_CATEGORIES.find((c) => c.id === selectedCategory) : null;
 
     return allProjects
       .filter((p) => {
         let matchesCategory = true;
-        if (activeCat && activeCat.id !== 'all') {
+        if (activeCat) {
           const typeStr = (p.project_type || '').toLowerCase();
           const catStr = (p.category_name || '').toLowerCase();
           const titleStr = (p.title || '').toLowerCase();
@@ -87,9 +86,9 @@ const ProjectList = ({ onNavigateHome, onSelectProject }) => {
     return filteredProjects.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredProjects, currentPageNum]);
 
-  // Chọn bộ lọc danh mục: lọc tức thì, không reload, reset về trang 1
+  // Chọn bộ lọc danh mục: bấm để chọn, bấm lại lần nữa để bỏ chọn (hiện tất cả)
   const handleSelectCategory = (categoryId) => {
-    setSelectedCategory(categoryId);
+    setSelectedCategory((prev) => (prev === categoryId ? null : categoryId));
     setCurrentPageNum(1);
   };
 
@@ -148,10 +147,26 @@ const ProjectList = ({ onNavigateHome, onSelectProject }) => {
 
   return (
     <div className="project-page">
-      {/* Tiêu đề ngắn gọn duy nhất: Công trình */}
+      {/* Tiêu đề: Công trình + Dải danh mục lọc ngay bên dưới */}
       <div className="project-page-title-wrap">
         <div className="container">
           <h1 className="section-title"><span className="text-yellow">Công trình</span></h1>
+
+          {/* 4 Phân loại công trình ngay bên dưới chữ Công trình */}
+          <div className="category-pills project-top-category-pills" role="tablist" aria-label="Lọc theo loại công trình">
+            {PROJECT_CATEGORIES.map((cat) => (
+              <button
+                key={cat.id}
+                type="button"
+                className={`category-pill ${selectedCategory === cat.id ? 'active' : ''}`}
+                onClick={() => handleSelectCategory(cat.id)}
+                role="tab"
+                aria-selected={selectedCategory === cat.id}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -184,22 +199,6 @@ const ProjectList = ({ onNavigateHome, onSelectProject }) => {
                 <option value="oldest">Cũ nhất</option>
               </select>
             </div>
-          </div>
-
-          {/* Category Filter Pills - theo 5 phân loại công trình */}
-          <div className="category-pills" role="tablist" aria-label="Lọc theo loại công trình">
-            {PROJECT_CATEGORIES.map((cat) => (
-              <button
-                key={cat.id}
-                type="button"
-                className={`category-pill ${selectedCategory === cat.id ? 'active' : ''}`}
-                onClick={() => handleSelectCategory(cat.id)}
-                role="tab"
-                aria-selected={selectedCategory === cat.id}
-              >
-                {cat.label}
-              </button>
-            ))}
           </div>
         </div>
 
