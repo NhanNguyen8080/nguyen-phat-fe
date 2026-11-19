@@ -113,45 +113,45 @@ const processSteps = [
   }
 ];
 
-// Dữ liệu Hình ảnh hoạt động thực tế của anh em trong công ty (3 giai đoạn làm việc chăm chỉ: Văn phòng -> Nhà xưởng -> Lắp đặt thiết bị)
+// Dữ liệu Hình ảnh hoạt động thực tế (3 giai đoạn ngắn gọn: Văn phòng -> Nhà xưởng -> Lắp đặt thiết bị)
 const workMoments = [
   {
     id: 1,
-    title: 'Nghiên Cứu & Thiết Kế Kỹ Thuật Tại Văn Phòng',
-    desc: 'Tại văn phòng, các kỹ sư và chuyên viên kỹ thuật Nguyên Phát luôn làm việc chăm chỉ, tập trung cao độ trong từng phép tính phụ tải, tối ưu hóa sơ đồ nguyên lý 2D/3D và lập trình tự động hóa PLC chính xác trước khi chuyển giao xuống xưởng.',
-    badge: 'Khối Văn Phòng & R&D',
+    title: 'Thiết Kế & Lập Trình Tại Văn Phòng',
+    desc: 'Đội ngũ kỹ sư tập trung bóc tách bản vẽ 2D/3D, tính toán phụ tải và lập trình PLC chính xác cho từng dự án.',
+    badge: 'Khối Văn Phòng',
     imgUrl: '/catalog/pages/14.jpg',
-    tag: 'Văn Phòng Thiết Kế',
+    tag: 'Thiết Kế 3D',
     highlights: [
-      'Nghiên cứu bản vẽ tỉ mỉ, bóc tách khối lượng và tối ưu hóa giải pháp theo yêu cầu dự án',
-      'Tính toán cân bằng phụ tải, lựa chọn khí cụ đóng cắt chính xác nhằm tiết kiệm chi phí cho chủ đầu tư',
-      'Lập trình điều khiển PLC, Scada và thiết kế giao diện tự động hóa thông minh, đồng bộ'
+      'Bóc tách bản vẽ và tối ưu sơ đồ nguyên lý',
+      'Tính toán phụ tải tiết kiệm chi phí',
+      'Lập trình điều khiển tự động hóa PLC'
     ]
   },
   {
     id: 2,
-    title: 'Gia Công Cơ Khí & Lắp Ráp Thiết Bị Tại Nhà Xưởng',
-    desc: 'Tại phân xưởng sản xuất, đội ngũ thợ lành nghề miệt mài bên hệ thống máy cắt, chấn, đột CNC; cần mẫn uốn ép từng thanh cái đồng Busbar và tỉ mỉ đấu nối từng đầu dây nhị thứ, kiểm soát chặt chẽ từng chi tiết nhỏ nhất.',
-    badge: 'Nhà Máy Sản Xuất',
+    title: 'Gia Công & Lắp Ráp Tại Nhà Xưởng',
+    desc: 'Thợ lành nghề gia công vỏ tủ CNC, uốn thanh cái đồng Busbar và đấu nối khí cụ điện chính hãng.',
+    badge: 'Xưởng Sản Xuất',
     imgUrl: '/catalog/pages/15.jpg',
-    tag: 'Nhà Xưởng Chế Tạo',
+    tag: 'Cơ Khí CNC',
     highlights: [
-      'Gia công cơ khí vỏ tủ và thang máng cáp CNC chuẩn xác, buồng sơn tĩnh điện công nghệ cao',
-      'Đấu nối thanh cái đồng đỏ 99.99% mạ thiếc và lắp ráp khí cụ điện chính hãng Schneider, Mitsubishi, ABB...',
-      'Đo kiểm cách điện, kiểm định an toàn nghiêm ngặt từng khâu trước khi xuất xưởng theo chuẩn TCVN/IEC'
+      'Gia công vỏ tủ & thang máng cáp CNC',
+      'Đấu nối thanh cái đồng đỏ nguyên chất',
+      'Kiểm định an toàn đạt chuẩn TCVN/IEC'
     ]
   },
   {
     id: 3,
-    title: 'Trực Tiếp Thi Công & Lắp Đặt Thiết Bị Tại Công Trường',
-    desc: 'Trên công trường thực tế, các kỹ sư và đội ngũ thi công Cơ Điện Nguyên Phát không ngại khó khăn, trực tiếp cẩu lắp đặt tủ vào vị trí, kéo rải thang máng cáp, đấu nối an toàn và đóng điện vận hành trọn vẹn cho công trình.',
-    badge: 'Hiện Trường & Dự Án',
+    title: 'Lắp Đặt Thiết Bị Tại Công Trường',
+    desc: 'Kỹ sư hiện trường trực tiếp cẩu lắp đặt tủ điện, kéo rải thang máng cáp và đóng điện vận hành an toàn.',
+    badge: 'Hiện Trường Dự Án',
     imgUrl: '/catalog/pages/13.jpg',
-    tag: 'Lắp Đặt Hiện Trường',
+    tag: 'Lắp Đặt Thực Tế',
     highlights: [
-      'Trực tiếp bám sát hiện trường, khảo sát mặt bằng, căn chỉnh bệ móng và định vị tủ điện vững chắc',
-      'Lắp đặt hệ thống thang máng cáp, đấu nối cáp động lực và thử nghiệm liên động cơ điện an toàn tuyệt đối',
-      'Tinh thần trách nhiệm cao, đóng điện vận hành thông suốt và đồng hành hỗ trợ kỹ thuật bảo hành 24/7'
+      'Định vị bệ móng & cẩu lắp an toàn',
+      'Đấu nối cáp nguồn & thử tải liên động',
+      'Bàn giao hoàn thiện & bảo hành 24/7'
     ]
   }
 ];
@@ -437,7 +437,7 @@ const AboutPage = ({ onNavigateHome }) => {
               Hình Ảnh <span className="highlight-red">Thực Tế</span>
             </h2>
             <p className="section-sub-heading">
-              Hình ảnh làm việc chăm chỉ, tận tâm của đội ngũ Cơ Điện Nguyên Phát từ nghiên cứu thiết kế tại văn phòng đến chế tạo tại nhà xưởng và trực tiếp lắp đặt thiết bị tại công trường
+              Hành trình làm việc tận tâm từ nghiên cứu thiết kế tại văn phòng đến chế tạo xưởng và lắp đặt thiết bị tại công trường
             </p>
           </div>
 
