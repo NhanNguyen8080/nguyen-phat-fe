@@ -131,20 +131,17 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
       pageFlipRef.current = pageFlipInstance;
 
       // Vá CanvasRender của PageFlip để canvas có nền trong suốt (loại bỏ hoàn toàn hiện tượng nháy vệt trắng khi mở bìa)
-      // và chỉ vẽ bóng gáy sách khi cả 2 trang trái & phải đều đang hiển thị (chế độ 2 trang mở)
+      // và khử hoàn toàn lằn đen/vệt bóng gáy sách ở giữa 2 trang theo yêu cầu người dùng
       try {
         const render = pageFlipInstance.getRender();
         if (render) {
           render.clear = function () {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
           };
-          const origDrawBookShadow = render.drawBookShadow ? render.drawBookShadow.bind(render) : null;
-          if (origDrawBookShadow) {
-            render.drawBookShadow = function () {
-              if (this.leftPage == null || this.rightPage == null) return;
-              origDrawBookShadow();
-            };
-          }
+          render.drawBookShadow = function () {
+            // Bỏ hoàn toàn lằn đen / bóng rãnh gáy sách ở giữa trang đôi
+            return;
+          };
         }
       } catch (err) {
         console.warn('Không thể patch canvas render:', err);
