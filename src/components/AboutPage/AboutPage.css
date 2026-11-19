@@ -1538,69 +1538,85 @@
 
 .culture-card-banner {
   height: 270px;
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  background: #0f172a;
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
   border-radius: 16px;
   box-shadow: 0 14px 32px rgba(15, 23, 42, 0.16);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  border: 1px solid rgba(203, 213, 225, 0.7);
+  cursor: pointer;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
 }
 
 .culture-card:hover .culture-card-banner {
-  transform: scale(1.02);
-  box-shadow: 0 20px 42px rgba(211, 47, 47, 0.24);
+  transform: translateY(-4px) scale(1.015);
+  box-shadow: 0 22px 45px rgba(211, 47, 47, 0.22);
+  border-color: rgba(211, 47, 47, 0.45);
 }
 
-.culture-img-placeholder {
+.culture-card-img {
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at center, rgba(211, 47, 47, 0.28) 0%, rgba(15, 23, 42, 0.88) 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  text-align: center;
-  position: relative;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.4, 1);
 }
 
-.placeholder-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.14);
-  color: #fca5a5;
+.culture-card:hover .culture-card-img {
+  transform: scale(1.08);
+}
+
+.culture-card-img-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.05) 0%, rgba(15, 23, 42, 0.7) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2;
 }
 
-.placeholder-badge {
-  font-size: 0.8rem;
+.culture-card:hover .culture-card-img-overlay {
+  opacity: 1;
+}
+
+.culture-view-photo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  color: #d32f2f;
+  font-size: 0.85rem;
   font-weight: 700;
-  color: #fef08a;
-  background: rgba(0, 0, 0, 0.45);
-  padding: 5px 16px;
+  padding: 9px 20px;
   border-radius: 999px;
-  margin-bottom: 10px;
-  letter-spacing: 0.5px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  transform: translateY(10px);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.4, 1);
 }
 
-.placeholder-note {
-  font-size: 0.82rem;
-  color: #cbd5e1;
-  margin: 0;
-  font-style: italic;
-  line-height: 1.5;
-  max-width: 280px;
+.culture-card:hover .culture-view-photo-btn {
+  transform: translateY(0);
+}
+
+.culture-badge-overlay {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(15, 23, 42, 0.85);
+  color: #fef08a;
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 3;
 }
 
 .culture-card-body {

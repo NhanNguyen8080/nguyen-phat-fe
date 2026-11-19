@@ -164,7 +164,8 @@ const cultureItems = [
     desc: 'Chúng tôi luôn chú trọng xây dựng môi trường làm việc chuyên nghiệp, an toàn và thân thiện. Đảm bảo các chế độ phúc lợi theo quy định như BHXH, BHYT và các quyền lợi liên quan.',
     highlight: 'Khám sức khỏe định kỳ & Bảo hộ lao động tối đa',
     badge: 'Môi Trường An Toàn',
-    placeholderText: 'Hình ảnh nhân viên đi khám sức khỏe định kỳ (Đang cập nhật)',
+    imageUrl: '/images/culture/kham-suc-khoe.jpg',
+    placeholderText: 'Hình ảnh nhân viên đi khám sức khỏe định kỳ',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
@@ -177,7 +178,8 @@ const cultureItems = [
     desc: 'Công ty thường xuyên tổ chức các hoạt động giao lưu thể thao, đặc biệt là bóng đá, góp phần nâng cao sức khỏe, gắn kết tập thể và phát huy tinh thần đồng đội.',
     highlight: 'Giải bóng đá nội bộ & Phong trào thể thao gắn kết',
     badge: 'Tinh Thần Đồng Đội',
-    placeholderText: 'Hình ảnh giải đấu bóng đá giao lưu công ty (Đang cập nhật)',
+    imageUrl: '/images/culture/giao-luu-bong-da.jpg',
+    placeholderText: 'Hình ảnh giải đấu bóng đá giao lưu công ty',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="12" cy="12" r="10"/>
@@ -195,7 +197,8 @@ const cultureItems = [
     desc: 'Hằng năm, Cơ Điện Nguyên Phát đều tổ chức các chuyến du lịch, nghỉ dưỡng cho cán bộ, nhân viên nhằm tái tạo năng lượng, nâng cao đời sống tinh thần và tạo động lực cho những chặng đường phát triển tiếp theo.',
     highlight: 'Kỳ nghỉ teambuilding thường niên & Gắn kết gia đình',
     badge: 'Tái Tạo Năng Lượng',
-    placeholderText: 'Hình ảnh chuyến du lịch nghỉ dưỡng toàn thể nhân viên (Đang cập nhật)',
+    imageUrl: '/images/culture/du-lich-nghi-duong.jpg',
+    placeholderText: 'Hình ảnh chuyến du lịch nghỉ dưỡng toàn thể nhân viên',
     icon: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
@@ -854,12 +857,34 @@ const AboutPage = ({ onNavigateHome }) => {
             <div className="culture-cards-grid">
               {cultureItems.map((item) => (
                 <div key={item.id} className="culture-card">
-                  <div className="culture-card-banner">
-                    <div className="culture-img-placeholder">
-                      <div className="placeholder-icon">{item.icon}</div>
-                      <span className="placeholder-badge">{item.badge}</span>
-                      <p className="placeholder-note">{item.placeholderText}</p>
+                  <div 
+                    className="culture-card-banner"
+                    onClick={() => setSelectedPhoto({
+                      id: `culture-${item.id}`,
+                      imgUrl: item.imageUrl,
+                      title: item.title,
+                      badge: item.badge,
+                      desc: item.desc
+                    })}
+                  >
+                    <img 
+                      src={item.imageUrl} 
+                      alt={item.title} 
+                      className="culture-card-img"
+                      loading="lazy"
+                    />
+                    <div className="culture-card-img-overlay">
+                      <span className="culture-view-photo-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="11" cy="11" r="8"/>
+                          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                          <line x1="11" y1="8" x2="11" y2="14"/>
+                          <line x1="8" y1="11" x2="14" y2="11"/>
+                        </svg>
+                        Xem Ảnh Chi Tiết
+                      </span>
                     </div>
+                    <span className="culture-badge-overlay">{item.badge}</span>
                   </div>
 
                   <div className="culture-card-body">
