@@ -23,7 +23,9 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
   const [allProducts, setAllProducts] = useState([]);
   const [parentCategories, setParentCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState(initialCategory || 'all');
+  const [selectedCategory, setSelectedCategory] = useState(
+    initialCategory && initialCategory !== 'all' ? initialCategory : null
+  );
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const [currentPageNum, setCurrentPageNum] = useState(1);
@@ -31,7 +33,7 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   useEffect(() => {
-    setSelectedCategory(initialCategory || 'all');
+    setSelectedCategory(initialCategory && initialCategory !== 'all' ? initialCategory : null);
     setCurrentPageNum(1);
   }, [initialCategory]);
 
@@ -56,11 +58,11 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
     };
   }, []);
 
-  // Danh mục: Chỉ giữ 1 phân cấp cha, lọc bỏ tất cả phân cấp con, phân cấp cha bỏ mục hình ảnh thiết bị
+  // Danh mục: Chỉ giữ 1 phân cấp cha, bỏ nút 'Tất cả danh mục' để đồng bộ logic với Công trình
   const categoryPills = useMemo(() => {
-    const list = [{ id: 'all', name: 'Tất cả danh mục' }];
+    const list = [];
     parentCategories.forEach((cat) => {
-      if (!list.some((item) => item.name === cat.name)) {
+      if (cat.name && !list.some((item) => item.name === cat.name)) {
         list.push({
           id: cat.id || cat.slug || cat.name,
           name: cat.name,
@@ -88,11 +90,13 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
 
     return allProducts
       .filter((p) => {
-        // Lọc danh mục cha (đã quy chuẩn hoá 1 cấp duy nhất)
+        // Lọc danh mục cha: Nếu không chọn thì hiển thị tất cả
         const matchesCategory =
+          !selectedCategory ||
           selectedCategory === 'all' ||
           p.category_name === selectedCategory ||
-          p.category_id === selectedCategory;
+          p.category_id === selectedCategory ||
+          (p.category_name && p.category_name.toLowerCase().includes(selectedCategory.toLowerCase()));
 
         // Tìm kiếm theo tên, mã code, danh mục, tiêu chuẩn, thương hiệu
         const matchesSearch =
@@ -129,8 +133,9 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
     return filteredProducts.slice(start, start + ITEMS_PER_PAGE);
   }, [filteredProducts, currentPageNum]);
 
-  const handleSelectCategory = (cat) => {
-    setSelectedCategory(cat);
+  // Chọn bộ lọc danh mục: bấm để chọn, bấm lại lần nữa để bỏ chọn (hiện tất cả)
+  const handleSelectCategory = (catName) => {
+    setSelectedCategory((prev) => (prev === catName ? null : catName));
     setCurrentPageNum(1);
   };
 
@@ -197,6 +202,24 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
           <p className="product-page-subtitle">
             Hệ thống tủ điện công nghiệp, tủ phân phối MSB, tủ điều khiển và thiết bị cơ điện chế tạo theo tiêu chuẩn quốc tế IEC 61439-1/2 &amp; TCVN.
           </p>
+          {/* Dải danh mục lọc đặt ngay bên dưới tiêu đề - đồng bộ với trang Công trình */}
+          <div className="category-pills product-top-category-pills" role="tablist" aria-label="Lọc theo loại sản phẩm">
+            {categoryPills.map((cat) => {
+              const isSelected = selectedCategory === cat.name || selectedCategory === cat.id;
+              return (
+                <button
+                  key={cat.id || cat.name}
+                  type="button"
+                  className={`category-pill ${isSelected ? 'active' : ''}`}
+                  onClick={() => handleSelectCategory(cat.name)}
+                  role="tab"
+                  aria-selected={isSelected}
+                >
+                  {cat.name}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
@@ -232,32 +255,6 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
               </select>
             </div>
           </div>
-
-          {/* Category Pills: 1 phân cấp cha duy nhất, lọc bỏ toàn bộ phân cấp con & bỏ hình ảnh thiết bị */}
-          <div className="category-pills">
-            {categoryPills.map((cat) => {
-              const isSelected =
-                (cat.id === 'all' && selectedCategory === 'all') ||
-                selectedCategory === cat.name ||
-                selectedCategory === cat.id;
-              const count =
-                cat.id === 'all'
-                  ? allProducts.length
-                  : categoryCounts[cat.name] || 0;
-
-              return (
-                <button
-                  key={cat.id || cat.name}
-                  type="button"
-                  className={`category-pill ${isSelected ? 'active' : ''}`}
-                  onClick={() => handleSelectCategory(cat.id === 'all' ? 'all' : cat.name)}
-                >
-                  <span>{cat.name}</span>
-                  {count > 0 && <span className="cat-pill-count">{count}</span>}
-                </button>
-              );
-            })}
-          </div>
         </div>
 
         {/* Counter Header */}
@@ -282,7 +279,8 @@ const ProductList = ({ onNavigateHome: _onNavigateHome, onSelectProduct, initial
               style={{ marginTop: '16px' }}
               onClick={() => {
                 setSearchTerm('');
-                setSelectedCategory('all');
+                setSelectedCategory(null);
+                setCurrentPageNum(1);
               }}
             >
               Đặt lại tất cả bộ lọc

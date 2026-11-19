@@ -89,19 +89,32 @@
 
 .sort-select {
   padding: 10px 16px;
-  border: 1px solid #e0e0e0;
-  border-radius: var(--border-radius-xl);
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
   font-size: 0.9rem;
-  background-color: var(--secondary-bg);
+  background: #ffffff;
   color: var(--text-dark);
   cursor: pointer;
   outline: none;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+  transition: all 0.2s ease;
+}
+
+.sort-select:hover {
+  border-color: #94a3b8;
+}
+
+.product-top-category-pills {
+  justify-content: center;
+  margin-top: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 /* Category Pills */
 .category-pills {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   overflow-x: auto;
   padding-bottom: 6px;
   scrollbar-width: thin;
@@ -110,48 +123,33 @@
 }
 
 .category-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
   padding: 8px 18px;
-  background-color: var(--secondary-bg);
-  border: 1px solid #e8e8e8;
-  border-radius: var(--border-radius-xl);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
   font-size: 0.88rem;
   font-weight: 600;
-  color: var(--text-gray);
+  color: #475569;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .category-pill:hover {
-  background-color: #f0f0f0;
-  color: var(--text-dark);
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
 }
 
 .category-pill.active {
-  background-color: var(--text-dark);
-  border-color: var(--text-dark);
+  background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
+  border-color: rgba(255, 255, 255, 0.2);
   color: #ffffff;
-}
-
-.cat-pill-count {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 1px 7px;
-  border-radius: 10px;
-  background-color: rgba(0, 0, 0, 0.08);
-  color: inherit;
-  transition: all 0.2s ease;
-}
-
-.category-pill.active .cat-pill-count {
-  background-color: var(--accent-yellow);
-  color: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 3px 10px -1px rgba(220, 38, 38, 0.35);
+  transform: translateY(-1px);
 }
 
 /* --- Products Grid --- */
