@@ -85,16 +85,12 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
   // Toàn màn hình
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  // Hiển thị dải Thumbnails
-  const [showThumbs, setShowThumbs] = useState(true);
-
   // Mở Drawer Mục lục (TOC)
   const [showToc, setShowToc] = useState(false);
 
   const containerRef = useRef(null);
   const bookMountRef = useRef(null);
   const pageFlipRef = useRef(null);
-  const thumbsStripRef = useRef(null);
 
   // Khởi tạo FlipBuilder-style HTML5 Canvas PageFlip engine
   useEffect(() => {
@@ -113,9 +109,9 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
         height: 785,
         size: 'stretch',
         minWidth: 260,
-        maxWidth: 680,
+        maxWidth: 850,
         minHeight: 370,
-        maxHeight: 970,
+        maxHeight: 1200,
         maxShadowOpacity: 0.6,
         showCover: true,
         mobileScrollSupport: false,
@@ -168,16 +164,6 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
-
-  // Tự động cuộn Thumbnail tới trang hiện tại
-  useEffect(() => {
-    if (thumbsStripRef.current) {
-      const activeThumb = thumbsStripRef.current.querySelector(`.cp-thumb-item[data-page="${currentPage}"]`);
-      if (activeThumb) {
-        activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      }
-    }
-  }, [currentPage]);
 
   // Điều hướng trang
   const handleNext = useCallback(() => {
@@ -288,16 +274,146 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
               <line x1="19" y1="12" x2="5" y2="12"></line>
               <polyline points="12 19 5 12 12 5"></polyline>
             </svg>
-            <span>Trang chủ</span>
+            <span className="cp-back-text">Trang chủ</span>
           </button>
           <span className="cp-header-sep">/</span>
           <div className="cp-doc-heading">
             <h1 className="cp-doc-title">Hồ Sơ Năng Lực Cơ Điện Nguyên Phát</h1>
-            <span className="cp-doc-badge">Catalogue Chính Thức (28 Trang)</span>
+            <span className="cp-doc-badge">28 Trang</span>
           </div>
         </div>
 
+        {/* Thanh điều hướng trang ở Header trung tâm */}
+        <div className="cp-header-center-nav">
+          <button
+            type="button"
+            className="cp-head-nav-btn"
+            onClick={() => handleGoToPage(1)}
+            disabled={currentPage <= 1}
+            title="Trang đầu (Home)"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+              <polyline points="11 17 6 12 11 7"></polyline>
+              <polyline points="18 17 13 12 18 7"></polyline>
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            className="cp-head-nav-btn"
+            onClick={handlePrev}
+            disabled={currentPage <= 1}
+            title="Trang trước (Mũi tên trái)"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+
+          <div className="cp-head-page-box">
+            <span className="cp-head-page-lbl">Trang</span>
+            <input
+              type="number"
+              min="1"
+              max={TOTAL_PAGES}
+              value={currentPage}
+              onChange={(e) => {
+                const val = parseInt(e.target.value, 10);
+                if (!isNaN(val) && val >= 1 && val <= TOTAL_PAGES) {
+                  handleGoToPage(val);
+                }
+              }}
+              aria-label="Nhập số trang để nhảy đến"
+            />
+            <span className="cp-head-page-total">/ {TOTAL_PAGES}</span>
+            <span className="cp-head-spread-badge">({getPageLabel()})</span>
+          </div>
+
+          <button
+            type="button"
+            className="cp-head-nav-btn"
+            onClick={handleNext}
+            disabled={currentPage >= TOTAL_PAGES}
+            title="Trang sau (Mũi tên phải)"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            className="cp-head-nav-btn"
+            onClick={() => handleGoToPage(TOTAL_PAGES)}
+            disabled={currentPage >= TOTAL_PAGES}
+            title="Trang cuối (End)"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+              <polyline points="13 17 18 12 13 7"></polyline>
+              <polyline points="6 17 11 12 6 7"></polyline>
+            </svg>
+          </button>
+        </div>
+
         <div className="cp-header-right">
+          {/* Tự động lật (Slideshow Auto Play) */}
+          <button
+            type="button"
+            className={`cp-tool-btn cp-autoplay-tool-btn ${isAutoPlay ? 'active' : ''}`}
+            onClick={() => setIsAutoPlay(!isAutoPlay)}
+            title={isAutoPlay ? 'Dừng tự động lật' : 'Tự động lật trang (Trình chiếu)'}
+          >
+            {isAutoPlay ? (
+              <>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                  <rect x="6" y="4" width="4" height="16"></rect>
+                  <rect x="14" y="4" width="4" height="16"></rect>
+                </svg>
+                <span>Dừng</span>
+              </>
+            ) : (
+              <>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                <span>Tự lật</span>
+              </>
+            )}
+          </button>
+
+          {/* Cụm Zoom In / Reset / Zoom Out */}
+          <div className="cp-header-zoom-group">
+            <button
+              type="button"
+              className="cp-zoom-btn"
+              onClick={() => setZoom((z) => Math.max(0.75, Number((z - 0.15).toFixed(2))))}
+              title="Thu nhỏ (-)"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
+            <button
+              type="button"
+              className="cp-zoom-percent"
+              onClick={() => setZoom(1)}
+              title="Đặt lại kích thước gốc 100%"
+            >
+              {Math.round(zoom * 100)}%
+            </button>
+            <button
+              type="button"
+              className="cp-zoom-btn"
+              onClick={() => setZoom((z) => Math.min(1.5, Number((z + 0.15).toFixed(2))))}
+              title="Phóng to (+)"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
+          </div>
+
           {/* Nút Mục Lục (TOC) */}
           <button
             type="button"
@@ -305,7 +421,7 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
             onClick={() => setShowToc(!showToc)}
             title="Mục lục các chương"
           >
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="8" y1="6" x2="21" y2="6"></line>
               <line x1="8" y1="12" x2="21" y2="12"></line>
               <line x1="8" y1="18" x2="21" y2="18"></line>
@@ -324,12 +440,12 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
             title={soundEnabled ? 'Tắt âm thanh lật sách' : 'Bật âm thanh lật sách'}
           >
             {soundEnabled ? (
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                 <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
               </svg>
             ) : (
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
                 <line x1="23" y1="9" x2="17" y2="15"></line>
                 <line x1="17" y1="9" x2="23" y2="15"></line>
@@ -337,14 +453,14 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
             )}
           </button>
 
-          {/* Đổi Theme: Đêm (Studio tối) / Ngày (Studio sáng) */}
+          {/* Đổi Theme: Đêm / Ngày */}
           <button
             type="button"
-            className="cp-tool-btn"
+            className="cp-tool-btn cp-theme-toggle-btn"
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             title={theme === 'dark' ? 'Chuyển sang nền sáng' : 'Chuyển sang nền tối showroom'}
           >
-            {theme === 'dark' ? '☀️ Sáng' : '🌙 Tối'}
+            {theme === 'dark' ? '☀️' : '🌙'}
           </button>
 
           {/* Nút Toàn màn hình */}
@@ -355,14 +471,14 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
             title={isFullscreen ? 'Thu nhỏ cửa sổ' : 'Phóng toàn màn hình'}
           >
             {isFullscreen ? (
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="4 14 10 14 10 20"></polyline>
                 <polyline points="20 10 14 10 14 4"></polyline>
                 <line x1="14" y1="10" x2="21" y2="3"></line>
                 <line x1="3" y1="21" x2="10" y2="14"></line>
               </svg>
             ) : (
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="15 3 21 3 21 9"></polyline>
                 <polyline points="9 21 3 21 3 15"></polyline>
                 <line x1="21" y1="3" x2="14" y2="10"></line>
@@ -371,59 +487,35 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
             )}
           </button>
 
-          {/* Tải PDF gốc 28 trang */}
+          {/* Tải PDF */}
           <a
             href="/catalog/ho-so-nang-luc-nguyen-phat.pdf"
             download="Ho-So-Nang-Luc-Co-Dien-Nguyen-Phat.pdf"
             className="cp-download-action-btn"
             title="Tải tệp PDF chất lượng cao"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="7 10 12 15 17 10"></polyline>
               <line x1="12" y1="15" x2="12" y2="3"></line>
             </svg>
-            <span>Tải PDF</span>
+            <span className="cp-download-text">Tải PDF</span>
           </a>
         </div>
       </header>
 
       {/* ==============================================================
-          2. DẢI PHÂN ĐOẠN CHƯƠNG MỤC (Quick Chapter Tabs)
-          ============================================================== */}
-      <nav className="cp-chapters-nav" aria-label="Mục lục chương nhanh">
-        <div className="cp-chapters-scroll">
-          {CHAPTERS.map((ch, idx) => {
-            const isActive =
-              currentPage >= ch.page &&
-              (idx === CHAPTERS.length - 1 || currentPage < CHAPTERS[idx + 1].page);
-            return (
-              <button
-                key={ch.id}
-                type="button"
-                className={`cp-chap-tab ${isActive ? 'active' : ''}`}
-                onClick={() => handleGoToPage(ch.page)}
-              >
-                <span className="cp-chap-num">0{ch.id}</span>
-                <span className="cp-chap-name">{ch.title}</span>
-              </button>
-            );
-          })}
-        </div>
-      </nav>
-
-      {/* ==============================================================
-          3. SÂN KHẤU LẬT SÁCH CHUẨN FLIPBUILDER (HTML5 Canvas PageFlip Stage)
+          2. SÂN KHẤU LẬT SÁCH TOÀN MÀN HÌNH (HTML5 Canvas PageFlip Stage)
           ============================================================== */}
       <main className="cp-main-stage">
-        {/* Nút Lật Trang Trước (Mũi tên trái lớn) */}
+        {/* Nút Lật Trang Trước (Mũi tên trái) */}
         <button
           type="button"
           className="cp-side-arrow prev"
           onClick={handlePrev}
           disabled={currentPage <= 1}
           aria-label="Lật trang trước"
-          title="Lật trang trước (hoặc bấm/kéo mép góc trang sách)"
+          title="Lật trang trước (hoặc kéo mép góc trang sách)"
         >
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <polyline points="15 18 9 12 15 6"></polyline>
@@ -439,214 +531,20 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
           <div className="cp-book-ambient-shadow" />
         </div>
 
-        {/* Nút Lật Trang Tiếp Theo (Mũi tên phải lớn) */}
+        {/* Nút Lật Trang Tiếp Theo (Mũi tên phải) */}
         <button
           type="button"
           className="cp-side-arrow next"
           onClick={handleNext}
           disabled={currentPage >= TOTAL_PAGES}
           aria-label="Lật trang tiếp theo"
-          title="Lật trang sau (hoặc bấm/kéo mép góc trang sách)"
+          title="Lật trang sau (hoặc kéo mép góc trang sách)"
         >
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <polyline points="9 18 15 12 9 6"></polyline>
           </svg>
         </button>
       </main>
-
-      {/* ==============================================================
-          4. THANH CÔNG CỤ ĐÁY THÔNG MINH (Floating Dock Toolbar)
-          ============================================================== */}
-      <footer className={`cp-bottom-dock ${showThumbs ? 'dock-with-thumbs' : 'dock-alone'}`}>
-        {/* Nút Trang Đầu */}
-        <button
-          type="button"
-          className="cp-dock-btn"
-          onClick={() => handleGoToPage(1)}
-          disabled={currentPage <= 1}
-          title="Về trang bìa đầu tiên (Home)"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-            <polyline points="11 17 6 12 11 7"></polyline>
-            <polyline points="18 17 13 12 18 7"></polyline>
-          </svg>
-        </button>
-
-        {/* Nút Lùi 1 lượt */}
-        <button
-          type="button"
-          className="cp-dock-btn"
-          onClick={handlePrev}
-          disabled={currentPage <= 1}
-          title="Trang trước (hoặc kéo mép góc trái)"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-            <polyline points="15 18 9 12 15 6"></polyline>
-          </svg>
-        </button>
-
-        {/* Ô Điều Khiển & Nhập Trang Trực Tiếp */}
-        <div className="cp-dock-page-box">
-          <span>Trang</span>
-          <input
-            type="number"
-            min="1"
-            max={TOTAL_PAGES}
-            value={currentPage}
-            onChange={(e) => {
-              const val = parseInt(e.target.value, 10);
-              if (!isNaN(val) && val >= 1 && val <= TOTAL_PAGES) {
-                handleGoToPage(val);
-              }
-            }}
-            aria-label="Nhập số trang để nhảy đến"
-          />
-          <span>/ {TOTAL_PAGES}</span>
-          <span className="cp-dock-spread-hint">({getPageLabel()})</span>
-        </div>
-
-        {/* Nút Tiến 1 lượt */}
-        <button
-          type="button"
-          className="cp-dock-btn"
-          onClick={handleNext}
-          disabled={currentPage >= TOTAL_PAGES}
-          title="Trang sau (hoặc kéo mép góc phải)"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </button>
-
-        {/* Nút Trang Cuối */}
-        <button
-          type="button"
-          className="cp-dock-btn"
-          onClick={() => handleGoToPage(TOTAL_PAGES)}
-          disabled={currentPage >= TOTAL_PAGES}
-          title="Đến trang bìa cuối cùng (End)"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-            <polyline points="13 17 18 12 13 7"></polyline>
-            <polyline points="6 17 11 12 6 7"></polyline>
-          </svg>
-        </button>
-
-        <span className="cp-dock-divider" />
-
-        {/* Tự động lật (Slideshow Auto Play) */}
-        <button
-          type="button"
-          className={`cp-dock-btn cp-dock-autoplay-btn ${isAutoPlay ? 'active' : ''}`}
-          onClick={() => setIsAutoPlay(!isAutoPlay)}
-          title={isAutoPlay ? 'Dừng tự động lật trang' : 'Tự động lật trang (Trình chiếu)'}
-        >
-          {isAutoPlay ? (
-            <>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <rect x="6" y="4" width="4" height="16"></rect>
-                <rect x="14" y="4" width="4" height="16"></rect>
-              </svg>
-              <span>Dừng</span>
-            </>
-          ) : (
-            <>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-              </svg>
-              <span>Tự lật</span>
-            </>
-          )}
-        </button>
-
-        <span className="cp-dock-divider" />
-
-        {/* Zoom Out */}
-        <button
-          type="button"
-          className="cp-dock-btn"
-          onClick={() => setZoom((z) => Math.max(0.8, Number((z - 0.15).toFixed(2))))}
-          title="Thu nhỏ"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-        </button>
-
-        {/* Zoom Reset */}
-        <button
-          type="button"
-          className="cp-dock-zoom-indicator"
-          onClick={() => setZoom(1)}
-          title="Đặt lại kích thước gốc 100%"
-        >
-          {Math.round(zoom * 100)}%
-        </button>
-
-        {/* Zoom In */}
-        <button
-          type="button"
-          className="cp-dock-btn"
-          onClick={() => setZoom((z) => Math.min(1.5, Number((z + 0.15).toFixed(2))))}
-          title="Phóng to"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-          </svg>
-        </button>
-
-        <span className="cp-dock-divider" />
-
-        {/* Ẩn / Hiện Dải Ảnh Thu Nhỏ (Thumbnails) */}
-        <button
-          type="button"
-          className={`cp-dock-btn ${showThumbs ? 'active' : ''}`}
-          onClick={() => setShowThumbs(!showThumbs)}
-          title={showThumbs ? 'Ẩn thanh ảnh thu nhỏ' : 'Hiện thanh ảnh thu nhỏ'}
-        >
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <rect x="3" y="3" width="7" height="7"></rect>
-            <rect x="14" y="3" width="7" height="7"></rect>
-            <rect x="14" y="14" width="7" height="7"></rect>
-            <rect x="3" y="14" width="7" height="7"></rect>
-          </svg>
-        </button>
-      </footer>
-
-      {/* ==============================================================
-          5. DẢI ẢNH THU NHỎ CỐ ĐỊNH ĐÁY MÀN HÌNH (Fixed Bottom Thumbnails Strip)
-          ============================================================== */}
-      {showThumbs && (
-        <section className="cp-thumbs-drawer-fixed" aria-label="Toàn bộ 28 trang thu nhỏ">
-          <div className="cp-thumbs-strip" ref={thumbsStripRef}>
-            {Array.from({ length: TOTAL_PAGES }, (_, i) => i + 1).map((pageNum) => {
-              const isSelected =
-                orientation === 'landscape' && currentPage > 1 && currentPage < TOTAL_PAGES
-                  ? pageNum === (currentPage % 2 === 0 ? currentPage : currentPage - 1) ||
-                    pageNum === (currentPage % 2 === 0 ? currentPage + 1 : currentPage)
-                  : pageNum === currentPage;
-              return (
-                <button
-                  key={pageNum}
-                  data-page={pageNum}
-                  type="button"
-                  className={`cp-thumb-item ${isSelected ? 'active' : ''}`}
-                  onClick={() => handleGoToPage(pageNum)}
-                  title={`Xem Trang ${pageNum}`}
-                >
-                  <img
-                    src={`/catalog/pages/${pageNum}.jpg`}
-                    alt={`Thu nhỏ trang ${pageNum}`}
-                    loading="lazy"
-                  />
-                  <span className="cp-thumb-badge">{pageNum}</span>
-                </button>
-              );
-            })}
-          </div>
-        </section>
-      )}
 
       {/* ==============================================================
           6. MODAL / DRAWER MỤC LỤC CHI TIẾT (TOC Sidebar Modal)
