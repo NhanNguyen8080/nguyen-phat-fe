@@ -433,6 +433,31 @@
   transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
+/* Rãnh gáy sách gập nhẹ mờ tự nhiên ở giữa khi mở 2 trang (Subtle Spine Crease) */
+.cp-book-stage-inner.is-open-spread::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.02) 20%,
+    rgba(0, 0, 0, 0.09) 46%,
+    rgba(0, 0, 0, 0.13) 50%,
+    rgba(0, 0, 0, 0.09) 54%,
+    rgba(0, 0, 0, 0.02) 80%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0.7;
+}
+
 
 /* ==============================================================
    1. BÌA TRƯỚC ĐANG ĐÓNG (Closed Front Cover - Static Single Page)
@@ -540,6 +565,31 @@
   z-index: 12;
   opacity: 0;
   transition: opacity 0.3s ease;
+}
+
+.cp-book-stage-inner.is-opening-front::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 22px;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.02) 20%,
+    rgba(0, 0, 0, 0.09) 46%,
+    rgba(0, 0, 0, 0.13) 50%,
+    rgba(0, 0, 0, 0.09) 54%,
+    rgba(0, 0, 0, 0.02) 80%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 10;
+  opacity: 0.7;
+  transition: opacity 0.4s ease 0.25s;
 }
 
 
