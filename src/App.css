@@ -172,3 +172,44 @@
     min-height: 110px;
   }
 }
+
+/* ==========================================================
+   HỆ THỐNG PHÂN BIỆT ĐỀ MỤC XEN KẼ TOÀN TRANG (FULL-WIDTH SECTION BANDS)
+   Vùng ĐỤC (Frosted 3D Glass Band) & Vùng BÌNH THƯỜNG (Transparent 3D Space)
+   ========================================================== */
+
+/* 1. Trên màn hình máy tính (Home FullPage Sections) */
+.home-fullpage-main .hero-screen-1,
+.home-fullpage-main section.about,
+.home-fullpage-main section.portfolio,
+.home-fullpage-main section.contact {
+  background: transparent;
+  border-top: 1.5px solid transparent;
+  border-bottom: 1.5px solid transparent;
+}
+
+.home-fullpage-main .hero-screen-2,
+.home-fullpage-main section.services,
+.home-fullpage-main section.capacity-section {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.82) 0%, rgba(246, 249, 252, 0.76) 50%, rgba(236, 242, 250, 0.72) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1.5px solid rgba(203, 213, 225, 0.75);
+  border-bottom: 1.5px solid rgba(203, 213, 225, 0.75);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.95), 0 14px 34px rgba(15, 23, 42, 0.035);
+}
+
+/* 2. Trên màn hình di động & tablet */
+@media (max-width: 992px) {
+  .hero-screen-2,
+  section.services,
+  section.capacity-section {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.82) 0%, rgba(246, 249, 252, 0.76) 50%, rgba(236, 242, 250, 0.72) 100%);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1.5px solid rgba(203, 213, 225, 0.75);
+    border-bottom: 1.5px solid rgba(203, 213, 225, 0.75);
+    padding: 48px 0;
+  }
+}
+

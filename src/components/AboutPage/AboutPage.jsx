@@ -241,12 +241,13 @@ const AboutPage = ({ onNavigateHome }) => {
         </div>
       </section>
 
-      <main className="container about-main-content">
+      <main className="about-main-content">
         {/* =========================================================
-            MỤC 1: LỜI MỞ ĐẦU & BAN GIÁM ĐỐC & ĐỐI TÁC TIN CẬY
+            MỤC 1: LỜI MỞ ĐẦU & BAN GIÁM ĐỐC & ĐỐI TÁC TIN CẬY (Dải Bình Thường)
             ========================================================= */}
-        <section className="about-section intro-leadership-section">
-          <div className="intro-leadership-grid">
+        <section className="about-section intro-leadership-section section-band-transparent">
+          <div className="container">
+            <div className="intro-leadership-grid">
             {/* Cột Trái: Lời Mở Đầu & Đối Tác Tin Cậy */}
             <div className="intro-text-column">
               <div className="intro-card-primary">
@@ -331,21 +332,23 @@ const AboutPage = ({ onNavigateHome }) => {
               </div>
             </div>
           </div>
+          </div>
         </section>
 
         {/* =========================================================
-            MỤC 2: GIÁ TRỊ CỐT LÕI (Từ feedback image16)
+            MỤC 2: GIÁ TRỊ CỐT LÕI (Dải Đục - Frosted Glass Band)
             ========================================================= */}
-        <section className="about-section values-section">
-          <div className="section-title-wrap">
-            <span className="section-mini-tag">NGUYÊN TẮC HOẠT ĐỘNG</span>
-            <h2 className="section-main-heading">
-              Giá Trị <span className="highlight-red">Cốt Lõi</span>
-            </h2>
-            <p className="section-sub-heading">
-              Những giá trị tạo nên chất lượng sản phẩm và uy tín của Cơ Điện Nguyên Phát trên mỗi công trình
-            </p>
-          </div>
+        <section className="about-section values-section section-band-opaque">
+          <div className="container">
+            <div className="section-title-wrap">
+              <span className="section-mini-tag">NGUYÊN TẮC HOẠT ĐỘNG</span>
+              <h2 className="section-main-heading">
+                Giá Trị <span className="highlight-red">Cốt Lõi</span>
+              </h2>
+              <p className="section-sub-heading">
+                Những giá trị tạo nên chất lượng sản phẩm và uy tín của Cơ Điện Nguyên Phát trên mỗi công trình
+              </p>
+            </div>
 
           <div className="values-cards-grid">
             {coreValues.map((val) => (
@@ -360,52 +363,56 @@ const AboutPage = ({ onNavigateHome }) => {
               </div>
             ))}
           </div>
+          </div>
         </section>
 
         {/* =========================================================
-            MỤC 3: QUY TRÌNH SẢN XUẤT & THI CÔNG (Từ feedback image17)
+            MỤC 3: QUY TRÌNH SẢN XUẤT & THI CÔNG (Dải Bình Thường)
             ========================================================= */}
-        <section className="about-section process-section">
-          <div className="section-title-wrap">
-            <span className="section-mini-tag">CHUẨN HÓA QUY TRÌNH</span>
-            <h2 className="section-main-heading">
-              Quy Trình <span className="highlight-red">Sản Xuất &amp; Thi Công</span>
-            </h2>
-            <p className="section-sub-heading">
-              Quy trình 5 bước khép kín đảm bảo chất lượng, tính chính xác và đúng tiến độ cam kết
-            </p>
-          </div>
+        <section className="about-section process-section section-band-transparent">
+          <div className="container">
+            <div className="section-title-wrap">
+              <span className="section-mini-tag">CHUẨN HÓA QUY TRÌNH</span>
+              <h2 className="section-main-heading">
+                Quy Trình <span className="highlight-red">Sản Xuất &amp; Thi Công</span>
+              </h2>
+              <p className="section-sub-heading">
+                Quy trình 5 bước khép kín đảm bảo chất lượng, tính chính xác và đúng tiến độ cam kết
+              </p>
+            </div>
 
-          <div className="process-timeline-grid">
-            {processSteps.map((step, idx) => (
-              <div key={step.num} className="process-card-step">
-                <div className="process-step-header">
-                  <span className="process-step-num">{step.num}</span>
-                  <div className="process-step-icon">{step.icon}</div>
-                  {idx < processSteps.length - 1 && <span className="process-connector-arrow">→</span>}
+            <div className="process-timeline-grid">
+              {processSteps.map((step, idx) => (
+                <div key={step.num} className="process-card-step">
+                  <div className="process-step-header">
+                    <span className="process-step-num">{step.num}</span>
+                    <div className="process-step-icon">{step.icon}</div>
+                    {idx < processSteps.length - 1 && <span className="process-connector-arrow">→</span>}
+                  </div>
+                  <h3 className="process-step-title">{step.title}</h3>
+                  <p className="process-step-desc">{step.desc}</p>
                 </div>
-                <h3 className="process-step-title">{step.title}</h3>
-                <p className="process-step-desc">{step.desc}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
 
         {/* =========================================================
-            MỤC 4: HÌNH ẢNH THỰC TẾ (Thiết kế xen kẽ ảnh - chữ theo yêu cầu)
+            MỤC 4: HÌNH ẢNH THỰC TẾ (Dải Đục - Frosted Glass Band)
             ========================================================= */}
-        <section className="about-section moments-section">
-          <div className="section-title-wrap">
-            <span className="section-mini-tag">HOẠT ĐỘNG THỰC TẾ</span>
-            <h2 className="section-main-heading">
-              Hình Ảnh <span className="highlight-red">Thực Tế</span>
-            </h2>
-            <p className="section-sub-heading">
-              Hành trình làm việc tận tâm từ nghiên cứu thiết kế tại văn phòng đến chế tạo xưởng và lắp đặt thiết bị tại công trường
-            </p>
-          </div>
+        <section className="about-section moments-section section-band-opaque">
+          <div className="container">
+            <div className="section-title-wrap">
+              <span className="section-mini-tag">HOẠT ĐỘNG THỰC TẾ</span>
+              <h2 className="section-main-heading">
+                Hình Ảnh <span className="highlight-red">Thực Tế</span>
+              </h2>
+              <p className="section-sub-heading">
+                Hành trình làm việc tận tâm từ nghiên cứu thiết kế tại văn phòng đến chế tạo xưởng và lắp đặt thiết bị tại công trường
+              </p>
+            </div>
 
-          <div className="moments-alternating-list">
+            <div className="moments-alternating-list">
             {workMoments.map((item, index) => {
               const isReversed = index % 2 === 1; // Hàng lẻ: ảnh trái chữ phải; Hàng chẵn: chữ trái ảnh phải
               return (
@@ -468,21 +475,25 @@ const AboutPage = ({ onNavigateHome }) => {
               );
             })}
           </div>
-        </section>        {/* =========================================================
-            MỤC 5: SƠ ĐỒ TỔ CHỨC CÔNG TY (Design Chuyên Nghiệp - Bản Gọn Tinh Tế)
-            ========================================================= */}
-        <section className="about-section orgchart-section">
-          <div className="section-title-wrap">
-            <span className="section-mini-tag">CƠ CẤU BỘ MÁY ĐIỀU HÀNH</span>
-            <h2 className="section-main-heading">
-              Sơ Đồ <span className="highlight-red">Tổ Chức Doanh Nghiệp</span>
-            </h2>
-            <p className="section-sub-heading">
-              Bộ máy quản trị tinh gọn, phân quyền minh bạch, phối hợp chặt chẽ từ ban lãnh đạo chiến lược đến đội ngũ sản xuất và thi công hiện trường
-            </p>
           </div>
+        </section>
 
-          <div className="orgchart-board-card">
+        {/* =========================================================
+            MỤC 5: SƠ ĐỒ TỔ CHỨC CÔNG TY (Dải Bình Thường)
+            ========================================================= */}
+        <section className="about-section orgchart-section section-band-transparent">
+          <div className="container">
+            <div className="section-title-wrap">
+              <span className="section-mini-tag">CƠ CẤU BỘ MÁY ĐIỀU HÀNH</span>
+              <h2 className="section-main-heading">
+                Sơ Đồ <span className="highlight-red">Tổ Chức Doanh Nghiệp</span>
+              </h2>
+              <p className="section-sub-heading">
+                Bộ máy quản trị tinh gọn, phân quyền minh bạch, phối hợp chặt chẽ từ ban lãnh đạo chiến lược đến đội ngũ sản xuất và thi công hiện trường
+              </p>
+            </div>
+
+            <div className="orgchart-board-card">
             {/* Header kỹ thuật theo sơ đồ */}
             <div className="orgchart-board-header">
               <div className="orgchart-board-title-line">
@@ -799,95 +810,100 @@ const AboutPage = ({ onNavigateHome }) => {
               </svg>
             </div>
           </div>
+          </div>
         </section>
 
         {/* =========================================================
-            MỤC 6: VĂN HÓA DOANH NGHIỆP CƠ ĐIỆN NGUYÊN PHÁT (Từ feedback image20 & text)
+            MỤC 6: VĂN HÓA DOANH NGHIỆP CƠ ĐIỆN NGUYÊN PHÁT (Dải Đục - Frosted Glass Band)
             ========================================================= */}
-        <section className="about-section culture-section">
-          <div className="section-title-wrap">
-            <span className="section-mini-tag">CON NGƯỜI LÀ CỐT LÕI</span>
-            <h2 className="section-main-heading">
-              Văn Hóa <span className="highlight-red">Cơ Điện Nguyên Phát</span>
-            </h2>
-            <p className="section-sub-heading">
-              Xây dựng môi trường làm việc nhân văn, chuyên nghiệp, gắn kết bền vững và luôn lấy con người làm trọng tâm phát triển
-            </p>
-          </div>
+        <section className="about-section culture-section section-band-opaque">
+          <div className="container">
+            <div className="section-title-wrap">
+              <span className="section-mini-tag">CON NGƯỜI LÀ CỐT LÕI</span>
+              <h2 className="section-main-heading">
+                Văn Hóa <span className="highlight-red">Cơ Điện Nguyên Phát</span>
+              </h2>
+              <p className="section-sub-heading">
+                Xây dựng môi trường làm việc nhân văn, chuyên nghiệp, gắn kết bền vững và luôn lấy con người làm trọng tâm phát triển
+              </p>
+            </div>
 
-          {/* Khối Đoạn Văn Mở Đầu Văn Hóa (Trích chính xác từ doc feedback) */}
-          {/* Banner Văn Hóa - Đội Ngũ Có Ảnh Nền Bên Dưới (Theo mẫu tham khảo) */}
-          <div className="culture-team-hero-banner">
-            <div className="culture-team-banner-overlay" />
-            <div className="culture-team-banner-content">
-              <div className="culture-team-accent-line" />
-              <h3 className="culture-team-banner-title">ĐỘI NGŨ</h3>
-              <div className="culture-team-banner-text">
-                <p>
-                  Trong một văn hóa doanh nghiệp mà mọi nhân viên đều có cơ hội được phát triển, <strong className="brand-orange">Cơ Điện</strong> <strong className="brand-blue">Nguyên Phát</strong> mang đến cho nhân viên của mình những vị trí phù hợp với tiềm năng, tính cách, chuyên môn từ đó củng cố sức mạnh nhân sự.
-                </p>
-                <p>
-                  Hiện nay chúng tôi đã xây dựng nguồn nhân sự với những cá nhân xuất sắc trong một tập thể <strong className="brand-orange">Nguyên</strong> <strong className="brand-blue">Phát</strong> đoàn kết luôn sẵn sàng phục vụ và mang lại giá trị bền vững cho Quý khách hàng &amp; đối tác.
-                </p>
+            {/* Khối Đoạn Văn Mở Đầu Văn Hóa (Trích chính xác từ doc feedback) */}
+            {/* Banner Văn Hóa - Đội Ngũ Có Ảnh Nền Bên Dưới (Theo mẫu tham khảo) */}
+            <div className="culture-team-hero-banner">
+              <div className="culture-team-banner-overlay" />
+              <div className="culture-team-banner-content">
+                <div className="culture-team-accent-line" />
+                <h3 className="culture-team-banner-title">ĐỘI NGŨ</h3>
+                <div className="culture-team-banner-text">
+                  <p>
+                    Trong một văn hóa doanh nghiệp mà mọi nhân viên đều có cơ hội được phát triển, <strong className="brand-orange">Cơ Điện</strong> <strong className="brand-blue">Nguyên Phát</strong> mang đến cho nhân viên của mình những vị trí phù hợp với tiềm năng, tính cách, chuyên môn từ đó củng cố sức mạnh nhân sự.
+                  </p>
+                  <p>
+                    Hiện nay chúng tôi đã xây dựng nguồn nhân sự với những cá nhân xuất sắc trong một tập thể <strong className="brand-orange">Nguyên</strong> <strong className="brand-blue">Phát</strong> đoàn kết luôn sẵn sàng phục vụ và mang lại giá trị bền vững cho Quý khách hàng &amp; đối tác.
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* 3 Thẻ Hoạt Động Văn Hóa Doanh Nghiệp */}
-          <div className="culture-cards-grid">
-            {cultureItems.map((item) => (
-              <div key={item.id} className="culture-card">
-                <div className="culture-card-banner">
-                  <div className="culture-img-placeholder">
-                    <div className="placeholder-icon">{item.icon}</div>
-                    <span className="placeholder-badge">{item.badge}</span>
-                    <p className="placeholder-note">{item.placeholderText}</p>
+            {/* 3 Thẻ Hoạt Động Văn Hóa Doanh Nghiệp */}
+            <div className="culture-cards-grid">
+              {cultureItems.map((item) => (
+                <div key={item.id} className="culture-card">
+                  <div className="culture-card-banner">
+                    <div className="culture-img-placeholder">
+                      <div className="placeholder-icon">{item.icon}</div>
+                      <span className="placeholder-badge">{item.badge}</span>
+                      <p className="placeholder-note">{item.placeholderText}</p>
+                    </div>
+                  </div>
+
+                  <div className="culture-card-body">
+                    <div className="culture-card-header">
+                      <div className="culture-icon-mini">{item.icon}</div>
+                      <h3 className="culture-card-title">{item.title}</h3>
+                    </div>
+                    <p className="culture-card-desc">{item.desc}</p>
+                    <div className="culture-highlight-pill">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                      <span>{item.highlight}</span>
+                    </div>
                   </div>
                 </div>
-
-                <div className="culture-card-body">
-                  <div className="culture-card-header">
-                    <div className="culture-icon-mini">{item.icon}</div>
-                    <h3 className="culture-card-title">{item.title}</h3>
-                  </div>
-                  <p className="culture-card-desc">{item.desc}</p>
-                  <div className="culture-highlight-pill">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="20 6 9 17 4 12"/>
-                    </svg>
-                    <span>{item.highlight}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* Nút Điều Hướng Trở Lại / Khám Phá Sản Phẩm & Hồ Sơ Năng Lực */}
-        <section className="about-footer-nav-section">
-          <div className="about-nav-buttons-wrap">
-            <button 
-              type="button" 
-              className="btn-outline-back"
-              onClick={() => onNavigateHome('#home')}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="19" y1="12" x2="5" y2="12"/>
-                <polyline points="12 19 5 12 12 5"/>
-              </svg>
-              Quay Về Trang Chủ
-            </button>
-            <button 
-              type="button" 
-              className="btn-primary-contact"
-              onClick={() => onNavigateHome('#contact')}
-            >
-              Liên Hệ &amp; Nhận Báo Giá
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="5" y1="12" x2="19" y2="12"/>
-                <polyline points="12 5 19 12 12 19"/>
-              </svg>
-            </button>
+        {/* Nút Điều Hướng Trở Lại / Khám Phá Sản Phẩm & Hồ Sơ Năng Lực (Dải Bình Thường) */}
+        <section className="about-footer-nav-section section-band-transparent">
+          <div className="container">
+            <div className="about-nav-buttons-wrap">
+              <button 
+                type="button" 
+                className="btn-outline-back"
+                onClick={() => onNavigateHome('#home')}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="19" y1="12" x2="5" y2="12"/>
+                  <polyline points="12 19 5 12 12 5"/>
+                </svg>
+                Quay Về Trang Chủ
+              </button>
+              <button 
+                type="button" 
+                className="btn-primary-contact"
+                onClick={() => onNavigateHome('#contact')}
+              >
+                Liên Hệ &amp; Nhận Báo Giá
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </button>
+            </div>
           </div>
         </section>
       </main>

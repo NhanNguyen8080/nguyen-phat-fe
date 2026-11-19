@@ -108,13 +108,38 @@
   margin: 0 auto;
 }
 
-/* --- Common Section Styles --- */
+/* --- Common Section Styles & Alternating Full-Width Bands --- */
 .about-main-content {
-  padding-bottom: 60px;
+  width: 100%;
+  padding-bottom: 20px;
 }
 
 .about-section {
-  padding: 48px 0;
+  width: 100%;
+  padding: 64px 0;
+  position: relative;
+  transition: background 0.3s ease;
+}
+
+/* Dải Nền ĐỤC Toàn Trang (Frosted 3D Glass Band) */
+.section-band-opaque {
+  width: 100%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.82) 0%, rgba(246, 249, 252, 0.76) 50%, rgba(236, 242, 250, 0.72) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1.5px solid rgba(203, 213, 225, 0.75);
+  border-bottom: 1.5px solid rgba(203, 213, 225, 0.75);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.95), 0 14px 34px rgba(15, 23, 42, 0.035);
+  position: relative;
+}
+
+/* Dải Nền BÌNH THƯỜNG Toàn Trang (Transparent Space Band) */
+.section-band-transparent {
+  width: 100%;
+  background: transparent;
+  border-top: 1.5px solid transparent;
+  border-bottom: 1.5px solid transparent;
+  box-shadow: none;
   position: relative;
 }
 
@@ -438,9 +463,7 @@
    MỤC 2: GIÁ TRỊ CỐT LÕI (4 Cards Grid)
    ========================================================================== */
 .values-section {
-  background: transparent;
-  border-top: 1px solid rgba(226, 232, 240, 0.6);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  /* Được tạo viền và hiệu ứng mờ 3D bởi class .section-band-opaque */
 }
 
 .values-cards-grid {
@@ -856,8 +879,7 @@
    ========================================================================== */
 .orgchart-section {
   background: transparent;
-  border-top: 1px solid rgba(226, 232, 240, 0.7);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+  border: none;
   padding: 60px 0 70px;
 }
 
@@ -1584,9 +1606,9 @@
 
 /* --- Footer Navigation Section --- */
 .about-footer-nav-section {
-  padding: 40px 0 10px;
-  border-top: 1px solid #f1f5f9;
-  margin-top: 20px;
+  padding: 50px 0 20px;
+  border: none;
+  margin-top: 0;
 }
 
 .about-nav-buttons-wrap {
