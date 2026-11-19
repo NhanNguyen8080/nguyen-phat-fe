@@ -94,20 +94,16 @@
   border-radius: 18px;
   overflow: hidden;
   cursor: pointer;
-  background-color: #1e293b;
-  border: 2px solid #ffffff;
-  box-shadow:
-    0 5px 0 #cbd5e1,
-    0 12px 28px rgba(15, 23, 42, 0.1);
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.16);
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease;
 }
 
 .portfolio-mosaic-item:hover {
-  transform: translateY(-5px);
-  border-color: #d32f2f;
-  box-shadow:
-    0 7px 0 #b91c1c,
-    0 20px 38px rgba(211, 47, 47, 0.18);
+  transform: translateY(-6px) scale(1.01);
+  border-color: rgba(211, 47, 47, 0.5);
+  box-shadow: 0 22px 42px rgba(211, 47, 47, 0.24);
 }
 
 .portfolio-image {

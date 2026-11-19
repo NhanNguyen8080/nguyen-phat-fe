@@ -40,23 +40,6 @@ const Hero = ({ onNavigateAbout }) => {
             </div>
           </div>
 
-          <div className="hero-actions">
-            <a
-              href="#product"
-              className="btn-primary"
-              style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
-            >
-              Khám phá ngay
-            </a>
-            <button
-              type="button"
-              className="btn-secondary"
-              onClick={onNavigateAbout}
-            >
-              Về chúng tôi
-            </button>
-          </div>
-
           <div className="hero-image-wrapper">
             <img
               src={HERO_BANNER_URL}
