@@ -1696,52 +1696,52 @@
 .btn-outline-back {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 60%, #e2e8f0 100%);
+  gap: 8px;
+  background: #ffffff;
   color: #334155;
-  border: 1.5px solid #cbd5e1;
-  border-bottom: 3.5px solid #94a3b8;
-  padding: 14px 28px;
-  border-radius: 12px;
-  font-size: 0.98rem;
+  border: 1px solid #cbd5e1;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-size: 0.92rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 3px 0 #cbd5e1, 0 8px 18px rgba(15, 23, 42, 0.06), inset 0 1px 1px #ffffff;
-  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.4, 1);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-outline-back:hover {
-  background: linear-gradient(180deg, #ffffff 0%, #e2e8f0 100%);
+  background: #f8fafc;
   color: #0f172a;
-  transform: translateY(-2px);
-  box-shadow: 0 5px 0 #94a3b8, 0 12px 22px rgba(15, 23, 42, 0.1);
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
 }
 
 .btn-primary-contact {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  background: linear-gradient(180deg, #ef4444 0%, #d32f2f 60%, #b91c1c 100%);
+  gap: 8px;
+  background: linear-gradient(180deg, #dc2626 0%, #b91c1c 100%);
   color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-bottom: 3.5px solid #881337;
-  padding: 14px 32px;
-  border-radius: 12px;
-  font-size: 0.98rem;
-  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 0 #881337, 0 10px 22px rgba(211, 47, 47, 0.32), inset 0 1px 1.5px rgba(255, 255, 255, 0.45);
-  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.4, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 3px 8px -1px rgba(220, 38, 38, 0.32);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-primary-contact:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 0 #881337, 0 14px 28px rgba(211, 47, 47, 0.4);
+  background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px -1px rgba(220, 38, 38, 0.42);
 }
 
 .btn-primary-contact:active {
-  transform: translateY(2px);
-  box-shadow: 0 1.5px 0 #881337, 0 4px 10px rgba(211, 47, 47, 0.25);
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(220, 38, 38, 0.25);
 }
 
 /* ==========================================================================

@@ -82,12 +82,6 @@ const Hero = ({ onNavigateAbout }) => {
                   className="btn-primary"
                   onClick={onNavigateAbout}
                   style={{
-                    padding: '12px 30px',
-                    fontSize: '0.95rem',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    borderRadius: 'var(--border-radius-lg)',
                     cursor: 'pointer'
                   }}
                 >

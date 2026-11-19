@@ -114,6 +114,20 @@
   right: 0;
 }
 
+/* Header Actions CTA */
+.header-actions {
+  display: flex;
+  align-items: center;
+}
+
+.header-actions .btn-primary {
+  padding: 8px 18px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  min-height: 38px;
+  border-radius: 8px;
+}
+
 /* =============================================
    MOBILE HAMBURGER & DRAWER NAVIGATION
    ============================================= */
@@ -304,8 +318,10 @@
   width: 100%;
   justify-content: center;
   margin-bottom: 16px;
-  font-size: 0.95rem;
-  font-weight: 700;
+  padding: 10px 20px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  border-radius: 8px;
 }
 
 .mobile-contact-quick {
