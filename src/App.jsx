@@ -366,18 +366,20 @@ function App() {
   };
 
   return (
-    <div className={`app ${route.page === 'home' ? 'is-home-fullpage' : ''}`}>
+    <div className={`app ${route.page === 'home' ? 'is-home-fullpage' : ''} ${route.page === 'capacity' ? 'is-capacity-page' : ''}`}>
       {/* Lớp nền cảnh quan điện (cột điện cao thế, đường dây & tòa nhà công nghiệp mờ phía sau) */}
       <div className="electric-landscape-bg" aria-hidden="true" />
 
-      <Header 
-        currentPage={route.page}
-        onNavigateHome={navigateToHome}
-        onNavigateAbout={navigateToAbout}
-        onNavigateProducts={navigateToProducts}
-        onNavigateProjects={navigateToProjects}
-        onNavigateCapacity={navigateToCapacity}
-      />
+      {route.page !== 'capacity' && (
+        <Header 
+          currentPage={route.page}
+          onNavigateHome={navigateToHome}
+          onNavigateAbout={navigateToAbout}
+          onNavigateProducts={navigateToProducts}
+          onNavigateProjects={navigateToProjects}
+          onNavigateCapacity={navigateToCapacity}
+        />
+      )}
 
       <Suspense fallback={<div style={{ minHeight: '60vh' }} />}>
         {route.page === 'about' ? (
@@ -443,13 +445,15 @@ function App() {
           </main>
         )}
       </Suspense>
-      <Footer
-        onNavigateHome={navigateToHome}
-        onNavigateAbout={navigateToAbout}
-        onNavigateProducts={navigateToProducts}
-        onNavigateProjects={navigateToProjects}
-        onNavigateCapacity={navigateToCapacity}
-      />
+      {route.page !== 'capacity' && (
+        <Footer
+          onNavigateHome={navigateToHome}
+          onNavigateAbout={navigateToAbout}
+          onNavigateProducts={navigateToProducts}
+          onNavigateProjects={navigateToProjects}
+          onNavigateCapacity={navigateToCapacity}
+        />
+      )}
     </div>
   );
 }

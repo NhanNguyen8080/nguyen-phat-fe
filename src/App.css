@@ -13,6 +13,13 @@
 
 /* Lớp nền cảnh quan ngành điện 3D được gắn cố định trực tiếp vào thẻ body trong index.css
    để hỗ trợ chuẩn bộ lọc kính mờ (backdrop-filter: blur) xuyên suốt toàn trang */
+.app.is-capacity-page {
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+
 .electric-landscape-bg {
   display: none;
 }

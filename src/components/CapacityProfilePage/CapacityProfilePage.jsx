@@ -569,7 +569,7 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
       {/* ==============================================================
           4. THANH CÔNG CỤ ĐÁY THÔNG MINH (Floating Dock Toolbar)
           ============================================================== */}
-      <footer className="cp-bottom-dock">
+      <footer className={`cp-bottom-dock ${showThumbs ? 'dock-with-thumbs' : 'dock-alone'}`}>
         {/* Nút Trang Đầu */}
         <button
           type="button"
@@ -729,10 +729,10 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
       </footer>
 
       {/* ==============================================================
-          5. DẢI ẢNH THU NHỎ (Interactive Thumbnails Strip)
+          5. DẢI ẢNH THU NHỎ CỐ ĐỊNH ĐÁY MÀN HÌNH (Fixed Bottom Thumbnails Strip)
           ============================================================== */}
       {showThumbs && (
-        <section className="cp-thumbs-drawer" aria-label="Toàn bộ 28 trang thu nhỏ">
+        <section className="cp-thumbs-drawer-fixed" aria-label="Toàn bộ 28 trang thu nhỏ">
           <div className="cp-thumbs-strip" ref={thumbsStripRef}>
             {Array.from({ length: TOTAL_PAGES }, (_, i) => i + 1).map((pageNum) => {
               const isSelected =
