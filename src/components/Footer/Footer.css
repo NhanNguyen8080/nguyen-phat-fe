@@ -86,10 +86,19 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 10px;
-  background-color: #ffffff;
+  background: linear-gradient(155deg, #ffffff 0%, #f4f6fa 60%, #e8edf4 100%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-bottom: 2.5px solid #cbd5e1;
   border-radius: 8px;
   padding: 6px 10px;
   overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15), inset 0 1px 1.5px #ffffff;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.partner-card:hover .partner-logo-box {
+  border-bottom-color: #d32f2f;
+  box-shadow: 0 6px 14px rgba(211, 47, 47, 0.22), inset 0 1px 1.5px #ffffff;
 }
 
 .partner-logo-box img {
@@ -158,9 +167,11 @@
   height: 38px;
   object-fit: contain;
   flex-shrink: 0;
-  background-color: #ffffff;
+  background: linear-gradient(145deg, #ffffff 0%, #f1f5f9 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
   border-radius: 50%;
   padding: 3px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), inset 0 1px 1.5px #ffffff;
 }
 
 .footer-logo .logo-text {
