@@ -608,22 +608,21 @@
 
 .moment-alt-row {
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 44px;
+  grid-template-columns: 1.08fr 0.92fr;
+  gap: 56px;
   align-items: center;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 18px;
-  padding: 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
   position: relative;
 }
 
 .moment-alt-row:hover {
-  transform: translateY(-4px);
-  border-color: #fca5a5;
-  box-shadow: 0 16px 36px rgba(211, 47, 47, 0.08);
+  transform: none;
+  border-color: transparent;
+  box-shadow: none;
 }
 
 /* Xen kẽ: Hàng chẵn đổi chữ bên trái, ảnh bên phải */
@@ -715,7 +714,7 @@
 .moment-alt-text-col {
   display: flex;
   flex-direction: column;
-  padding: 10px 6px;
+  padding: 0;
 }
 
 .moment-alt-header-line {
@@ -1320,7 +1319,7 @@
 
   .moment-alt-row {
     gap: 32px;
-    padding: 20px;
+    padding: 0;
   }
 
   .moment-alt-img-wrap {
@@ -1363,13 +1362,13 @@
   }
 
   .moments-alternating-list {
-    gap: 28px;
+    gap: 36px;
   }
 
   .moment-alt-row {
     grid-template-columns: 1fr;
     gap: 20px;
-    padding: 16px;
+    padding: 0;
   }
 
   .moment-alt-row.is-reversed .moment-alt-image-col {
