@@ -196,21 +196,6 @@ const ProjectDetail = ({ projectIdOrSlug, onNavigateBack, onNavigateContact, onS
                 <span className="key-spec-value">{project.completion_year ? `Năm ${project.completion_year}` : 'Đã hoàn thành bàn giao'}</span>
               </div>
             </div>
-
-            {/* Nút hành động tư vấn */}
-            <div className="project-actions-row">
-              <button 
-                type="button" 
-                className="btn-primary project-cta-btn"
-                onClick={onNavigateContact}
-              >
-                <span>Tư vấn kỹ thuật &amp; Báo giá công trình</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-              </button>
-            </div>
           </div>
         </div>
 
