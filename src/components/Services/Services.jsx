@@ -1,9 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Services.css';
 import { useScrollReveal } from '../../hooks/useScrollReveal';
 import { getProducts } from '../../services/productService';
 
 const FALLBACK_IMAGE = '/images/products/tu-msb-3200a.png';
+
+const getVisibleColumns = () => {
+  if (typeof window === 'undefined') return 3;
+  if (window.innerWidth <= 640) return 1;
+  if (window.innerWidth <= 992) return 2;
+  return 3;
+};
 
 const getProductThumbnail = (product) => {
   if (!product) return FALLBACK_IMAGE;
@@ -58,8 +65,13 @@ const isCableOrEnclosureProduct = (product) => {
 
 const Services = ({ onNavigateProducts, onSelectProduct }) => {
   const [allProducts, setAllProducts] = useState([]);
-  const [row1Page, setRow1Page] = useState(0);
-  const [row2Page, setRow2Page] = useState(0);
+  const [visibleCols, setVisibleCols] = useState(() => getVisibleColumns());
+  const [row1Index, setRow1Index] = useState(0);
+  const [row2Index, setRow2Index] = useState(0);
+  const [row1Animating, setRow1Animating] = useState(false);
+  const [row2Animating, setRow2Animating] = useState(false);
+  const row1TouchX = useRef(null);
+  const row2TouchX = useRef(null);
   const sectionRef = useScrollReveal({ threshold: 0.08 });
 
   useEffect(() => {
@@ -80,6 +92,14 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setVisibleCols(getVisibleColumns());
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Phân tách sản phẩm trực tiếp từ API thành 2 hàng (không tự chèn thêm sản phẩm mẫu):
   // Hàng 1: TỦ ĐIỆN & THIẾT BỊ
   const row1List = allProducts.filter((p) => !isCableOrEnclosureProduct(p));
@@ -87,12 +107,27 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
   // Hàng 2: THANG MÁNG CÁP VÀ VỎ TỦ
   const row2List = allProducts.filter((p) => isCableOrEnclosureProduct(p));
 
-  const ITEMS_PER_ROW = 3;
-  const maxRow1Page = Math.max(0, Math.ceil(row1List.length / ITEMS_PER_ROW) - 1);
-  const maxRow2Page = Math.max(0, Math.ceil(row2List.length / ITEMS_PER_ROW) - 1);
+  const maxRow1Index = Math.max(0, row1List.length - visibleCols);
+  const maxRow2Index = Math.max(0, row2List.length - visibleCols);
 
-  const visibleRow1 = row1List.slice(row1Page * ITEMS_PER_ROW, row1Page * ITEMS_PER_ROW + ITEMS_PER_ROW);
-  const visibleRow2 = row2List.slice(row2Page * ITEMS_PER_ROW, row2Page * ITEMS_PER_ROW + ITEMS_PER_ROW);
+  const safeRow1Index = Math.min(row1Index, maxRow1Index);
+  const safeRow2Index = Math.min(row2Index, maxRow2Index);
+
+  const triggerRow1Slide = (nextIdx) => {
+    const clamped = Math.max(0, Math.min(maxRow1Index, nextIdx));
+    if (clamped === safeRow1Index) return;
+    setRow1Animating(true);
+    setRow1Index(clamped);
+    setTimeout(() => setRow1Animating(false), 620);
+  };
+
+  const triggerRow2Slide = (nextIdx) => {
+    const clamped = Math.max(0, Math.min(maxRow2Index, nextIdx));
+    if (clamped === safeRow2Index) return;
+    setRow2Animating(true);
+    setRow2Index(clamped);
+    setTimeout(() => setRow2Animating(false), 620);
+  };
 
   const handleCardClick = (product) => {
     if (!product) return;
@@ -105,6 +140,140 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
       window.location.hash = `#/products/${idOrSlug}`;
     }
   };
+
+  const renderProductRow = ({
+    title,
+    categoryId,
+    products,
+    currentIndex,
+    maxIndex,
+    isAnimating,
+    onSlide,
+    touchRef,
+    fallbackImg,
+    defaultBadge,
+    delayClass
+  }) => (
+    <div className={`product-row-block reveal ${delayClass}`}>
+      <div className="product-row-header">
+        <div className="product-row-heading-center">
+          <h3
+            className="product-row-title"
+            onClick={() => onNavigateProducts && onNavigateProducts(categoryId)}
+            title={`Xem danh mục ${title}`}
+          >
+            {title}
+          </h3>
+          <div className="product-row-ornament">
+            <span className="ornament-line" />
+            <span className="ornament-diamond" />
+            <span className="ornament-line" />
+          </div>
+        </div>
+
+        {maxIndex > 0 && (
+          <div className="product-row-nav">
+            <div className="row-dots-indicator">
+              {Array.from({ length: maxIndex + 1 }, (_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  className={`row-dot ${i === currentIndex ? 'active' : ''}`}
+                  onClick={() => onSlide(i)}
+                  aria-label={`Slide ${i + 1}`}
+                />
+              ))}
+            </div>
+            <button
+              type="button"
+              className="row-nav-btn"
+              onClick={() => onSlide(currentIndex - 1)}
+              disabled={currentIndex === 0}
+              aria-label="Sản phẩm trước"
+            >
+              ‹
+            </button>
+            <button
+              type="button"
+              className="row-nav-btn"
+              onClick={() => onSlide(currentIndex + 1)}
+              disabled={currentIndex >= maxIndex}
+              aria-label="Sản phẩm tiếp theo"
+            >
+              ›
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div
+        className="product-slider-viewport"
+        onTouchStart={(e) => {
+          if (e.touches && e.touches.length > 0) {
+            touchRef.current = e.touches[0].clientX;
+          }
+        }}
+        onTouchEnd={(e) => {
+          if (touchRef.current === null) return;
+          if (e.changedTouches && e.changedTouches.length > 0) {
+            const diff = touchRef.current - e.changedTouches[0].clientX;
+            if (diff > 40) onSlide(currentIndex + 1);
+            else if (diff < -40) onSlide(currentIndex - 1);
+          }
+          touchRef.current = null;
+        }}
+      >
+        <div
+          className={`product-slider-track ${isAnimating ? 'is-sliding' : ''}`}
+          style={{
+            '--slide-index': currentIndex,
+            '--visible-cols': visibleCols
+          }}
+        >
+          {products.map((product, index) => {
+            const productName = decodeMojibake(product.name);
+            const categoryName = decodeMojibake(product.category_name) || defaultBadge;
+            const isVisibleCard = index >= currentIndex && index < currentIndex + visibleCols;
+
+            return (
+              <div
+                key={product.id || index}
+                className={`product-wide-card ${isVisibleCard ? 'is-in-view' : 'is-out-of-view'}`}
+                onClick={() => handleCardClick(product)}
+                role="button"
+                tabIndex={isVisibleCard ? 0 : -1}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleCardClick(product);
+                  }
+                }}
+                title={`Xem chi tiết: ${productName}`}
+              >
+                <div className="product-wide-img-box">
+                  <span className="product-wide-badge">{categoryName}</span>
+                  <img
+                    src={getProductThumbnail(product)}
+                    alt={productName}
+                    className="product-wide-img"
+                    loading="lazy"
+                    decoding="async"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = fallbackImg;
+                    }}
+                  />
+                </div>
+                <div className="product-wide-title-bar">
+                  <h4 className="product-wide-title">{productName}</h4>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <section className="services" id="product">
@@ -136,175 +305,35 @@ const Services = ({ onNavigateProducts, onSelectProduct }) => {
           )}
         </div>
 
-        {/* ==================== HÀNG 1: TỦ ĐIỆN ==================== */}
-        <div className="product-row-block reveal delay-1">
-          <div className="product-row-header">
-            <div className="product-row-heading-center">
-              <h3
-                className="product-row-title"
-                onClick={() => onNavigateProducts && onNavigateProducts('e03442e0-789d-46f9-a334-5a5f1cc02642')}
-                title="Xem danh mục Tủ điện"
-              >
-                TỦ ĐIỆN &amp; THIẾT BỊ
-              </h3>
-              <div className="product-row-ornament">
-                <span className="ornament-line" />
-                <span className="ornament-diamond" />
-                <span className="ornament-line" />
-              </div>
-            </div>
-
-            {maxRow1Page > 0 && (
-              <div className="product-row-nav">
-                <button
-                  type="button"
-                  className="row-nav-btn"
-                  onClick={() => setRow1Page((p) => Math.max(0, p - 1))}
-                  disabled={row1Page === 0}
-                  aria-label="Hàng 1 trang trước"
-                >
-                  ‹
-                </button>
-                <button
-                  type="button"
-                  className="row-nav-btn"
-                  onClick={() => setRow1Page((p) => Math.min(maxRow1Page, p + 1))}
-                  disabled={row1Page >= maxRow1Page}
-                  aria-label="Hàng 1 trang tiếp"
-                >
-                  ›
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className="product-wide-grid">
-            {visibleRow1.map((product, index) => {
-              const productName = decodeMojibake(product.name);
-              const categoryName = decodeMojibake(product.category_name) || 'Tủ điện';
-
-              return (
-                <div
-                  key={product.id || index}
-                  className="product-wide-card"
-                  onClick={() => handleCardClick(product)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      handleCardClick(product);
-                    }
-                  }}
-                  title={`Xem chi tiết: ${productName}`}
-                >
-                  <div className="product-wide-img-box">
-                    <span className="product-wide-badge">{categoryName}</span>
-                    <img
-                      src={getProductThumbnail(product)}
-                      alt={productName}
-                      className="product-wide-img"
-                      loading="lazy"
-                      decoding="async"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = FALLBACK_IMAGE;
-                      }}
-                    />
-                  </div>
-                  <div className="product-wide-title-bar">
-                    <h4 className="product-wide-title">{productName}</h4>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        {/* ==================== HÀNG 1: TỦ ĐIỆN & THIẾT BỊ ==================== */}
+        {renderProductRow({
+          title: 'TỦ ĐIỆN & THIẾT BỊ',
+          categoryId: 'e03442e0-789d-46f9-a334-5a5f1cc02642',
+          products: row1List,
+          currentIndex: safeRow1Index,
+          maxIndex: maxRow1Index,
+          isAnimating: row1Animating,
+          onSlide: triggerRow1Slide,
+          touchRef: row1TouchX,
+          fallbackImg: FALLBACK_IMAGE,
+          defaultBadge: 'Tủ điện',
+          delayClass: 'delay-1'
+        })}
 
         {/* ==================== HÀNG 2: THANG MÁNG CÁP VÀ VỎ TỦ ==================== */}
-        <div className="product-row-block reveal delay-2">
-          <div className="product-row-header">
-            <div className="product-row-heading-center">
-              <h3
-                className="product-row-title"
-                onClick={() => onNavigateProducts && onNavigateProducts('09048929-2ca1-48fb-a727-6fc6c259a0a7')}
-                title="Xem danh mục Thang máng cáp & Vỏ tủ"
-              >
-                THANG MÁNG CÁP VÀ VỎ TỦ
-              </h3>
-              <div className="product-row-ornament">
-                <span className="ornament-line" />
-                <span className="ornament-diamond" />
-                <span className="ornament-line" />
-              </div>
-            </div>
-
-            {maxRow2Page > 0 && (
-              <div className="product-row-nav">
-                <button
-                  type="button"
-                  className="row-nav-btn"
-                  onClick={() => setRow2Page((p) => Math.max(0, p - 1))}
-                  disabled={row2Page === 0}
-                  aria-label="Hàng 2 trang trước"
-                >
-                  ‹
-                </button>
-                <button
-                  type="button"
-                  className="row-nav-btn"
-                  onClick={() => setRow2Page((p) => Math.min(maxRow2Page, p + 1))}
-                  disabled={row2Page >= maxRow2Page}
-                  aria-label="Hàng 2 trang tiếp"
-                >
-                  ›
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className="product-wide-grid">
-            {visibleRow2.map((product, index) => {
-              const productName = decodeMojibake(product.name);
-              const categoryName = decodeMojibake(product.category_name) || 'Thang máng cáp & Vỏ tủ';
-
-              return (
-                <div
-                  key={product.id || index}
-                  className="product-wide-card"
-                  onClick={() => handleCardClick(product)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      handleCardClick(product);
-                    }
-                  }}
-                  title={`Xem chi tiết: ${productName}`}
-                >
-                  <div className="product-wide-img-box">
-                    <span className="product-wide-badge">{categoryName}</span>
-                    <img
-                      src={getProductThumbnail(product)}
-                      alt={productName}
-                      className="product-wide-img"
-                      loading="lazy"
-                      decoding="async"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = '/images/products/thang-mang-cap-dien.png';
-                      }}
-                    />
-                  </div>
-                  <div className="product-wide-title-bar">
-                    <h4 className="product-wide-title">{productName}</h4>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        {renderProductRow({
+          title: 'THANG MÁNG CÁP VÀ VỎ TỦ',
+          categoryId: '09048929-2ca1-48fb-a727-6fc6c259a0a7',
+          products: row2List,
+          currentIndex: safeRow2Index,
+          maxIndex: maxRow2Index,
+          isAnimating: row2Animating,
+          onSlide: triggerRow2Slide,
+          touchRef: row2TouchX,
+          fallbackImg: '/images/products/thang-mang-cap-dien.png',
+          defaultBadge: 'Thang máng cáp & Vỏ tủ',
+          delayClass: 'delay-2'
+        })}
       </div>
     </section>
   );

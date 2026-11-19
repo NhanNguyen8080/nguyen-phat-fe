@@ -2,6 +2,7 @@
    MỤC SẢN PHẨM TIÊU BIỂU NGOÀI TRANG CHỦ (#product)
    - Chia 2 hàng: Hàng 1 (Tủ Điện & Thiết Bị) + Hàng 2 (Thang Máng Cáp & Vỏ Tủ)
    - Khung thẻ TO và NGANG, hiển thị trọn vẹn 100% hình ảnh tải lên
+   - Hiệu ứng trượt ngang mượt mà (Smooth 3D Carousel Track) khi chuyển slide
    ========================================================== */
 
 .services {
@@ -62,6 +63,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 34px;
 }
 
 .product-row-heading-center {
@@ -106,36 +108,68 @@
   transform: rotate(45deg);
 }
 
+/* Nút điều hướng & chấm chỉ báo slide */
 .product-row-nav {
   position: absolute;
   right: 0;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
-  gap: 6px;
+  align-items: center;
+  gap: 8px;
+}
+
+.row-dots-indicator {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-right: 4px;
+}
+
+.row-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  border: none;
+  background-color: #cbd5e1;
+  padding: 0;
+  cursor: pointer;
+  transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.3s ease;
+}
+
+.row-dot.active {
+  width: 20px;
+  background-color: #d32f2f;
 }
 
 .row-nav-btn {
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  border: 1px solid rgba(211, 47, 47, 0.3);
+  border: 1.5px solid rgba(211, 47, 47, 0.35);
   background-color: #ffffff;
   color: #b91c1c;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 700;
   line-height: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  box-shadow: 0 3px 8px rgba(15, 23, 42, 0.08);
+  transition: all 0.22s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .row-nav-btn:hover:not(:disabled) {
   background-color: #d32f2f;
   border-color: #d32f2f;
   color: #ffffff;
+  transform: scale(1.08);
+  box-shadow: 0 6px 14px rgba(211, 47, 47, 0.25);
+}
+
+.row-nav-btn:active:not(:disabled) {
+  transform: scale(0.95);
 }
 
 .row-nav-btn:disabled {
@@ -143,14 +177,51 @@
   cursor: not-allowed;
 }
 
-/* ==================== LƯỚI 3 KHUNG NGANG TO RÕ ==================== */
-.product-wide-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
+/* ==================== SLIDER VIEWPORT & TRACK HIỆU ỨNG TRƯỢT MƯỢT ==================== */
+.product-slider-viewport {
+  width: 100%;
+  overflow: hidden;
+  padding: 6px 4px 12px;
+  margin: -6px -4px -12px;
+  box-sizing: border-box;
+}
+
+.product-slider-track {
+  --slide-gap: 18px;
+  --slide-index: 0;
+  --visible-cols: 3;
+  display: flex;
+  gap: var(--slide-gap);
+  width: 100%;
+  /* Trượt ngang mượt theo từng thẻ với gia tốc lò xo êm */
+  transform: translate3d(
+    calc(-1 * var(--slide-index) * (100% + var(--slide-gap)) / var(--visible-cols)),
+    0,
+    0
+  );
+  transition: transform 0.62s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+@keyframes cardSlidePulse {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(0.975) translateY(2px);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
+}
+
+.product-slider-track.is-sliding .product-wide-card.is-in-view {
+  animation: cardSlidePulse 0.58s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .product-wide-card {
+  flex: 0 0 calc((100% - (var(--visible-cols) - 1) * var(--slide-gap)) / var(--visible-cols));
+  max-width: calc((100% - (var(--visible-cols) - 1) * var(--slide-gap)) / var(--visible-cols));
   background-color: #ffffff;
   border: 1.5px solid #e2e8f0;
   border-radius: 14px;
@@ -161,7 +232,20 @@
   box-shadow:
     0 4px 0 #cbd5e1,
     0 10px 24px rgba(15, 23, 42, 0.07);
-  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease, border-color 0.28s ease;
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease,
+    border-color 0.35s ease,
+    opacity 0.45s ease;
+}
+
+.product-wide-card.is-out-of-view {
+  opacity: 0.45;
+  transform: scale(0.95);
+}
+
+.product-wide-card.is-in-view {
+  opacity: 1;
 }
 
 .product-wide-card:hover {
@@ -194,11 +278,15 @@
   object-fit: contain;
   object-position: center;
   display: block;
-  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.product-slider-track.is-sliding .product-wide-img {
+  transform: scale(1.03);
 }
 
 .product-wide-card:hover .product-wide-img {
-  transform: scale(1.05);
+  transform: scale(1.06);
 }
 
 .product-wide-badge {
@@ -249,10 +337,6 @@
 
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 992px) {
-  .product-wide-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .product-wide-img-box {
     height: 200px;
   }
@@ -266,10 +350,6 @@
 
   .services-main-title {
     text-align: center;
-  }
-
-  .product-wide-grid {
-    grid-template-columns: 1fr;
   }
 
   .product-wide-img-box {
