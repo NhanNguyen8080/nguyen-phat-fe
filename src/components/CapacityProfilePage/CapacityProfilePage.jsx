@@ -65,7 +65,7 @@ const BACKGROUND_PRESETS = [
     name: 'Studio Đêm',
     theme: 'dark',
     icon: '🌙',
-    swatch: 'radial-gradient(circle, #1e293b 0%, #070a12 100%)',
+    swatch: 'radial-gradient(circle, #24324a 0%, #0a0e17 100%)',
     desc: 'Triển lãm đêm sang trọng với đèn rọi trung tâm'
   },
   {
@@ -73,7 +73,7 @@ const BACKGROUND_PRESETS = [
     name: 'Bàn Gỗ Sang',
     theme: 'dark',
     icon: '🪵',
-    swatch: 'linear-gradient(135deg, #3d2417 0%, #170d07 100%)',
+    swatch: 'linear-gradient(135deg, #5c341d 0%, #200f08 100%)',
     desc: 'Mặt bàn gỗ óc chó cao cấp ấm cúng'
   },
   {
@@ -81,7 +81,7 @@ const BACKGROUND_PRESETS = [
     name: 'Đá Showroom',
     theme: 'dark',
     icon: '🏛️',
-    swatch: 'linear-gradient(135deg, #1e293b 0%, #080d18 100%)',
+    swatch: 'linear-gradient(135deg, #24324a 0%, #0f1724 100%)',
     desc: 'Mặt đá phiến cẩm thạch sang trọng'
   },
   {
@@ -89,8 +89,8 @@ const BACKGROUND_PRESETS = [
     name: 'Kỹ Thuật MEP',
     theme: 'dark',
     icon: '⚡',
-    swatch: 'linear-gradient(135deg, #1e233d 0%, #070b16 100%)',
-    desc: 'Lưới kỹ thuật cơ điện Nguyên Phát'
+    swatch: 'linear-gradient(135deg, #0e7490 0%, #091424 100%)',
+    desc: 'Lưới bản vẽ kỹ thuật cơ điện MEP'
   },
   {
     id: 'minimal-light',
@@ -642,7 +642,11 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
             </button>
 
             {showBgPicker && (
-              <div className="cp-bg-popover">
+              <div
+                className="cp-bg-popover"
+                onMouseDown={(e) => e.stopPropagation()}
+                onTouchStart={(e) => e.stopPropagation()}
+              >
                 <div className="cp-bg-popover-header">
                   <span className="cp-bg-popover-title">Không gian đọc</span>
                   <span className="cp-bg-popover-sub">Tùy biến hình nền sau sách</span>
@@ -655,7 +659,8 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
                         key={p.id}
                         type="button"
                         className={`cp-bg-preset-item ${isSelected ? 'is-selected' : ''}`}
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setBgPreset(p.id);
                           setTheme(p.theme);
                           try {
