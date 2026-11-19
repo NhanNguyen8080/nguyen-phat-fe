@@ -458,19 +458,6 @@ const ProductDetail = ({
                   <span>Hình ảnh tủ điện đang được cập nhật</span>
                 </div>
               )}
-
-              {/* Cam kết kỹ thuật mini dưới Gallery */}
-              <div className="pd-gallery-trust-strip">
-                <div className="pd-trust-item">
-                  <span>100% Type-tested IEC</span>
-                </div>
-                <div className="pd-trust-item">
-                  <span>Đồng mạ thiếc 99.99%</span>
-                </div>
-                <div className="pd-trust-item">
-                  <span>CO/CQ chính hãng</span>
-                </div>
-              </div>
             </div>
           </div>
 
