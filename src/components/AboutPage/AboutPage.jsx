@@ -118,50 +118,80 @@ const workMoments = [
   {
     id: 1,
     title: 'Khảo Sát & Giám Sát Công Trường',
-    desc: 'Kỹ sư Cơ Điện Nguyên Phát trực tiếp khảo sát mặt bằng và kiểm tra phụ tải trước khi lắp đặt hệ thống.',
+    desc: 'Kỹ sư Cơ Điện Nguyên Phát trực tiếp khảo sát thực địa công trình, kiểm tra mặt bằng, không gian và phụ tải thực tế trước khi lên phương án bố trí hệ thống điện.',
     badge: 'Kỹ Sư Hiện Trường',
     imgUrl: '/catalog/pages/13.jpg',
-    tag: 'Hiện Trường'
+    tag: 'Hiện Trường',
+    highlights: [
+      'Khảo sát chi tiết mặt bằng bệ móng và tuyến đường cáp dẫn',
+      'Tư vấn phương án bố trí tủ điện và thang máng cáp tối ưu không gian',
+      'Giám sát chặt chẽ quy chuẩn an toàn lao động và kỹ thuật thi công'
+    ]
   },
   {
     id: 2,
-    title: 'Thiết Kế Sơ Đồ Nguyên Lý 3D',
-    desc: 'Đội ngũ R&D và kỹ thuật bóc tách bản vẽ bố trí tủ điện và hệ thống thang máng cáp chuyên nghiệp.',
+    title: 'Thiết Kế Sơ Đồ Nguyên Lý 3D & Bóc Tách Bản Vẽ',
+    desc: 'Đội ngũ kỹ sư R&D thiết kế chi tiết sơ đồ nguyên lý điện một sợi (Single Line), phối cảnh 3D tủ bảng điện và hệ thống phân phối cáp.',
     badge: 'Phòng Kỹ Thuật',
     imgUrl: '/catalog/pages/14.jpg',
-    tag: 'Bản Vẽ 3D'
+    tag: 'Bản Vẽ 3D',
+    highlights: [
+      'Ứng dụng phần mềm chuyên dụng AutoCAD Electrical & 3D SolidWorks',
+      'Bóc tách vật tư chính xác, tối ưu hóa kích thước vỏ tủ và thanh cái đồng',
+      'Đồng bộ giải pháp kỹ thuật theo yêu cầu thiết kế của chủ đầu tư'
+    ]
   },
   {
     id: 3,
-    title: 'Gia Công Vỏ Tủ & Thang Máng Cáp CNC',
-    desc: 'Dây chuyền máy chấn, đột dập CNC tự động và buồng sơn tĩnh điện công nghệ cao tại nhà máy.',
+    title: 'Gia Công Cơ Khí Vỏ Tủ & Thang Máng Cáp CNC',
+    desc: 'Dây chuyền máy chấn, đột dập CNC tự động và buồng sơn tĩnh điện công nghệ cao đảm bảo độ chính xác cơ khí tuyệt đối.',
     badge: 'Nhà Máy Sản Xuất',
     imgUrl: '/catalog/pages/15.jpg',
-    tag: 'Cơ Khí CNC'
+    tag: 'Cơ Khí CNC',
+    highlights: [
+      'Gia công cơ khí CNC đạt cấp bảo vệ IP43, IP54 chống bụi nước',
+      'Sơn tĩnh điện chống ăn mòn bề mặt, độ bền cao trong mọi môi trường',
+      'Thép tấm tiêu chuẩn chất lượng cao độ dày từ 1.2mm đến 2.5mm'
+    ]
   },
   {
     id: 4,
-    title: 'Lắp Ráp & Đấu Nối Khí Cụ Điện',
-    desc: 'Kỹ thuật viên đấu nối thanh cái đồng Busbar và khí cụ đóng cắt chính hãng (Schneider, Mitsubishi, LS, ABB...).',
+    title: 'Lắp Ráp Khí Cụ & Đấu Nối Thanh Cái Đồng Busbar',
+    desc: 'Kỹ thuật viên lành nghề trực tiếp lắp ráp các thiết bị đóng cắt và gia công uốn ép thanh cái đồng nguyên chất chuẩn xác.',
     badge: 'Đấu Nối Tủ Điện',
     imgUrl: '/catalog/pages/16.jpg',
-    tag: 'Lắp Ráp Tủ'
+    tag: 'Lắp Ráp Tủ',
+    highlights: [
+      '100% thanh cái đồng đỏ nguyên chất mạ thiếc, bọc co nhiệt tiêu chuẩn',
+      'Tích hợp khí cụ điện chính hãng Schneider, Mitsubishi, ABB, LS, Shihlin, Chint',
+      'Đấu nối hệ thống nhị thứ, rơ-le điều khiển và đánh số thứ tự dây thẩm mỹ'
+    ]
   },
   {
     id: 5,
-    title: 'Đo Kiểm Cách Điện & Test Vận Hành',
-    desc: 'Quy trình kiểm định chất lượng nghiêm ngặt đạt chuẩn TCVN và IEC 61439 trước khi xuất xưởng.',
+    title: 'Đo Kiểm Cách Điện & Thử Nghiệm Vận Hành Xuất Xưởng',
+    desc: 'Quy trình kiểm định chất lượng nghiêm ngặt của phòng QA/QC theo chuẩn TCVN và IEC 61439 trước khi xuất xưởng.',
     badge: 'Phòng QA/QC',
     imgUrl: '/catalog/pages/17.jpg',
-    tag: 'Kiểm Định'
+    tag: 'Kiểm Định',
+    highlights: [
+      'Đo điện trở cách điện Megohmmeter và thử nghiệm phóng điện cao áp',
+      'Kiểm tra liên động cơ khí khóa an toàn (Interlock ATS/MTS)',
+      'Lập biên bản thử nghiệm nghiệm thu xuất xưởng (FAT) cho từng sản phẩm'
+    ]
   },
   {
     id: 6,
-    title: 'Nghiệm Thu & Bàn Giao Dự Án',
-    desc: 'Đồng hành cùng Quý khách hàng và Quý đối tác hoàn thiện các công trình công nghiệp trọng điểm.',
+    title: 'Vận Chuyển, Cẩu Lắp & Bàn Giao Dự Án',
+    desc: 'Đội ngũ kỹ thuật hỗ trợ cẩu lắp đặt vào vị trí, hướng dẫn đấu nối, chạy thử liên động và bàn giao hồ sơ hoàn công.',
     badge: 'Hợp Tác Bền Vững',
     imgUrl: '/catalog/pages/18.jpg',
-    tag: 'Bàn Giao'
+    tag: 'Bàn Giao',
+    highlights: [
+      'Phương tiện vận chuyển chuyên dụng bọc bảo vệ chống trầy xước',
+      'Hỗ trợ đóng điện chạy thử và hướng dẫn vận hành trực tiếp tại công trình',
+      'Bàn giao đầy đủ catalog, sơ đồ nguyên lý và chính sách bảo hành 24/7'
+    ]
   }
 ];
 
@@ -437,53 +467,93 @@ const AboutPage = ({ onNavigateHome }) => {
         </section>
 
         {/* =========================================================
-            MỤC 4: HÌNH ẢNH ANH EM TRONG CÔNG TY ĐANG LÀM VIỆC (Từ feedback image18)
+            MỤC 4: HÌNH ẢNH THỰC TẾ (Thiết kế xen kẽ ảnh - chữ theo yêu cầu)
             ========================================================= */}
         <section className="about-section moments-section">
           <div className="section-title-wrap">
-            <span className="section-mini-tag">THỰC TẾ SẢN XUẤT</span>
+            <span className="section-mini-tag">HOẠT ĐỘNG THỰC TẾ</span>
             <h2 className="section-main-heading">
-              Đội Ngũ Kỹ Sư &amp; <span className="highlight-red">Hoạt Động Tại Nhà Xưởng</span>
+              Hình Ảnh <span className="highlight-red">Thực Tế</span>
             </h2>
             <p className="section-sub-heading">
               Hình ảnh thực tế anh em kỹ sư, kỹ thuật viên Cơ Điện Nguyên Phát trực tiếp làm việc, sản xuất và giám sát tại nhà máy &amp; công trường
             </p>
           </div>
 
-          <div className="moments-gallery-grid">
-            {workMoments.map((item) => (
-              <div 
-                key={item.id} 
-                className="moment-card"
-                onClick={() => setSelectedPhoto(item)}
-              >
-                <div className="moment-img-wrap">
-                  <img 
-                    src={item.imgUrl} 
-                    alt={item.title} 
-                    className="moment-img"
-                    loading="lazy"
-                  />
-                  <div className="moment-overlay">
-                    <span className="moment-view-btn">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <div className="moments-alternating-list">
+            {workMoments.map((item, index) => {
+              const isReversed = index % 2 === 1; // Hàng lẻ: ảnh trái chữ phải; Hàng chẵn: chữ trái ảnh phải
+              return (
+                <div 
+                  key={item.id} 
+                  className={`moment-alt-row ${isReversed ? 'is-reversed' : ''}`}
+                >
+                  {/* Cột Ảnh */}
+                  <div 
+                    className="moment-alt-image-col"
+                    onClick={() => setSelectedPhoto(item)}
+                  >
+                    <div className="moment-alt-img-wrap">
+                      <img 
+                        src={item.imgUrl} 
+                        alt={item.title} 
+                        className="moment-alt-img"
+                        loading="lazy"
+                      />
+                      <div className="moment-alt-overlay">
+                        <span className="moment-alt-view-btn">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            <line x1="11" y1="8" x2="11" y2="14"/>
+                            <line x1="8" y1="11" x2="14" y2="11"/>
+                          </svg>
+                          Xem Ảnh Chi Tiết
+                        </span>
+                      </div>
+                      <span className="moment-alt-tag-badge">{item.tag}</span>
+                    </div>
+                  </div>
+
+                  {/* Cột Chữ & Thông Tin Kỹ Thuật */}
+                  <div className="moment-alt-text-col">
+                    <div className="moment-alt-header-line">
+                      <span className="moment-alt-step-chip">0{index + 1}</span>
+                      <span className="moment-alt-badge">{item.badge}</span>
+                    </div>
+                    <h3 className="moment-alt-title">{item.title}</h3>
+                    <p className="moment-alt-desc">{item.desc}</p>
+                    
+                    {item.highlights && item.highlights.length > 0 && (
+                      <ul className="moment-alt-highlights-list">
+                        {item.highlights.map((hl, hIdx) => (
+                          <li key={hIdx} className="moment-alt-highlight-item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d32f2f" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span>{hl}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    <button 
+                      type="button" 
+                      className="moment-alt-lightbox-btn"
+                      onClick={() => setSelectedPhoto(item)}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <circle cx="11" cy="11" r="8"/>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"/>
                         <line x1="11" y1="8" x2="11" y2="14"/>
                         <line x1="8" y1="11" x2="14" y2="11"/>
                       </svg>
-                      Xem Ảnh
-                    </span>
+                      Xem Phóng To Ảnh
+                    </button>
                   </div>
-                  <span className="moment-tag-badge">{item.tag}</span>
                 </div>
-                <div className="moment-info">
-                  <span className="moment-badge">{item.badge}</span>
-                  <h3 className="moment-title">{item.title}</h3>
-                  <p className="moment-desc">{item.desc}</p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
 

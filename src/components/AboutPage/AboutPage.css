@@ -596,52 +596,73 @@
 }
 
 /* ==========================================================================
-   MỤC 4: HÌNH ẢNH ANH EM TRONG CÔNG TY ĐANG LÀM VIỆC (Gallery Grid)
+   MỤC 4: HÌNH ẢNH THỰC TẾ (Bố Cục Xen Kẽ Ảnh Trái - Chữ Phải & Ngược Lại)
    ========================================================================== */
-.moments-gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-.moment-card {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-  cursor: pointer;
+.moments-alternating-list {
   display: flex;
   flex-direction: column;
-  transition: all 0.3s ease;
+  gap: 40px;
+  max-width: 1140px;
+  margin: 0 auto;
 }
 
-.moment-card:hover {
-  transform: translateY(-6px);
-  border-color: #fca5a5;
-  box-shadow: 0 14px 32px rgba(211, 47, 47, 0.1);
-}
-
-.moment-img-wrap {
-  width: 100%;
-  height: 220px;
+.moment-alt-row {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 44px;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
-  overflow: hidden;
-  background-color: #f1f5f9;
 }
 
-.moment-img {
+.moment-alt-row:hover {
+  transform: translateY(-4px);
+  border-color: #fca5a5;
+  box-shadow: 0 16px 36px rgba(211, 47, 47, 0.08);
+}
+
+/* Xen kẽ: Hàng chẵn đổi chữ bên trái, ảnh bên phải */
+.moment-alt-row.is-reversed .moment-alt-image-col {
+  order: 2;
+}
+
+.moment-alt-row.is-reversed .moment-alt-text-col {
+  order: 1;
+}
+
+/* Cột Ảnh */
+.moment-alt-image-col {
+  cursor: pointer;
+  width: 100%;
+}
+
+.moment-alt-img-wrap {
+  width: 100%;
+  height: 320px;
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  background-color: #f1f5f9;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.moment-alt-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
 }
 
-.moment-card:hover .moment-img {
-  transform: scale(1.06);
+.moment-alt-row:hover .moment-alt-img {
+  transform: scale(1.04);
 }
 
-.moment-overlay {
+.moment-alt-overlay {
   position: absolute;
   inset: 0;
   background: rgba(15, 23, 42, 0.55);
@@ -652,11 +673,11 @@
   transition: opacity 0.3s ease;
 }
 
-.moment-card:hover .moment-overlay {
+.moment-alt-row:hover .moment-alt-overlay {
   opacity: 1;
 }
 
-.moment-view-btn {
+.moment-alt-view-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -664,63 +685,126 @@
   color: #d32f2f;
   font-size: 0.88rem;
   font-weight: 700;
-  padding: 8px 18px;
+  padding: 10px 22px;
   border-radius: 999px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
   transform: translateY(10px);
   transition: transform 0.3s ease;
 }
 
-.moment-card:hover .moment-view-btn {
+.moment-alt-row:hover .moment-alt-view-btn {
   transform: translateY(0);
 }
 
-.moment-tag-badge {
+.moment-alt-tag-badge {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  background: rgba(211, 47, 47, 0.9);
+  top: 14px;
+  right: 14px;
+  background: rgba(211, 47, 47, 0.92);
   color: #ffffff;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  padding: 4px 12px;
+  padding: 4px 14px;
   border-radius: 999px;
   letter-spacing: 0.5px;
   backdrop-filter: blur(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.moment-info {
-  padding: 20px;
+/* Cột Chữ */
+.moment-alt-text-col {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  padding: 10px 6px;
 }
 
-.moment-badge {
+.moment-alt-header-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.moment-alt-step-chip {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #d32f2f;
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-family: monospace;
+}
+
+.moment-alt-badge {
   display: inline-block;
-  align-self: flex-start;
   font-size: 0.75rem;
   font-weight: 700;
   color: #d32f2f;
   background-color: #fff1f2;
-  padding: 3px 10px;
-  border-radius: 6px;
-  margin-bottom: 8px;
+  padding: 3px 12px;
+  border-radius: 999px;
 }
 
-.moment-title {
-  font-size: 1.08rem;
-  font-weight: 700;
+.moment-alt-title {
+  font-size: 1.4rem;
+  font-weight: 800;
   color: #0f172a;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   line-height: 1.35;
 }
 
-.moment-desc {
-  font-size: 0.86rem;
-  color: #64748b;
-  line-height: 1.6;
-  margin: 0;
+.moment-alt-desc {
+  font-size: 0.95rem;
+  color: #475569;
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.moment-alt-highlights-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.moment-alt-highlight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.88rem;
+  color: #334155;
+  line-height: 1.5;
+}
+
+.moment-alt-highlight-item svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.moment-alt-lightbox-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8fafc;
+  color: #334155;
+  border: 1px solid #e2e8f0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: all 0.2s ease;
+}
+
+.moment-alt-lightbox-btn:hover {
+  background: #fff1f2;
+  color: #d32f2f;
+  border-color: #fecaca;
+  transform: translateY(-2px);
 }
 
 /* ==========================================================================
@@ -1234,8 +1318,13 @@
     width: 90%;
   }
 
-  .moments-gallery-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .moment-alt-row {
+    gap: 32px;
+    padding: 20px;
+  }
+
+  .moment-alt-img-wrap {
+    height: 280px;
   }
 
   .culture-cards-grid {
@@ -1273,8 +1362,30 @@
     grid-template-columns: 1fr;
   }
 
-  .moments-gallery-grid {
+  .moments-alternating-list {
+    gap: 28px;
+  }
+
+  .moment-alt-row {
     grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 16px;
+  }
+
+  .moment-alt-row.is-reversed .moment-alt-image-col {
+    order: 1;
+  }
+
+  .moment-alt-row.is-reversed .moment-alt-text-col {
+    order: 2;
+  }
+
+  .moment-alt-img-wrap {
+    height: 220px;
+  }
+
+  .moment-alt-title {
+    font-size: 1.2rem;
   }
 
   .orgchart-level-departments {
