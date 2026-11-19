@@ -100,24 +100,21 @@
   position: relative;
   width: 100%;
   aspect-ratio: 4 / 3;
-  border-radius: 16px;
-  overflow: hidden;
-  background: linear-gradient(160deg, #ffffff 0%, #f8fafc 60%, #edf2f7 100%);
-  border: 1.5px solid rgba(226, 232, 240, 0.95);
-  border-bottom: 4px solid #cbd5e1;
-  box-shadow: 0 8px 0 #cbd5e1, 0 20px 40px rgba(15, 23, 42, 0.08), inset 0 1px 1.5px #ffffff;
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+  border: none;
+  box-shadow: none;
   cursor: zoom-in;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  transition: transform 0.25s ease;
 }
 
 .pd-main-stage:hover {
-  border-color: rgba(211, 47, 47, 0.4);
-  border-bottom-color: #d32f2f;
-  transform: translateY(-3px);
-  box-shadow: 0 10px 0 #b91c1c, 0 24px 44px rgba(211, 47, 47, 0.14), inset 0 1px 1.5px #ffffff;
+  transform: translateY(-4px);
+  box-shadow: none;
 }
 
 .pd-main-img {
@@ -127,15 +124,16 @@
   max-height: 100%;
   object-fit: contain;
   object-position: center;
-  padding: 16px;
+  padding: 8px;
   box-sizing: border-box;
   will-change: transform, opacity;
-  transition: opacity 0.3s ease;
+  filter: drop-shadow(0 16px 28px rgba(15, 23, 42, 0.22));
+  transition: opacity 0.3s ease, filter 0.35s ease, transform 0.35s ease;
 }
 
 .pd-main-stage:hover .pd-main-img-incoming {
-  /* Giữ nguyên toàn bộ chi tiết ảnh, không phóng to cắt xén */
-  transform: none;
+  transform: scale(1.04);
+  filter: drop-shadow(0 24px 42px rgba(211, 47, 47, 0.32));
 }
 
 .pd-main-img-incoming {
@@ -434,21 +432,19 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 16px 18px;
-  background: linear-gradient(160deg, #ffffff 0%, #f8fafc 60%, #edf2f7 100%);
-  border: 1.5px solid rgba(226, 232, 240, 0.95);
-  border-bottom: 3.5px solid #cbd5e1;
+  padding: 14px 16px;
+  background: transparent;
+  border: 1px solid rgba(226, 232, 240, 0.85);
   border-radius: 12px;
-  box-shadow: 0 4px 0 #cbd5e1, 0 6px 14px rgba(15, 23, 42, 0.04), inset 0 1px 1px #ffffff;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
   transition: all 0.2s ease;
   min-height: 84px;
 }
 
 .pd-hero-spec-card:hover {
   border-color: rgba(211, 47, 47, 0.4);
-  border-bottom-color: #d32f2f;
-  box-shadow: 0 6px 0 #b91c1c, 0 12px 20px rgba(211, 47, 47, 0.12);
   transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(211, 47, 47, 0.12);
 }
 
 .pd-hero-spec-card.highlight {

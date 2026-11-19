@@ -62,21 +62,24 @@
   background-color: #1a202c;
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 12px;
-  padding: 16px 12px;
+  padding: 14px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: none;
 }
 
 .partner-card:hover {
   transform: translateY(-4px);
-  background-color: #202736;
-  border-color: rgba(211, 47, 47, 0.4);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(211, 47, 47, 0.5);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
 .partner-logo-box {
@@ -86,30 +89,28 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 10px;
-  background: linear-gradient(155deg, #ffffff 0%, #f4f6fa 60%, #e8edf4 100%);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-bottom: 2.5px solid #cbd5e1;
-  border-radius: 8px;
-  padding: 6px 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15), inset 0 1px 1.5px #ffffff;
-  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  background: transparent;
+  border: none;
+  padding: 4px;
+  overflow: visible;
+  box-shadow: none;
 }
 
 .partner-card:hover .partner-logo-box {
-  border-bottom-color: #d32f2f;
-  box-shadow: 0 6px 14px rgba(211, 47, 47, 0.22), inset 0 1px 1.5px #ffffff;
+  box-shadow: none;
 }
 
 .partner-logo-box img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
-  transition: transform 0.25s ease;
+  filter: brightness(1.1) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
+  transition: transform 0.25s ease, filter 0.25s ease;
 }
 
 .partner-card:hover .partner-logo-box img {
-  transform: scale(1.05);
+  transform: translateY(-2px) scale(1.08);
+  filter: brightness(1.2) drop-shadow(0 6px 14px rgba(211, 47, 47, 0.35));
 }
 
 .partner-fallback {

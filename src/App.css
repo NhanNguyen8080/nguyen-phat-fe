@@ -95,11 +95,11 @@
   /* Tinh chỉnh kích thước con bên trong từng màn hình để vừa khít 100vh */
   /* 1A. Màn hình 1 của Trang chủ (Hero Banner) */
   .home-fullpage-main .hero-top {
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
 
   .home-fullpage-main .hero-image {
-    height: clamp(280px, 46vh, 440px);
+    height: clamp(270px, 44vh, 420px);
   }
 
   /* 1B. Màn hình 2 của Trang chủ (Lời cảm ơn + Ảnh giữa phóng to + Lĩnh vực hoạt động) */
