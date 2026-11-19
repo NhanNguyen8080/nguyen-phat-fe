@@ -238,8 +238,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-left: 18px;
-  margin-bottom: -14px;
+  margin-left: 0;
+  margin-bottom: 14px;
   position: relative;
   z-index: 3;
 }
@@ -290,7 +290,7 @@
 .mission-white-card.card-3d-surface {
   background: transparent;
   border: none;
-  padding: 8px 0;
+  padding: 0;
   display: grid;
   grid-template-columns: 1fr 1.5px 1fr;
   gap: 18px;
@@ -630,6 +630,16 @@
     transform: scale(0.76);
     transform-origin: top center;
     margin-bottom: -65px;
+  }
+
+  .mission-top-badge-row {
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .mission-red-line {
+    display: none;
   }
 
   .mission-white-card.card-3d-surface {
