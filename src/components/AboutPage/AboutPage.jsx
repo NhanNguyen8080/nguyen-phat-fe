@@ -204,34 +204,6 @@ const cultureItems = [
   }
 ];
 
-// Sơ Đồ Tổ Chức Công Ty
-const orgDepartments = [
-  {
-    title: 'Phòng Kỹ Thuật & R&D',
-    role: 'Tư Vấn & Thiết Kế',
-    desc: 'Khảo sát hiện trường, bóc tách khối lượng, thiết kế bản vẽ 2D/3D tủ điện và lập trình tự động hóa PLC.'
-  },
-  {
-    title: 'Nhà Máy Sản Xuất',
-    role: 'Gia Công & Chế Tạo',
-    desc: 'Phân xưởng đột dập chấn CNC cơ khí vỏ tủ, thang máng cáp và phân xưởng lắp ráp thiết bị, thanh cái đồng.'
-  },
-  {
-    title: 'Phòng Quản Lý Chất Lượng',
-    role: 'Kiểm Định QA/QC',
-    desc: 'Đo kiểm cách điện, kiểm định an toàn theo chuẩn TCVN/IEC và cấp chứng thư xuất xưởng nghiêm ngặt.'
-  },
-  {
-    title: 'Phòng Thi Công & Dự Án',
-    role: 'Lắp Đặt Hiện Trường',
-    desc: 'Cẩu lắp tủ điện tại dự án, đấu nối cáp, nghiệm thu đóng điện an toàn và bảo hành bảo trì 24/7 toàn quốc.'
-  },
-  {
-    title: 'Phòng Kinh Doanh & Dịch Vụ',
-    role: 'Báo Giá & Hỗ Trợ',
-    desc: 'Tiếp nhận yêu cầu, tư vấn giải pháp kỹ thuật tối ưu chi phí và chăm sóc Quý khách hàng, Quý đối tác.'
-  }
-];
 
 const AboutPage = ({ onNavigateHome }) => {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
@@ -496,54 +468,196 @@ const AboutPage = ({ onNavigateHome }) => {
               );
             })}
           </div>
-        </section>
-
-        {/* =========================================================
-            MỤC 5: SƠ ĐỒ TỔ CHỨC CÔNG TY (Theo yêu cầu sơ đồ tổ chức nhỏ nhỏ)
+        </section>        {/* =========================================================
+            MỤC 5: SƠ ĐỒ TỔ CHỨC CÔNG TY (Chuẩn theo sơ đồ tổ chức)
             ========================================================= */}
         <section className="about-section orgchart-section">
           <div className="section-title-wrap">
             <span className="section-mini-tag">CƠ CẤU BỘ MÁY</span>
             <h2 className="section-main-heading">
-              Sơ Đồ <span className="highlight-red">Tổ Chức Công Ty</span>
+              Sơ Đồ <span className="highlight-red">Tổ Chức</span>
             </h2>
             <p className="section-sub-heading">
-              Cơ cấu tổ chức tinh gọn, phối hợp nhịp nhàng, tối ưu hóa năng suất và kiểm soát chất lượng chặt chẽ
+              Cơ cấu tổ chức tinh gọn, phân cấp rõ ràng, phối hợp nhịp nhàng giữa ban điều hành, quản lý dự án và các bộ phận nghiệp vụ
             </p>
           </div>
 
-          <div className="orgchart-tree-container">
-            {/* Cấp 1: Ban Giám Đốc */}
-            <div className="orgchart-level-root">
-              <div className="orgchart-node root-node">
-                <div className="node-icon-crown">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                  </svg>
+          <div className="orgchart-board-card">
+            {/* Header thanh đỏ theo ảnh sơ đồ */}
+            <div className="orgchart-board-header">
+              <div className="orgchart-board-title-line">
+                <span className="orgchart-board-red-title">SƠ ĐỒ TỔ CHỨC</span>
+                <div className="orgchart-board-red-bar" />
+              </div>
+              <button 
+                type="button" 
+                className="orgchart-view-original-btn"
+                onClick={() => setSelectedPhoto({
+                  imgUrl: '/images/so-do-to-chuc.png',
+                  title: 'Sơ Đồ Tổ Chức - Cơ Điện Nguyên Phát',
+                  badge: 'Bản Vẽ Gốc',
+                  desc: 'Sơ đồ tổ chức cơ cấu bộ máy từ Ban Giám Đốc, Giám Đốc, Ban Quản Lý Dự Án đến các bộ phận chức năng và đội ngũ công nhân trực tiếp sản xuất, lắp đặt.'
+                })}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="11" cy="11" r="8"/>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                  <line x1="11" y1="8" x2="11" y2="14"/>
+                  <line x1="8" y1="11" x2="14" y2="11"/>
+                </svg>
+                Xem Bản Gốc (Ảnh)
+              </button>
+            </div>
+
+            {/* Canvas sơ đồ dạng cây tương tác chuẩn theo sơ đồ */}
+            <div className="orgchart-canvas-scroll">
+              <div className="orgchart-canvas-inner">
+                {/* CẤP 1: BAN GIÁM ĐỐC */}
+                <div className="org-tree-level org-tree-level-1">
+                  <div className="org-card org-card-director">
+                    <span className="org-card-title">BAN GIÁM<br />ĐỐC</span>
+                  </div>
                 </div>
-                <div className="node-role-badge">CẤP QUẢN TRỊ CAO NHẤT</div>
-                <h3 className="node-title">BAN GIÁM ĐỐC</h3>
-                <p className="node-sub">Giám đốc Mai Hưng HÀ</p>
+
+                {/* Mũi tên từ Cấp 1 xuống Cấp 2 */}
+                <div className="org-connector-single">
+                  <div className="org-stem-line" />
+                  <div className="org-stem-arrow" />
+                </div>
+
+                {/* CẤP 2: GIÁM ĐỐC */}
+                <div className="org-tree-level org-tree-level-2">
+                  <div className="org-card org-card-director">
+                    <span className="org-card-title">GIÁM ĐỐC</span>
+                  </div>
+                </div>
+
+                {/* Phân nhánh từ GIÁM ĐỐC xuống CẤP 3 (5 Bộ phận) */}
+                <div className="org-branch-wrap">
+                  <div className="org-branch-upper-stem" />
+                  <div className="org-branch-row">
+                    <div className="org-branch-col is-first">
+                      <div className="org-branch-line-h" />
+                      <div className="org-branch-stem" />
+                      <div className="org-branch-arrow" />
+                    </div>
+                    <div className="org-branch-col is-middle">
+                      <div className="org-branch-line-h" />
+                      <div className="org-branch-stem" />
+                      <div className="org-branch-arrow" />
+                    </div>
+                    <div className="org-branch-col is-center">
+                      <div className="org-branch-line-h" />
+                      <div className="org-branch-stem" />
+                      <div className="org-branch-arrow" />
+                    </div>
+                    <div className="org-branch-col is-middle">
+                      <div className="org-branch-line-h" />
+                      <div className="org-branch-stem" />
+                      <div className="org-branch-arrow" />
+                    </div>
+                    <div className="org-branch-col is-last">
+                      <div className="org-branch-line-h" />
+                      <div className="org-branch-stem" />
+                      <div className="org-branch-arrow" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* CẤP 3: 5 KHỐI PHÒNG BAN */}
+                <div className="org-cards-row-5">
+                  <div className="org-card org-card-dept">
+                    <span className="org-card-title">BỘ PHẬN<br />HÀNH CHÍNH</span>
+                  </div>
+                  <div className="org-card org-card-dept">
+                    <span className="org-card-title">BỘ PHẬN<br />TÀI CHÍNH - KẾ TOÁN</span>
+                  </div>
+                  <div className="org-card org-card-dept org-card-dept-highlight">
+                    <span className="org-card-title">BAN QUẢN LÝ<br />DỰ ÁN</span>
+                  </div>
+                  <div className="org-card org-card-dept">
+                    <span className="org-card-title">BỘ PHẬN<br />KINH DOANH</span>
+                  </div>
+                  <div className="org-card org-card-dept">
+                    <span className="org-card-title">BỘ PHẬN<br />THIẾT KẾ</span>
+                  </div>
+                </div>
+
+                {/* Phân nhánh từ BAN QUẢN LÝ DỰ ÁN xuống CẤP 4 (5 Bộ phận hiện trường/kho/bảo dưỡng) */}
+                <div className="org-branch-wrap">
+                  <div className="org-branch-upper-stem" />
+                  <div className="org-branch-row">
+                    <div className="org-branch-col is-first">
+                      <div className="org-branch-line-h" />
+                      <div className="org-branch-stem" />
+                      <div className="org-branch-arrow" />
+                    </div>
+                    <div className="org-branch-col is-middle">
+                      <div className="org-branch-line-h" />
+                      <div className="org-branch-stem" />
+                      <div className="org-branch-arrow" />
+                    </div>
+                    <div className="org-branch-col is-center">
+                      <div className="org-branch-line-h" />
+                      <div className="org-branch-stem" />
+                      <div className="org-branch-arrow" />
+                    </div>
+                    <div className="org-branch-col is-middle">
+                      <div className="org-branch-line-h" />
+                      <div className="org-branch-stem" />
+                      <div className="org-branch-arrow" />
+                    </div>
+                    <div className="org-branch-col is-last">
+                      <div className="org-branch-line-h" />
+                      <div className="org-branch-stem" />
+                      <div className="org-branch-arrow" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* CẤP 4: 5 BỘ PHẬN KỸ THUẬT & VẬN HÀNH */}
+                <div className="org-cards-row-5">
+                  <div className="org-card org-card-subdept">
+                    <span className="org-card-title">BỘ PHẬN<br />THI CÔNG ĐIỆN</span>
+                  </div>
+                  <div className="org-card org-card-subdept">
+                    <span className="org-card-title">BỘ PHẬN<br />THI CÔNG CƠ KHÍ</span>
+                  </div>
+                  <div className="org-card org-card-subdept org-card-subdept-highlight">
+                    <span className="org-card-title">BP. QUẢN LÝ<br />KHO</span>
+                  </div>
+                  <div className="org-card org-card-subdept">
+                    <span className="org-card-title">BP MUA BÁN<br />HÀNG HÓA</span>
+                  </div>
+                  <div className="org-card org-card-subdept">
+                    <span className="org-card-title">BỘ PHẬN<br />BẢO DƯỠNG</span>
+                  </div>
+                </div>
+
+                {/* Mũi tên từ BP. QUẢN LÝ KHO xuống CẤP 5 */}
+                <div className="org-connector-single">
+                  <div className="org-stem-line" />
+                  <div className="org-stem-arrow" />
+                </div>
+
+                {/* CẤP 5: ĐỘI NGŨ CN TRỰC TIẾP SẢN XUẤT, LẮP ĐẶT */}
+                <div className="org-tree-level org-tree-level-5">
+                  <div className="org-card org-card-workers">
+                    <span className="org-card-title">ĐỘI NGŨ CN TRỰC TIẾP SẢN XUẤT, LẮP ĐẶT</span>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Đường Nối Phân Cấp */}
-            <div className="orgchart-connector-vertical" />
-            <div className="orgchart-connector-horizontal" />
-
-            {/* Cấp 2: Các Phòng Ban Chức Năng */}
-            <div className="orgchart-level-departments">
-              {orgDepartments.map((dept, index) => (
-                <div key={index} className="orgchart-node-wrapper">
-                  <div className="orgchart-dept-stem" />
-                  <div className="orgchart-node dept-node">
-                    <span className="dept-num-badge">0{index + 1}</span>
-                    <span className="dept-role-pill">{dept.role}</span>
-                    <h4 className="dept-title">{dept.title}</h4>
-                    <p className="dept-desc">{dept.desc}</p>
-                  </div>
-                </div>
-              ))}
+            {/* Chỉ dẫn vuốt chạm trên màn hình nhỏ */}
+            <div className="orgchart-mobile-swipe-hint">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+              <span>Vuốt ngang để xem toàn bộ sơ đồ tổ chức</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
             </div>
           </div>
         </section>

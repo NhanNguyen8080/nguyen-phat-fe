@@ -817,157 +817,320 @@
 }
 
 /* ==========================================================================
-   MỤC 5: SƠ ĐỒ TỔ CHỨC CÔNG TY (Org Chart Tree)
+   MỤC 5: SƠ ĐỒ TỔ CHỨC CÔNG TY (Org Chart Board & Visual Tree)
    ========================================================================== */
 .orgchart-section {
   background-color: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(4px);
   border-top: 1px solid rgba(226, 232, 240, 0.6);
   border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  padding: 60px 0;
 }
 
-.orgchart-tree-container {
+/* Thẻ bảng sơ đồ nền trắng bo tròn */
+.orgchart-board-card {
+  max-width: 1120px;
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 32px 36px 28px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+  position: relative;
+}
+
+/* Header thanh đỏ theo ảnh sơ đồ */
+.orgchart-board-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+}
+
+.orgchart-board-title-line {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-grow: 1;
+}
+
+.orgchart-board-red-title {
+  color: #d32f2f;
+  font-size: 1.55rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.orgchart-board-red-bar {
+  flex-grow: 1;
+  height: 3px;
+  background-color: #d32f2f;
+  border-radius: 2px;
+}
+
+/* Nút xem bản gốc ảnh phóng to */
+.orgchart-view-original-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #fff1f2;
+  color: #d32f2f;
+  border: 1px solid #fecaca;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.orgchart-view-original-btn:hover {
+  background-color: #d32f2f;
+  color: #ffffff;
+  border-color: #d32f2f;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.2);
+}
+
+/* Khung cuộn ngang khi trên màn hình hẹp */
+.orgchart-canvas-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 8px 4px 16px;
+}
+
+/* Khung cây sơ đồ bên trong */
+.orgchart-canvas-inner {
+  min-width: 900px;
+  max-width: 1000px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
-  max-width: 1100px;
-  margin: 0 auto;
 }
 
-/* Cấp 1: Ban Giám Đốc */
-.orgchart-level-root {
+/* CÁC CẤP TRONG SƠ ĐỒ */
+.org-tree-level {
   display: flex;
   justify-content: center;
+  width: 100%;
   z-index: 2;
 }
 
-.root-node {
-  background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
-  color: #ffffff;
-  border-radius: 14px;
-  padding: 22px 36px;
+/* Thẻ chung trong sơ đồ */
+.org-card {
   text-align: center;
-  box-shadow: 0 10px 28px rgba(211, 47, 47, 0.25);
-  border: 2px solid #ef4444;
-  min-width: 280px;
+  cursor: default;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  user-select: none;
 }
 
-.node-icon-crown {
-  color: #fde047;
-  margin-bottom: 6px;
+.org-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
-.node-role-badge {
-  font-size: 0.7rem;
+.org-card-title {
+  display: block;
+  text-transform: uppercase;
+}
+
+/* CẤP 1 & CẤP 2: BAN GIÁM ĐỐC & GIÁM ĐỐC (Gradient Đỏ/Hồng san hô) */
+.org-card-director {
+  background: linear-gradient(180deg, #ffdddc 0%, #fa9c9a 100%);
+  border: 1.5px solid #dc2626;
+  border-radius: 12px;
+  padding: 14px 28px;
+  min-width: 200px;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.15);
+}
+
+.org-card-director .org-card-title {
+  color: #111827;
+  font-size: 0.98rem;
   font-weight: 800;
-  letter-spacing: 1px;
-  color: #fee2e2;
-  margin-bottom: 4px;
+  line-height: 1.35;
+  letter-spacing: 0.5px;
 }
 
-.root-node .node-title {
-  font-size: 1.35rem;
-  font-weight: 800;
-  letter-spacing: 1px;
-  margin: 0 0 4px;
-  color: #ffffff;
-}
-
-.root-node .node-sub {
-  font-size: 0.92rem;
-  color: #fef08a;
-  font-weight: 600;
-  margin: 0;
-}
-
-/* Đường Nối Phân Cấp */
-.orgchart-connector-vertical {
-  width: 2px;
-  height: 32px;
-  background-color: #cbd5e1;
-}
-
-.orgchart-connector-horizontal {
-  width: 80%;
-  height: 2px;
-  background-color: #cbd5e1;
-  position: relative;
-}
-
-/* Cấp 2: Các Phòng Ban */
-.orgchart-level-departments {
+/* CẤP 3: 5 KHỐI PHÒNG BAN (Gradient Cam/Mơ ấm áp) */
+.org-cards-row-5 {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 16px;
   width: 100%;
-  margin-top: 0;
+  z-index: 2;
 }
 
-.orgchart-node-wrapper {
+.org-card-dept {
+  background: linear-gradient(180deg, #ffe9d7 0%, #ffc799 100%);
+  border: 1.5px solid #ea580c;
+  border-radius: 10px;
+  padding: 12px 6px;
+  min-height: 72px;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.12);
 }
 
-.orgchart-dept-stem {
-  width: 2px;
-  height: 24px;
-  background-color: #cbd5e1;
-}
-
-.dept-node {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 20px 14px;
-  text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  transition: all 0.25s ease;
-}
-
-.dept-node:hover {
-  transform: translateY(-4px);
-  border-color: #d32f2f;
-  box-shadow: 0 10px 24px rgba(211, 47, 47, 0.08);
-}
-
-.dept-num-badge {
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: #cbd5e1;
-  font-family: monospace;
-  margin-bottom: 6px;
-}
-
-.dept-role-pill {
-  display: inline-block;
-  align-self: center;
-  font-size: 0.7rem;
+.org-card-dept .org-card-title {
+  color: #111827;
+  font-size: 0.86rem;
   font-weight: 700;
-  color: #d32f2f;
-  background-color: #fff1f2;
-  padding: 2px 10px;
-  border-radius: 999px;
-  margin-bottom: 10px;
-}
-
-.dept-title {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 8px;
   line-height: 1.35;
 }
 
-.dept-desc {
-  font-size: 0.8rem;
+.org-card-dept.org-card-dept-highlight {
+  border-width: 2px;
+  border-color: #c2410c;
+  box-shadow: 0 6px 16px rgba(234, 88, 12, 0.2);
+}
+
+/* CẤP 4: 5 BỘ PHẬN KỸ THUẬT & VẬN HÀNH (Gradient Vàng ngà/Be nhạt) */
+.org-card-subdept {
+  background: linear-gradient(180deg, #fef6ee 0%, #fde4cb 100%);
+  border: 1.5px solid #d97706;
+  border-radius: 10px;
+  padding: 12px 6px;
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(217, 119, 6, 0.1);
+}
+
+.org-card-subdept .org-card-title {
+  color: #111827;
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.org-card-subdept.org-card-subdept-highlight {
+  border-width: 2px;
+  border-color: #b45309;
+}
+
+/* CẤP 5: ĐỘI NGŨ CN TRỰC TIẾP SẢN XUẤT, LẮP ĐẶT (Gradient Bạc/Kim loại) */
+.org-card-workers {
+  background: linear-gradient(180deg, #f8fafc 0%, #cbd5e1 45%, #94a3b8 100%);
+  border: 1.5px solid #475569;
+  border-radius: 10px;
+  padding: 12px 32px;
+  width: 60%;
+  min-width: 480px;
+  max-width: 620px;
+  box-shadow: 0 6px 18px rgba(71, 85, 105, 0.22), inset 0 1px 1px #ffffff;
+}
+
+.org-card-workers .org-card-title {
+  color: #0f172a;
+  font-size: 0.94rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  line-height: 1.35;
+}
+
+/* ĐƯỜNG NỐI & MŨI TÊN (Connectors & Arrows) */
+.org-connector-single {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+}
+
+.org-stem-line {
+  width: 2px;
+  height: 24px;
+  background-color: #1e293b;
+}
+
+.org-stem-arrow,
+.org-branch-arrow {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 7px solid #1e293b;
+  margin-top: -1px;
+}
+
+/* Khối phân nhánh ngang 5 cột */
+.org-branch-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.org-branch-upper-stem {
+  width: 2px;
+  height: 18px;
+  background-color: #1e293b;
+}
+
+.org-branch-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+.org-branch-col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 28px;
+}
+
+/* Thanh ngang nối các nhánh */
+.org-branch-line-h {
+  position: absolute;
+  top: 0;
+  height: 2px;
+  background-color: #1e293b;
+}
+
+.org-branch-col.is-first .org-branch-line-h {
+  left: 50%;
+  right: -16px;
+}
+
+.org-branch-col.is-middle .org-branch-line-h,
+.org-branch-col.is-center .org-branch-line-h {
+  left: -16px;
+  right: -16px;
+}
+
+.org-branch-col.is-last .org-branch-line-h {
+  left: -16px;
+  right: 50%;
+}
+
+.org-branch-stem {
+  width: 2px;
+  height: 21px;
+  background-color: #1e293b;
+}
+
+/* Chỉ dẫn vuốt chạm trên thiết bị di động */
+.orgchart-mobile-swipe-hint {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   color: #64748b;
-  line-height: 1.5;
-  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 14px;
 }
 
 /* ==========================================================================
@@ -1320,12 +1483,8 @@
     display: none;
   }
 
-  .orgchart-level-departments {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  .orgchart-connector-horizontal {
-    width: 90%;
+  .orgchart-mobile-swipe-hint {
+    display: flex;
   }
 
   .moment-alt-row {
@@ -1398,16 +1557,13 @@
     font-size: 1.2rem;
   }
 
-  .orgchart-level-departments {
-    grid-template-columns: 1fr;
+  .orgchart-board-card {
+    padding: 20px 14px;
+    border-radius: 12px;
   }
 
-  .orgchart-dept-stem {
-    display: none;
-  }
-
-  .orgchart-connector-horizontal {
-    display: none;
+  .orgchart-board-red-title {
+    font-size: 1.25rem;
   }
 
   .about-nav-buttons-wrap {
