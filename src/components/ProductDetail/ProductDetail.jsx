@@ -555,9 +555,6 @@ const ProductDetail = ({
             <div className="pd-stacked-block pd-block-info">
               <div className="pd-block-header">
                 <h2 className="pd-block-title">Thông Tin Sản Phẩm</h2>
-                {productSpecs.length > 0 && (
-                  <span className="pd-block-badge">{productSpecs.length} thông số</span>
-                )}
               </div>
 
               <div className="pd-block-desc-card">
