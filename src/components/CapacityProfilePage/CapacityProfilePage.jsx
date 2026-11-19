@@ -109,9 +109,9 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
         height: 785,
         size: 'stretch',
         minWidth: 260,
-        maxWidth: 850,
+        maxWidth: 680,
         minHeight: 370,
-        maxHeight: 1200,
+        maxHeight: 980,
         maxShadowOpacity: 0.6,
         showCover: true,
         mobileScrollSupport: false,
@@ -524,7 +524,7 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
 
         {/* Khung sách PageFlip HTML5 Canvas với bóng đổ và góc gấp trang 3D */}
         <div
-          className="cp-book-stage-inner"
+          className={`cp-book-stage-inner is-${orientation}`}
           style={{ transform: `scale(${zoom})`, transformOrigin: 'center center' }}
         >
           <div ref={bookMountRef} className="cp-flipbook-mount" />
