@@ -818,21 +818,25 @@ const AboutPage = ({ onNavigateHome }) => {
             ========================================================= */}
         <section className="about-section culture-section section-band-opaque">
           <div className="container">
-            <div className="section-title-wrap">
-              <span className="section-mini-tag">CON NGƯỜI LÀ CỐT LÕI</span>
-              <h2 className="section-main-heading">
-                Văn Hóa <span className="highlight-red">Cơ Điện Nguyên Phát</span>
-              </h2>
-              <p className="section-sub-heading">
-                Xây dựng môi trường làm việc nhân văn, chuyên nghiệp, gắn kết bền vững và luôn lấy con người làm trọng tâm phát triển
-              </p>
-            </div>
-
-            {/* Khối Đoạn Văn Mở Đầu Văn Hóa (Trích chính xác từ doc feedback) */}
-            {/* Banner Văn Hóa - Đội Ngũ Có Ảnh Nền Bên Dưới (Theo mẫu tham khảo) */}
+            {/* Banner Văn Hóa & Đội Ngũ - Ảnh Nền Bao Trùm Cả Title Văn Hóa Công Ty */}
             <div className="culture-team-hero-banner">
               <div className="culture-team-banner-overlay" />
               <div className="culture-team-banner-content">
+                {/* Phần Title Văn Hóa Doanh Nghiệp được ảnh nền bao trùm */}
+                <div className="culture-banner-header">
+                  <span className="section-mini-tag culture-banner-mini-tag">CON NGƯỜI LÀ CỐT LÕI</span>
+                  <h2 className="culture-banner-main-heading">
+                    Văn Hóa <span className="highlight-brand-orange">Cơ Điện Nguyên Phát</span>
+                  </h2>
+                  <p className="culture-banner-sub-heading">
+                    Xây dựng môi trường làm việc nhân văn, chuyên nghiệp, gắn kết bền vững và luôn lấy con người làm trọng tâm phát triển
+                  </p>
+                </div>
+
+                {/* Đường chỉ phân cách mềm giữa Title và Đội ngũ */}
+                <div className="culture-team-divider-line" />
+
+                {/* Khối Đoạn Văn Đội Ngũ (Trích chính xác từ doc feedback) */}
                 <div className="culture-team-accent-line" />
                 <h3 className="culture-team-banner-title">ĐỘI NGŨ</h3>
                 <div className="culture-team-banner-text">
