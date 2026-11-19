@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import St from 'page-flip';
 import './CapacityProfilePage.css';
+
+const PageFlip = St?.PageFlip || St;
 
 const TOTAL_PAGES = 28;
 
@@ -50,16 +53,21 @@ const playPaperFlipSound = () => {
   }
 };
 
+const PAGE_IMAGES = Array.from(
+  { length: TOTAL_PAGES },
+  (_, i) => `/catalog/pages/${i + 1}.jpg`
+);
+
 const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
-  // Trang hiện tại
+  // Trang hiện tại (1-indexed: 1 đến 28)
   const [currentPage, setCurrentPage] = useState(() => {
     const p = Number(initialPage) || 1;
     return Math.min(TOTAL_PAGES, Math.max(1, p));
   });
 
-  // Chế độ xem: 'spread' (trang đôi 2 bên) hoặc 'single' (1 trang đơn)
-  const [viewMode, setViewMode] = useState(() =>
-    typeof window !== 'undefined' && window.innerWidth > 860 ? 'spread' : 'single'
+  // Hướng hiển thị ('landscape' - 2 trang đôi hoặc 'portrait' - 1 trang đơn)
+  const [orientation, setOrientation] = useState(() =>
+    typeof window !== 'undefined' && window.innerWidth > 860 ? 'landscape' : 'portrait'
   );
 
   // Giao diện: 'dark' (Phòng đọc Studio đêm cao cấp) hoặc 'light' (Phòng đọc sáng)
@@ -83,16 +91,74 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
   // Mở Drawer Mục lục (TOC)
   const [showToc, setShowToc] = useState(false);
 
-  // Trạng thái đang lật trang 3D
-  const [flipState, setFlipState] = useState(null);
-
   const containerRef = useRef(null);
-  const touchStartXRef = useRef(null);
+  const bookMountRef = useRef(null);
+  const pageFlipRef = useRef(null);
   const thumbsStripRef = useRef(null);
 
-  // Tính trang bên trái & phải ở trạng thái tĩnh
-  const leftPage = viewMode === 'spread' ? (currentPage % 2 === 0 ? currentPage - 1 : currentPage) : currentPage;
-  const rightPage = viewMode === 'spread' ? Math.min(TOTAL_PAGES, leftPage + 1) : currentPage;
+  // Khởi tạo FlipBuilder-style HTML5 Canvas PageFlip engine
+  useEffect(() => {
+    if (!bookMountRef.current) return;
+
+    // Tạo phần tử con wrapper để PageFlip mount vào an toàn
+    const bookWrapper = document.createElement('div');
+    bookWrapper.className = 'cp-flipbook-root';
+    bookMountRef.current.appendChild(bookWrapper);
+
+    let pageFlipInstance = null;
+
+    try {
+      pageFlipInstance = new PageFlip(bookWrapper, {
+        width: 550,
+        height: 785,
+        size: 'stretch',
+        minWidth: 260,
+        maxWidth: 680,
+        minHeight: 370,
+        maxHeight: 970,
+        maxShadowOpacity: 0.6,
+        showCover: true,
+        mobileScrollSupport: false,
+        useMouseEvents: true,
+        showPageCorners: true,
+        flippingTime: 650, // Chuẩn FlipBuilder
+        startPage: Math.max(0, Math.min(TOTAL_PAGES - 1, currentPage - 1)),
+      });
+
+      pageFlipInstance.loadFromImages(PAGE_IMAGES);
+      pageFlipRef.current = pageFlipInstance;
+
+      // Khi trang lật hoàn tất
+      pageFlipInstance.on('flip', (e) => {
+        const pageIndex = Number(e.data);
+        setCurrentPage(pageIndex + 1);
+        if (soundEnabled) {
+          playPaperFlipSound();
+        }
+      });
+
+      // Khi hướng trang thay đổi
+      pageFlipInstance.on('changeOrientation', (e) => {
+        setOrientation(e.data);
+      });
+    } catch (err) {
+      console.error('Lỗi khởi tạo PageFlip:', err);
+    }
+
+    return () => {
+      if (pageFlipInstance) {
+        try {
+          pageFlipInstance.destroy();
+        } catch {
+          // ignore
+        }
+        pageFlipRef.current = null;
+      }
+      if (bookWrapper.parentNode) {
+        bookWrapper.parentNode.removeChild(bookWrapper);
+      }
+    };
+  }, []);
 
   // Lắng nghe sự kiện Fullscreen thay đổi
   useEffect(() => {
@@ -106,108 +172,47 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
   // Tự động cuộn Thumbnail tới trang hiện tại
   useEffect(() => {
     if (thumbsStripRef.current) {
-      const activeThumb = thumbsStripRef.current.querySelector(`.cp-thumb-item[data-page="${leftPage}"]`);
+      const activeThumb = thumbsStripRef.current.querySelector(`.cp-thumb-item[data-page="${currentPage}"]`);
       if (activeThumb) {
         activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
       }
     }
-  }, [leftPage]);
+  }, [currentPage]);
 
-  // Điều hướng trang với hiệu ứng lật trang 3D
-  const triggerFlip = useCallback((direction, targetPage) => {
-    if (flipState) return;
-
-    if (soundEnabled) {
-      playPaperFlipSound();
-    }
-
-    if (viewMode === 'single') {
-      setFlipState({ direction, targetPage, fromPage: currentPage });
-      setTimeout(() => {
-        setCurrentPage(targetPage);
-        setFlipState(null);
-      }, 920);
-      return;
-    }
-
-    // Spread mode
-    const fromLeft = leftPage;
-    const fromRight = rightPage;
-    const newLeft = targetPage % 2 === 0 ? targetPage - 1 : targetPage;
-    const newRight = Math.min(TOTAL_PAGES, newLeft + 1);
-
-    if (fromLeft === newLeft && fromRight === newRight) return;
-
-    setFlipState({
-      direction,
-      fromLeft,
-      fromRight,
-      newLeft,
-      newRight
-    });
-
-    setTimeout(() => {
-      setCurrentPage(newLeft);
-      setFlipState(null);
-    }, 960);
-  }, [flipState, soundEnabled, viewMode, leftPage, rightPage, currentPage]);
-
+  // Điều hướng trang
   const handleNext = useCallback(() => {
-    if (viewMode === 'spread') {
-      if (rightPage >= TOTAL_PAGES) {
-        setIsAutoPlay(false);
-        return;
-      }
-      const target = Math.min(TOTAL_PAGES, rightPage + 1);
-      triggerFlip('next', target);
-    } else {
-      if (currentPage >= TOTAL_PAGES) {
-        setIsAutoPlay(false);
-        return;
-      }
-      triggerFlip('next', currentPage + 1);
+    if (pageFlipRef.current) {
+      pageFlipRef.current.flipNext('bottom');
     }
-  }, [viewMode, rightPage, currentPage, triggerFlip]);
+  }, []);
 
   const handlePrev = useCallback(() => {
-    if (viewMode === 'spread') {
-      if (leftPage <= 1) return;
-      const target = Math.max(1, leftPage - 2);
-      triggerFlip('prev', target);
-    } else {
-      if (currentPage <= 1) return;
-      triggerFlip('prev', currentPage - 1);
+    if (pageFlipRef.current) {
+      pageFlipRef.current.flipPrev('bottom');
     }
-  }, [viewMode, leftPage, currentPage, triggerFlip]);
+  }, []);
 
-  const handleGoToPage = (pageNumber) => {
-    const valid = Math.min(TOTAL_PAGES, Math.max(1, Number(pageNumber) || 1));
-    const target = viewMode === 'spread' ? (valid % 2 === 0 ? valid - 1 : valid) : valid;
-    if (target === (viewMode === 'spread' ? leftPage : currentPage)) return;
-    const dir = target > (viewMode === 'spread' ? leftPage : currentPage) ? 'next' : 'prev';
-    triggerFlip(dir, target);
-  };
+  const handleGoToPage = useCallback((pageNumber) => {
+    const page = Math.max(1, Math.min(TOTAL_PAGES, Number(pageNumber) || 1));
+    if (pageFlipRef.current) {
+      pageFlipRef.current.flip(page - 1, 'bottom');
+    }
+  }, []);
 
   // Tự động lật (Auto-play slideshow)
   useEffect(() => {
     if (!isAutoPlay) return;
     const timer = setInterval(() => {
-      if (viewMode === 'spread') {
-        if (rightPage >= TOTAL_PAGES) {
-          setIsAutoPlay(false);
-        } else {
-          handleNext();
-        }
-      } else {
+      if (pageFlipRef.current) {
         if (currentPage >= TOTAL_PAGES) {
           setIsAutoPlay(false);
         } else {
-          handleNext();
+          pageFlipRef.current.flipNext('bottom');
         }
       }
     }, 4500);
     return () => clearInterval(timer);
-  }, [isAutoPlay, viewMode, rightPage, currentPage, handleNext]);
+  }, [isAutoPlay, currentPage]);
 
   // Phím tắt bàn phím
   useEffect(() => {
@@ -233,27 +238,7 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  });
-
-  // Touch Swipe trên Mobile
-  const handleTouchStart = (e) => {
-    if (e.touches && e.touches[0]) {
-      touchStartXRef.current = e.touches[0].clientX;
-    }
-  };
-
-  const handleTouchEnd = (e) => {
-    if (touchStartXRef.current === null) return;
-    if (e.changedTouches && e.changedTouches[0]) {
-      const deltaX = e.changedTouches[0].clientX - touchStartXRef.current;
-      if (deltaX < -50) {
-        handleNext();
-      } else if (deltaX > 50) {
-        handlePrev();
-      }
-    }
-    touchStartXRef.current = null;
-  };
+  }, [handleNext, handlePrev, handleGoToPage, showToc]);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -265,6 +250,22 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
         document.exitFullscreen();
       }
     }
+  };
+
+  // Nhãn hiển thị số trang đang xem
+  const getPageLabel = () => {
+    if (orientation === 'portrait') {
+      return `${currentPage} / ${TOTAL_PAGES}`;
+    }
+    if (currentPage === 1) {
+      return `1 / ${TOTAL_PAGES} (Bìa trước)`;
+    }
+    if (currentPage === TOTAL_PAGES) {
+      return `${TOTAL_PAGES} / ${TOTAL_PAGES} (Bìa sau)`;
+    }
+    const left = currentPage % 2 === 0 ? currentPage : currentPage - 1;
+    const right = Math.min(TOTAL_PAGES, left + 1);
+    return `${left} - ${right} / ${TOTAL_PAGES}`;
   };
 
   return (
@@ -314,26 +315,6 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
             </svg>
             <span>Mục lục</span>
           </button>
-
-          {/* Toggle Chế độ xem: 2 trang / 1 trang */}
-          <div className="cp-mode-switcher">
-            <button
-              type="button"
-              className={`cp-mode-btn ${viewMode === 'spread' ? 'active' : ''}`}
-              onClick={() => setViewMode('spread')}
-              title="Chế độ 2 Trang Đôi (Sách mở)"
-            >
-              📖 Đôi
-            </button>
-            <button
-              type="button"
-              className={`cp-mode-btn ${viewMode === 'single' ? 'active' : ''}`}
-              onClick={() => setViewMode('single')}
-              title="Chế độ 1 Trang Đơn"
-            >
-              📄 Đơn
-            </button>
-          </div>
 
           {/* Bật / Tắt Âm thanh lật sách */}
           <button
@@ -414,8 +395,8 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
         <div className="cp-chapters-scroll">
           {CHAPTERS.map((ch, idx) => {
             const isActive =
-              leftPage >= ch.page &&
-              (idx === CHAPTERS.length - 1 || leftPage < CHAPTERS[idx + 1].page);
+              currentPage >= ch.page &&
+              (idx === CHAPTERS.length - 1 || currentPage < CHAPTERS[idx + 1].page);
             return (
               <button
                 key={ch.id}
@@ -432,150 +413,30 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
       </nav>
 
       {/* ==============================================================
-          3. SÂN KHẤU LẬT SÁCH 3D (3D Realistic Flipbook Stage)
+          3. SÂN KHẤU LẬT SÁCH CHUẨN FLIPBUILDER (HTML5 Canvas PageFlip Stage)
           ============================================================== */}
-      <main
-        className="cp-main-stage"
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-      >
+      <main className="cp-main-stage">
         {/* Nút Lật Trang Trước (Mũi tên trái lớn) */}
         <button
           type="button"
           className="cp-side-arrow prev"
           onClick={handlePrev}
-          disabled={leftPage <= 1}
+          disabled={currentPage <= 1}
           aria-label="Lật trang trước"
-          title="Lật trang trước (Phím Mũi tên Trái)"
+          title="Lật trang trước (hoặc bấm/kéo mép góc trang sách)"
         >
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <polyline points="15 18 9 12 15 6"></polyline>
           </svg>
         </button>
 
-        {/* Khung sách 3D với bóng đổ và hiệu ứng lật trang */}
+        {/* Khung sách PageFlip HTML5 Canvas với bóng đổ và góc gấp trang 3D */}
         <div
-          className={`cp-book-viewport ${viewMode === 'spread' ? 'mode-spread' : 'mode-single'}`}
+          className="cp-book-stage-inner"
           style={{ transform: `scale(${zoom})`, transformOrigin: 'center center' }}
         >
-          {/* Bóng đổ môi trường 3D dưới đáy cuốn sách */}
+          <div ref={bookMountRef} className="cp-flipbook-mount" />
           <div className="cp-book-ambient-shadow" />
-
-          {/* TH1: CHẾ ĐỘ 2 TRANG ĐÔI (SPREAD MODE) */}
-          {viewMode === 'spread' && (
-            <div className="cp-spread-book">
-              {/* Trang Trái Nền */}
-              <div
-                className="cp-book-page page-left"
-                onClick={handlePrev}
-                title="Bấm mép trái để lật về trang trước"
-              >
-                <div className="cp-page-inner">
-                  <img
-                    src={`/catalog/pages/${flipState?.direction === 'next' ? flipState.fromLeft : flipState?.direction === 'prev' ? flipState.newLeft : leftPage}.jpg`}
-                    alt={`Trang ${leftPage}`}
-                    className="cp-page-image"
-                  />
-                  <div className="cp-gutter-shadow left" />
-                  <div className="cp-page-edge left" />
-                  {/* Bóng đổ quét qua khi lá lật tiếp đất êm ái */}
-                  {flipState?.direction === 'next' && <div className="cp-page-landing-shadow left" />}
-                  <span className="cp-page-badge left">
-                    Trang {flipState?.direction === 'prev' ? flipState.newLeft : leftPage}
-                  </span>
-                </div>
-              </div>
-
-              {/* Sống Gáy Sách 3D */}
-              <div className="cp-book-spine-3d">
-                <div className="cp-spine-highlight" />
-              </div>
-
-              {/* Trang Phải Nền */}
-              <div
-                className="cp-book-page page-right"
-                onClick={handleNext}
-                title="Bấm mép phải để lật sang trang sau"
-              >
-                <div className="cp-page-inner">
-                  <img
-                    src={`/catalog/pages/${flipState?.direction === 'next' ? flipState.newRight : flipState?.direction === 'prev' ? flipState.fromRight : rightPage}.jpg`}
-                    alt={`Trang ${rightPage}`}
-                    className="cp-page-image"
-                  />
-                  <div className="cp-gutter-shadow right" />
-                  <div className="cp-page-edge right" />
-                  {/* Bóng đổ quét qua khi lật ngược về */}
-                  {flipState?.direction === 'prev' && <div className="cp-page-landing-shadow right" />}
-                  <span className="cp-page-badge right">
-                    Trang {flipState?.direction === 'next' ? flipState.newRight : rightPage}
-                  </span>
-                </div>
-              </div>
-
-              {/* LÁ LẬT TRANG 3D DYNAMIC LEAF */}
-              {flipState && (
-                <div
-                  className={`cp-flip-leaf ${flipState.direction === 'next' ? 'flip-to-left' : 'flip-to-right'}`}
-                >
-                  {/* Mặt trước của trang lật */}
-                  <div className="cp-leaf-face face-front">
-                    <img
-                      src={`/catalog/pages/${flipState.direction === 'next' ? flipState.fromRight : flipState.newRight}.jpg`}
-                      alt="Lật trang"
-                      className="cp-page-image"
-                    />
-                    <div className="cp-leaf-sheen front" />
-                  </div>
-                  {/* Mặt sau của trang lật */}
-                  <div className="cp-leaf-face face-back">
-                    <img
-                      src={`/catalog/pages/${flipState.direction === 'next' ? flipState.newLeft : flipState.fromLeft}.jpg`}
-                      alt="Lật trang"
-                      className="cp-page-image"
-                    />
-                    <div className="cp-leaf-sheen back" />
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* TH2: CHẾ ĐỘ 1 TRANG ĐƠN (SINGLE PAGE MODE) */}
-          {viewMode === 'single' && (
-            <div className="cp-single-book-stage">
-              {/* Trang đệm nằm dưới lộ ra khi lật */}
-              {flipState && (
-                <div className="cp-single-page-card under-card">
-                  <img
-                    src={`/catalog/pages/${flipState.direction === 'next' ? flipState.targetPage : currentPage}.jpg`}
-                    alt="Trang nền"
-                    className="cp-page-image"
-                  />
-                  <span className="cp-page-badge center">
-                    Trang {flipState.direction === 'next' ? flipState.targetPage : currentPage} / {TOTAL_PAGES}
-                  </span>
-                </div>
-              )}
-
-              {/* Trang cử động theo thao tác lật */}
-              <div
-                className={`cp-single-page-card top-card ${flipState ? `flipping-${flipState.direction}` : ''}`}
-                onClick={handleNext}
-                title="Bấm để lật sang trang sau"
-              >
-                <img
-                  src={`/catalog/pages/${flipState?.direction === 'prev' ? flipState.targetPage : currentPage}.jpg`}
-                  alt={`Trang ${currentPage}`}
-                  className="cp-page-image"
-                />
-                {flipState && <div className="cp-single-curl-shading" />}
-                <span className="cp-page-badge center">
-                  Trang {flipState?.direction === 'prev' ? flipState.targetPage : currentPage} / {TOTAL_PAGES}
-                </span>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Nút Lật Trang Tiếp Theo (Mũi tên phải lớn) */}
@@ -583,9 +444,9 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
           type="button"
           className="cp-side-arrow next"
           onClick={handleNext}
-          disabled={rightPage >= TOTAL_PAGES}
+          disabled={currentPage >= TOTAL_PAGES}
           aria-label="Lật trang tiếp theo"
-          title="Lật trang sau (Phím Mũi tên Phải)"
+          title="Lật trang sau (hoặc bấm/kéo mép góc trang sách)"
         >
           <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <polyline points="9 18 15 12 9 6"></polyline>
@@ -602,7 +463,7 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
           type="button"
           className="cp-dock-btn"
           onClick={() => handleGoToPage(1)}
-          disabled={leftPage <= 1}
+          disabled={currentPage <= 1}
           title="Về trang bìa đầu tiên (Home)"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
@@ -616,8 +477,8 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
           type="button"
           className="cp-dock-btn"
           onClick={handlePrev}
-          disabled={leftPage <= 1}
-          title="Trang trước"
+          disabled={currentPage <= 1}
+          title="Trang trước (hoặc kéo mép góc trái)"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
             <polyline points="15 18 9 12 15 6"></polyline>
@@ -631,7 +492,7 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
             type="number"
             min="1"
             max={TOTAL_PAGES}
-            value={viewMode === 'spread' ? `${leftPage}` : currentPage}
+            value={currentPage}
             onChange={(e) => {
               const val = parseInt(e.target.value, 10);
               if (!isNaN(val) && val >= 1 && val <= TOTAL_PAGES) {
@@ -640,10 +501,8 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
             }}
             aria-label="Nhập số trang để nhảy đến"
           />
-          {viewMode === 'spread' && rightPage !== leftPage && (
-            <span className="cp-dock-spread-to">-{rightPage}</span>
-          )}
           <span>/ {TOTAL_PAGES}</span>
+          <span className="cp-dock-spread-hint">({getPageLabel()})</span>
         </div>
 
         {/* Nút Tiến 1 lượt */}
@@ -651,8 +510,8 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
           type="button"
           className="cp-dock-btn"
           onClick={handleNext}
-          disabled={rightPage >= TOTAL_PAGES}
-          title="Trang sau"
+          disabled={currentPage >= TOTAL_PAGES}
+          title="Trang sau (hoặc kéo mép góc phải)"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
             <polyline points="9 18 15 12 9 6"></polyline>
@@ -664,7 +523,7 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
           type="button"
           className="cp-dock-btn"
           onClick={() => handleGoToPage(TOTAL_PAGES)}
-          disabled={rightPage >= TOTAL_PAGES}
+          disabled={currentPage >= TOTAL_PAGES}
           title="Đến trang bìa cuối cùng (End)"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
@@ -763,8 +622,9 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
           <div className="cp-thumbs-strip" ref={thumbsStripRef}>
             {Array.from({ length: TOTAL_PAGES }, (_, i) => i + 1).map((pageNum) => {
               const isSelected =
-                viewMode === 'spread'
-                  ? pageNum === leftPage || pageNum === rightPage
+                orientation === 'landscape' && currentPage > 1 && currentPage < TOTAL_PAGES
+                  ? pageNum === (currentPage % 2 === 0 ? currentPage : currentPage - 1) ||
+                    pageNum === (currentPage % 2 === 0 ? currentPage + 1 : currentPage)
                   : pageNum === currentPage;
               return (
                 <button
@@ -816,8 +676,8 @@ const CapacityProfilePage = ({ initialPage = 1, onNavigateHome }) => {
             <div className="cp-toc-list">
               {CHAPTERS.map((ch) => {
                 const isActive =
-                  leftPage >= ch.page &&
-                  (ch.id === CHAPTERS.length || leftPage < CHAPTERS[ch.id]?.page);
+                  currentPage >= ch.page &&
+                  (ch.id === CHAPTERS.length || currentPage < CHAPTERS[ch.id]?.page);
                 return (
                   <div
                     key={ch.id}
