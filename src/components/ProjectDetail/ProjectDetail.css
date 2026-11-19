@@ -12,16 +12,16 @@
 
 /* --- Top Navigation & Breadcrumbs --- */
 .project-detail-nav {
-  background: #ffffff;
-  border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+  background: transparent;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.7);
   padding: 12px 0;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+  box-shadow: none;
 }
 
 .project-detail-nav-inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 16px;
   flex-wrap: wrap;
 }
@@ -32,7 +32,7 @@
   gap: 8px;
   font-size: 0.88rem;
   color: var(--text-gray);
-  max-width: 75%;
+  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -68,24 +68,6 @@
 
 .breadcrumb-separator {
   color: #cbd5e1;
-}
-
-.project-back-btn {
-  background: none;
-  border: 1px solid #cbd5e1;
-  border-radius: 6px;
-  padding: 5px 12px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: #475569;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.project-back-btn:hover {
-  background: #f8fafc;
-  color: #0f172a;
-  border-color: #94a3b8;
 }
 
 /* --- Main Layout --- */

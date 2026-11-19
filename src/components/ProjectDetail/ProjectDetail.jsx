@@ -109,13 +109,6 @@ const ProjectDetail = ({ projectIdOrSlug, onNavigateBack, onNavigateContact, onS
             )}
             <span className="breadcrumb-item active">{project.title}</span>
           </nav>
-          <button 
-            type="button" 
-            className="project-back-btn" 
-            onClick={onNavigateBack}
-          >
-            ← Quay lại danh sách
-          </button>
         </div>
       </div>
 
